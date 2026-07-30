@@ -1,0 +1,88 @@
+(footprint "VIA_0.5_0.3"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "HSOF-8-1 [TOLL] power MOSFET (http://www.infineon.com/cms/en/product/packages/PG-HSOF/PG-HSOF-8-1/)")
+	(tags "mosfet hsof toll thermal vias")
+	(property "Reference" "REF**"
+		(at 0 -6 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "1c219e88-0a16-4358-bf0f-83a32e7fb5c8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "VIA_0.5_0.3"
+		(at 0 6 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9849c7c4-18d8-4f3c-8b45-669688432854")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e5e14a90-3552-43bb-8e09-068d7876a541")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "befb9b96-5292-4447-afe1-68367a4e7c4f")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(pad "1" thru_hole circle
+		(at 0 0.01)
+		(size 0.5 0.5)
+		(drill 0.3)
+		(layers "*.Cu")
+		(remove_unused_layers no)
+		(uuid "487cd148-b2bb-4bdd-bcab-ca439027b13e")
+	)
+	(pad "2" thru_hole circle
+		(at 0 0.01)
+		(size 0.5 0.5)
+		(drill 0.3)
+		(layers "*.Cu")
+		(remove_unused_layers no)
+		(uuid "d27682a8-7a4b-4c9a-852c-ae8e6a1c17b8")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/Infineon_PG-HSOF-8-1.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

@@ -1,0 +1,152 @@
+(footprint "urb 50w dc-dc"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "XP Power JTD Series DC-DC Converter")
+	(tags "DCDC Isolated")
+	(property "Reference" "REF**"
+		(at 2.51 10.97 180)
+		(layer "F.SilkS")
+		(uuid "49d5d3f1-e373-4304-8ad1-5ef66f2617b1")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "DC-DC Mornsun"
+		(at 0 -14.83 180)
+		(layer "F.Fab")
+		(uuid "d25ace50-e95b-4043-819d-1c7f3987c596")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0eb25822-1ea9-4fec-a76f-0940a9d5807e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "806e4b28-5f6b-4960-97e6-199c10a09da7")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_rect
+		(start -25.4 12.7)
+		(end 25.4 -12.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "d1d1fe33-5f28-4c54-a253-d0d2938c4d9c")
+	)
+	(fp_rect
+		(start -25.7 13)
+		(end 25.7 -13)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "83161698-e29a-4a3e-ad89-5dc61e339bfa")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 2.54 -10.16 0)
+		(layer "F.Fab")
+		(uuid "282170a0-fdec-4821-a2d2-cab66943a065")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole roundrect
+		(at -22.86 -7.62)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(roundrect_rratio 0.25)
+		(uuid "17e26e85-ac6c-4504-9028-72fe2b7044d0")
+	)
+	(pad "2" thru_hole circle
+		(at -22.86 2.54)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "34ceb266-584d-4ffc-9a93-6a84dea9fd4c")
+	)
+	(pad "3" thru_hole circle
+		(at -22.86 7.62)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "67c19550-03a5-44db-901b-ae249154aa91")
+	)
+	(pad "4" thru_hole circle
+		(at 22.86 10.16)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "8d3ec715-23d7-4f6d-a41f-aad3b7dce5c0")
+	)
+	(pad "5" thru_hole circle
+		(at 22.86 0)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "2b0b11eb-1e48-4b0c-a279-b1ec6a99ae70")
+	)
+	(pad "6" thru_hole circle
+		(at 22.86 -10.16)
+		(size 3 3)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "0d3b5e82-1507-4b7d-8835-d41b17ed5e1e")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Converter_DCDC.3dshapes/Converter_DCDC_XP_POWER_JTDxxxxxxx_THT.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
