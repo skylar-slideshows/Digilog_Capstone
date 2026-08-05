@@ -24,6 +24,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+// Skylar
+#include "app.hpp"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -886,11 +889,19 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
+
+// Skylar
+#include "app.hpp"
+
 void StartDefaultTask(void *argument)
 {
   /* init code for USB_Device */
   MX_USB_Device_Init();
   /* USER CODE BEGIN 5 */
+
+  // Skylar
+  app_main();
+
   /* Infinite loop */
   for(;;)
   {
