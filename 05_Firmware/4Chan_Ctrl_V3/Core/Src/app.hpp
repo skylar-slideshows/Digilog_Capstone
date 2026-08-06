@@ -1,4 +1,4 @@
-// Skylar: C++ source bridge
+// Skylar: C++ source bridge header
 
 #pragma once
 #ifdef __cplusplus
