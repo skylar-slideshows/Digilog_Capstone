@@ -14,7 +14,9 @@
 \usepackage{setspace}
 
 \usepackage{ragged2e}
+\usepackage{parskip}
 
+\usepackage{booktabs}
 % --- Header/Footer Configuration ---
 \pagestyle{fancy}
 \fancyhf{} % Clear all default header and footer settings
@@ -31,9 +33,9 @@
 \begin{document}
 \begin{titlepage}
     \centering
-    \vspace*{1cm}
+    \vspace*{0cm}
     
-    {\huge \textbf{Analog Mixing Console With Digital Control\\ \vspace{0.5cm}and Automated Signal Path Configuration}} \\[1cm]
+    {\huge \textbf{Analog Mixing Console with Digital Control\\ \vspace{0.5cm}and Automated Signal Path Configuration}} \\[1cm]
     
     \vspace{0.5cm}
     
@@ -46,38 +48,38 @@
 
 
     
-    {\LARGE \textbf{Skylar Denno}}
+    {\Large \textbf{Skylar Denno}}
     
     \vspace{0.3cm}
     
-    {\LARGE \textbf{Evan Forcucci}}
+    {\Large \textbf{Evan Forcucci}}
     
         \vspace{0.3cm}
     
-    {\LARGE \textbf{Daniil Petrov}}
+    {\Large \textbf{Daniil Petrov}}
     
         \vspace{0.3cm}
     
-    {\LARGE \textbf{Xinhao Chen}}
+    {\Large \textbf{Xinhao Chen}}
     
         \vspace{0.3cm}
     
-    {\LARGE \textbf{Daniel Salas}}
+    {\Large \textbf{Daniel Salas}}
     
         \vspace{0.3cm}
     
-    {\LARGE \textbf{Luke Garrity}}
+    {\Large \textbf{Luke Garrity}}
     
 
     
-    \vspace{1cm}
+    \vspace{0.5cm}
     
-        {\Large \textbf{Advisor: }Milad Siami }
+        {\large \textbf{Advisor: }Milad Siami }
     
-        \vspace{2cm}
+        \vspace{1.3cm}
 
     
-        {\large \textbf{Northeastern University}} \\
+        {\LARGE \textbf{Northeastern University}} \\
         
     Department of Electrical and Computer Engineering \\
     \vspace{1cm}
@@ -86,6 +88,7 @@
     \today
 
 \end{titlepage}
+\setlength{\parindent}{6pt}
 
 \justify
 
@@ -93,20 +96,57 @@
 
 \section{Abstract}
 
-
-
+\newpage
 \section{Introduction}
 
 
+\newpage
 \section{System Explanation}
 
 \subsection{Fundamental Design and Vision}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{fullui.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fxsection.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
 
 \subsection{Analog System Overview}
 
 \subsection{STM32 Microcontroller and Digital Overview}
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{cubemx.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pins.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
+
+\newpage
 \section{Technical Details}
 
 
@@ -115,16 +155,36 @@
 \subsection{Voltage Controlled Amplification}
 \label{sssec:vca}
 
-To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency. There are several ways to implement voltage controlled resistors. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$ To implement the variable gain, voltage controlled amplifiers (VCAs) will be used.
-
-The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line inputs, an INA2137 line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A VCA with a control voltage will be used to vary the gain. For a microphone input, a PGA2500 digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain.
+To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency.
 
 
-The second place gain will need control is on the auxiliary send section, where variable amounts of audio from each channel may be summed to auxiliary signal buses for group external processing. These busses will be fed by VCAs, specifically the SSI2164. The third place for voltage controlled gain is the feed into the main summing bus. For this, two VCAs (SSI2164s) will be used per channel. One VCA will feed the left channel summing bus, and the other VCA will feed the right channel summing bus. A pan (stereo panorama balance) knob will control the difference in gain between the two VCAs for each channel, and the channel fader (volume control) will scale both VCAs equally. 
+
+There are several ways to implement voltage controlled resistors. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$ To implement the variable gain, voltage controlled amplifiers (VCAs) will be used.
+
+The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line inputs, an INA2137~\cite{ina2137} line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A VCA with a control voltage will be used to vary the gain. For a microphone input, a PGA2500~\cite{pga2500} digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{inputsection.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{fader.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
+The second place gain will need control is on the auxiliary send section, where variable amounts of audio from each channel may be summed to auxiliary signal buses for group external processing. These busses will be fed by VCAs, specifically the SSI2164~\cite{ssi2164}. The third place for voltage controlled gain is the feed into the main summing bus. For this, two VCAs (SSI2164s) will be used per channel. One VCA will feed the left channel summing bus, and the other VCA will feed the right channel summing bus. A pan (stereo panorama balance) knob will control the difference in gain between the two VCAs for each channel, and the channel fader (volume control) will scale both VCAs equally. 
 
 \subsubsection*{Component: PGA2500}
 
-The PGA2500 digitally controlled microphone preamplifier accepts its gain setting as a number, so it needs no control DAC. A
+The PGA2500 digitally controlled microphone preamplifier~\cite{pga2500} accepts its gain setting as a number, so it needs no control DAC. A
 16-bit control word travels over a serial port using the SPI protocol. The gain range runs from
 10\,dB to 65\,dB in 1\,dB steps, with a separate unity gain setting. Several
 devices may share one port in a daisy chain, which keeps the wiring count low across a
@@ -140,7 +200,7 @@ the gain, and no control voltage takes part.
 
 
 \subsubsection*{Component: SSI2164}
-The SSI2164 provides four VCAs in one package. Each VCA takes a current input,
+The SSI2164~\cite{ssi2164} provides four VCAs in one package. Each VCA takes a current input,
 produces a current output, and accepts a ground-referenced control port. The
 control law is exponential:
 %
@@ -175,7 +235,7 @@ update.
 
 Parts of the channel need a variable resistance and not a variable gain. The
 equalizer corner frequencies and the filter $Q$ are the main examples. An
-LM13700 OTA supplies this resistance. Transconductance follows the amplifier
+LM13700 OTA~\cite{lm13700} supplies this resistance. Transconductance follows the amplifier
 bias current:
 %
 \begin{equation}
@@ -204,7 +264,9 @@ therefore needs no exponential converter.
 
 \subsubsection*{Component: LM13700}
 
-The LM13700 is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor, and the scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. That makes it a general-purpose analog multiplier building block, which is why it turns up as a VCA, voltage-controlled filter, voltage-controlled resistor, or oscillator, and why it became a staple of synthesizer design.
+\label{sssec:vcr}
+
+The LM13700~\cite{lm13700} is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor, and the scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. That makes it a general-purpose analog multiplier building block, which is why it turns up as a VCA, voltage-controlled filter, voltage-controlled resistor, or oscillator, and why it became a staple of synthesizer design.
 
 Each of the two channels adds linearizing diodes and a Darlington buffer. The diodes matter because the bare differential pair is linear only over a few tens of millivolts, so most designs either attenuate hard at the input or use the diodes to trade input range against noise. The buffers give you a high-impedance follower to drive the next stage without loading the current output. It runs on anything from about ±2 V to ±18 V, with bias currents up to a couple of milliamps.
 
@@ -254,31 +316,331 @@ Reconfiguring the console's state follows a fixed order. This order prevents tra
 
 
 \subsection{State-Variable Filter Equalizer}
+\label{ssec:eq}
+
+\subsubsection*{State Variable Filter Core}
+\label{sssec:svf}
+
+Each band uses a state variable filter. The topology is a loop of one summing
+amplifier and two integrators. The output of the second integrator returns to
+the summing input. Three responses appear at once in this loop. The summing node
+gives a high-pass response, the first integrator gives a band-pass response, and
+the second gives a low-pass response. One filter therefore supplies every shape
+the band needs, and a switch selects between them.
+
+An OTA and a capacitor form each integrator. Equation~\eqref{eq:ota-gm} of
+Section~\ref{sssec:vcr} gives the transconductance, so the corner frequency
+follows the bias current:
+%
+\begin{equation}
+    \omega_0 = \frac{g_m}{C} = \frac{I_\mathrm{ABC}}{2 V_T C} .
+    \label{eq:svf-freq}
+\end{equation}
+%
+One control voltage drives both integrators of a band through one
+voltage-to-current converter. The two halves of an LM13700 share a die and a
+bias current, so they track each other. A temperature change moves both corner
+frequencies together, as Section~\ref{sssec:temperature} describes. The shape of
+the response survives, and only its position on the frequency axis moves.
+
+A third path sets Q. The band-pass output returns to the summing node through a
+damping coefficient, and Q is the reciprocal of that coefficient. A third OTA in
+this path therefore makes Q variable. The two bell bands need this OTA. The
+shelf bands hold a constant Q and use a fixed resistor, so they need two OTAs
+each. One channel therefore holds ten OTAs, or five LM13700 packages.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{eqspice.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{eqfreq.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{eqq.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
+\subsubsection*{Band Types and Switching}
+\label{sssec:eq-bands}
+
+The two middle bands are bells with variable frequency, Q, and gain. They take
+the band-pass output. The top and bottom bands are shelves with variable
+frequency and gain and a constant Q. A shelf comes from the low-pass or the
+high-pass output summed with the direct signal.
+
+An ADG1404~\cite{adg1404} selects which filter output reaches the gain stage. This part is a
+4-to-1 multiplexer with a low on-resistance, so one device covers every mode of
+one band. The low band selects its low-pass output for a shelf or its band-pass
+output for a bell. The high band does the same with its high-pass output. A
+fourth input holds the band flat. Further ADG1404 devices bypass the whole
+equalizer and reorder it against the compressor.
+
+\subsubsection*{Boost and Cut}
+\label{sssec:eq-gain}
+
+Gain is the one parameter that a single OTA cannot supply well, because boost
+and cut need opposite signs and a reciprocal shape. The design uses one SSI2164
+VCA channel per band, so one package serves all four bands. The VCA sets the
+magnitude of the filter contribution. Write $B(s)$ for the selected filter
+output and $K$ for the VCA gain:
+%
+\begin{equation}
+    H_\mathrm{boost}(s) = 1 + K B(s) ,
+    \qquad
+    H_\mathrm{cut}(s) = \frac{1}{1 + K B(s)} .
+    \label{eq:eq-gain}
+\end{equation}
+%
+The two forms are reciprocals, so a cut of 6\,dB mirrors a boost of 6\,dB. One
+analog switch chooses between them. It places the VCA output at the summing node
+for a boost, and inside the feedback path of the summing amplifier for a cut.
+
+The switch never clicks, because of where it operates. The two forms meet at
+$K = 0$, which is the flat setting. The control processor drives the VCA to full
+attenuation before it moves the switch, and the SSI2164 reaches $-100$\,dB. The
+filter therefore contributes nothing at the instant of the change.
+
+The VCA follows an exponential law, and a boost in decibels needs a linear value
+of $K$. A lookup table in the control processor performs this conversion. The
+analog circuit needs no linearizing network, which is a direct benefit of
+digital control.
+
+\subsubsection*{Control Voltage Budget}
+\label{sssec:eq-cv}
+
+Each bell band takes three control voltages for frequency, Q, and gain. Each
+shelf band takes two, because its Q is fixed. The equalizer therefore uses ten
+of the twenty control voltages that Section~\ref{ssec:cv-dacs} provides for a
+channel. The remaining ten serve the fader, the pan control, the compressor, and
+the sends.
+
+\subsubsection*{Control Surface}
+\label{sssec:eq-surface}
+
+The panel holds four frequency encoders and four gain encoders. A pot in a
+conventional console sits in the signal path, so each parameter needs its own
+pot. Here an encoder produces a number and touches no audio. The same encoder
+can therefore serve several parameters, and the panel carries far fewer controls
+than the channel has parameters.
+
+The design uses this freedom twice. The four gain encoders carry push switches,
+described in Section~\ref{ssec:gpio}. A held push switch turns the same encoder
+into the Q control for that band. The two shelf bands hold a constant Q, so
+their push switches select between shelf and bell instead.
+
+Three buttons above the section form a radio group, and one lamp stays lit. They
+point the whole encoder group at the equalizer, at the compressor, or at the
+sends. Later sections describe those two processors. The encoder rings and the
+channel display redraw on every change of layer, so the panel always reports the
+parameters that the encoders now hold.
+
+Four gestures complete the section. A single press of a radio button selects a
+layer. A double tap bypasses that processor and a second double tap restores it.
+A held press resets the parameters of that processor. A held press of the
+equalizer button and the compressor button together for three seconds exchanges
+the order of the two processors in the chain. The control processor mutes the
+channel across this last change, because it rearranges the analog path.
+
 
 \subsection{Dynamic Range Compressor}
+\label{ssec:compressor}
 
-\subsection{Summing Bus}
+The compressor splits along the same line as the rest of the console. The
+detector is digital and the audio path is analog. Four high-speed
+analog-to-digital converters sit on a spare SPI bus, one for each channel, and
+they report the signal to the control processor. The processor computes the
+gain reduction from the threshold, the ratio, the attack, the release, and the
+makeup gain. It then drives one SSI2164 channel, and that VCA does the work on
+the audio.
 
-\subsection{Physical Controls and Knob Position Indication}
+This arrangement costs little. The converters never touch the audio path, so
+they need no audio-grade linearity. Only their magnitude accuracy matters. A
+16-bit part gives 96\,dB of detection range, which covers the working range of
+the compressor with room to spare. Four channels at a 48\,kHz sample rate and 16
+bits produce 3.1\,Mbit/s, or about a third of a 10\,MHz SPI bus. The detector
+arithmetic costs near 11\,\% of the processor.
+
+\subsubsection*{The Sidechain Needs Its Own Path}
+\label{sssec:comp-latency}
+
+One constraint governs the design. The control voltage of the compressor must
+not travel through the shared converters of Section~\ref{ssec:cv-dacs}. That
+path updates at 400\,Hz and smooths its output with a 100\,Hz pole. The attack
+time would then never fall below about 4\,ms, and no setting could recover it.
+
+The sidechain therefore carries its own converter, on the same SPI bus as the
+analog-to-digital converters and at the same sample rate. A reconstruction pole
+near 5\,kHz follows it, which gives a time constant of 32\,$\mu$s. The whole
+detection loop stays on one fast bus, and the slow control plane sets only the
+five parameters.
+
+The audio path holds no delay, so the detector cannot look ahead. The gain
+reduction always arrives a little after the event that caused it. This suits a
+program-dependent leveling compressor well. It does not suit a peak limiter, and
+the paper does not claim one.
+
+\subsubsection*{What Software Detection Adds}
+\label{sssec:comp-software}
+
+Several features arrive at no extra cost in parts. The sidechain filter is a few
+lines of code, so the detector can ignore low frequencies without an analog
+network. The detector law is a choice rather than a circuit, so peak and RMS
+behavior both become settings. A soft knee and a program-dependent release cost
+nothing further. Additionally, the console may be set up to feed other channels' signals into the sidechain ADC, allowing sidechain linking compression between sources, allowing the engineer to for example, have the bass dynamically duck during kick drum hits. Still, the actual audio signal travels through a fully analog path, as the ADCs are only to read the levels and generate the compressor CV envelope. The gain reduction is applied by analog VCAs.
+
+Metering also comes free. The processor already holds the gain reduction as a
+number, so the channel display of Section~\ref{ssec:displays} needs no
+measurement circuit to draw it.
+
+\subsubsection*{De-esser Mode}
+\label{sssec:comp-deess}
+
+A switched crossover turns the compressor into a de-esser. An ADG1404 routes the
+audio through a first-order high-pass and low-pass pair with a corner near
+5\,kHz. The VCA then acts on the high band alone, and the two bands rejoin at a
+summing amplifier. A first-order pair sums back to a flat magnitude response, so
+the recombined signal stays correct when the compressor is idle. The processor
+also moves its sidechain filter to match, so the detector responds only to the
+band that the VCA controls.
+
+The detector tap follows the chain order. Section~\ref{ssec:eq} describes the
+switch that exchanges the equalizer and the compressor, and the same switch
+moves the point at which the analog-to-digital converter reads the signal.
+
+
 
 \subsection{Motorized Faders}
+\label{ssec:faders}
+
+Each channel carries one Alps RSA0N fader~\cite{rsa0n}. This is a 100\,mm motorized slide
+potentiometer with a 10\,k$\Omega$ linear track and a touch sense track. The
+fader does two jobs and only two. It reports where the hand put it, and it shows
+where the stored value sits. The audio never reaches the resistive track.
+
+This point deserves emphasis, because it removes a familiar fault. A
+conventional console passes the signal through the fader track, so a worn or
+dirty track produces crackle in the audio. Here the track carries a steady
+direct voltage and nothing else. A noisy track produces a noisy reading, and
+software removes that noise before the reading becomes a control voltage. The
+track needs to be readable, not quiet.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{alps.jpg}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
+\subsubsection*{Position Sensing}
+\label{sssec:fader-sense}
+
+The top of the track connects to VDDA at 3.3\,V, and the bottom connects to
+analog ground. The wiper therefore returns a fraction of VDDA. This voltage
+reaches an analog-to-digital converter inside the STM32G474~\cite{stm32g474}, and one converter
+channel serves each of the four faders. The maximum operating voltage of the
+track is 10\,V DC~\cite{rsa0n}, so 3.3\,V leaves a wide margin.
+
+VDDA also serves as the reference for the converter, as
+Section~\ref{ssec:cv-dacs} describes. The reading is therefore ratiometric. A
+drift of VDDA moves the track voltage and the reference together, and the
+reported position does not change.
+
+A 1\,k$\Omega$ resistor and a 10\,nF capacitor sit at each converter input. The
+capacitor supplies the charge that the sampling network demands, and the pair
+also removes noise that the motor drive couples into the wiper. The converter
+runs with hardware oversampling, which averages the contact noise of the track.
+Twelve bits across 100\,mm of travel give 41 counts per millimetre, or one count
+every 24\,$\mu$m. The mechanical repeatability of the fader is far coarser than
+this, so the converter never limits the result.
+
+\subsubsection*{Motor Drive}
+\label{sssec:fader-motor}
+
+A DRV8871~\cite{drv8871} drives each motor. The device holds one full H-bridge and accepts two
+logic inputs, so each motor uses two pins on the processor. One input carries
+the PWM signal and the other stays static, and the pair that carries the PWM
+sets the direction. Both inputs high shorts the motor windings and brakes.
+
+The motor rail is a dedicated 10\,V supply, which falls comfortably within the supply range of the DRV8871 and is the recommended motor voltage of the Alps RSA0N series. A resistor on the ILIM pin sets a hard ceiling on current, and this ceiling does
+not depend on the duty cap. The datasheet gives 32\,k$\Omega$ for a limit of
+2\,A~\cite{drv8871}. The fader motor needs far less, so the design sets the limit just above
+the stall current of the motor. The driver also protects itself against a short
+circuit and against overtemperature.
+
+The PWM runs at 25\,kHz. This frequency is above the audio band, moving any motor noise or while out of the human hearing range. 
+
+\subsubsection*{Touch Sense}
+\label{sssec:fader-touch}
+
+A TTP223-BA6~\cite{ttp223} capacitive sensor watches the touch track of each fader. Its output
+reaches one input pin on the processor, so four pins serve the four faders.
+
+The sensor reports whether a hand is on the fader by repeatedly charging the metal fader cap and reporting capacitance via charge time. A human has additional capacitance, so when the user touches the fader, their capacitance is added to the detected amount, and the charge time increases. This way, accidental bumps will not move the faders. A
+knocked fader or a resting cable moves the fader, but without activating the sensor. Without the sensor, that movement would overwrite the stored value. With
+the sensor, the loop treats the movement as an error, drives the fader back, and
+leaves the stored value alone.
+
+\subsubsection*{Position Loop}
+\label{sssec:fader-loop}
+
+The loop runs at 1\,kHz on the processor. It needs no traffic on the
+I\textsuperscript{2}C bus, because the converter and the timers sit on the same
+chip.
+
+Which side holds the truth depends on the touch state. A touched fader is an
+input, and its measured position sets the stored value. An untouched fader is a
+display, and the stored value sets the target position. The control voltage
+always follows the stored value and never the measured position. A recall writes the correct control voltage
+at once, and the audio is right before the fader has finished its travel. A
+small mechanical error in the final resting place therefore produces no error in
+gain.
+
+Four rules keep the movement clean.
+
+\begin{enumerate}
+    \item A deadband of about 0.2\,mm stops the loop near the target. Without
+          it the fader hunts and the motor buzzes.
+    \item A fixed duty offset covers the static friction. A small error would
+          otherwise ask for a duty too low to move the lever at all.
+    \item The loop brakes on arrival instead of coasting. The lever carries
+          enough inertia to overshoot the target.
+    \item A duty ceiling limits the travel speed, so a full recall takes about
+          300\,ms rather than slamming into the end stop.
+\end{enumerate}
+
+A stall timer guards the end stops. The loop watches the position while it
+drives. If the error stays large and the position stops changing, the loop cuts
+the drive and reports a fault.
 
 \subsection{LCD Displays}
-
-
 \label{ssec:displays}
 
 The knob rings, the motorized fader, and the button lamps already report
 position and state. They cannot report a name, and they cannot report a shape.
 A small display adds these two things. Each channel strip carries one Adafruit
-4421 module, which holds a 1.54\,inch IPS panel of 240 by 240 pixels and an
-ST7789 controller. The screen shows the track name, the transfer curve of the
+4421 module~\cite{ada4421}, which holds a 1.54\,inch IPS panel of 240 by 240 pixels and an
+ST7789 controller~\cite{st7789}. The screen shows the track name, the transfer curve of the
 equalizer, and the gain reduction of the compressor. Adafruit supplies this
 part as a bare module on a flexible cable, so each strip also needs a small
 connector for the 22 pin "flat-flex" ribbon cable.
 
 One controller board drives four screens on a single SPI bus configured as transmit only (no data return from screens to controller). The four modules will 
-share the clock line and the data line (MISO). Each module receives its own chip select line. Two pins on the controller will be used to select the module to talk to using a two bit number. A 2-to-4 decoder generates the four chip select lines and saves two pins on the processor. The backlight of all four displays will be controlled by another pin, and pulse width modulation (PWM) will be used to vary its brightness.
+share the clock line and the data line (MOSI). Each module receives its own chip select line. Two pins on the controller will be used to select the module to talk to using a two bit number. A 2-to-4 decoder generates the four chip select lines and saves two pins on the processor. The backlight of all four displays will be controlled by another pin, and pulse width modulation (PWM) will be used to vary its brightness.
 
 Bus bandwidth sets the whole update strategy. A full frame holds 57,600 pixels
 at 16 bits per pixel, or 115,200 bytes. A clock of 40\,MHz therefore needs
@@ -306,18 +668,218 @@ small buffer instead. A tile of 240 by 32 pixels needs 15\,kB. The controller
 keeps two tiles and uses DMA. The processor draws into the second tile while
 the DMA engine sends the first tile to the bus. It is likely that during design, we will sacrifice colors to reduce the bits per pixel, in order to increase framerate. We also plan to have a single, larger display in the center / master section, for the user to configure settings and save and load console states.
 
-\subsection{GPIO Expansion}
+\subsection{GPIO Expansion and Control Hardware}
+
+
+\label{ssec:gpio}
+
+Every control on a channel strip reaches the processor through the same three
+MCP23017 expanders~\cite{mcp23017} that share the I\textsuperscript{2}C bus with the converters.
+Each expander carries 16 pins, but two of them cannot serve as inputs. Microchip
+advises that GPA7 and GPB7 drive outputs only, because those pins react to noise
+and can corrupt the bus~\cite{mcp23017}. Each expander therefore offers 14 input pins, and three
+expanders offer 42.
+
+The channel needs exactly 42. Ten EC11 encoders~\cite{ec11} use two pins each for their
+phases. Six of those encoders also carry a push switch. Sixteen buttons take the
+rest. The budget closes with nothing spare, so any later control needs a fourth
+expander. The six output-only pins remain available for indicators.
+
+\subsubsection*{Pin Allocation}
+\label{sssec:pin-allocation}
+
+Allocation is not free choice. The expander latches a whole port at one instant,
+so the two phases of one encoder must sit in the same port byte. Phases split
+across two ports, or across two devices, would arrive from two different reads.
+The decoder would then see a transition that never happened.
+Table~\ref{tab:pin-allocation} keeps every encoder inside one port.
+
+\begin{table}[t]
+\centering
+\caption{Input allocation for one channel. Each port supplies seven usable
+pins, because pin 7 of each port drives outputs only.}
+\label{tab:pin-allocation}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Device} & \textbf{Port A} & \textbf{Port B} \\
+\midrule
+Expander 1 & Encoders 1 to 3, 1 button & Encoders 4 and 5, 3 buttons \\
+Expander 2 & Encoders 6 to 8, 1 button & Encoders 9 and 10, 3 buttons \\
+Expander 3 & 6 push switches, 1 button & 7 buttons \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Encoder Signals}
+\label{sssec:quadrature}
+
+The EC11 is an incremental encoder with quadrature output. It holds two contact
+sets that open and close a quarter cycle apart. One phase leads the other, and
+which phase leads gives the direction of rotation. The encoder reports no
+absolute position and no rate. It reports only steps and direction.
+
+The processor decodes each encoder with a small state machine. The two phases
+form a 2-bit value, and one detent produces one full cycle of that value. A
+valid step changes exactly one bit. A table of 16 entries maps the previous
+value and the new value to a count of $+1$, $-1$, or zero. A change of both bits
+at once cannot occur on a real rotation. The state machine treats that case as a
+lost sample, discards it, and resynchronizes on the next valid step. This rule
+matters more than raw speed. A fast turn may lose a count, but the machine never
+produces a count in the wrong direction.
+
+\subsubsection*{Contact Debounce}
+\label{sssec:debounce}
+
+Mechanical contacts bounce for one to five milliseconds. The expander cannot
+help with this on its own. Its internal glitch filter removes pulses shorter
+than 150\,ns~\cite{mcp23017}, which suppresses electrical noise but not a bouncing contact.
+Every input therefore passes through an RC network first.
+
+Each input uses a 10\,k$\Omega$ pull-up to the rail and a 1\,k$\Omega$ resistor
+in series with the contact. A capacitor to ground completes the network. The
+series resistor also limits the discharge current through the contact to about
+3\,mA, which extends contact life. The GPIO pins of the MCP23017 are Schmitt
+trigger inputs. They switch at 0.2\,VDD and 0.8\,VDD~\cite{mcp23017}, so the hysteresis band
+covers nearly 2\,V at a 3.3\,V rail. A slow edge through that band produces one
+clean transition and no repeat.
+
+Two capacitor values serve two needs. Buttons use 100\,nF, which gives an edge
+of about 1.8\,ms and removes all normal bounce. Encoder phases use 22\,nF, which
+gives an edge of about 0.4\,ms. The encoder needs the faster network because its
+phases change far more often than a button does. A fast turn of three
+revolutions per second on a 20 detent encoder produces 240 transitions per
+second, or one transition every 4\,ms.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{debouncebutton.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{debounceec11.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+\subsubsection*{Interrupt Handling}
+\label{sssec:gpio-interrupts}
+
+A scan of every input on every frame would waste the bus. The expanders raise an
+interrupt instead, and the processor reads only after a control moves. Each
+device enables interrupt-on-change on all input pins through GPINTEN. INTCON
+stays clear, so each pin compares against its own previous value.
+
+The three devices share one interrupt line. Two configuration bits make this
+possible. IOCON.MIRROR joins INTA and INTB inside each device, so one pin
+reports both ports. IOCON.ODR makes that pin an open-drain output. The three
+pins then join at one node with a single 4.7\,k$\Omega$ pull-up, and any device
+can pull the node low without a conflict. One line therefore serves a whole
+channel, and the processor uses four lines in total.
+
+The shared line does not name its source, so the service routine scans. It reads
+both ports of all three devices, which takes about 370\,$\mu$s at 400\,kHz. It
+compares each byte against the stored previous value, and the changed bits
+identify the control. The routine then feeds the changed encoder phases to the
+state machine.
+
+A read of the port registers also clears the interrupt inside each device. This
+step is not optional. A device that nobody reads holds the shared line low and
+blocks every later interrupt on that channel. The routine therefore reads all
+three devices on every event, and it checks the line again before it exits.
+
+This design costs nothing while the console sits still. A fast turn of one
+encoder raises 240 events per second, and each event costs 370\,$\mu$s. The
+input traffic therefore reaches about 9\,\% of the bus at its worst. The
+allowance in Table~\ref{tab:i2c-budget} of Section~\ref{ssec:cv-dacs} treats this
+traffic as continuous, so that budget states an upper bound rather than a normal
+load.
+
+
+\subsubsection*{Knob Position Indication}
+\label{sssec:led-rings}
+ 
+An encoder has no end stop and no pointer, so the panel must show the position
+by another means. A ring of 32 LEDs in 0201 packages surrounds each knob and
+covers 270 degrees. A pitch of 2\,mm places the ring on a circle of about
+26\,mm, which clears the body of an EC11. One LED therefore covers about
+8.7 degrees, and the ring resolves the travel to one part in 32. The ring gives
+a coarse reading that the eye takes in at a glance. The channel display carries
+the exact value.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{ledring3d.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ledringpcb.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{channelwidth.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+ 
+Four 74HCT595 shift registers~\cite{hct595} drive the 32 LEDs of one ring. They sit on a small
+dedicated board behind the panel, with the encoder through the middle. Each
+board carries an input connector and an output connector, and both connectors
+hold the supply, the ground, the shift clock, the latch clock, the output enable,
+and the data. Forty knobs serve four channels, so 160 devices sit in the chain.
+Eight further devices on the main board drive the 64 button lamps of those
+channels. The chain therefore holds 168 devices and 1344 bits.
+ 
+The choice of the HCT family is not incidental. The processor drives 3.3\,V
+logic, and these devices run from the 5\,V LED rail. An HCT input switches at
+2.0\,V, so it accepts a 3.3\,V signal from a 5\,V part~\cite{hct595}. An HC input would need
+3.5\,V at the same supply and would not work.
+ 
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{ledringschem.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+ 
+The shift clock runs at 480\,kHz, and a full frame therefore takes 2.8\,ms. This
+rate is far below what the devices allow, and the margin is deliberate. The
+chain crosses the whole control surface and passes every channel strip. A slow
+clock with slow edges radiates far less into the analog path than a fast one,
+for the same reason that Section~\ref{ssec:displays} separates the display bus.
+The outputs hold their state between frames, so a slow clock costs no
+brightness. It costs only 2.8\,ms of delay before a movement appears.
+ 
+A dedicated 5\,V rail feeds the LEDs. At 2\,mA per LED, a fully lit surface
+draws about 2.7\,A, so the rail carries the load and the 3.3\,V logic supply does
+not. A PWM signal on the output enable line sets the brightness of the whole
+chain. That signal runs above 20\,kHz. A slower PWM would place a large
+switching current inside the audio band, next to the analog circuits.
+ 
+
+
+
 
 \subsection{Control Voltage DACs}
 \label{ssec:cv-dacs}
 
 Each console channel needs many control voltages at once. These are the VCA control
-ports and the equalizer corner frequencies. An STM32G474 supplies these levels
+ports and the equalizer corner frequencies. An STM32G474~\cite{stm32g474} supplies these levels
 through four independent I\textsuperscript{2}C buses. Each bus carries one
 console channel, so one processor serves four channels.
 
 Each bus holds eight devices. Three MCP23017 expanders provide the switch and
-lamp lines described above. Five MCP4728 converters provide the control
+lamp lines described above. Five MCP4728 converters~\cite{mcp4728} provide the control
 voltages. The MCP4728 holds four 12-bit outputs, so each bus produces 20
 control voltages. One processor therefore produces 80 control voltages in
 total.
@@ -326,14 +888,14 @@ Every MCP4728 leaves the factory with the same default address, so the five
 devices on a bus need distinct addresses. The address bits live in on-chip
 EEPROM. A programming step at the end of manufacture writes them once. This
 step needs a precise transition of the LDAC pin against the I\textsuperscript{2}C
-clock, so the test fixture performs it at a reduced clock rate. The LDAC pin
+clock~\cite{mcp4728}, so the test fixture performs it at a reduced clock rate. The LDAC pin
 serves a second purpose during normal use. The processor writes all five
 devices and then pulses LDAC, and all 20 outputs of a channel move together.
 
 \subsubsection*{Bus Bandwidth}
 \label{sssec:bus-bandwidth}
 
-The bus runs in Fast mode at 400\,kHz. One bit period is therefore
+The bus runs in Fast mode at 400\,kHz~\cite{i2cspec}. One bit period is therefore
 2.5\,$\mu$s, and one byte takes 22.5\,$\mu$s because each byte carries an
 acknowledge bit. Two transactions repeat every frame. The Fast Write command of
 the MCP4728 loads all four channels in nine bytes. A two-register read of the
@@ -387,7 +949,7 @@ gain of two would ask for 4.096\,V from a 3.3\,V rail. A reference of VDDA
 therefore gives the widest span available. A full scale of 3.3\,V across 12 bits
 gives a step of 0.81\,mV at the converter output.
 
-A TL074 stage follows each output. The stage applies a gain and an offset, and
+A TL074 stage~\cite{tl074} follows each output. The stage applies a gain and an offset, and
 a reference voltage at the second input sets that offset. Two resistors per
 channel therefore fix the span. The widest span reaches about $\pm 13$\,V,
 because the TL074 does not swing to its rails. A design that needs a true
@@ -424,11 +986,119 @@ The slew limit is a choice and not only a constraint. Slower changes in paramete
 therefore serves the sound of the console as well as its noise budget.
 
 
+
 \subsection{Power Supply}
 
-\subsection{Physical Manufacturing Technicalities}
+\label{ssec:psu}
 
-\subsection{Computer Connection}
+The console holds 16 channels and a master section. Four controller cards serve
+those channels, and each card carries four of them. Two supplies feed the frame,
+and they never share a path. A linear supply feeds the analog circuits. A
+switching supply feeds everything digital.
+
+\subsubsection*{Analog Supply}
+\label{sssec:psu-analog}
+
+A toroidal transformer delivers 18\,V RMS to a full bridge rectifier. Reservoir
+capacitors follow, and an LM317~\cite{lm317} and an LM337~\cite{lm337} regulate the result to
+$\pm 16.5$\,V. Further filtering follows each regulator. Every card carries its
+own regulator pair, which keeps the drop across each device small and isolates
+one card from another.
+
+The analog load per channel comes from three groups. Five LM13700 packages hold
+the equalizer filters. Two SSI2164 packages hold the equalizer gain stages, the
+compressor, and the level control. About ten TL074 packages hold the control
+voltage output stages, the filter summing amplifiers, and the current-to-voltage
+converters. Together these draw near 130\,mA from each rail. A card of four
+channels therefore needs about 520\,mA per rail, and a supply of 500\,mA per card
+meets that figure.
+
+A separate low-dropout regulator produces VDDA at 3.3\,V. This rail serves only
+as the reference for the converters of Section~\ref{ssec:cv-dacs}, and it draws
+about 50\,mA. It takes its input from the linear side and not from a switching
+converter. A regulator of this type rejects little at the switching frequency,
+and VDDA sets every control voltage in the console.
+
+\subsubsection*{Digital Supply}
+\label{sssec:psu-digital}
+
+A 105\,W switching supply feeds three buck converters. One produces 3.3\,V for
+the processors, the expanders, the converters, and the displays. One produces
+10\,V for the fader motors. One produces 5\,V for the indicators.
+
+The indicator load is the largest. Each controller drives 1280 ring LEDs and 64
+button lamps, so the frame holds 5376. Each LED drops 2.8\,V and takes 1.5\,mA.
+A fully lit surface therefore draws 8.1\,A, or 40\,W from the 5\,V rail. The LEDs
+dissipate 23\,W of that figure and the series resistors dissipate the remaining
+18\,W. A lower rail would waste less, but 2.2\,V across the resistor is what
+holds the current steady against the spread of forward voltage.
+
+\begin{table}[t]
+\centering
+\caption{Load on the 105\,W switching supply. The three worst cases do not last
+long and do not normally coincide.}
+\label{tab:power-budget}
+\begin{tabular}{l r r l}
+\toprule
+\textbf{Rail} & \textbf{Current} & \textbf{Power} & \textbf{Condition} \\
+\midrule
+3.3\,V digital & 2.0\,A & 7\,W & Continuous \\
+5\,V indicators & 8.1\,A & 40\,W & Every LED lit \\
+10\,V motors & 5.0\,A & 50\,W & All 16 faders start \\
+\midrule
+Total & & 97\,W & Worst case \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:power-budget} shows the margin is thin. The motor figure is the
+reason. Sixteen motors that start together draw near 50\,W, and that peak lasts
+only as long as the faders travel. Two measures hold the total below the limit.
+The ILIM resistor of each DRV8871 caps the current of one motor, as
+Section~\ref{ssec:faders} describes. The control processor also staggers the
+starts across a recall. This second measure costs nothing that the user can
+hear, because the control voltage already carries the recalled value before the
+faders move.
+
+\subsubsection*{Separation}
+\label{sssec:psu-separation}
+
+Noise control rests on layout more than on components. The linear supply and the
+switching supply occupy separate areas of the frame, and their returns meet at
+one point only. The 5\,V rail switches 8\,A at the PWM rate of the indicators,
+and the 10\,V rail switches several amps at the PWM rate of the motors. Both
+returns stay away from the analog ground.
+
+Every device carries local decoupling. Ferrite beads isolate the supply pin of
+each converter and each reference, so a current transient on one device does not
+reach its neighbor.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{psuschem.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{psupcb.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{psu3d.png}
+    \caption{This is the caption text that describes your image.}
+    \label{fig:my_image}
+\end{figure}
+
+
+
+\newpage
 
 
 \section{Division of Tasks}
@@ -443,7 +1113,7 @@ therefore serves the sound of the console as well as its noise budget.
 
 \subsection{PCB and CAD Design}
 
-
+\newpage
 \section{Budget Proposal}
 
 \subsection{Component Selection}
@@ -452,6 +1122,7 @@ therefore serves the sound of the console as well as its noise budget.
 
 \subsection{PCB and CAD Services}
 
+\newpage
 \section{Timeline}
 
 \subsection{Design and Prototyping}
@@ -460,12 +1131,101 @@ therefore serves the sound of the console as well as its noise budget.
 
 \subsection{Final Assembly}
 
+\newpage
 \section{Conclusion}
 
 
 
-
+\newpage
 \section{References}
+
+% The bibliography below supplies its own heading, which is suppressed inside
+% this group so that the numbered "References" section above is used instead.
+\begingroup
+\let\oldsection\section
+\renewcommand{\section}[2]{}
+
+\begin{thebibliography}{99}
+
+\bibitem{lm13700}
+Texas Instruments, \emph{LM13700 Dual Operational Transconductance Amplifiers
+with Linearizing Diodes and Buffers}, datasheet.
+
+\bibitem{ina2137}
+Texas Instruments, \emph{INA137, INA2137 Audio Differential Line Receivers},
+datasheet.
+
+\bibitem{pga2500}
+Texas Instruments, \emph{PGA2500 Digitally Controlled Microphone Preamplifier},
+datasheet SBOS289A, Dec. 2003. [Online]. Available:
+\url{https://www.ti.com/lit/ds/symlink/pga2500.pdf}
+
+\bibitem{ssi2164}
+Sound Semiconductor, \emph{SSI2164 FatKeys Quad Voltage Controlled Amplifier},
+datasheet rev. 3.0, Aug. 2018. [Online]. Available:
+\url{https://www.soundsemiconductor.com/downloads/ssi2164datasheet.pdf}
+
+\bibitem{adg1404}
+Analog Devices, \emph{ADG1404 iCMOS 4-Channel Multiplexer}, datasheet.
+
+\bibitem{tl074}
+Texas Instruments, \emph{TL071, TL072, TL074 Low-Noise JFET-Input Operational
+Amplifiers}, datasheet.
+
+\bibitem{stm32g474}
+STMicroelectronics, \emph{STM32G474xB/xC/xE Arm Cortex-M4 32-bit MCU+FPU},
+datasheet. See also reference manual RM0440.
+
+\bibitem{mcp23017}
+Microchip Technology, \emph{MCP23017/MCP23S17 16-Bit I/O Expander with Serial
+Interface}, datasheet DS20001952C, 2016.
+
+\bibitem{mcp4728}
+Microchip Technology, \emph{MCP4728 12-Bit, Quad Digital-to-Analog Converter
+with EEPROM Memory}, datasheet DS22187E, 2010. [Online]. Available:
+\url{https://ww1.microchip.com/downloads/en/devicedoc/22187e.pdf}
+
+\bibitem{i2cspec}
+NXP Semiconductors, \emph{UM10204: I\textsuperscript{2}C-bus Specification and
+User Manual}.
+
+\bibitem{ec11}
+Alps Alpine, \emph{EC11 Series Incremental Rotary Encoder}, product data.
+
+\bibitem{rsa0n}
+Alps Alpine, \emph{RS**N1*M Series Motor-Driven Slide Potentiometer, Master
+Type}, product data. [Online]. Available:
+\url{https://tech.alpsalpine.com/e/products/detail/RSA0N11M9A0K/}
+
+\bibitem{drv8871}
+Texas Instruments, \emph{DRV8871 3.6-A Brushed DC Motor Driver with Internal
+Current Sense}, datasheet. [Online]. Available:
+\url{https://www.ti.com/lit/ds/symlink/drv8871.pdf}
+
+\bibitem{ttp223}
+Tontek Design Technology, \emph{TTP223 Touch Pad Detector IC}, datasheet.
+
+\bibitem{ada4421}
+Adafruit Industries, \emph{1.54" 240x240 Color IPS TFT Display}, product ID
+4421. [Online]. Available: \url{https://www.adafruit.com/product/4421}
+
+\bibitem{st7789}
+Sitronix Technology, \emph{ST7789V 262K Color Single-Chip TFT-LCD Controller
+and Driver}, datasheet.
+
+\bibitem{hct595}
+Nexperia, \emph{74HC595, 74HCT595 8-bit Serial-In, Serial or Parallel-Out Shift
+Register with Output Latches}, datasheet.
+
+\bibitem{lm317}
+Texas Instruments, \emph{LM317 3-Terminal Adjustable Regulator}, datasheet.
+
+\bibitem{lm337}
+Texas Instruments, \emph{LM337 3-Terminal Adjustable Negative Regulator},
+datasheet.
+
+\end{thebibliography}
+\endgroup
 
 
 
