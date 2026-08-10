@@ -99,6 +99,8 @@
 \newpage
 \section{Introduction}
 
+\subsection{Motivation and Applications in Other Fields}
+
 
 \newpage
 \section{System Explanation}
@@ -125,13 +127,62 @@
 
 \subsection{Analog System Overview}
 
+\subsubsection*{Remote Controlled Analog Systems}
+To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency. The implementation details of these voltage controlled amplifiers and voltage controlled resistors are covered in Sections 4.1 and 4.2, respectively.
+
+In short, voltage controlled amplification will be implemented using voltage controlled amplifiers (VCAs), specifically the SSI2164 for most signals, and the PGA2500 digitally controlled microphone preamplifier (on an SPI control bus rather than using an analog control voltage) for the microphone inputs. Any switching or reconfiguration of channel paths will be implemented by the ADG1404 CMOS analog multiplexer. Voltage controlled resistors will be implemented using the LM13700 operational transconductance amplifier (OTA).
+
+For these components, temperature often changes their behavior, and parameters may differ between units. Details on calibration and temperature compensation schemes are outlined in Section 4.3. Using these components, a voltage controlled parametric equalizer (Section 4.4) may be implemented.
+
+
+\subsubsection*{Control Voltages}
+To produce the control voltages, we will rely on a set of MCP4728 digital-to-analog converter (DAC) chips on I2C busses (running at "Fast mode," 400kHz). These chips have 12-bit accuracy (4,096 voltage levels), which provides more than enough definition for our purposes. We will use a low sample rate around 400Hz, as these control voltages do not need fast changes or high bandwidth. The 0-3.3V output from these DACs will be mapped to a larger voltage range of around $+/- 15V$ using low offset op-amps and a reference offset voltage. The amplification circuit will also provide low pass filtering which both smooths the control voltages and removes any digital noise. Only then will the control voltages be allowed to pass physically to the low noise analog section. More information on this topic is in Section 4.9.
+
+\subsubsection*{Noise and Power}
+The analog systems will be powered by a set of low noise, bipolar rails at about $+/- 16.5V$. The power supply for the analog components will be of a linear topology, to avoid polluting the voltage rails with the switching noise present in other power supply designs. Additionally, the DACs and ADCs will use a dedicated 3.3V voltage reference, designed as a small, low noise supply and separate from the main, high current 3.3V logic supply, but sharing the same ground potential. The power supply is discussed in Section 4.10.
+
+To further isolate the analog section from the digital section, the analog circuitry will be physically located on a different printed circuit board (PCB) than the digital components. The boards will be the same size and stack on top of each other in a mezzanine configuration, with pin headers, similarly to a shield board for microcontroller development boards, but at a much larger size. The digital PCB will be on top of the analog PCB. Any high speed or low-noise analog signals that must travel between the boards will do so via the pin headers. Interlacing these signals with ground pins in the physical pin header layout will reduce crosstalk between channels. We will avoid placing high speed or low noise signals near each other in the pin header, without a ground pin between them.
+
+The digital and analog systems will essentially share the same ground node, but the digital and analog grounds will only connect at a single point at the power supply. Most of the noise protection will be due to the PCB layout and physical separation, rather than trying to separate the ground nodes. The digital PCB, from top to bottom, will likely have the four following copper layers: Top: Digital signals, SMD; Inner 1: Ground plane; Inner 2: Digital signals (heavily shielded); Bottom: Ground plane. Stitching vias in the ground plane will help equalize them with a very low impedance path between them. Ground vias will also be placed near each chip's ground pins. The analog PCB (below the digital PCB), from top to bottom, will have the following four copper layers: Top: Analog signals, SMD; Inner 1: Ground plane; Inner 2: Ground plane; Bottom: Analog signals. With this stackup, we can see that the bottom layer of the digital PCB, sitting right above the first layer of the analog PCB, is a ground plane, rather than a signal layer. This will help prevent interference from the digital electronics from inducing noise in the sensitive analog circuitry.
+
+Local decoupling and filtering will be added physically closer to many of the chips and devices to shunt any noise from crosstalk of digital traces and systems to ground.
+
+\subsubsection*{Summing Bus}
+The output of each of the individual audio channels will feed a summing bus, from which the "mixed" audio may be recorded from back into a computer. The processing and gain/attenuation happens on all the individual channels, and the summing bus is just a "dumb" summing amplifier with equal input impedance see by every channel output (post channel gain).
+
+
+
 \subsection{STM32 Microcontroller and Digital Overview}
+
+\subsubsection*{STM32G474}
+For this project, the STM32 microcontroller was chosen. Specifically, we chose the ARM based STM32G474 variety, for its expansive I/O, deep analog integration with onboard DACs and ADCs, and its ability for standard-speed USB. We plan to run the CPU clock at its maximum speed of 170MHz. This will be more than enough processing power for our requirements. Additionally, our team already has a few Nucleo 64 development boards of this exact chip, allowing those to be excluded from the budget.
+
+We will use an external 24MHz crystal oscillator on our final PCBs (exact same as the Nucleo boards) to simplify all of the different timers for busses running at different speeds. If the firmware will not fit on the chip's internal flash, we will add an SPI flash chip, on a separate SPI bus. This connection, while slow in today's standards, will be more than enough for the controller to access the program during operation.
+
+\subsubsection*{Channel Buckets}
+Each STM32 controller will be in charge of a "bucket" of four channels. We will make everything for this entire project as a set of 4 channels, and during final production, we will combine a few of these buckets together to create a console. The current goal is 16 channels, requiring 4 sets of 4-channel buckets. The numbers listed in the budget proposal are for this 16 channel configuration. However, if budget requires, the design can be reduced to 12 or 8 channels extremely easily, as a result of this bucket setup.
+
+\subsubsection*{Master Section}
+There will also be a simple master section with its own STM32G474. The master section does not need remote control, as all the processing will be done on the individual channels of audio. The master section is just a "dumb" summing bus which accepts the output of an arbitrary number of channels, with their respective gain factors already applied by the VCAs. The summing bus can then be fixed gain for each channel. The master section controller will mostly be to run the large center screen, which will allow for track naming and console setting configuration. This highly modular design allows a console with any number of channels (divisible by 4) to be created by using any number of individual buckets of 4 channels and a single master section.
+
+
+\subsubsection*{Communication Between Devices and Pin Assignment}
+
+The controllers will communicate with each other on an SPI (Serial Peripheral Interface) bus, but for the most part, communication between controllers is not needed, since each manages the signal path configuration of its own four channels, and the outputs from those channels just dump onto the main "dumb" summing bus with the processing and gain already completed. This bus will be mostly used for saving the console state, where the master section controller polls each of the bucket controllers for their channel parameter values. Each bucket will dump its numerous values of settings onto the bus, and the master controller will collect these and save them. Upon loading, the same thing will happen in reverse.
+
+The STM32G474 has four $I^2C$ (Inter-integrated Circuit) buses and three SPI (Serial Peripheral Interface) buses. Each $I^2C$ bus consists of a clock pin and a data pin, carrying signals in both directions.  Multiple devices may communicate, with 3 bit addresses, allowing 8 addressable chips on the same bus. Each I2C bus will be used for one channel's chips, so all four I2C busses will be identical for simplicity, and we can address specific channels by changing which I2C bus we are communicating on. 
+
+Each I2C bus will have three, MCP23017 GPIO expanders (giving 42 total input pins per channel = 168 additional GPIOs for each bucket/STM32). These pins will be connected to the physical control devices such as the rotary encoders and pushbutton switches. More information about GPIO expansion and control is in Section 4.8. Each bus will also have five, MCP4728 quad DACs, for a total count of 20 control voltage DAC channels per console channel, which fits in the required number for the analog processors we plan to implement. More information about control voltage DACs is in Section 4.9.
+
+The STM32 controller also has three SPI busses. Bus 1 will be configured as a 4-wire full duplex, in slave mode, where a master controller selects which chip to talk to. This is for the aforementioned communication between controllers and the master section. SPI bus 2 will be a 2-wire transmit only bus, which will be connected to all four of the small channel LCD screens. These screens only receive data and never send it. More information about the LCD screens is in Section 4.7.
+
+Finally, the third SPI bus will be reserved for a potential SPI flash chip, if the onboard flash is not enough to contain the controller's firmware. We may also use dedicated ADC channels for the dynamic compressor sidechain (See Section 4.5) and control voltage envelope generation. We might also move some things around, adding an SPI GPIO expander such as the MCP23S17 to this bus, to move signals like the fader touch sensors or display chip select pins, making room to use onboard ADCs for the compressor instead (See Figure 4).
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{cubemx.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Pin assignments in STM32CubeMX. PG10 is dedicated for reset only. PC4 and 5 are multiplexed with PA2 and 3, respectively on the Nucleo development board, and to reduce complexity, we just avoid PC4 and 5. This is for one bucket of 4 channels. PB8 is the boot mode pin, left open in case we need to tell the microcontroller to boot from the external SPI flash chip (if the firmware does not fit on internal flash)}
     \label{fig:my_image}
 \end{figure}
 
@@ -139,10 +190,15 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{pins.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Pin assignment listing. Some of the general purpose output pins may be moved to extra pins on the MCP23017s instead.}
     \label{fig:my_image}
 \end{figure}
 
+10 pins are configured as pulse width modulation (PWM) outputs. 8 of these are for the fader motor H-bridge control (two for each motor, see Section 4.6). The other two pins are to change the brightness of the LCD backlights and of all the LEDs on the bucket of channels, through PWM on every LED driver shift register's output enable pin (See Section 4.8). To keep potential audible noise out of the audio, all PWM signals will run at 24KHz or more, beyond human hearing.
+
+\subsubsection*{RTOS}
+Due to the anticipated complexity of the firmware, especially with its multiple busses running at different speeds and interrupts from various chips, a real-time operating system (RTOS) will be used to help schedule and organize parts of the firmware with various priority levels. This way, we can move away from the regular design of a huge, very complex single main loop which checks everything. We just will need to write individual programs or "tasks" and give them a priority level. We plan to use FreeRTOS, which is a simple, open source RTOS that provides CPU scheduling. Being simpler than many other RTOS options, it does not provide memory management or built-in peripheral drivers, which would only complicate things, since we do not anticipate needing these. If we do need these things, we will switch to a more complex RTOS like Zephyr.
+ 
 
 
 
@@ -150,37 +206,36 @@
 \section{Technical Details}
 
 
+This section contains descriptions and technical explanations of each system, in \textbf{\textit{as much detail as we currently have.}} A large amount of research and simulations, and some design and physical prototyping has already been completed, in order to verify the feasibility of these systems. Designs are subject to change.
+
 
 
 \subsection{Voltage Controlled Amplification}
 \label{sssec:vca}
 
-To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency.
 
 
-
-There are several ways to implement voltage controlled resistors. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$ To implement the variable gain, voltage controlled amplifiers (VCAs) will be used.
-
-The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line inputs, an INA2137~\cite{ina2137} line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A VCA with a control voltage will be used to vary the gain. For a microphone input, a PGA2500~\cite{pga2500} digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain.
+To implement the variable gain, voltage controlled amplifiers (VCAs) will be used, which have a gain factor related to a control voltage. The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line level inputs, an INA2137~\cite{ina2137} line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A SSI2164~\cite{ssi2164} VCA will be used to vary the gain with remote control. For a microphone input, a PGA2500~\cite{pga2500} digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain. The PGA2500 does not need a control voltage, and thus does not need another control voltage DAC channel. Instead, the gain is digitally controlled through a control word send on a serial bus.
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.2\textwidth]{inputsection.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Input section controls, at the top of each channel strip. Input knob controls gain applied by the VCA. The switches at the top select the source type. (MIC switches the input to pass through the PGA2500 preamplifier, and HI-Z switches in a resistor to increase the input impedance to accept direct input instrument signals from things like electric guitar coil pickups. The buttons on the bottom control the +48V phantom power for condenser microphones, phase polarity invert, and high pass filter, respectively. These functions are for the mic preamp only and are built into the PGA2500.}
     \label{fig:my_image}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.2\textwidth]{fader.png}
-    \caption{This is the caption text that describes your image.}
-    \label{fig:my_image}
-\end{figure}
 
 
 
 The second place gain will need control is on the auxiliary send section, where variable amounts of audio from each channel may be summed to auxiliary signal buses for group external processing. These busses will be fed by VCAs, specifically the SSI2164~\cite{ssi2164}. The third place for voltage controlled gain is the feed into the main summing bus. For this, two VCAs (SSI2164s) will be used per channel. One VCA will feed the left channel summing bus, and the other VCA will feed the right channel summing bus. A pan (stereo panorama balance) knob will control the difference in gain between the two VCAs for each channel, and the channel fader (volume control) will scale both VCAs equally. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{fader.png}
+    \caption{Output section controls, at the bottom of each channel strip. The LED strip is a simple VU meter bar display implemented with a LM3916. The channel fader is shown (See Section 4.6), and the stereo pan(orama) balance control. SOLO mutes all other channels, MUTE mutes this channel, SEL selects the channel for functions like channel grouping or group parameter changes. INS switches the channel effects insert loop, which sends the audio out, to some external processor, and recieves it back as a line-level signal. PRE sets the source point for this effects loop to be before the application of the fader and pan VCA gain. (PREfader)}
+    \label{fig:my_image}
+\end{figure}
 
 \subsubsection*{Component: PGA2500}
 
@@ -195,7 +250,7 @@ polarity reverse relay.
 The zero-crossing detector delays each gain change until the input signal
 crosses zero. This limits the glitch energy from the switched gain network, preventing pops and clicks on the output. A
 channel with no input signal therefore shows some delay before the new gain
-takes effect. Preamplifier recall is exact. A switched resistor network sets
+takes effect. Preamplifier recall is exact, since a switched resistor network sets
 the gain, and no control voltage takes part.
 
 
@@ -234,8 +289,8 @@ update.
 \subsection{Voltage Controlled Resistors}
 
 Parts of the channel need a variable resistance and not a variable gain. The
-equalizer corner frequencies and the filter $Q$ are the main examples. An
-LM13700 OTA~\cite{lm13700} supplies this resistance. Transconductance follows the amplifier
+equalizer corner frequencies and the filter $Q$ are the main examples. here are several ways to implement voltage controlled resistors. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$  For the
+LM13700 OTA~\cite{lm13700}, transconductance follows the amplifier
 bias current:
 %
 \begin{equation}
@@ -266,9 +321,9 @@ therefore needs no exponential converter.
 
 \label{sssec:vcr}
 
-The LM13700~\cite{lm13700} is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor, and the scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. That makes it a general-purpose analog multiplier building block, which is why it turns up as a VCA, voltage-controlled filter, voltage-controlled resistor, or oscillator, and why it became a staple of synthesizer design.
+The LM13700~\cite{lm13700} is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor. The scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. That makes it a general-purpose analog multiplier building block, which is why it turns up as a VCA, voltage-controlled filter, voltage-controlled resistor, or oscillator, and why it became a staple of synthesizer design.
 
-Each of the two channels adds linearizing diodes and a Darlington buffer. The diodes matter because the bare differential pair is linear only over a few tens of millivolts, so most designs either attenuate hard at the input or use the diodes to trade input range against noise. The buffers give you a high-impedance follower to drive the next stage without loading the current output. It runs on anything from about ±2 V to ±18 V, with bias currents up to a couple of milliamps.
+Each of the two channels adds linearizing diodes and a Darlington buffer. The diodes matter because the bare differential pair is linear only over a few tens of millivolts, so most designs either attenuate hard at the input or use the diodes to trade input range against noise. We will do both. The buffers give you a high-impedance follower to drive the next stage without loading the current output.
 
 \subsection{Calibration and Temperature Sensitivity}
 \label{sssec:temperature}
@@ -352,14 +407,14 @@ each. One channel therefore holds ten OTAs, or five LM13700 packages.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{eqspice.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{A single variable state filter configured with voltage-controlled center frequency and Q factor, in LTSpice.}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{eqfreq.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Output frequency response at the band pass output, during a sweep of the frequency control voltage from -14V to +14V with 1V steps. Q is kept constant. Frequency follows the same direction as voltage, so when voltage increases, so does frequency. For the other 3 in other frequency ranges, this circuit may be duplicated and the integration capacitor value changed.}
     \label{fig:my_image}
 \end{figure}
 
@@ -367,7 +422,7 @@ each. One channel therefore holds ten OTAs, or five LM13700 packages.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{eqq.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Output frequency response at the band pass output, during a sweep of the Q control voltage from -14V to +14V with 1V steps. Frequency is kept constant.}
     \label{fig:my_image}
 \end{figure}
 
@@ -530,9 +585,9 @@ potentiometer with a 10\,k$\Omega$ linear track and a touch sense track. The
 fader does two jobs and only two. It reports where the hand put it, and it shows
 where the stored value sits. The audio never reaches the resistive track.
 
-This point deserves emphasis, because it removes a familiar fault. A
+A
 conventional console passes the signal through the fader track, so a worn or
-dirty track produces crackle in the audio. Here the track carries a steady
+dirty track produces crackle in the audio. Here, the track carries a steady
 direct voltage and nothing else. A noisy track produces a noisy reading, and
 software removes that noise before the reading becomes a control voltage. The
 track needs to be readable, not quiet.
@@ -540,7 +595,7 @@ track needs to be readable, not quiet.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{alps.jpg}
-    \caption{This is the caption text that describes your image.}
+    \caption{An Alps 100mm motorized fader, part number RSA0N11M9}
     \label{fig:my_image}
 \end{figure}
 
@@ -753,14 +808,14 @@ second, or one transition every 4\,ms.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{debouncebutton.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{A debounce circuit for push buttons, with debounce time about 15ms. The Schmidt trigger is already present on the MCP23017 input pins, so an additional one does not needed to be added. We would plug node 9 straight into the MCP23017.}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{debounceec11.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{A debounce circuit for the EC11 rotary encoder, with both rotary step debouncing (KNOB\_A and KNOB\_B) and debouncing of the push switch (pressing the knob down, KNOB\_SW). The Schmidt triggers are already present on the MCP23017 input pins, so additional ones do not needed to be added. We would plug nodes 1, 3 and 5 straight into the MCP23017.}
     \label{fig:my_image}
 \end{figure}
 
@@ -802,63 +857,56 @@ load.
 \subsubsection*{Knob Position Indication}
 \label{sssec:led-rings}
  
-An encoder has no end stop and no pointer, so the panel must show the position
-by another means. A ring of 32 LEDs in 0201 packages surrounds each knob and
-covers 270 degrees. A pitch of 2\,mm places the ring on a circle of about
-26\,mm, which clears the body of an EC11. One LED therefore covers about
+These encoders may control different parameters at different times or need to be set to display a different value than before during a state load. To do this, we use knobs with no indicator marking and rotary encoders with no stop point (360 degrees around, forever). A ring of 32 LEDs in small 0201 SMD packages surrounds each knob to display the position Each set set of 32 LEDs covers 270 degrees, which is the standard range of real potentiometers used in audio. One LED therefore covers about
 8.7 degrees, and the ring resolves the travel to one part in 32. The ring gives
-a coarse reading that the eye takes in at a glance. The channel display carries
-the exact value.
+a coarse reading that the eye takes in at a glance. The channel controller carries
+the exact value (and maybe the exact value can be shown on the channel display).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{ledring3d.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{3D Render of the LED ring, for the small 6mm shaft EC11 encoders, with a 7.5mm diameter hole for that shaft.}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{ledringpcb.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{PCB layout. Inner layers are ground plane and VCC=5V plane. The width of these boards is only 24mm!}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{channelwidth.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Aiming for a standard channel strip width of 1.5 inches (38mm), we may stagger the LED boards like this to fit knobs in two columns.}
     \label{fig:my_image}
 \end{figure}
  
 Four 74HCT595 shift registers~\cite{hct595} drive the 32 LEDs of one ring. They sit on a small
-dedicated board behind the panel, with the encoder through the middle. Each
-board carries an input connector and an output connector, and both connectors
-hold the supply, the ground, the shift clock, the latch clock, the output enable,
-and the data. Forty knobs serve four channels, so 160 devices sit in the chain.
-Eight further devices on the main board drive the 64 button lamps of those
-channels. The chain therefore holds 168 devices and 1344 bits.
+dedicated board behind the front panel, with the encoder through the middle. Each
+board carries a connector for power, ground, data/clock in, latch, output enable, and data out (to cascade the bitstream to the next knob's shift registers). There are 10 knobs per channel, so forty knobs serve four channels, so 160 shift registers sit in the chain.
+Eight further devices on the main board drive the 64 button lamps of the four channels controlled by the bucket's controller. The chain therefore holds 168 devices and 1344 bits.
  
-The choice of the HCT family is not incidental. The processor drives 3.3\,V
+The choice of the HCT family is due to the following reason. The processor drives 3.3\,V
 logic, and these devices run from the 5\,V LED rail. An HCT input switches at
-2.0\,V, so it accepts a 3.3\,V signal from a 5\,V part~\cite{hct595}. An HC input would need
-3.5\,V at the same supply and would not work.
+2.0\,V, so it comfortably accepts a 3.3\,V logic signal as high, while running at 5V\,~\cite{hct595}. The regular "HC" variant running at 5V sees logic high only beyond,
+3.5\,V, which would not work with 3.3V logic.
  
  \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{ledringschem.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Schematic for the LED ring breakout boards, showing four 74HCT595 LED driver shift registers (32 total LEDs)}
     \label{fig:my_image}
 \end{figure}
 
  
-The shift clock runs at 480\,kHz, and a full frame therefore takes 2.8\,ms. This
-rate is far below what the devices allow, and the margin is deliberate. The
+The shift clock runs at 480\,kHz, and a full frame of updating all LEDs therefore takes 2.8\,ms. This
+rate is safely far below the maximum speeds the devices can handle. This is because the
 chain crosses the whole control surface and passes every channel strip. A slow
-clock with slow edges radiates far less into the analog path than a fast one,
-for the same reason that Section~\ref{ssec:displays} separates the display bus.
+clock with slow edges radiates far less into the analog path than a fast one.
 The outputs hold their state between frames, so a slow clock costs no
-brightness. It costs only 2.8\,ms of delay before a movement appears.
+brightness. It costs only 2.8\,ms of delay before a movement appears, which is not noticeable to the human eye.
  
 A dedicated 5\,V rail feeds the LEDs. At 2\,mA per LED, a fully lit surface
 draws about 2.7\,A, so the rail carries the load and the 3.3\,V logic supply does
@@ -1081,20 +1129,7 @@ reach its neighbor.
 \end{figure}
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.99\textwidth]{psupcb.png}
-    \caption{This is the caption text that describes your image.}
-    \label{fig:my_image}
-\end{figure}
 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{psu3d.png}
-    \caption{This is the caption text that describes your image.}
-    \label{fig:my_image}
-\end{figure}
 
 
 
@@ -1114,11 +1149,9 @@ reach its neighbor.
 \subsection{PCB and CAD Design}
 
 \newpage
-\section{Budget Proposal}
+\section{Budget Proposal and Expense Enumeration}
 
-\subsection{Component Selection}
-
-\subsection{Component Sources}
+\subsection{Component Selection and Sourcing}
 
 \subsection{PCB and CAD Services}
 
@@ -1139,8 +1172,8 @@ reach its neighbor.
 \newpage
 \section{References}
 
-% The bibliography below supplies its own heading, which is suppressed inside
-% this group so that the numbered "References" section above is used instead.
+%%%%%%%%%%%%%%
+
 \begingroup
 \let\oldsection\section
 \renewcommand{\section}[2]{}
