@@ -97,40 +97,159 @@
 \section{Abstract}
 
 \newpage
+
+
 \section{Introduction}
+\label{sec:intro}
 
-\subsection{Motivation and Applications in Other Fields}
+A mixing console routes, shapes, and balances many audio signals at once, before summing each processed signal together into a full mixed, recorded performance of a song. Two kinds of audio mixing console serve this job today, and each one gives up something that the other holds.
+
+An analog console carries the audio as a continuous voltage from the input to
+the output. Many audio engineers prefer the result of analog hardware and insist, even today, to use it despite its expense and many drawbacks. These drawbacks include the issue of recall of settings. An analog console cannot store a
+setting to load later, since all the knobs and faders control physical potentiometers that have physical resistances that the audio signal passes through. To set a parameter (a resistance) for a different configuration or song, one must physically rotate the knobs by hand to physically recall the state. To reconfigure an entire console (often with 64+ channels, each with several tens of knobs), can take hours. The state of a session lives in the position of every knob and every fader on the surface. An audio engineer who needs that state again writes it (or often their assistant writes it) on a paper recall sheet and rebuilds it by hand. The rebuild is slow, and it is never exact.
+
+Conversely, a digital console converts the audio to discrete samples at the input and back to a continuous
+voltage at the output. All the processing is done digitally with digital signal processing (DSP). The digital console stores and recalls every parameter without error, but the
+audio only reaches those settings and that memory after passing through converters and arithmetic. No matter if DSP really "sounds" worse than analog processing or not, the analog music equipment market is massive.
+
+We propose a mixing console that takes a third path. The audio stays analog through the whole console signal chain. Only the control values become digital, and using deep integration between digital and analog systems, we may configure the console's analog signal path instantly and exactly, eliminating the need for manual recall.
+
+\subsubsection*{What the Console Does}
+
+In traditional mixing consoles, the potentiometers do two jobs at once, and these jobs are inseparable. They provide a physical control and indication of position, and they provide a variable resistance related to that position. If we separate the potentiometer into a rotary encoder, which provides the physical control and indication, but no resistance, and a voltage controlled resistor of some sort, which provides the variable resistance without moving parts, we can eliminate the problem of having to physically match the state on real resistor strips for recall.
 
 
-\newpage
-\section{System Explanation}
+In our console, every parameter that an engineer would normally set with a potentiometer becomes a number in the memory of a control processor. That number is set by a rotary encoder, and that number reaches the analog
+circuit as a control voltage, and the circuit responds as if a hand had moved a
+knob.
 
-\subsection{Fundamental Design and Vision}
+Crucially, the controller itself can also change all of the control voltages independently of the physical positions of any knobs, instantly reconfiguring hundreds of parameters from a saved state with no moving parts. Additionally, an arbitrary number of controls may be automated to change values throughout a song, and arbitrarily many parameters may be changed at once in real time for live applications (unlike a physical potentiometer, where an audio engineer only has two hands).
 
+An audio console is simply made up of many individual channels of identical signal processors. Each channel processes each part/layer of audio within of the song, such as the snare drum, the bass guitar, the lead vocal, etc. and each layer of audio needs different processing to fit in the full "picture" of the full recorded performance. Audio consoles simply combine many of these channels together, add some useful routing options, and sum the processed outputs of each channel together at the end. We aim to create a console with a modest 16 channels, using one STM32 microcontroller for every group of 4 channels. The actual remote control of parameters and analog processing of audio happens within those channels, and each channel identically requires the following features.
+
+Every channel carries its own microphone preamplifier or a line receiver, its own four band
+equalizer, a dynamic range compressor, routing options for auxiliary sends, a pan control, and a fader / main volume control. For our design, we plan for voltage
+controlled amplifiers (VCAs) to set every gain in that chain. Operational transconductance
+amplifiers (OTAs) will supply every variable resistance, which are needed to control the corner frequencies
+and the Q (quality/BW) factor of each band in the equalizer. Analog multiplexers select the band shapes, the
+bypass paths, and other routing options. Section 4
+describes each of these circuits in turn.
+
+The control surface reports the state that the memory holds. Each channel
+carries ten rotary encoders with rings of LEDs around each encoder to show their "position" in a way that can be changed remotely without movement. Each channel also will have sixteen buttons with lamps, a small
+display, and a motorized fader with a touch sensor. None of these controls
+touch the audio. An encoder produces a number and nothing else, so the same
+encoder can serve the equalizer, the compressor, or the sends as the engineer
+selects. One physical control therefore covers several parameters, and the panel
+holds far fewer controls than the channel has settings, which reduces the cost, complexity, and size as compared to a fully analog console. Additionally all the rotary encoders may be the same across the entire system, whereas using potentiometers in a fully analog audio path usually requires a large variety of hard-to-source potentiometers with different values and exotic taper curves.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.99\textwidth]{fullui.png}
-    \caption{This is the caption text that describes your image.}
-    \label{fig:my_image}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{fxsection.png}
-    \caption{This is the caption text that describes your image.}
+    \caption{Mockup of the front panel of a 16 channel console under this vision.}
     \label{fig:my_image}
 \end{figure}
 
 
 
 
-\subsection{Analog System Overview}
+\subsubsection*{Greatest Challenges}
+
+Moving the control plane into a processor is not the hard part. Keeping the
+audio clean while that processor sits centimeters away, along with the depth and number of points of the analog/digital integration, is the hard part. Three
+problems decide whether the approach works.
+
+The first problem is linearity. A fixed resistor and a good operational
+amplifier, as used in traditional consoles, are close to ideal. A voltage controlled element is not. Every gain stage and every filter in the channel therefore could add
+distortion that a passive component would not add. The
+differential pair inside an operational transconductance amplifier stays linear
+only across a few tens of millivolts, so the design attenuates the signal before
+it reaches that input and takes advantage of linearizing distortion, which predistorts the signal in a way such that the OTAs nonlinearities will undo this distortion.
+
+The second problem is noise, of which the digital control circuitry
+supplies the largest source. A digital console can place its processor far from
+any analog circuit, and the digital audio is impervious to external interference. This console does not have this luxury. Converters, port expanders, shift
+registers, motor drivers, and switching supplies all sit near the signal path.
+Noise on a control port also does more damage than noise on a signal wire,
+because a voltage controlled amplifier multiplies that noise into the audio. One
+millivolt on a control port for the filter circuitry produces sidebands only 55\,dB below the signal.
+
+The third problem is recall accuracy. For the most part, the console runs open loop. No sensor
+measures the true gain of a channel, and no controller corrects it. This is in order to allow the audio engineer to change anything in realtime, whenever they want. We may add a short startup sequence that calibrates some things, but for normal operation, there is nothing on the output side to ensure nothing drifts. The
+transconductance of an operational transconductance amplifier and the gain
+constant of a voltage controlled amplifier both scale with absolute temperature.
+A stored number therefore does not produce the same result on a cold morning
+that it produced during the session it came from.
+Section~\ref{sssec:temperature} discusses this topic in more detail.
+
+\subsubsection*{Goal}
+
+The goal of this project is first and foremost a demonstration. We aim to show
+that our audio console can hold every parameter in memory, recall it and reconfigure a fully analog signal path on command, and
+still meet the audio performance that engineers expect from a conventional
+analog desk. Digital control must cost nothing that even an experienced audio engineer can hear.
+
+Additionally, a second and more movable goal is to build these concepts into a somewhat polished, nearly release-ready "demonstration product." Since much of the challenges with noise and linearity can only solved by designing our own PCBs, and since some of the digital systems will be too fast to rely on breadboards, due to their intrinsic parasitic capacitance and inductance, we will have to design PCBs and use hobbyist/prototype manufacturing services such as JLCPCB. If we just make a nice enclosure, making a "proto-product" kind of thing is not much of a step past demonstration.
+
+However, for the first (and main goal of demonstration), success is a measurement and not an opinion. We will report total harmonic
+distortion, the noise floor, the crosstalk between channels, and the
+repeatability of a recall across a range of temperature. We will compare these values to existing, fully analog tradition, processors. A design that recalls the settings
+perfectly but adds audible distortion or hiss has failed the claim that matters.
+
+\subsection{Applications in Other Fields}
+\label{ssec:other-fields}
+
+The split between an analog signal plane and a digital control plane is neither
+new nor unique to audio. Numerous industries run a physical processes that produce and handle highly sensitive analog signals in their native
+domain and command those processes from a computer. They meet the same problems
+that this console meets, so their answers inform its design.
+
+Electric power gives the clearest case, because nobody can digitize the signal.
+A substation handles hundreds of megawatts, and if a converter could sample that power
+and rebuild it, what would power the output buffer?! So the power path stays analog by necessity. Every improvement
+must therefore come from the control plane, and the IEC 61850 standard carries
+settings, measurements, and commands across that plane.
+
+The devices in a substation divide the same way the channel strip on an audio console divides. The
+on-load tap changer of a transformer moves in discrete steps, much like the
+switched resistor network inside the PGA2500 digitally controlled microphone preamplifier we will use.
+A static VAR compensator varies its output in a continuous way through a
+thyristor firing angle, much like a voltage controlled amplifier follows a
+control voltage. Recall appears in the same form as well. A protective relay
+holds several groups of settings, and an operator selects a different group when
+the network configuration changes. One command therefore moves many parameters
+to a known state, which is exactly what a snapshot does on a console.
+
+A power system also adds one rule that this design needs. An interlock checks
+the preconditions before a command executes, because the wrong order of
+operations can damage infrastructure. The recall sequence of Section~\ref{sssec:recall}
+follows the same logic when it mutes a channel before it writes new values, to avoid clicks and pops on the output, which when amplified could (and have, many times) destroy the speaker drivers in highly accurate studio monitors with extremely fast transient responses.
+
+Two further fields each contribute a method. A chemical plant stores its
+settings as recipes and recalls them at the start of a production run, which is
+a snapshot under a different name. Process control also names the transition
+itself. A bumpless transfer moves an output to a new setpoint without a step at
+the process, and the mute and ramp of a console recall performs the same work.
+A phased array radar holds thousands of antenna elements, and no two of them
+match. Every element therefore carries a calibration table against frequency and
+against temperature. Section~\ref{sssec:temperature} applies that same method to
+each channel of this console, and for the same reason.
+
+
+
+
+\newpage
+\section{System Overview}
+
+
+
+
+\subsection{Analog Systems}
 
 \subsubsection*{Remote Controlled Analog Systems}
 To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency. The implementation details of these voltage controlled amplifiers and voltage controlled resistors are covered in Sections 4.1 and 4.2, respectively.
 
-In short, voltage controlled amplification will be implemented using voltage controlled amplifiers (VCAs), specifically the SSI2164 for most signals, and the PGA2500 digitally controlled microphone preamplifier (on an SPI control bus rather than using an analog control voltage) for the microphone inputs. Any switching or reconfiguration of channel paths will be implemented by the ADG1404 CMOS analog multiplexer. Voltage controlled resistors will be implemented using the LM13700 operational transconductance amplifier (OTA).
+In short, voltage controlled amplification will be implemented using voltage controlled amplifiers (VCAs), specifically the SSI2164 for most signals, and the PGA2500 digitally controlled microphone preamplifier (on an SPI control bus rather than using an analog control voltage) for the microphone inputs. Any switching or reconfiguration of channel paths will be implemented by the DG409 CMOS analog multiplexer. Voltage controlled resistors will be implemented using the LM13700 operational transconductance amplifier (OTA).
 
 For these components, temperature often changes their behavior, and parameters may differ between units. Details on calibration and temperature compensation schemes are outlined in Section 4.3. Using these components, a voltage controlled parametric equalizer (Section 4.4) may be implemented.
 
@@ -152,7 +271,7 @@ The output of each of the individual audio channels will feed a summing bus, fro
 
 
 
-\subsection{STM32 Microcontroller and Digital Overview}
+\subsection{Digital Systems}
 
 \subsubsection*{STM32G474}
 For this project, the STM32 microcontroller was chosen. Specifically, we chose the ARM based STM32G474 variety, for its expansive I/O, deep analog integration with onboard DACs and ADCs, and its ability for standard-speed USB. We plan to run the CPU clock at its maximum speed of 170MHz. This will be more than enough processing power for our requirements. Additionally, our team already has a few Nucleo 64 development boards of this exact chip, allowing those to be excluded from the budget.
@@ -196,6 +315,8 @@ Finally, the third SPI bus will be reserved for a potential SPI flash chip, if t
 
 10 pins are configured as pulse width modulation (PWM) outputs. 8 of these are for the fader motor H-bridge control (two for each motor, see Section 4.6). The other two pins are to change the brightness of the LCD backlights and of all the LEDs on the bucket of channels, through PWM on every LED driver shift register's output enable pin (See Section 4.8). To keep potential audible noise out of the audio, all PWM signals will run at 24KHz or more, beyond human hearing.
 
+Additionally (not shown in Figures 4/5) we plan, if needed, to have a small temperature sensor IC for every bucket of channels, in order to reverse any performance drifts due to temperature. See Section 4.3 for more details.
+
 \subsubsection*{RTOS}
 Due to the anticipated complexity of the firmware, especially with its multiple busses running at different speeds and interrupts from various chips, a real-time operating system (RTOS) will be used to help schedule and organize parts of the firmware with various priority levels. This way, we can move away from the regular design of a huge, very complex single main loop which checks everything. We just will need to write individual programs or "tasks" and give them a priority level. We plan to use FreeRTOS, which is a simple, open source RTOS that provides CPU scheduling. Being simpler than many other RTOS options, it does not provide memory management or built-in peripheral drivers, which would only complicate things, since we do not anticipate needing these. If we do need these things, we will switch to a more complex RTOS like Zephyr.
  
@@ -215,13 +336,13 @@ This section contains descriptions and technical explanations of each system, in
 
 
 
-To implement the variable gain, voltage controlled amplifiers (VCAs) will be used, which have a gain factor related to a control voltage. The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line level inputs, an INA2137~\cite{ina2137} line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A SSI2164~\cite{ssi2164} VCA will be used to vary the gain with remote control. For a microphone input, a PGA2500~\cite{pga2500} digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain. The PGA2500 does not need a control voltage, and thus does not need another control voltage DAC channel. Instead, the gain is digitally controlled through a control word send on a serial bus.
+To implement the variable gain, voltage controlled amplifiers (VCAs) will be used, which have a gain factor related to a control voltage. The first place that gain must be remotely controlled is in the input section, which takes in either a balanced line level (preamplified) signal, or a balanced quiet microphone signal. For line level inputs, an INA2137~\cite{ina2137} line input receiver with fixed unity gain will impedance balance and convert the double ended signal into a single ended signal for processing. A SSI2164~\cite{ssi2164} VCA will be used to vary the gain with remote control. For a microphone input, a PGA2500~\cite{pga2500} digitally controlled microphone preamplifier will be used on an SPI bus to allow control of the microphone gain. The PGA2500 does not need a control voltage, and thus does not need another control voltage DAC channel. Instead, the gain is digitally controlled through a control word sent on a serial bus.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.2\textwidth]{inputsection.png}
-    \caption{Input section controls, at the top of each channel strip. Input knob controls gain applied by the VCA. The switches at the top select the source type. (MIC switches the input to pass through the PGA2500 preamplifier, and HI-Z switches in a resistor to increase the input impedance to accept direct input instrument signals from things like electric guitar coil pickups. The buttons on the bottom control the +48V phantom power for condenser microphones, phase polarity invert, and high pass filter, respectively. These functions are for the mic preamp only and are built into the PGA2500.}
+    \includegraphics[width=0.12\textwidth]{inputsection.png}
+    \caption{Input section controls, at the top of each channel strip. Input knob controls gain applied by the VCA. The switches at the top select the source type. (MIC switches the input to pass through the PGA2500 preamplifier, and HI-Z switches in a resistor to increase the input impedance to accept direct input instrument signals from things like electric guitar coil pickups. The buttons on the bottom control the +48V phantom power for condenser microphones, phase polarity invert, and high pass filter, respectively. These functions are easy to implement with the PGA2500, but they are luxuries and will only be added if we have time.}
     \label{fig:my_image}
 \end{figure}
 
@@ -232,14 +353,14 @@ The second place gain will need control is on the auxiliary send section, where 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.2\textwidth]{fader.png}
+    \includegraphics[width=0.12\textwidth]{fader.png}
     \caption{Output section controls, at the bottom of each channel strip. The LED strip is a simple VU meter bar display implemented with a LM3916. The channel fader is shown (See Section 4.6), and the stereo pan(orama) balance control. SOLO mutes all other channels, MUTE mutes this channel, SEL selects the channel for functions like channel grouping or group parameter changes. INS switches the channel effects insert loop, which sends the audio out, to some external processor, and recieves it back as a line-level signal. PRE sets the source point for this effects loop to be before the application of the fader and pan VCA gain. (PREfader)}
     \label{fig:my_image}
 \end{figure}
 
 \subsubsection*{Component: PGA2500}
 
-The PGA2500 digitally controlled microphone preamplifier~\cite{pga2500} accepts its gain setting as a number, so it needs no control DAC. A
+The PGA2500 digitally controlled microphone preamplifier~\cite{pga2500} accepts its gain setting as a number, so it needs no control voltage DAC. A
 16-bit control word travels over a serial port using the SPI protocol. The gain range runs from
 10\,dB to 65\,dB in 1\,dB steps, with a separate unity gain setting. Several
 devices may share one port in a daisy chain, which keeps the wiring count low across a
@@ -265,31 +386,16 @@ control law is exponential:
 \end{equation}
 %
 where $G$ is the gain in decibels. A control span of $-660$\,mV to $+3.3$\,V
-therefore covers the full range of $+20$\,dB to $-100$\,dB.
+therefore covers the full range of $+20$\,dB to $-100$\,dB. We can just cap the lowest control voltage to 0V, so we do not need CV amplifiers. We will still need a buffer.
 
-Equation~\eqref{eq:vca-law} gives a useful property for recall. One control DAC
-step always moves the gain by the same number of decibels. A 12-bit control DAC
-across a 4.096\,V span gives a 1\,mV step, or 0.03\,dB. This resolution holds
-at the top of the fader and at 90\,dB of attenuation.
 
 Noise on the control port becomes gain modulation, so the control path needs
-care. Noise of 1\,mV RMS produces sidebands about 55\,dB below the signal. A
-target of 10\,$\mu$V RMS in the audio band moves those sidebands below
-$-95$\,dBc. The control DAC, its voltage reference, and its output buffer must
-all meet this target.
-
-Each control DAC step also makes a step in gain. A first-order RC filter on
-each control line removes the glitch energy from the step. The corner frequency
-cannot go very low, because the fader must still respond fast. We set the
-corner near 100\,Hz and update the control DAC at 1\,kHz. The control processor
-interpolates fader moves, so the hardware receives many small steps instead of
-one large step. The control voltage settles within about 15\,ms after the last
-update.
+care. Noise of 1\,mV RMS produces sidebands about 55\,dB below the signal. Our DACs have a nominal noise voltage of $290\mu$V peak-to-peak~\cite{mcp4728} so as long as we are careful to not add much more noise, it will not be an issue. See Section 4.9 for more information on the control voltage converters.
 
 \subsection{Voltage Controlled Resistors}
 
 Parts of the channel need a variable resistance and not a variable gain. The
-equalizer corner frequencies and the filter $Q$ are the main examples. here are several ways to implement voltage controlled resistors. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$  For the
+equalizer corner frequencies and the filter $Q$ are the main examples. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$  For the
 LM13700 OTA~\cite{lm13700}, transconductance follows the amplifier
 bias current:
 %
@@ -303,27 +409,64 @@ bias current:
 where $V_T = kT/q$ is the thermal voltage. A bias current from 1\,$\mu$A to
 500\,$\mu$A gives a resistance from about 51\,k$\Omega$ down to about
 100\,$\Omega$. Three decades of range cover a wide sweep of one corner
-frequency.
+frequency. To achieve that though, we will have to amplify the control voltages, mapping their small 0-3.3V range to something near $+/-15V$. The VCAs do not need this amplification.
 
-The OTA stays linear only for small differential input voltages. A resistive
-divider holds the signal at the OTA input below about 20\,mV peak. The
-linearizing diodes extend this limit. Both methods cost signal-to-noise ratio,
-so the divider ratio sets the noise floor of the equalizer stage.
-
-An op-amp voltage-to-current converter derives $I_\mathrm{ABC}$ from the
-control DAC. This keeps the bias current independent of the supply rail.
+A standard, real resistor will convert this buffered and amplified voltage into the biasing control current.
 Transconductance follows bias current in a linear way, so corner frequency also
 follows the control DAC code in a linear way. A lookup table in the control
 processor maps a target frequency to the correct code. The analog circuit
 therefore needs no exponential converter.
 
+The OTA stays linear only for small differential input voltages. In most existing designs, a resistive voltage
+divider holds the signal at the OTA input below about 20\,mV peak. The
+linearizing diodes extend this limit. We will do both.
+
+
+
 \subsubsection*{Component: LM13700}
 
 \label{sssec:vcr}
 
-The LM13700~\cite{lm13700} is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor. The scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. That makes it a general-purpose analog multiplier building block, which is why it turns up as a VCA, voltage-controlled filter, voltage-controlled resistor, or oscillator, and why it became a staple of synthesizer design.
+The LM13700~\cite{lm13700} is a dual operational transconductance amplifier, manufactured originally by National Semiconductor, and now TI. Unlike an op-amp (which is a voltage controlled voltage source), OTAs produce an output CURRENT proportional to the differential input voltage, just like a resistor. The scaling factor (the effective resistor value) is set by an external amplifier bias current: $gm = I_ABC / 2V_T$, or roughly 19 mS per mA of bias at room temperature. OTAs have been widely used in music circuits, most commonly in synthesizers, in voltage controlled filters.
 
-Each of the two channels adds linearizing diodes and a Darlington buffer. The diodes matter because the bare differential pair is linear only over a few tens of millivolts, so most designs either attenuate hard at the input or use the diodes to trade input range against noise. We will do both. The buffers give you a high-impedance follower to drive the next stage without loading the current output.
+Each of the two channels adds linearizing diodes and a Darlington buffer. The Darlington buffer helps drive loads at the output without loading the real output of the OTA which can affect its performance. The
+diodes take advantage of linearizing distortion, which predistorts the signal in a way such that the OTAs nonlinearities will undo this distortion.
+
+The bare differential pair inside the OTA follows a hyperbolic tangent:
+%
+\begin{equation}
+    I_\mathrm{out} = I_\mathrm{ABC} \tanh\!\left( \frac{V_\mathrm{in}}{2 V_T} \right) .
+    \label{eq:ota-tanh}
+\end{equation}
+%
+This curve stays linear only near the origin, which is why the bare part needs a
+small input signal. The linearizing diodes place the inverse of that curve in
+front of it. Two diode-connected transistors split a bias current $I_D$ around
+the signal current $I_s$, so the voltage across the pair follows a logarithm:
+%
+\begin{equation}
+    \frac{V_D}{2 V_T}
+    = \frac{1}{2} \ln\!\left( \frac{I_D/2 + I_s}{I_D/2 - I_s} \right)
+    = \operatorname{artanh}\!\left( \frac{2 I_s}{I_D} \right) .
+    \label{eq:ota-diode}
+\end{equation}
+%
+The differential pair then applies $\tanh$ to this result, and the two functions
+cancel exactly:
+%
+\begin{equation}
+    I_\mathrm{out} = \frac{2 I_\mathrm{ABC} I_s}{I_D} .
+    \label{eq:ota-linear}
+\end{equation}
+%
+The output is therefore linear in $I_s$, and the thermal voltage cancels with
+the curvature. Both functions come from the same junction physics on one die, so
+the cancellation holds across temperature. The signal current must stay below
+$I_D/2$, because one diode starves at that limit and the logarithm fails.
+
+
+
+
 
 \subsection{Calibration and Temperature Sensitivity}
 \label{sssec:temperature}
@@ -331,6 +474,8 @@ Each of the two channels adds linearizing diodes and a Darlington buffer. The di
 The gain constant in Equation~\eqref{eq:vca-law} and the thermal voltage in
 Equation~\eqref{eq:ota-gm} both scale with absolute temperature. This is the
 largest threat to recall accuracy in the channel.
+
+If we use the linearizing diodes provided for each OTA on the LM13700 chip (mentioned just above), we can greatly reduce the temperature dependency of the OTAs (Equation (2)), leaving the SSI2164 VCAs as the main problem.
 
 The gain constant of the SSI2164 rises with absolute temperature. A rise of
 30\,$^\circ$C moves the constant from about 33\,mV/dB to about 36\,mV/dB. A
@@ -340,18 +485,11 @@ thermal voltage $V_T$ drifts in the same manner. The equivalent resistance
 rises by about 0.33\,\% per $^\circ$C, and any corner frequency set by that
 resistance falls by the same fraction.
 
-We correct this drift in two places. A resistor with a $+3300$\,ppm/$^\circ$C
-coefficient scales the control voltage at each SSI2164 control port. The
-control processor also reads a temperature sensor on each module and trims the
-control DAC codes. The sensor correction handles the residual error and the
+We correct this drift in the following way. A resistor with a $+3300$\,ppm/$^\circ$C
+coefficient scales the control voltage at each SSI2164 control port. If needed, we will also add a temperature sensor to the board. The
+control processor would read it and and trim the
+control DAC codes to account for the different temperature. This sensor correction could handle the residual error and the
 slow drift of the voltage reference.
-
-Device tolerance also limits recall accuracy. Each module receives a
-calibration table at the end of manufacture. The test system measures gain
-against control DAC code at several points. It stores the corrections in
-nonvolatile memory on the module. The control processor reads this table at
-power-up and applies it to every recall. The table travels with the module, so
-a board swap does not change the calibration. This recall accuracy however, is still likely to be more precise than the manual recall of physically turning potentiometers to the positions indicated on a recall sheet.
 
 
 
@@ -376,14 +514,16 @@ Reconfiguring the console's state follows a fixed order. This order prevents tra
 \subsubsection*{State Variable Filter Core}
 \label{sssec:svf}
 
-Each band uses a state variable filter. The topology is a loop of one summing
+Each band uses a state variable filter. The topology of a state variable filter is a loop of one summing
 amplifier and two integrators. The output of the second integrator returns to
-the summing input. Three responses appear at once in this loop. The summing node
-gives a high-pass response, the first integrator gives a band-pass response, and
-the second gives a low-pass response. One filter therefore supplies every shape
-the band needs, and a switch selects between them.
+the summing input. Three useful outputs appear at different points in this loop. The summing amplifier's output
+gives a high-pass response, the first integrator's output gives a band-pass response, and
+the second integrator's output gives a low-pass response. One filter therefore supplies every shape
+the band needs, and a switch (DG409) selects between them.
 
-An OTA and a capacitor form each integrator. Equation~\eqref{eq:ota-gm} of
+To build a four band equalizer, the signal is sent in parallel through four state variable filters. The output from each filter, set by the audio engineer to the desired frequency, band type, and bandwidth, is summed using a configurable gain factor and placement in the circuit to switch between cut and boost, with the raw input signal. Leaving all bands' gains at 0 will not affect the input signal, no matter their frequency or Q setting.
+
+Traditionally, a resistor and a capacitor form each integrator. However, to implement voltage controlled center frequency, we replace the resistor with an OTA, keeping the capacitor constant and hardwired. Equation~\eqref{eq:ota-gm} of
 Section~\ref{sssec:vcr} gives the transconductance, so the corner frequency
 follows the bias current:
 %
@@ -392,17 +532,8 @@ follows the bias current:
     \label{eq:svf-freq}
 \end{equation}
 %
-One control voltage drives both integrators of a band through one
-voltage-to-current converter. The two halves of an LM13700 share a die and a
-bias current, so they track each other. A temperature change moves both corner
-frequencies together, as Section~\ref{sssec:temperature} describes. The shape of
-the response survives, and only its position on the frequency axis moves.
-
-A third path sets Q. The band-pass output returns to the summing node through a
-damping coefficient, and Q is the reciprocal of that coefficient. A third OTA in
-this path therefore makes Q variable. The two bell bands need this OTA. The
-shelf bands hold a constant Q and use a fixed resistor, so they need two OTAs
-each. One channel therefore holds ten OTAs, or five LM13700 packages.
+Both integrators must have an identical resistance, so there will be two OTAs for frequency, but both will be controlled by one control voltage / current. A third path and OTA sets the bandwidth, or quality factor, Q. The band-pass output returns to the summing node through a
+damping coefficient, and Q is the reciprocal of that coefficient. The third OTA  therefore makes Q variable.
 
 \begin{figure}[H]
     \centering
@@ -413,7 +544,7 @@ each. One channel therefore holds ten OTAs, or five LM13700 packages.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{eqfreq.png}
+    \includegraphics[width=0.45\textwidth]{eqfreq.png}
     \caption{Output frequency response at the band pass output, during a sweep of the frequency control voltage from -14V to +14V with 1V steps. Q is kept constant. Frequency follows the same direction as voltage, so when voltage increases, so does frequency. For the other 3 in other frequency ranges, this circuit may be duplicated and the integration capacitor value changed.}
     \label{fig:my_image}
 \end{figure}
@@ -421,7 +552,7 @@ each. One channel therefore holds ten OTAs, or five LM13700 packages.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{eqq.png}
+    \includegraphics[width=0.45\textwidth]{eqq.png}
     \caption{Output frequency response at the band pass output, during a sweep of the Q control voltage from -14V to +14V with 1V steps. Frequency is kept constant.}
     \label{fig:my_image}
 \end{figure}
@@ -432,24 +563,21 @@ each. One channel therefore holds ten OTAs, or five LM13700 packages.
 \label{sssec:eq-bands}
 
 The two middle bands are bells with variable frequency, Q, and gain. They take
-the band-pass output. The top and bottom bands are shelves with variable
+the band-pass output only, with no option to switch to shelves. The top and bottom bands are shelves that may be switched to bells, with variable
 frequency and gain and a constant Q. A shelf comes from the low-pass or the
-high-pass output summed with the direct signal.
-
-An ADG1404~\cite{adg1404} selects which filter output reaches the gain stage. This part is a
+high-pass output of the filter circuit summed with the direct signal. An DG409~\cite{DG409} CMOS signal multiplexer selects which filter output reaches the gain stage for the top and bottom band. This part is a dual
 4-to-1 multiplexer with a low on-resistance, so one device covers every mode of
-one band. The low band selects its low-pass output for a shelf or its band-pass
-output for a bell. The high band does the same with its high-pass output. A
-fourth input holds the band flat. Further ADG1404 devices bypass the whole
+two bands. The low band selects its low-pass output for a shelf or its band-pass
+output for a bell. The high band does the same with its high-pass output. Further DG408 devices bypass the whole
 equalizer and reorder it against the compressor.
 
 \subsubsection*{Boost and Cut}
 \label{sssec:eq-gain}
 
 Gain is the one parameter that a single OTA cannot supply well, because boost
-and cut need opposite signs and a reciprocal shape. The design uses one SSI2164
+and cut of frequency bands on an equalizer need opposite signs and a reciprocal shape. The design uses one SSI2164
 VCA channel per band, so one package serves all four bands. The VCA sets the
-magnitude of the filter contribution. Write $B(s)$ for the selected filter
+magnitude of the filter contribution. In the frequency domain, using $B(s)$ for the selected filter's
 output and $K$ for the VCA gain:
 %
 \begin{equation}
@@ -465,9 +593,7 @@ for a boost, and inside the feedback path of the summing amplifier for a cut.
 
 The switch never clicks, because of where it operates. The two forms meet at
 $K = 0$, which is the flat setting. The control processor drives the VCA to full
-attenuation before it moves the switch, and the SSI2164 reaches $-100$\,dB. The
-filter therefore contributes nothing at the instant of the change.
-
+attenuation before it moves the switch. 
 The VCA follows an exponential law, and a boost in decibels needs a linear value
 of $K$. A lookup table in the control processor performs this conversion. The
 analog circuit needs no linearizing network, which is a direct benefit of
@@ -476,8 +602,8 @@ digital control.
 \subsubsection*{Control Voltage Budget}
 \label{sssec:eq-cv}
 
-Each bell band takes three control voltages for frequency, Q, and gain. Each
-shelf band takes two, because its Q is fixed. The equalizer therefore uses ten
+Each (middle two) bell band takes three control voltages for frequency, Q, and gain. Each (outer two)
+shelf band take two, because their Q will be fixed. The equalizer therefore uses ten
 of the twenty control voltages that Section~\ref{ssec:cv-dacs} provides for a
 channel. The remaining ten serve the fader, the pan control, the compressor, and
 the sends.
@@ -485,9 +611,9 @@ the sends.
 \subsubsection*{Control Surface}
 \label{sssec:eq-surface}
 
-The panel holds four frequency encoders and four gain encoders. A pot in a
+The panel holds four frequency encoders and four gain encoders. A potentiometer in a
 conventional console sits in the signal path, so each parameter needs its own
-pot. Here an encoder produces a number and touches no audio. The same encoder
+potentiometer. Here, an encoder produces a number and touches no audio. The same encoder
 can therefore serve several parameters, and the panel carries far fewer controls
 than the channel has parameters.
 
@@ -502,23 +628,32 @@ sends. Later sections describe those two processors. The encoder rings and the
 channel display redraw on every change of layer, so the panel always reports the
 parameters that the encoders now hold.
 
-Four gestures complete the section. A single press of a radio button selects a
-layer. A double tap bypasses that processor and a second double tap restores it.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fxsection.png}
+    \caption{Since we have separated the control from the parameter being controlled, one encoder can be used for multiple functions. The audio engineer may select which part of the channel processing they are controlling with the "digital radio buttons" at the top.}
+    \label{fig:my_image}
+\end{figure}
+
+A single press of a radio button selects which effect is being controlled. We also plan to add three additional control options using the existing buttons, improving flexibility and ergonomics. A double tap bypasses that processor and a second double tap restores it.
 A held press resets the parameters of that processor. A held press of the
 equalizer button and the compressor button together for three seconds exchanges
 the order of the two processors in the chain. The control processor mutes the
-channel across this last change, because it rearranges the analog path.
+channel across this last change, to prevent clicks, because it rearranges the analog path.
 
 
 \subsection{Dynamic Range Compressor}
 \label{ssec:compressor}
 
+A compressor reduces the dynamic range of a signal: once the input rises above a set threshold, the compressor turns the gain down, so loud passages are pulled closer to quiet ones. Engineers use compressors to keep a vocal or bass sitting at a more constant volume in a mix rather than jumping forward and disappearing, and because the whole signal can be turned up to make a track sound louder and more consistent without clipping on previously loud parts, after compression is applied.
+
 The compressor splits along the same line as the rest of the console. The
 detector is digital and the audio path is analog. Four high-speed
-analog-to-digital converters sit on a spare SPI bus, one for each channel, and
-they report the signal to the control processor. The processor computes the
+analog-to-digital converters sit on either the third SPI bus (See Section 3.2), or some pins will be rearranged and the onboard ADCs used. There will be one ADC for each channel, and
+they report the signal to the control processor. This is the only time we will ever read the audio signal in digitally, but it is not for digital processing. The digitized signal will never be converted back; it is just to generate a control voltage envelope. From this audio signal, the processor computes the
 gain reduction from the threshold, the ratio, the attack, the release, and the
-makeup gain. It then drives one SSI2164 channel, and that VCA does the work on
+makeup gain settings. It then drives one SSI2164 channel, and that VCA does the work on
 the audio.
 
 This arrangement costs little. The converters never touch the audio path, so
@@ -563,7 +698,7 @@ measurement circuit to draw it.
 \subsubsection*{De-esser Mode}
 \label{sssec:comp-deess}
 
-A switched crossover turns the compressor into a de-esser. An ADG1404 routes the
+A switched crossover turns the compressor into a de-esser. A DG409 routes the
 audio through a first-order high-pass and low-pass pair with a corner near
 5\,kHz. The VCA then acts on the high band alone, and the two bands rejoin at a
 summing amplifier. A first-order pair sums back to a flat magnitude response, so
@@ -645,42 +780,21 @@ The PWM runs at 25\,kHz. This frequency is above the audio band, moving any moto
 A TTP223-BA6~\cite{ttp223} capacitive sensor watches the touch track of each fader. Its output
 reaches one input pin on the processor, so four pins serve the four faders.
 
-The sensor reports whether a hand is on the fader by repeatedly charging the metal fader cap and reporting capacitance via charge time. A human has additional capacitance, so when the user touches the fader, their capacitance is added to the detected amount, and the charge time increases. This way, accidental bumps will not move the faders. A
-knocked fader or a resting cable moves the fader, but without activating the sensor. Without the sensor, that movement would overwrite the stored value. With
-the sensor, the loop treats the movement as an error, drives the fader back, and
+The sensor reports whether a hand is on the fader by repeatedly charging the metal fader cap and reporting capacitance via charge time. A human has additional capacitance, so when the user touches the fader, their capacitance is added to the detected amount, and the charge time increases. This way, a
+knocked fader or a resting cable moves the fader, but without activating the sensor. Without the TTP223, that movement would overwrite the stored value. With
+the sensor, the loop treats the movement as an error, since no finger was detected, drives the fader back, and
 leaves the stored value alone.
 
 \subsubsection*{Position Loop}
 \label{sssec:fader-loop}
 
-The loop runs at 1\,kHz on the processor. It needs no traffic on the
-I\textsuperscript{2}C bus, because the converter and the timers sit on the same
-chip.
+The fader position sensing loop runs at 1\,kHz on the processor. It needs no traffic on the
+I\textsuperscript{2}C bus, because the converter and the timers are onboard the STM32 chip. The loop watches the fader's position as it
+drives and actively corrects the position in a feedback loop. \textit{The fader position is updated by the value in memory}. An error in the position of the fader in this state will not effect the actual gain value stored in memory. However, when the fader is touched, this is stopped, so the audio engineer can freely move the fader, and \textit{the value in memory is updated from the fader position}.
 
-Which side holds the truth depends on the touch state. A touched fader is an
-input, and its measured position sets the stored value. An untouched fader is a
-display, and the stored value sets the target position. The control voltage
-always follows the stored value and never the measured position. A recall writes the correct control voltage
-at once, and the audio is right before the fader has finished its travel. A
-small mechanical error in the final resting place therefore produces no error in
-gain.
 
-Four rules keep the movement clean.
 
-\begin{enumerate}
-    \item A deadband of about 0.2\,mm stops the loop near the target. Without
-          it the fader hunts and the motor buzzes.
-    \item A fixed duty offset covers the static friction. A small error would
-          otherwise ask for a duty too low to move the lever at all.
-    \item The loop brakes on arrival instead of coasting. The lever carries
-          enough inertia to overshoot the target.
-    \item A duty ceiling limits the travel speed, so a full recall takes about
-          300\,ms rather than slamming into the end stop.
-\end{enumerate}
 
-A stall timer guards the end stops. The loop watches the position while it
-drives. If the error stays large and the position stops changing, the loop cuts
-the drive and reports a fault.
 
 \subsection{LCD Displays}
 \label{ssec:displays}
@@ -864,21 +978,21 @@ the exact value (and maybe the exact value can be shown on the channel display).
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{ledring3d.png}
+    \includegraphics[width=0.4\textwidth]{ledring3d.png}
     \caption{3D Render of the LED ring, for the small 6mm shaft EC11 encoders, with a 7.5mm diameter hole for that shaft.}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{ledringpcb.png}
+    \includegraphics[width=0.5\textwidth]{ledringpcb.png}
     \caption{PCB layout. Inner layers are ground plane and VCC=5V plane. The width of these boards is only 24mm!}
     \label{fig:my_image}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{channelwidth.png}
+    \includegraphics[width=0.4\textwidth]{channelwidth.png}
     \caption{Aiming for a standard channel strip width of 1.5 inches (38mm), we may stagger the LED boards like this to fit knobs in two columns.}
     \label{fig:my_image}
 \end{figure}
@@ -896,7 +1010,7 @@ logic, and these devices run from the 5\,V LED rail. An HCT input switches at
  \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{ledringschem.png}
-    \caption{Schematic for the LED ring breakout boards, showing four 74HCT595 LED driver shift registers (32 total LEDs)}
+    \caption{Schematic for the LED ring breakout boards, showing four 74HCT595 LED driver shift registers (32 total LEDs). Common cathode configuration.}
     \label{fig:my_image}
 \end{figure}
 
@@ -1123,8 +1237,8 @@ reach its neighbor.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.99\textwidth]{psuschem.png}
-    \caption{This is the caption text that describes your image.}
+    \includegraphics[width=0.75\textwidth]{psuschem.png}
+    \caption{Schematic for the PSU. Subject to safety evaluation and change.}
     \label{fig:my_image}
 \end{figure}
 
@@ -1153,10 +1267,81 @@ reach its neighbor.
 
 \subsection{Component Selection and Sourcing}
 
+We are doing everything as buckets of 4 channels, and these prices and quantities are for 16 channels (4 buckets). If budget demands, we can easily scale to 12 or 8 channels.
+
+\textbf{Guys so we need the following components: please list the part number, quantity, unit price, total price = unit price x qty and the source/distributer ignore shipping tarrif tax}
+
+
+x means the rest of the part number can be whatever variant. 
+
+Package is the size/shape of the physical chip that will go on the PCB. Examples include DIP-4, TSSOP16, SIP-16, QFN... dw about that its just what package is here
+
+These are the digital parts, all of these will come from JLCPCB and be presoldered for us with their turnkey pcb fab/assembly service.
+
+Go on JLCPCB parts library and search these components, Pick the cheapest package that has at least a few hundred in stock and report that price (per unit) here and then the price = unit price X quantity. Also have a part description column where u say briefly what we are using it for. If not sure search the document for that part. The prices go down with quantity so use the unit price for the qty listed
+\vspace{0.5cm}
+
+5x STM32G474xxxx - main controller
+
+48x MCP23017 - gpio expander on i2c
+
+80x MCP4728 - cv dac
+
+16x TTP223-BA6 - touch sensor for faders
+
+16x DRV8871 - h bridge motor driver for faders
+
+4x 74HC139xxx - to turn CS[1:0] into 4, 1 bit chip select pins for selecting the display to talk to on the SPI bus.
+
+
+
+16x just search this one on google: Adafruit 4421 TFT Display 
+
+\vspace{0.5cm}
+
+Led ring stuff already made lol dw about it
+
+PSU also made leave it out
+
+also i have the encoders and faders and buttons so dw about those either theyre pricy at these qtys
+
+and i have the devboards for the microcontrolelr and breakout boards of everything already
+
+\vspace{0.5cm}
+
+\textbf{Now heres's the analog components, just search these on JLCPCB parts list, and digikey, and mouser (maybe some other distributer if u want) and list the lowest distributer price of the lowest price package. Use the unit price at the quantity I list here.}
+
+\vspace{0.5cm}
+
+128x NE5532 - main audio op amp
+
+16x INA2137 - balanced line input receiver (dual)
+
+64x TL074 - CV amp
+
+64x LM13700 - OTA
+
+112x SSI2164 - VCA
+
+16x PGA2500 - mic pre
+
+2x THAT1646 - line out buffer
+
+2x OPA2134 - hifi op amp for the 2-bus summing bus
+
+
+
+i can source the LM13700s i have a lot already ik theyre "obsolete" but just put \$0.75 per each one and put the distributer as 
+
+
 \subsection{PCB and CAD Services}
+
+Daniel guess? idk just put like \$250 and find something that adds up to that
 
 \newpage
 \section{Timeline}
+
+i have the devboards for the microcontrolelr and breakout boards of everything already so thats what we r using in design and proto
 
 \subsection{Design and Prototyping}
 
