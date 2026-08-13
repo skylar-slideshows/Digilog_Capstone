@@ -74,7 +74,7 @@
     
     \vspace{0.5cm}
     
-        {\large \textbf{Advisor: }Milad Siami }
+        {\large \textbf{Advisor: }Milad Siami \textbf{[Team \#2]}}
     
         \vspace{1.3cm}
 
@@ -95,6 +95,41 @@
 \tableofcontents
 
 \section{Abstract}
+
+An analog mixing console cannot remember its own settings. Every parameter lives
+in the position of a potentiometer, and the audio passes through that
+potentiometer, so the two roles cannot be separated. Restoring a session means
+turning every knob by hand against a paper recall sheet, and the result is never
+exact. A digital console solves recall completely, but only by converting the
+audio to numbers at the input and back to a voltage at the output.
+
+This proposal describes a console that takes neither path. The audio stays
+analog from the input connector to the summing bus. Only the control values
+become digital. A rotary encoder produces a number instead of a resistance, a
+control processor stores that number, and a control voltage carries it to the
+analog circuit. The circuit then responds as though a hand had moved a knob.
+Voltage controlled amplifiers set every gain, and operational transconductance
+amplifiers supply every variable resistance in the equalizer. One command
+therefore reconfigures a whole channel, and nothing in the signal path moves.
+
+The design covers 16 channels and a master section. One STM32G474 processor
+serves each group of four channels through four independent
+I\textsuperscript{2}C buses, and it drives 20 control voltages and 42 input pins
+per channel. Each channel carries a microphone preamplifier or a line receiver,
+a four band state variable filter equalizer, a compressor with a digital
+detector and an analog gain element, auxiliary sends, a pan control, and a
+motorized fader with a touch sensor.
+
+The difficulty is not the control plane. The difficulty is keeping the audio
+clean while converters, expanders, shift registers, motor drivers, and switching
+supplies all sit centimetres from the signal path. Three quantities decide the
+outcome: the linearity of every voltage controlled element, the noise that the
+control plane couples into the audio, and the repeatability of a recall as the
+temperature changes. Success is therefore a measurement rather than an opinion.
+The project reports total harmonic distortion, the noise floor, the crosstalk
+between channels, and the recall error across a temperature range, and it
+compares each figure against a conventional analog desk.
+
 
 \newpage
 
@@ -132,7 +167,7 @@ equalizer, a dynamic range compressor, routing options for auxiliary sends, a pa
 controlled amplifiers (VCAs) to set every gain in that chain. Operational transconductance
 amplifiers (OTAs) will supply every variable resistance, which are needed to control the corner frequencies
 and the Q (quality/BW) factor of each band in the equalizer. Analog multiplexers select the band shapes, the
-bypass paths, and other routing options. Section 4
+bypass paths, and other routing options. Section~\ref{sec:technical}
 describes each of these circuits in turn.
 
 The control surface reports the state that the memory holds. Each channel
@@ -147,7 +182,7 @@ holds far fewer controls than the channel has settings, which reduces the cost, 
     \centering
     \includegraphics[width=0.99\textwidth]{fullui.png}
     \caption{Mockup of the front panel of a 16 channel console under this vision.}
-    \label{fig:my_image}
+    \label{fig:panel-mockup}
 \end{figure}
 
 
@@ -207,12 +242,12 @@ that this console meets, so their answers inform its design.
 Electric power gives the clearest case, because nobody can digitize the signal.
 A substation handles hundreds of megawatts, and if a converter could sample that power
 and rebuild it, what would power the output buffer?! So the power path stays analog by necessity. Every improvement
-must therefore come from the control plane, and the IEC 61850 standard carries
+must therefore come from the control plane, and the IEC 61850 standard~\cite{iec61850} carries
 settings, measurements, and commands across that plane.
 
 The devices in a substation divide the same way the channel strip on an audio console divides. The
 on-load tap changer of a transformer moves in discrete steps, much like the
-switched resistor network inside the PGA2500 digitally controlled microphone preamplifier we will use.
+switched resistor network inside the PGA2500~\cite{pga2500} digitally controlled microphone preamplifier we will use.
 A static VAR compensator varies its output in a continuous way through a
 thyristor firing angle, much like a voltage controlled amplifier follows a
 control voltage. Recall appears in the same form as well. A protective relay
@@ -240,25 +275,27 @@ each channel of this console, and for the same reason.
 
 \newpage
 \section{System Overview}
+\label{sec:overview}
 
 
 
 
 \subsection{Analog Systems}
+\label{ssec:analog-overview}
 
 \subsubsection*{Remote Controlled Analog Systems}
-To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency. The implementation details of these voltage controlled amplifiers and voltage controlled resistors are covered in Sections 4.1 and 4.2, respectively.
+To remotely control parameters of the analog signal processing, all the required processing may be (and usually is, even in fully analog systems) designed to only require variable resistors and variable gain. For example, to change the resonant frequency of a band on the equalizer, we may keep the capacitor value constant and vary only the resistor to change the resonant frequency. The implementation details of these voltage controlled amplifiers and voltage controlled resistors are covered in Sections~\ref{sssec:vca} and~\ref{ssec:vcr-sec}, respectively.
 
-In short, voltage controlled amplification will be implemented using voltage controlled amplifiers (VCAs), specifically the SSI2164 for most signals, and the PGA2500 digitally controlled microphone preamplifier (on an SPI control bus rather than using an analog control voltage) for the microphone inputs. Any switching or reconfiguration of channel paths will be implemented by the DG409 CMOS analog multiplexer. Voltage controlled resistors will be implemented using the LM13700 operational transconductance amplifier (OTA).
+In short, voltage controlled amplification will be implemented using voltage controlled amplifiers (VCAs), specifically the SSI2164~\cite{ssi2164} for most signals, and the PGA2500 digitally controlled microphone preamplifier (on an SPI control bus rather than using an analog control voltage) for the microphone inputs. Any switching or reconfiguration of channel paths will be implemented by the DG409~\cite{dg409} CMOS analog multiplexer. Voltage controlled resistors will be implemented using the LM13700~\cite{lm13700} operational transconductance amplifier (OTA).
 
-For these components, temperature often changes their behavior, and parameters may differ between units. Details on calibration and temperature compensation schemes are outlined in Section 4.3. Using these components, a voltage controlled parametric equalizer (Section 4.4) may be implemented.
+For these components, temperature often changes their behavior, and parameters may differ between units. Details on calibration and temperature compensation schemes are outlined in Section~\ref{sssec:temperature}. Using these components, a voltage controlled parametric equalizer (Section~\ref{ssec:eq}) may be implemented.
 
 
 \subsubsection*{Control Voltages}
-To produce the control voltages, we will rely on a set of MCP4728 digital-to-analog converter (DAC) chips on I2C busses (running at "Fast mode," 400kHz). These chips have 12-bit accuracy (4,096 voltage levels), which provides more than enough definition for our purposes. We will use a low sample rate around 400Hz, as these control voltages do not need fast changes or high bandwidth. The 0-3.3V output from these DACs will be mapped to a larger voltage range of around $+/- 15V$ using low offset op-amps and a reference offset voltage. The amplification circuit will also provide low pass filtering which both smooths the control voltages and removes any digital noise. Only then will the control voltages be allowed to pass physically to the low noise analog section. More information on this topic is in Section 4.9.
+To produce the control voltages, we will rely on a set of MCP4728~\cite{mcp4728} digital-to-analog converter (DAC) chips on I2C busses (running at "Fast mode," 400kHz~\cite{i2cspec}). These chips have 12-bit accuracy (4,096 voltage levels), which provides more than enough definition for our purposes. We will use a low sample rate around 400Hz, as these control voltages do not need fast changes or high bandwidth. The 0-3.3V output from these DACs will be mapped to a larger voltage range of around $+/- 15V$ using low offset op-amps and a reference offset voltage. The amplification circuit will also provide low pass filtering which both smooths the control voltages and removes any digital noise. Only then will the control voltages be allowed to pass physically to the low noise analog section. More information on this topic is in Section~\ref{ssec:cv-dacs}.
 
 \subsubsection*{Noise and Power}
-The analog systems will be powered by a set of low noise, bipolar rails at about $+/- 16.5V$. The power supply for the analog components will be of a linear topology, to avoid polluting the voltage rails with the switching noise present in other power supply designs. Additionally, the DACs and ADCs will use a dedicated 3.3V voltage reference, designed as a small, low noise supply and separate from the main, high current 3.3V logic supply, but sharing the same ground potential. The power supply is discussed in Section 4.10.
+The analog systems will be powered by a set of low noise, bipolar rails at about $+/- 16.5V$. The power supply for the analog components will be of a linear topology, to avoid polluting the voltage rails with the switching noise present in other power supply designs. Additionally, the DACs and ADCs will use a dedicated 3.3V voltage reference, designed as a small, low noise supply and separate from the main, high current 3.3V logic supply, but sharing the same ground potential. The power supply is discussed in Section~\ref{ssec:psu}.
 
 To further isolate the analog section from the digital section, the analog circuitry will be physically located on a different printed circuit board (PCB) than the digital components. The boards will be the same size and stack on top of each other in a mezzanine configuration, with pin headers, similarly to a shield board for microcontroller development boards, but at a much larger size. The digital PCB will be on top of the analog PCB. Any high speed or low-noise analog signals that must travel between the boards will do so via the pin headers. Interlacing these signals with ground pins in the physical pin header layout will reduce crosstalk between channels. We will avoid placing high speed or low noise signals near each other in the pin header, without a ground pin between them.
 
@@ -272,9 +309,10 @@ The output of each of the individual audio channels will feed a summing bus, fro
 
 
 \subsection{Digital Systems}
+\label{ssec:digital-overview}
 
 \subsubsection*{STM32G474}
-For this project, the STM32 microcontroller was chosen. Specifically, we chose the ARM based STM32G474 variety, for its expansive I/O, deep analog integration with onboard DACs and ADCs, and its ability for standard-speed USB. We plan to run the CPU clock at its maximum speed of 170MHz. This will be more than enough processing power for our requirements. Additionally, our team already has a few Nucleo 64 development boards of this exact chip, allowing those to be excluded from the budget.
+For this project, the STM32 microcontroller was chosen. Specifically, we chose the ARM based STM32G474~\cite{stm32g474} variety, for its expansive I/O, deep analog integration with onboard DACs and ADCs, and its ability for standard-speed USB. We plan to run the CPU clock at its maximum speed of 170MHz. This will be more than enough processing power for our requirements. Additionally, our team already has a few Nucleo 64 development boards of this exact chip, allowing those to be excluded from the budget.
 
 We will use an external 24MHz crystal oscillator on our final PCBs (exact same as the Nucleo boards) to simplify all of the different timers for busses running at different speeds. If the firmware will not fit on the chip's internal flash, we will add an SPI flash chip, on a separate SPI bus. This connection, while slow in today's standards, will be more than enough for the controller to access the program during operation.
 
@@ -291,18 +329,18 @@ The controllers will communicate with each other on an SPI (Serial Peripheral In
 
 The STM32G474 has four $I^2C$ (Inter-integrated Circuit) buses and three SPI (Serial Peripheral Interface) buses. Each $I^2C$ bus consists of a clock pin and a data pin, carrying signals in both directions.  Multiple devices may communicate, with 3 bit addresses, allowing 8 addressable chips on the same bus. Each I2C bus will be used for one channel's chips, so all four I2C busses will be identical for simplicity, and we can address specific channels by changing which I2C bus we are communicating on. 
 
-Each I2C bus will have three, MCP23017 GPIO expanders (giving 42 total input pins per channel = 168 additional GPIOs for each bucket/STM32). These pins will be connected to the physical control devices such as the rotary encoders and pushbutton switches. More information about GPIO expansion and control is in Section 4.8. Each bus will also have five, MCP4728 quad DACs, for a total count of 20 control voltage DAC channels per console channel, which fits in the required number for the analog processors we plan to implement. More information about control voltage DACs is in Section 4.9.
+Each I2C bus will have three, MCP23017~\cite{mcp23017} GPIO expanders (giving 42 total input pins per channel = 168 additional GPIOs for each bucket/STM32). These pins will be connected to the physical control devices such as the rotary encoders and pushbutton switches. More information about GPIO expansion and control is in Section~\ref{ssec:gpio}. Each bus will also have five, MCP4728 quad DACs, for a total count of 20 control voltage DAC channels per console channel, which fits in the required number for the analog processors we plan to implement. More information about control voltage DACs is in Section~\ref{ssec:cv-dacs}.
 
-The STM32 controller also has three SPI busses. Bus 1 will be configured as a 4-wire full duplex, in slave mode, where a master controller selects which chip to talk to. This is for the aforementioned communication between controllers and the master section. SPI bus 2 will be a 2-wire transmit only bus, which will be connected to all four of the small channel LCD screens. These screens only receive data and never send it. More information about the LCD screens is in Section 4.7.
+The STM32 controller also has three SPI busses. Bus 1 will be configured as a 4-wire full duplex, in slave mode, where a master controller selects which chip to talk to. This is for the aforementioned communication between controllers and the master section. SPI bus 2 will be a 2-wire transmit only bus, which will be connected to all four of the small channel LCD screens. These screens only receive data and never send it. More information about the LCD screens is in Section~\ref{ssec:displays}.
 
-Finally, the third SPI bus will be reserved for a potential SPI flash chip, if the onboard flash is not enough to contain the controller's firmware. We may also use dedicated ADC channels for the dynamic compressor sidechain (See Section 4.5) and control voltage envelope generation. We might also move some things around, adding an SPI GPIO expander such as the MCP23S17 to this bus, to move signals like the fader touch sensors or display chip select pins, making room to use onboard ADCs for the compressor instead (See Figure 4).
+Finally, the third SPI bus will be reserved for a potential SPI flash chip, if the onboard flash is not enough to contain the controller's firmware. We may also use dedicated ADC channels for the dynamic compressor sidechain (See Section~\ref{ssec:compressor}) and control voltage envelope generation. We might also move some things around, adding an SPI GPIO expander such as the MCP23S17 to this bus, to move signals like the fader touch sensors or display chip select pins, making room to use onboard ADCs for the compressor instead (See Figure~\ref{fig:pinlist}).
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{cubemx.png}
     \caption{Pin assignments in STM32CubeMX. PG10 is dedicated for reset only. PC4 and 5 are multiplexed with PA2 and 3, respectively on the Nucleo development board, and to reduce complexity, we just avoid PC4 and 5. This is for one bucket of 4 channels. PB8 is the boot mode pin, left open in case we need to tell the microcontroller to boot from the external SPI flash chip (if the firmware does not fit on internal flash)}
-    \label{fig:my_image}
+    \label{fig:cubemx}
 \end{figure}
 
 
@@ -310,21 +348,22 @@ Finally, the third SPI bus will be reserved for a potential SPI flash chip, if t
     \centering
     \includegraphics[width=0.8\textwidth]{pins.png}
     \caption{Pin assignment listing. Some of the general purpose output pins may be moved to extra pins on the MCP23017s instead.}
-    \label{fig:my_image}
+    \label{fig:pinlist}
 \end{figure}
 
-10 pins are configured as pulse width modulation (PWM) outputs. 8 of these are for the fader motor H-bridge control (two for each motor, see Section 4.6). The other two pins are to change the brightness of the LCD backlights and of all the LEDs on the bucket of channels, through PWM on every LED driver shift register's output enable pin (See Section 4.8). To keep potential audible noise out of the audio, all PWM signals will run at 24KHz or more, beyond human hearing.
+10 pins are configured as pulse width modulation (PWM) outputs. 8 of these are for the fader motor H-bridge control (two for each motor, see Section~\ref{ssec:faders}). The other two pins are to change the brightness of the LCD backlights and of all the LEDs on the bucket of channels, through PWM on every LED driver shift register's output enable pin (See Section~\ref{ssec:gpio}). To keep potential audible noise out of the audio, all PWM signals will run at 24KHz or more, beyond human hearing.
 
-Additionally (not shown in Figures 4/5) we plan, if needed, to have a small temperature sensor IC for every bucket of channels, in order to reverse any performance drifts due to temperature. See Section 4.3 for more details.
+Additionally (not shown in Figures~\ref{fig:cubemx} and~\ref{fig:pinlist}) we plan, if needed, to have a small temperature sensor IC for every bucket of channels, in order to reverse any performance drifts due to temperature. See Section~\ref{sssec:temperature} for more details.
 
 \subsubsection*{RTOS}
-Due to the anticipated complexity of the firmware, especially with its multiple busses running at different speeds and interrupts from various chips, a real-time operating system (RTOS) will be used to help schedule and organize parts of the firmware with various priority levels. This way, we can move away from the regular design of a huge, very complex single main loop which checks everything. We just will need to write individual programs or "tasks" and give them a priority level. We plan to use FreeRTOS, which is a simple, open source RTOS that provides CPU scheduling. Being simpler than many other RTOS options, it does not provide memory management or built-in peripheral drivers, which would only complicate things, since we do not anticipate needing these. If we do need these things, we will switch to a more complex RTOS like Zephyr.
+Due to the anticipated complexity of the firmware, especially with its multiple busses running at different speeds and interrupts from various chips, a real-time operating system (RTOS) will be used to help schedule and organize parts of the firmware with various priority levels. This way, we can move away from the regular design of a huge, very complex single main loop which checks everything. We just will need to write individual programs or "tasks" and give them a priority level. We plan to use FreeRTOS~\cite{freertos}, which is a simple, open source RTOS that provides CPU scheduling. Being simpler than many other RTOS options, it does not provide memory management or built-in peripheral drivers, which would only complicate things, since we do not anticipate needing these. If we do need these things, we will switch to a more complex RTOS like Zephyr.
  
 
 
 
 \newpage
 \section{Technical Details}
+\label{sec:technical}
 
 
 This section contains descriptions and technical explanations of each system, in \textbf{\textit{as much detail as we currently have.}} A large amount of research and simulations, and some design and physical prototyping has already been completed, in order to verify the feasibility of these systems. Designs are subject to change.
@@ -343,7 +382,7 @@ To implement the variable gain, voltage controlled amplifiers (VCAs) will be use
     \centering
     \includegraphics[width=0.12\textwidth]{inputsection.png}
     \caption{Input section controls, at the top of each channel strip. Input knob controls gain applied by the VCA. The switches at the top select the source type. (MIC switches the input to pass through the PGA2500 preamplifier, and HI-Z switches in a resistor to increase the input impedance to accept direct input instrument signals from things like electric guitar coil pickups. The buttons on the bottom control the +48V phantom power for condenser microphones, phase polarity invert, and high pass filter, respectively. These functions are easy to implement with the PGA2500, but they are luxuries and will only be added if we have time.}
-    \label{fig:my_image}
+    \label{fig:input-section}
 \end{figure}
 
 
@@ -354,8 +393,8 @@ The second place gain will need control is on the auxiliary send section, where 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.12\textwidth]{fader.png}
-    \caption{Output section controls, at the bottom of each channel strip. The LED strip is a simple VU meter bar display implemented with a LM3916. The channel fader is shown (See Section 4.6), and the stereo pan(orama) balance control. SOLO mutes all other channels, MUTE mutes this channel, SEL selects the channel for functions like channel grouping or group parameter changes. INS switches the channel effects insert loop, which sends the audio out, to some external processor, and recieves it back as a line-level signal. PRE sets the source point for this effects loop to be before the application of the fader and pan VCA gain. (PREfader)}
-    \label{fig:my_image}
+    \caption{Output section controls, at the bottom of each channel strip. The LED strip is a simple VU meter bar display implemented with a LM3916~\cite{lm3916}. The channel fader is shown (See Section~\ref{ssec:faders}), and the stereo pan(orama) balance control. SOLO mutes all other channels, MUTE mutes this channel, SEL selects the channel for functions like channel grouping or group parameter changes. INS switches the channel effects insert loop, which sends the audio out, to some external processor, and recieves it back as a line-level signal. PRE sets the source point for this effects loop to be before the application of the fader and pan VCA gain. (PREfader)}
+    \label{fig:output-section}
 \end{figure}
 
 \subsubsection*{Component: PGA2500}
@@ -390,9 +429,10 @@ therefore covers the full range of $+20$\,dB to $-100$\,dB. We can just cap the 
 
 
 Noise on the control port becomes gain modulation, so the control path needs
-care. Noise of 1\,mV RMS produces sidebands about 55\,dB below the signal. Our DACs have a nominal noise voltage of $290\mu$V peak-to-peak~\cite{mcp4728} so as long as we are careful to not add much more noise, it will not be an issue. See Section 4.9 for more information on the control voltage converters.
+care. Noise of 1\,mV RMS produces sidebands about 55\,dB below the signal. Our DACs have a nominal noise voltage of $290\mu$V peak-to-peak~\cite{mcp4728} so as long as we are careful to not add much more noise, it will not be an issue. See Section~\ref{ssec:cv-dacs} for more information on the control voltage converters.
 
 \subsection{Voltage Controlled Resistors}
+\label{ssec:vcr-sec}
 
 Parts of the channel need a variable resistance and not a variable gain. The
 equalizer corner frequencies and the filter $Q$ are the main examples. We plan to use operational transconductance amplifiers (OTAs) to implement this voltage controlled resistance, specifically the LM13700~\cite{lm13700}, for its output Darlington buffers and linearizing diodes, which help it achieve a THD of $<1\%.$  For the
@@ -539,14 +579,14 @@ damping coefficient, and Q is the reciprocal of that coefficient. The third OTA 
     \centering
     \includegraphics[width=0.8\textwidth]{eqspice.png}
     \caption{A single variable state filter configured with voltage-controlled center frequency and Q factor, in LTSpice.}
-    \label{fig:my_image}
+    \label{fig:svf-schematic}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{eqfreq.png}
     \caption{Output frequency response at the band pass output, during a sweep of the frequency control voltage from -14V to +14V with 1V steps. Q is kept constant. Frequency follows the same direction as voltage, so when voltage increases, so does frequency. For the other 3 in other frequency ranges, this circuit may be duplicated and the integration capacitor value changed.}
-    \label{fig:my_image}
+    \label{fig:svf-freq-sweep}
 \end{figure}
 
 
@@ -554,7 +594,7 @@ damping coefficient, and Q is the reciprocal of that coefficient. The third OTA 
     \centering
     \includegraphics[width=0.45\textwidth]{eqq.png}
     \caption{Output frequency response at the band pass output, during a sweep of the Q control voltage from -14V to +14V with 1V steps. Frequency is kept constant.}
-    \label{fig:my_image}
+    \label{fig:svf-q-sweep}
 \end{figure}
 
 
@@ -565,10 +605,11 @@ damping coefficient, and Q is the reciprocal of that coefficient. The third OTA 
 The two middle bands are bells with variable frequency, Q, and gain. They take
 the band-pass output only, with no option to switch to shelves. The top and bottom bands are shelves that may be switched to bells, with variable
 frequency and gain and a constant Q. A shelf comes from the low-pass or the
-high-pass output of the filter circuit summed with the direct signal. An DG409~\cite{DG409} CMOS signal multiplexer selects which filter output reaches the gain stage for the top and bottom band. This part is a dual
-4-to-1 multiplexer with a low on-resistance, so one device covers every mode of
-two bands. The low band selects its low-pass output for a shelf or its band-pass
-output for a bell. The high band does the same with its high-pass output. Further DG408 devices bypass the whole
+high-pass output of the filter circuit summed with the direct signal. A DG409 CMOS signal multiplexer selects which filter output reaches the gain stage for the top and bottom band. This part is a dual
+4-to-1 multiplexer, so one device covers every mode of two bands. Its on
+resistance is a few hundred ohms, so each switch feeds a summing node rather
+than a high impedance node, which keeps the resistance out of the response. The low band selects its low-pass output for a shelf or its band-pass
+output for a bell. The high band does the same with its high-pass output. Further DG408~\cite{dg409} devices bypass the whole
 equalizer and reorder it against the compressor.
 
 \subsubsection*{Boost and Cut}
@@ -633,7 +674,7 @@ parameters that the encoders now hold.
     \centering
     \includegraphics[width=0.6\textwidth]{fxsection.png}
     \caption{Since we have separated the control from the parameter being controlled, one encoder can be used for multiple functions. The audio engineer may select which part of the channel processing they are controlling with the "digital radio buttons" at the top.}
-    \label{fig:my_image}
+    \label{fig:fx-section}
 \end{figure}
 
 A single press of a radio button selects which effect is being controlled. We also plan to add three additional control options using the existing buttons, improving flexibility and ergonomics. A double tap bypasses that processor and a second double tap restores it.
@@ -650,7 +691,7 @@ A compressor reduces the dynamic range of a signal: once the input rises above a
 
 The compressor splits along the same line as the rest of the console. The
 detector is digital and the audio path is analog. Four high-speed
-analog-to-digital converters sit on either the third SPI bus (See Section 3.2), or some pins will be rearranged and the onboard ADCs used. There will be one ADC for each channel, and
+analog-to-digital converters sit on either the third SPI bus (See Section~\ref{ssec:digital-overview}), or some pins will be rearranged and the onboard ADCs used. There will be one ADC for each channel, and
 they report the signal to the control processor. This is the only time we will ever read the audio signal in digitally, but it is not for digital processing. The digitized signal will never be converted back; it is just to generate a control voltage envelope. From this audio signal, the processor computes the
 gain reduction from the threshold, the ratio, the attack, the release, and the
 makeup gain settings. It then drives one SSI2164 channel, and that VCA does the work on
@@ -731,7 +772,7 @@ track needs to be readable, not quiet.
     \centering
     \includegraphics[width=0.4\textwidth]{alps.jpg}
     \caption{An Alps 100mm motorized fader, part number RSA0N11M9}
-    \label{fig:my_image}
+    \label{fig:alps-fader}
 \end{figure}
 
 
@@ -772,7 +813,7 @@ not depend on the duty cap. The datasheet gives 32\,k$\Omega$ for a limit of
 the stall current of the motor. The driver also protects itself against a short
 circuit and against overtemperature.
 
-The PWM runs at 25\,kHz. This frequency is above the audio band, moving any motor noise or while out of the human hearing range. 
+The PWM runs at 25\,kHz. This frequency sits above the audio band, so the motor produces no whine that a listener can hear.
 
 \subsubsection*{Touch Sense}
 \label{sssec:fader-touch}
@@ -923,14 +964,14 @@ second, or one transition every 4\,ms.
     \centering
     \includegraphics[width=0.9\textwidth]{debouncebutton.png}
     \caption{A debounce circuit for push buttons, with debounce time about 15ms. The Schmidt trigger is already present on the MCP23017 input pins, so an additional one does not needed to be added. We would plug node 9 straight into the MCP23017.}
-    \label{fig:my_image}
+    \label{fig:debounce-button}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{debounceec11.png}
     \caption{A debounce circuit for the EC11 rotary encoder, with both rotary step debouncing (KNOB\_A and KNOB\_B) and debouncing of the push switch (pressing the knob down, KNOB\_SW). The Schmidt triggers are already present on the MCP23017 input pins, so additional ones do not needed to be added. We would plug nodes 1, 3 and 5 straight into the MCP23017.}
-    \label{fig:my_image}
+    \label{fig:debounce-encoder}
 \end{figure}
 
 
@@ -980,21 +1021,21 @@ the exact value (and maybe the exact value can be shown on the channel display).
     \centering
     \includegraphics[width=0.4\textwidth]{ledring3d.png}
     \caption{3D Render of the LED ring, for the small 6mm shaft EC11 encoders, with a 7.5mm diameter hole for that shaft.}
-    \label{fig:my_image}
+    \label{fig:ledring-3d}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{ledringpcb.png}
     \caption{PCB layout. Inner layers are ground plane and VCC=5V plane. The width of these boards is only 24mm!}
-    \label{fig:my_image}
+    \label{fig:ledring-pcb}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{channelwidth.png}
     \caption{Aiming for a standard channel strip width of 1.5 inches (38mm), we may stagger the LED boards like this to fit knobs in two columns.}
-    \label{fig:my_image}
+    \label{fig:ledring-stagger}
 \end{figure}
  
 Four 74HCT595 shift registers~\cite{hct595} drive the 32 LEDs of one ring. They sit on a small
@@ -1011,7 +1052,7 @@ logic, and these devices run from the 5\,V LED rail. An HCT input switches at
     \centering
     \includegraphics[width=0.9\textwidth]{ledringschem.png}
     \caption{Schematic for the LED ring breakout boards, showing four 74HCT595 LED driver shift registers (32 total LEDs). Common cathode configuration.}
-    \label{fig:my_image}
+    \label{fig:ledring-schematic}
 \end{figure}
 
  
@@ -1022,8 +1063,8 @@ clock with slow edges radiates far less into the analog path than a fast one.
 The outputs hold their state between frames, so a slow clock costs no
 brightness. It costs only 2.8\,ms of delay before a movement appears, which is not noticeable to the human eye.
  
-A dedicated 5\,V rail feeds the LEDs. At 2\,mA per LED, a fully lit surface
-draws about 2.7\,A, so the rail carries the load and the 3.3\,V logic supply does
+A dedicated 5\,V rail feeds the LEDs. At 1.5\,mA per LED, a fully lit surface
+draws about 2.0\,A, so the rail carries the load and the 3.3\,V logic supply does
 not. A PWM signal on the output enable line sets the brightness of the whole
 chain. That signal runs above 20\,kHz. A slower PWM would place a large
 switching current inside the audio band, next to the analog circuits.
@@ -1239,7 +1280,7 @@ reach its neighbor.
     \centering
     \includegraphics[width=0.75\textwidth]{psuschem.png}
     \caption{Schematic for the PSU. Subject to safety evaluation and change.}
-    \label{fig:my_image}
+    \label{fig:psu-schematic}
 \end{figure}
 
 
@@ -1250,25 +1291,107 @@ reach its neighbor.
 \newpage
 
 
+
 \section{Division of Tasks}
+\label{sec:tasks}
+
+Six members divide into five subteams. Most members belong to two subteams, so
+no part of the console depends on one person alone. Skylar Denno directs the
+project and joins three subteams. This console fails at the boundaries between
+its parts rather than inside any single block, so one member tracks the analog
+design, the firmware, and the board layout at once and keeps the three in
+agreement.
 
 \subsection{Digital Architecture Design}
+\label{ssec:task-digital}
+
+Evan Forcucci, Xinhao Chen, and Daniil Petrov own this area. They chose the
+STM32G474 for its analog integration and its pin count, and they decide what
+each bus carries. The processor holds four I\textsuperscript{2}C buses and three
+SPI buses, and the assignment of devices to those buses sets the bandwidth
+budget of Section~\ref{ssec:cv-dacs}. This subteam also produces the pin
+assignment of Section~\ref{ssec:digital-overview}, the control voltage converters, and the channel
+displays of Section~\ref{ssec:displays}. One rule guides the work. The
+converters read the fader position and the compressor sidechain only, and the
+audio itself never enters the digital domain.
 
 \subsection{Firmware}
+\label{ssec:task-firmware}
+
+Daniil Petrov and Skylar Denno write the firmware. The task is coordination
+rather than computation. The processor must track the physical controls, hold
+the analog state, and refresh the surface, all without a delay that the engineer
+can feel. FreeRTOS divides this work into tasks with separate priorities, which
+replaces one large main loop. One processor manages a four-channel bucket, and
+the master section processor collects and distributes the console state for a
+save or a recall. The firmware also owns the interrupt service routine of
+Section~\ref{ssec:gpio}, the recall order of Section~\ref{sssec:recall}, the
+fader position loop of Section~\ref{ssec:faders}, and the calibration tables of
+Section~\ref{sssec:temperature}.
 
 \subsection{Analog Systems Design}
+\label{ssec:task-analog}
+
+Luke Garrity and Skylar Denno design the analog path. This subteam carries the
+hardest requirement in the project, because the remote control must stay
+transparent. A listener should not hear that a control voltage sets the gain
+instead of a hand. The work covers the operational transconductance amplifiers
+that supply every variable resistance, the voltage controlled amplifiers that
+supply every gain, the state variable filter equalizer of
+Section~\ref{ssec:eq}, and the compressor of Section~\ref{ssec:compressor}.
+Three targets govern the design: low distortion through every gain stage, a
+noise floor that matches a conventional desk, and a recall that repeats without
+drift as the room warms.
 
 \subsection{Control and UI Design}
+\label{ssec:task-control}
+
+Xinhao Chen and Evan Forcucci connect the surface to the processor. The subteam
+works in two stages. Software control comes first, so a working console exists
+before any knob reaches it. Physical controls then arrive on top of that base.
+The hardware covers the MCP23017 expansion of Section~\ref{ssec:gpio}, the
+rotary encoders and their LED rings, the buttons and lamps, and the motorized
+faders of Section~\ref{ssec:faders}. The detailed problems live here: contact
+debounce, quadrature decoding, the shift register chain, and the layer scheme
+that lets one encoder serve the equalizer, the compressor, or the sends.
 
 \subsection{PCB and CAD Design}
+\label{ssec:task-pcb}
+
+Daniel Salas and Skylar Denno produce the boards and the panel. Noise is the
+largest problem in this project, and layout decides most of it. The subteam
+therefore designs two kinds of board to two different standards. The analog
+boards need ground planes, local decoupling, and filtered supply rails. The
+digital boards need controlled impedance and crosstalk control at a 170\,MHz
+clock. Section~\ref{ssec:analog-overview} describes the mezzanine stack that separates the two, and
+Section~\ref{ssec:psu} describes the supply separation that depends on the same
+layout work. The subteam also designs the front panel, so that the console reads
+clearly to an engineer who has never used it.
+
 
 \newpage
 \section{Budget Proposal and Expense Enumeration}
 
+
+\label{sec:budget}
+
+The budget covers one complete 16 channel console and its master section.
+The bucket structure of Section~\ref{ssec:digital-overview} makes the figure scale in a predictable
+way, because a console is four identical cards plus one master. A reduction to
+12 or 8 channels removes whole cards and does not change the design.
+
 \subsection{Component Selection and Sourcing}
+\label{ssec:budget-parts}
 
-We are doing everything as buckets of 4 channels, and these prices and quantities are for 16 channels (4 buckets). If budget demands, we can easily scale to 12 or 8 channels.
+Most parts come from the JLCPCB turnkey stock. This choice ties the bill of
+materials to the assembly service, so the same vendor supplies the part and
+places it on the board. Turnkey sourcing also removes the shipping cost and the
+customs delay of a separate order for each line. Four parts fall outside that
+stock. The Orient Display 5 inch master screen comes from Digikey, the THAT1646~\cite{that1646}
+line driver comes from Mouser, the Adafruit 4421 channel screens come from
+Adafruit, and the LM13700 comes from a private source.
 
+<<<<<<< HEAD:WRITTEN_PROPOSAL/PROPOSAL.tex
 
 
 
@@ -1303,10 +1426,42 @@ PCB, panel, and passives   & \$280.00 & \$280.00 & \$280.00 \\
 \midrule
 \textbf{Total}             & \textbf{\$1{,}105.94} & \textbf{\$900.66} & \textbf{\$630.92} \\
 With 10\,\% contingency    & \$1{,}216.53 & \$990.73 & \$694.01 \\
+=======
+Table~\ref{tab:budget-options} gives the cost by subsystem for the full build
+and for two reduced builds. The microphone input stage carries its own row
+because it is the single most expensive block and the first candidate for
+removal. Sixteen PGA2500 preamplifiers cost \$205.28, which is 19\,\% of the
+whole console. A build without microphone inputs still demonstrates every claim
+in Section~\ref{sec:technical}, because the line receiver path exercises the same equalizer, the
+same compressor, and the same recall mechanism.
+
+\begin{table}[h]
+\centering
+\caption{Component cost by subsystem, in US dollars. The reduced builds remove
+the microphone input stage and then remove half the channels. The fixed cost of
+board and panel fabrication does not fall with the channel count.}
+
+\vspace{0.5cm}
+
+\label{tab:budget-options}
+\begin{tabular}{l r r r}
+\toprule
+\textbf{Subsystem} & \textbf{16 ch} & \textbf{16 ch, no mic} & \textbf{8 ch, no mic} \\
+\midrule
+Digital control        & 303.52   & 303.52  & 151.50 \\
+User interface         & 85.90    & 85.90   & 67.76  \\
+Analog signal path     & 231.24   & 231.24  & 131.66 \\
+Microphone input stage & 205.28   & ---     & ---    \\
+PCB, panel, passives   & 280.00   & 280.00  & 280.00 \\
+\midrule
+Total                  & 1105.94  & 900.66  & 630.92 \\
+With 10\,\% contingency & 1216.53 & 990.73  & 694.01 \\
+>>>>>>> 06ddfd2 (upload proposal):00_PROPOSAL/WRITTEN_PROPOSAL/PROPOSAL.tex
 \bottomrule
 \end{tabular}
 \end{table}
 
+<<<<<<< HEAD:WRITTEN_PROPOSAL/PROPOSAL.tex
 
 % ------------------------------------------------------------
 %  Table 2 -- Margin against the $700 target
@@ -1326,10 +1481,55 @@ Hardware cost, 8 channels without mic input     & \$630.92 \\
 \midrule
 \textbf{Margin remaining}                       & \textbf{\$69.08} \\
 Largest contingency the target admits           & 10.9\,\% \\
+=======
+The digital control cost is dominated by converters rather than by processors.
+Eighty MCP4728 devices cost \$165.60 and 48 MCP23017 expanders cost \$82.08,
+while the five STM32G474 processors cost only \$55.00. This ratio follows from
+the architecture. One processor serves four channels, but every channel needs
+its own 20 control voltages and its own 42 input pins.
+
+\subsection*{Parts Already on Hand}
+\label{ssec:budget-onhand}
+
+A large part of the hardware already exists and therefore carries no cost in
+this proposal. Table~\ref{tab:budget-onhand} lists these items at the unit price
+the project would otherwise pay. The stock covers \$527.60 of components, which
+is 32\,\% of what the console would cost without it.
+
+Two items deserve separate mention. The LED ring boards of Section~\ref{ssec:gpio} are
+already designed, so the budget carries no cost for their development. One ring
+serves each of the 160 encoders, and those 160 boards carry 5120 LEDs in total. The team also owns several Nucleo 64 development
+boards that carry the STM32G474, which covers the prototyping phase before the
+final boards exist. The analog power supply of Section~\ref{ssec:psu} is also
+built already, so the transformer, the rectifier, the regulators, and the
+reservoir capacitors appear nowhere in the figures above.
+
+\begin{table}[h]
+\centering
+\caption{Hardware already owned, valued at the unit price in the bill of
+materials, against the quantity the full build needs.}
+
+\vspace{0.5cm}
+
+\label{tab:budget-onhand}
+\begin{tabular}{l r r r r}
+\toprule
+\textbf{Item} & \textbf{Needed} & \textbf{On hand} & \textbf{Unit} & \textbf{Value} \\
+\midrule
+Motorized fader, RSA0N11M9 & 17  & 16 & 25.00 & 400.00 \\
+EC11 rotary encoder        & 160 & 40 & 1.00  & 40.00  \\
+Adafruit 4421 display      & 16  & 8  & 10.95 & 87.60  \\
+LED ring boards            & 44  & 44 & ---   & fabricated \\
+Knob and fader caps        & 177 & 62 & ---   & ---    \\
+Buttons with lamp          & 256 & many & 0.10 & ---   \\
+\midrule
+Identified value           &     &    &       & 527.60 \\
+>>>>>>> 06ddfd2 (upload proposal):00_PROPOSAL/WRITTEN_PROPOSAL/PROPOSAL.tex
 \bottomrule
 \end{tabular}
 \end{table}
 
+<<<<<<< HEAD:WRITTEN_PROPOSAL/PROPOSAL.tex
 
 % ------------------------------------------------------------
 %  Table 3 -- Line item bill of materials (16 channels)
@@ -1389,25 +1589,216 @@ Adafruit 4421  & 1.54 inch channel display      & 16  & --- & --- & On hand \\
 \bottomrule
 \end{tabular}
 \end{table}
+=======
+\subsection{Known Gaps and Contingency}
+\label{ssec:budget-gaps}
 
+The stock does not cover every quantity, and the bill of materials treats three
+lines as fully covered when they are not. One fader, 120 encoders, and eight
+displays still need purchase, which adds \$232.60. The LM3916 meter driver of
+Figure~\ref{fig:output-section} also carries a quantity of 24 at a cost of zero, which adds a further
+\$24.00. The corrected component total is therefore near \$1362.
+
+Four costs remain outside the figures entirely.
+
+\begin{enumerate}
+    \item Knob caps. One cap fits each of the 160 encoders, and the bill of
+          materials carries 45 with no unit price. A cap from the Sifam or
+          Rogan ranges is not a cheap part at this quantity.
+    \item Audio connectors. Sixteen channels need input and output connectors,
+          and the master section needs its own. No line covers them.
+    \item Shipping and customs. The bill of materials states this exclusion
+          directly.
+    \item Rework. A first revision of a mixed-signal board of this density
+          rarely reaches production without one respin.
+\end{enumerate}
+>>>>>>> 06ddfd2 (upload proposal):00_PROPOSAL/WRITTEN_PROPOSAL/PROPOSAL.tex
+
+A contingency of 10\,\% does not absorb these items. A contingency of 30\,\%
+raises the full build to \$1437.72 and covers both the identified shortfall and
+a reasonable allowance for the unpriced lines. We therefore request the 30\,\%
+figure and treat the microphone input stage as the first reduction if the award
+falls short.
 
 \subsection{PCB and CAD Services}
+\label{ssec:budget-pcb}
 
-Daniel guess? idk just put like \$250 and find something that adds up to that
+Three lines cover fabrication, and together they total \$280.00. Panel
+fabrication takes \$100.00, board fabrication takes \$150.00, and small passive
+components take \$30.00.
+
+The board count is larger than a single line suggests. Section~\ref{ssec:analog-overview} places the
+analog circuits and the digital circuits on separate boards in a mezzanine
+stack, so one channel bucket needs two four-layer boards. Four buckets and one
+master section therefore need ten boards in total. The LED ring boards are a
+separate design at 24\,mm wide, and those already exist.
+
+Assembly is the largest risk in this section. The console holds several thousand
+placements across the ten boards, and hand assembly is not realistic for parts
+in the packages this design uses. The \$150.00 line therefore assumes JLCPCB
+turnkey assembly at prototype quantity. A design that needs a second revision
+pays this cost twice, which is the main reason for the contingency requested
+above.
+
+
 
 \newpage
-\section{Timeline}
 
-i have the devboards for the microcontrolelr and breakout boards of everything already so thats what we r using in design and proto
+
+\section{Timeline}
+\label{sec:timeline}
+
+The project runs from the middle of August 2026 to the fourth of December 2026,
+which gives 16 weeks. Three tracks run in parallel across those weeks, and they
+match the subteams of Section~\ref{sec:tasks}. The analog track prototypes one
+processing block at a time. The firmware track brings up the buses and the
+control surface. The layout track turns each frozen design into a board.
+
+Table~\ref{tab:milestones} lists the dates that gate the other work. A design
+freeze matters more than a start date here, because a board cannot enter layout
+until its schematic stops changing.
+
+\begin{table}[h]
+\centering
+\caption{Gating milestones. Each freeze releases one block to the layout track.}
+\vspace{0.5cm}
+
+\label{tab:milestones}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Date} & \textbf{Milestone} & \textbf{Releases} \\
+\midrule
+18 Sep & Equalizer and fader design freeze & Control surface layout \\
+25 Sep & Commitment to digital components  & Controller layout \\
+9 Oct  & Input, sends, and compressor freeze & Analog board layout \\
+16 Oct & First fabrication batch submitted & Control surface boards \\
+6 Nov  & Final designs submitted to fabrication & All remaining boards \\
+20 Nov & Boards and panel in hand           & Final assembly \\
+4 Dec  & Project due                        & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{tl.png}
+    \caption{Projected timeline diagram - subject to changes}
+    \label{fig:timeline}
+\end{figure}
 
 \subsection{Design and Prototyping}
+\label{ssec:time-design}
+
+This stage runs from the middle of August to the end of September. The analog
+subteam builds the equalizer and the fader first, because those two blocks
+carry the largest technical risk. The state variable filter of
+Section~\ref{ssec:eq} proves that a voltage sets a corner frequency without
+audible cost, and the position loop of Section~\ref{ssec:faders} proves that the
+motor, the touch sensor, and the control voltage agree. A design freeze on 18
+September closes both.
+
+The firmware subteam works on the link between the control hardware and the
+STM32 across the same weeks. The target is a working bus stack: the expanders of
+Section~\ref{ssec:gpio} raise interrupts, the converters accept a frame, and the
+encoders return counts in the right direction. A commitment to the digital
+component list follows on 25 September, and the controller board can then enter
+layout.
+
+Two purchasing tasks belong in this stage and not later. The Alps fader is
+marked as not recommended for new designs, and the Adafruit display has shown
+long lead times. Both need an order in August, because a part that arrives in
+November arrives too late to matter.
 
 \subsection{Implementation and Iteration}
+\label{ssec:time-build}
+
+This stage runs from late September to the sixth of November and holds most of
+the work. The analog subteam completes the input stage, the auxiliary sends, and
+the compressor of Section~\ref{ssec:compressor}, and freezes them on 9 October.
+The master section and the mix bus follow through October. The firmware subteam
+moves to the displays of Section~\ref{ssec:displays} and to the layer scheme of
+the control surface, then starts the test and measurement work that continues
+into November.
+
+The layout track produces boards in the order that the freezes release them. The
+control surface boards come first, then the analog board, then the controller
+board. The front panel enters CAD at the start of November.
+
+The schedule splits fabrication into two batches for one reason. A single
+submission leaves no room for a mistake, and a mixed-signal board of this
+density rarely passes on the first attempt. The control surface boards therefore
+go out on 16 October, three weeks before the rest. That batch is the simplest of
+the three, and it tests the footprints, the assembly service, and the turnkey
+part substitutions while a correction is still possible. The analog board and
+the controller board follow on 6 November.
+
+A submission on 6 November leaves four weeks. This margin is deliberate and it
+should not shrink. The real constraint is not the submission date but the
+arrival date, because fabrication, assembly, and shipping consume two to three
+weeks on their own. A submission two weeks before the due date would deliver
+boards during the final week and leave no time to build the console around them.
 
 \subsection{Final Assembly}
+\label{ssec:time-assembly}
 
+This stage runs from the middle of November to the fourth of December. Boards
+and the panel arrive near 20 November. The team populates the frame, connects
+the buckets to the master section, and brings up one channel at a time.
+
+Measurement follows assembly and decides whether the project met its claim.
+Section~\ref{sec:intro} states the four figures that matter: total harmonic distortion, the
+noise floor, the crosstalk between channels, and the repeatability of a recall
+across a temperature range. The calibration procedure of
+Section~\ref{sssec:temperature} runs during this stage, because it needs the
+final hardware.
+
+The report and the presentation run in parallel through November and finish with
+the build. Writing does not wait for the last measurement, because only the
+results section depends on it.
 \newpage
 \section{Conclusion}
+
+This proposal separates two jobs that a potentiometer has always performed at
+once. A rotary encoder now provides the physical control and the indication, and
+a voltage controlled element provides the resistance or the gain. Nothing in the
+audio path moves, and nothing in the audio path becomes a number. The console
+therefore recalls a session the way a digital desk does, while the signal itself
+never leaves the analog domain.
+
+The architecture follows from that separation. A channel is a set of voltage
+controlled amplifiers and operational transconductance amplifiers, and every one
+of them takes its setting from a control voltage. A processor holds those
+settings as data, so the same encoder can serve the equalizer, the compressor,
+or the sends, and one command can move hundreds of parameters at once. The
+bucket structure repeats this arrangement four channels at a time, which lets
+the console scale to 8, 12, or 16 channels without a change to the design.
+
+Three risks decide whether the approach works, and this document states each one
+plainly rather than assuming it away. Voltage controlled elements distort more
+than the fixed resistors they replace, so the design attenuates the signal at
+every operational transconductance amplifier input and uses the linearizing
+diodes to recover the loss. The control plane sits close to the audio, so the
+layout, the supply separation, and the reconstruction filters carry as much
+weight as the circuit topology. The console also runs open loop, so calibration
+tables and temperature correction carry the whole recall accuracy budget alone.
+None of these problems is solved by a better part. Each one is solved by a
+measurement and an iteration.
+
+The deliverable is a demonstration and not a product. A 16 channel console with
+a full complement of microphone preamplifiers costs \$1,105.94 in components,
+and existing hardware covers a further \$527.60 that the budget does not carry.
+The bucket structure gives a clear reduction path if the award falls short,
+because the microphone input stage is 19\,\% of the cost and removing it changes
+nothing that the project sets out to prove. The schedule reaches fabrication in
+early November and leaves four weeks for assembly and measurement.
+
+The claim under test is narrow and it is falsifiable. Digital control of an
+analog signal path should cost nothing that an experienced engineer can hear. If
+the measured distortion, noise, and crosstalk match a conventional desk, and if
+a recall repeats across a working temperature range, then the claim holds. If
+they do not, the report will say so and will say why.
+
 
 
 
@@ -1422,13 +1813,9 @@ i have the devboards for the microcontrolelr and breakout boards of everything a
 
 \begin{thebibliography}{99}
 
-\bibitem{lm13700}
-Texas Instruments, \emph{LM13700 Dual Operational Transconductance Amplifiers
-with Linearizing Diodes and Buffers}, datasheet.
-
-\bibitem{ina2137}
-Texas Instruments, \emph{INA137, INA2137 Audio Differential Line Receivers},
-datasheet.
+\bibitem{iec61850}
+International Electrotechnical Commission, \emph{IEC 61850: Communication
+Networks and Systems for Power Utility Automation}, standard series.
 
 \bibitem{pga2500}
 Texas Instruments, \emph{PGA2500 Digitally Controlled Microphone Preamplifier},
@@ -1440,20 +1827,15 @@ Sound Semiconductor, \emph{SSI2164 FatKeys Quad Voltage Controlled Amplifier},
 datasheet rev. 3.0, Aug. 2018. [Online]. Available:
 \url{https://www.soundsemiconductor.com/downloads/ssi2164datasheet.pdf}
 
-\bibitem{adg1404}
-Analog Devices, \emph{ADG1404 iCMOS 4-Channel Multiplexer}, datasheet.
+\bibitem{dg409}
+Vishay Siliconix, \emph{DG408, DG409 Single 8-Channel and Differential
+4-Channel CMOS Analog Multiplexers}, datasheet. [Online]. Available:
+\url{https://www.vishay.com/docs/70062/dg408.pdf}
 
-\bibitem{tl074}
-Texas Instruments, \emph{TL071, TL072, TL074 Low-Noise JFET-Input Operational
-Amplifiers}, datasheet.
-
-\bibitem{stm32g474}
-STMicroelectronics, \emph{STM32G474xB/xC/xE Arm Cortex-M4 32-bit MCU+FPU},
-datasheet. See also reference manual RM0440.
-
-\bibitem{mcp23017}
-Microchip Technology, \emph{MCP23017/MCP23S17 16-Bit I/O Expander with Serial
-Interface}, datasheet DS20001952C, 2016.
+\bibitem{lm13700}
+Texas Instruments, \emph{LM13700 Dual Operational Transconductance Amplifiers
+with Linearizing Diodes and Buffers}, datasheet. [Online]. Available:
+\url{https://www.ti.com/lit/ds/symlink/lm13700.pdf}
 
 \bibitem{mcp4728}
 Microchip Technology, \emph{MCP4728 12-Bit, Quad Digital-to-Analog Converter
@@ -1464,8 +1846,25 @@ with EEPROM Memory}, datasheet DS22187E, 2010. [Online]. Available:
 NXP Semiconductors, \emph{UM10204: I\textsuperscript{2}C-bus Specification and
 User Manual}.
 
-\bibitem{ec11}
-Alps Alpine, \emph{EC11 Series Incremental Rotary Encoder}, product data.
+\bibitem{stm32g474}
+STMicroelectronics, \emph{STM32G474xB/xC/xE Arm Cortex-M4 32-bit MCU+FPU},
+datasheet. See also reference manual RM0440.
+
+\bibitem{mcp23017}
+Microchip Technology, \emph{MCP23017/MCP23S17 16-Bit I/O Expander with Serial
+Interface}, datasheet DS20001952C, 2016.
+
+\bibitem{freertos}
+FreeRTOS, \emph{FreeRTOS Real-Time Operating System for Microcontrollers}.
+[Online]. Available: \url{https://www.freertos.org}
+
+\bibitem{ina2137}
+Texas Instruments, \emph{INA137, INA2137 Audio Differential Line Receivers},
+datasheet. [Online]. Available:
+\url{https://www.ti.com/lit/ds/symlink/ina2137.pdf}
+
+\bibitem{lm3916}
+Texas Instruments, \emph{LM3916 Dot/Bar Display Driver}, datasheet.
 
 \bibitem{rsa0n}
 Alps Alpine, \emph{RS**N1*M Series Motor-Driven Slide Potentiometer, Master
@@ -1488,9 +1887,17 @@ Adafruit Industries, \emph{1.54" 240x240 Color IPS TFT Display}, product ID
 Sitronix Technology, \emph{ST7789V 262K Color Single-Chip TFT-LCD Controller
 and Driver}, datasheet.
 
+\bibitem{ec11}
+Alps Alpine, \emph{EC11 Series Incremental Rotary Encoder}, product data.
+
 \bibitem{hct595}
 Nexperia, \emph{74HC595, 74HCT595 8-bit Serial-In, Serial or Parallel-Out Shift
 Register with Output Latches}, datasheet.
+
+\bibitem{tl074}
+Texas Instruments, \emph{TL071, TL072, TL074 Low-Noise JFET-Input Operational
+Amplifiers}, datasheet. [Online]. Available:
+\url{https://www.ti.com/lit/ds/symlink/tl074.pdf}
 
 \bibitem{lm317}
 Texas Instruments, \emph{LM317 3-Terminal Adjustable Regulator}, datasheet.
@@ -1498,6 +1905,11 @@ Texas Instruments, \emph{LM317 3-Terminal Adjustable Regulator}, datasheet.
 \bibitem{lm337}
 Texas Instruments, \emph{LM337 3-Terminal Adjustable Negative Regulator},
 datasheet.
+
+\bibitem{that1646}
+THAT Corporation, \emph{THAT 1606, 1646 Balanced Line Driver ICs}, datasheet.
+[Online]. Available:
+\url{https://thatcorp.com/datashts/THAT_1606-1646_Datasheet.pdf}
 
 \end{thebibliography}
 \endgroup

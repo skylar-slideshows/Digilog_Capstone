@@ -76,12 +76,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "silk_edge_clearance|195000000|195881765|5529f048-0776-492b-ab62-3cf2ff0febb1|64b2c65c-6fc4-4c39-b1d9-4dfa4639ec5b",
-          "i dont care lol creepage and clearance safety >> silkscreen"
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -264,7 +259,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "REVISION 0.2"
+      "sch_revision": "REVISION 2"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -546,13 +541,19 @@
         "CEN_SEC1",
         "CEN_SEC2"
       ],
+      "Net-(D1-+)": [
+        "CHASSIS"
+      ],
       "Net-(D1-A)": [
         "18VP_SEC"
       ],
       "Net-(D10-K)": [
-        "CHASSIS"
+        "CEN_SEC"
       ],
       "Net-(D2-A)": [
+        "18VP_SEC"
+      ],
+      "Net-(D3-A)": [
         "18VN_SEC"
       ],
       "Net-(D5--)": [
@@ -568,8 +569,17 @@
       "Net-(J10-Pin_2)": [
         "GND"
       ],
-      "Net-(J3-Pin_1)": [
+      "Net-(J2-Pin_1)": [
         "MAINS_IN_1"
+      ],
+      "Net-(J2-Pin_2)": [
+        "MAINS_IN_2",
+        "T_P1B",
+        "T_P2B"
+      ],
+      "Net-(J3-Pin_1)": [
+        "T_P1A",
+        "T_P2A"
       ],
       "Net-(J3-Pin_2)": [
         "MAINS_IN_2",
@@ -816,7 +826,7 @@
         "uuid": "fa85d71b-1ddc-4df3-8621-90a970c44e66"
       }
     ],
-    "used_designators": "H1-2,R1-20,M1-2,#SYM1-6,J1-14,HS1-3,TH1,F1,SW1-3,C1-23,U1-8,FB1-3,D1-4,D6-15,TR1-2,PS1-3,L1-4",
+    "used_designators": "H1-2,R1-20,M1-2,#SYM1-6,J1-14,HS1-3,TH1,F1,SW1-3,FB1-3,U1-8,C1-23,D1-15,TR1-2,PS1-3,L1-4",
     "variants": []
   },
   "sheets": [
