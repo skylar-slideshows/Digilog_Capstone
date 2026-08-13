@@ -1269,69 +1269,126 @@ reach its neighbor.
 
 We are doing everything as buckets of 4 channels, and these prices and quantities are for 16 channels (4 buckets). If budget demands, we can easily scale to 12 or 8 channels.
 
-\textbf{Guys so we need the following components: please list the part number, quantity, unit price, total price = unit price x qty and the source/distributer ignore shipping tarrif tax}
-
-
-x means the rest of the part number can be whatever variant. 
-
-Package is the size/shape of the physical chip that will go on the PCB. Examples include DIP-4, TSSOP16, SIP-16, QFN... dw about that its just what package is here
-
-These are the digital parts, all of these will come from JLCPCB and be presoldered for us with their turnkey pcb fab/assembly service.
-
-Go on JLCPCB parts library and search these components, Pick the cheapest package that has at least a few hundred in stock and report that price (per unit) here and then the price = unit price X quantity. Also have a part description column where u say briefly what we are using it for. If not sure search the document for that part. The prices go down with quantity so use the unit price for the qty listed
-\vspace{0.5cm}
-
-5x STM32G474xxxx - main controller
-
-48x MCP23017 - gpio expander on i2c
-
-80x MCP4728 - cv dac
-
-16x TTP223-BA6 - touch sensor for faders
-
-16x DRV8871 - h bridge motor driver for faders
-
-4x 74HC139xxx - to turn CS[1:0] into 4, 1 bit chip select pins for selecting the display to talk to on the SPI bus.
 
 
 
-16x just search this one on google: Adafruit 4421 TFT Display 
-
-\vspace{0.5cm}
-
-Led ring stuff already made lol dw about it
-
-PSU also made leave it out
-
-also i have the encoders and faders and buttons so dw about those either theyre pricy at these qtys
-
-and i have the devboards for the microcontrolelr and breakout boards of everything already
-
-\vspace{0.5cm}
-
-\textbf{Now heres's the analog components, just search these on JLCPCB parts list, and digikey, and mouser (maybe some other distributer if u want) and list the lowest distributer price of the lowest price package. Use the unit price at the quantity I list here.}
-
-\vspace{0.5cm}
-
-128x NE5532 - main audio op amp
-
-16x INA2137 - balanced line input receiver (dual)
-
-64x TL074 - CV amp
-
-64x LM13700 - OTA
-
-112x SSI2164 - VCA
-
-16x PGA2500 - mic pre
-
-2x THAT1646 - line out buffer
-
-2x OPA2134 - hifi op amp for the 2-bus summing bus
+% ============================================================
+%  Budget tables for Section 5, Digilog Capstone proposal
+%  Generated from Hardware_Budget.xlsx
+%  Requires: booktabs (already loaded in PROPOSAL.tex)
+%  All figures exclude shipping, tariff, and sales tax.
+% ============================================================
 
 
+% ------------------------------------------------------------
+%  Table 1 -- Scenario summary
+% ------------------------------------------------------------
+\begin{table}[H]
+\centering
+\caption{Hardware cost by subsystem for three build configurations. The
+microphone input column removes the PGA2500 preamplifier stage only; balanced
+line input and output remain in every configuration. Figures exclude shipping,
+tariff, and tax.}
+\label{tab:budget-summary}
+\begin{tabular}{l r r r}
+\toprule
+ & \textbf{16 channels} & \textbf{16 channels} & \textbf{8 channels} \\
+\textbf{Subsystem} & \textbf{(4 buckets)} & \textbf{no mic input} & \textbf{no mic input} \\
+\midrule
+Digital control            & \$303.52 & \$303.52 & \$151.50 \\
+User interface             & \$85.90  & \$85.90  & \$67.76 \\
+Analog signal path         & \$231.24 & \$231.24 & \$131.66 \\
+Microphone input stage     & \$205.28 & ---      & --- \\
+PCB, panel, and passives   & \$280.00 & \$280.00 & \$280.00 \\
+\midrule
+\textbf{Total}             & \textbf{\$1{,}105.94} & \textbf{\$900.66} & \textbf{\$630.92} \\
+With 10\,\% contingency    & \$1{,}216.53 & \$990.73 & \$694.01 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-i can source the LM13700s i have a lot already ik theyre "obsolete" but just put \$0.75 per each one and put the distributer as 
+
+% ------------------------------------------------------------
+%  Table 2 -- Margin against the $700 target
+% ------------------------------------------------------------
+\begin{table}[H]
+\centering
+\caption{Margin available against a \$700 budget for the reduced eight channel
+configuration without microphone inputs. The remaining margin must absorb
+shipping, tariff, and tax, none of which appear in Table~\ref{tab:budget-summary}.}
+\label{tab:budget-margin}
+\begin{tabular}{l r}
+\toprule
+\textbf{Item} & \textbf{Amount} \\
+\midrule
+Budget target                                   & \$700.00 \\
+Hardware cost, 8 channels without mic input     & \$630.92 \\
+\midrule
+\textbf{Margin remaining}                       & \textbf{\$69.08} \\
+Largest contingency the target admits           & 10.9\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ------------------------------------------------------------
+%  Table 3 -- Line item bill of materials (16 channels)
+%  Optional: fills the enumeration called for in Section 5.1
+% ------------------------------------------------------------
+\begin{table}[H]
+\centering
+\small
+\caption{Line item bill of materials for the full 16 channel configuration.
+Unit prices are quantity break prices at the quantities shown. Parts already
+held by the team are listed separately below the rule and carry no cost.}
+\label{tab:bom}
+\begin{tabular}{l l r r r l}
+\toprule
+\textbf{Part} & \textbf{Function} & \textbf{Qty} & \textbf{Unit} & \textbf{Total} & \textbf{Source} \\
+\midrule
+\multicolumn{6}{l}{\textit{Digital control}} \\
+STM32G474      & Bucket and master controller   & 5   & \$11.00 & \$55.00  & JLCPCB \\
+MCP23017       & I\textsuperscript{2}C GPIO expander & 48 & \$1.71 & \$82.08 & JLCPCB \\
+MCP4728        & Quad control voltage DAC       & 80  & \$2.07  & \$165.60 & JLCPCB \\
+74HC139        & Display chip select decoder    & 4   & \$0.21  & \$0.84   & JLCPCB \\
+\midrule
+\multicolumn{6}{l}{\textit{User interface}} \\
+05A20L22P      & 22 pin flat flex connector     & 16  & \$0.07  & \$1.12   & JLCPCB \\
+TTP223-BA6     & Fader touch sensor             & 17  & \$0.17  & \$2.89   & JLCPCB \\
+DRV8871        & Fader motor H bridge           & 17  & \$2.15  & \$36.55  & JLCPCB \\
+74HCT595       & LED driver shift register      & 32  & \$0.14  & \$4.48   & JLCPCB \\
+AFY800480B1    & 5 inch master display          & 1   & \$40.86 & \$40.86  & DigiKey \\
+\midrule
+\multicolumn{6}{l}{\textit{Analog signal path}} \\
+NE5532         & Audio operational amplifier    & 128 & \$0.18  & \$23.04  & JLCPCB \\
+LM13700        & Transconductance amplifier     & 64  & \$0.75  & \$48.00  & Team stock \\
+OPA2134        & Summing bus amplifier          & 2   & \$1.74  & \$3.48   & JLCPCB \\
+SSI2164        & Quad voltage controlled amp    & 112 & \$0.39  & \$43.68  & JLCPCB \\
+TL074          & Control voltage amplifier      & 64  & \$0.21  & \$13.44  & JLCPCB \\
+INA2137        & Balanced line receiver         & 16  & \$2.69  & \$43.04  & JLCPCB \\
+DG409          & Signal routing multiplexer     & 42  & \$1.06  & \$44.52  & JLCPCB \\
+THAT1646       & Balanced line driver           & 2   & \$6.02  & \$12.04  & Mouser \\
+\midrule
+\multicolumn{6}{l}{\textit{Microphone input}} \\
+PGA2500        & Digital mic preamplifier       & 16  & \$12.83 & \$205.28 & JLCPCB \\
+\midrule
+\multicolumn{6}{l}{\textit{Fabrication}} \\
+---            & Front panel fabrication        & 1   & \$100.00 & \$100.00 & TBD \\
+---            & PCB fabrication                & 1   & \$150.00 & \$150.00 & JLCPCB \\
+---            & Passives, diodes, transistors  & 1   & \$30.00  & \$30.00  & JLCPCB \\
+\midrule
+\multicolumn{5}{l}{\textbf{Total}} & \textbf{\$1{,}105.94} \\
+\midrule
+\multicolumn{6}{l}{\textit{Held by the team, not budgeted}} \\
+RSA0N11M9      & Motorized fader                & 17  & --- & --- & On hand \\
+EC11           & Rotary encoder with switch     & 160 & --- & --- & On hand \\
+TSL06322       & Illuminated pushbutton         & 256 & --- & --- & On hand \\
+Adafruit 4421  & 1.54 inch channel display      & 16  & --- & --- & On hand \\
+---            & LED ring boards                & 44  & --- & --- & Already fabricated \\
+---            & Knob caps and fader caps       & 62  & --- & --- & On hand \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 \subsection{PCB and CAD Services}
