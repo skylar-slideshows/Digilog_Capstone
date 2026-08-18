@@ -62,7 +62,7 @@
           "hatch_thickness": 1.0,
           "min_clearance": 0.5,
           "min_island_area": 10.0,
-          "min_thickness": 0.5,
+          "min_thickness": 0.25,
           "pad_connection": 1,
           "remove_islands": 0,
           "thermal_relief_gap": 0.5,
@@ -76,28 +76,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "silk_edge_clearance|195000000|195881765|5529f048-0776-492b-ab62-3cf2ff0febb1|64b2c65c-6fc4-4c39-b1d9-4dfa4639ec5b",
-          "i dont care lol creepage and clearance safety >> silkscreen"
-        ],
-        [
-          "silk_overlap|193000000|235881765|64b2c65c-6fc4-4c39-b1d9-4dfa4639ec5b|c51760d2-21e7-4b4c-bc58-986294707281",
-          "dont gaf"
-        ],
-        [
-          "silk_overlap|205976774|89719555|5aff3a0f-75bd-45cb-af57-67d6703e3e39|d99a3665-e6d8-47d0-af16-625601fc5d3e",
-          "idc"
-        ],
-        [
-          "text_thickness|183038936|87412916|a77b4009-0c45-43e9-88cd-92505e7b16e7|00000000-0000-0000-0000-000000000000",
-          "idc"
-        ],
-        [
-          "text_thickness|287302101|165000687|5eae091a-dfe4-4542-87e5-cbb02b13dd6e|00000000-0000-0000-0000-000000000000",
-          "idc"
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -107,18 +86,18 @@
         "connection_width": "warning",
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",
-        "courtyards_overlap": "ignore",
+        "courtyards_overlap": "error",
         "creepage": "error",
         "diff_pair_gap_out_of_range": "error",
         "diff_pair_uncoupled_length_too_long": "error",
         "drill_out_of_range": "error",
-        "duplicate_footprints": "ignore",
-        "extra_footprint": "ignore",
+        "duplicate_footprints": "warning",
+        "extra_footprint": "warning",
         "footprint": "error",
-        "footprint_filters_mismatch": "ignore",
-        "footprint_symbol_field_mismatch": "ignore",
-        "footprint_symbol_mismatch": "ignore",
-        "footprint_type_mismatch": "ignore",
+        "footprint_filters_mismatch": "warning",
+        "footprint_symbol_field_mismatch": "warning",
+        "footprint_symbol_mismatch": "warning",
+        "footprint_type_mismatch": "warning",
         "hole_clearance": "error",
         "hole_to_hole": "warning",
         "holes_co_located": "warning",
@@ -128,21 +107,21 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "ignore",
+        "lib_footprint_mismatch": "warning",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
-        "missing_courtyard": "ignore",
+        "missing_courtyard": "warning",
         "missing_footprint": "warning",
         "missing_tuning_profile": "warning",
         "net_conflict": "warning",
         "nonmirrored_text_on_back_layer": "warning",
         "npth_inside_courtyard": "error",
         "padstack": "warning",
-        "pth_inside_courtyard": "ignore",
+        "pth_inside_courtyard": "error",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
-        "silk_over_copper": "ignore",
+        "silk_over_copper": "warning",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
@@ -180,7 +159,7 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.3,
+        "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.005,
@@ -232,12 +211,8 @@
       ],
       "track_widths": [
         0.0,
-        0.2,
-        0.5,
-        0.8,
-        1.0,
-        1.7,
-        2.5
+        0.3,
+        0.5
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -269,6 +244,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.5,
+          "drill": 0.3
         }
       ],
       "zones_allow_external_fillets": false
@@ -280,7 +259,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "REVISION 0.2"
+      "sch_revision": ""
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -528,7 +507,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "PSU.kicad_pro",
+    "filename": "sends.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -557,108 +536,7 @@
       "version": 5
     },
     "net_colors": null,
-    "netclass_assignments": {
-      "/GND": [
-        "CEN_SEC1",
-        "CEN_SEC2"
-      ],
-      "Net-(D1-A)": [
-        "18VP_SEC"
-      ],
-      "Net-(D10-K)": [
-        "CEN_SEC"
-      ],
-      "Net-(D2-A)": [
-        "18VN_SEC"
-      ],
-      "Net-(D5--)": [
-        "CEN_SEC"
-      ],
-      "Net-(D6-+)": [
-        "CHASSIS"
-      ],
-      "Net-(J10-Pin_1)": [
-        "BUCK_10V"
-      ],
-      "Net-(J10-Pin_2)": [
-        "GND"
-      ],
-      "Net-(J3-Pin_1)": [
-        "MAINS_IN_1"
-      ],
-      "Net-(J3-Pin_2)": [
-        "MAINS_IN_2",
-        "T_P1B",
-        "T_P2B"
-      ],
-      "Net-(J4-Pin_1)": [
-        "T_P1A",
-        "T_P2A"
-      ],
-      "Net-(J4-Pin_2)": [
-        "T_P1B"
-      ],
-      "Net-(J4-Pin_3)": [
-        "T_P2A"
-      ],
-      "Net-(J7-Pin_1)": [
-        "TO_BUCK_P"
-      ],
-      "Net-(J8-Pin_1)": [
-        "BUCK_3V3"
-      ],
-      "Net-(J8-Pin_2)": [
-        "BUCK_5V"
-      ],
-      "Net-(PS1-GND-Pad2)": [
-        "GND"
-      ],
-      "Net-(PS1-VIN)": [
-        "TO_BUCK_P"
-      ],
-      "Net-(TR1-Pad6)": [
-        "CEN_SEC"
-      ],
-      "unconnected-(J1-N-Pad2)": [
-        "MAINS_IN_2"
-      ],
-      "unconnected-(PS1-OUT-Pad3)": [
-        "BUCK_3V3"
-      ],
-      "unconnected-(PS2-OUT-Pad3)": [
-        "BUCK_5V"
-      ],
-      "unconnected-(PS3-OUT-Pad3)": [
-        "BUCK_10V"
-      ],
-      "unconnected-(SW1-B-Pad2)": [
-        "MAINS_IN_1"
-      ],
-      "unconnected-(TR1-Pad1)": [
-        "T_P1A"
-      ],
-      "unconnected-(TR1-Pad2)": [
-        "T_P1B"
-      ],
-      "unconnected-(TR1-Pad3)": [
-        "T_P2A"
-      ],
-      "unconnected-(TR1-Pad4)": [
-        "T_P2B"
-      ],
-      "unconnected-(TR1-Pad5)": [
-        "18VN_SEC"
-      ],
-      "unconnected-(TR1-Pad6)": [
-        "CEN_SEC"
-      ],
-      "unconnected-(TR1-Pad7)": [
-        "CEN_SEC"
-      ],
-      "unconnected-(TR1-Pad8)": [
-        "18VP_SEC"
-      ]
-    },
+    "netclass_assignments": null,
     "netclass_patterns": []
   },
   "pcbnew": {
@@ -702,10 +580,10 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Value",
           "name": "Value",
           "show": true
@@ -738,36 +616,6 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
-        },
-        {
-          "group_by": false,
-          "label": "LCSC",
-          "name": "LCSC",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "PURC_LINK",
-          "name": "PURC_LINK",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Device",
-          "name": "Sim.Device",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Pins",
-          "name": "Sim.Pins",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Field5",
-          "name": "Field5",
           "show": false
         },
         {
@@ -781,6 +629,12 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": true
         }
       ],
       "filter_string": "",
@@ -826,18 +680,27 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "PSU.kicad_sch",
+        "filename": "sends.kicad_sch",
         "name": "Root",
-        "uuid": "fa85d71b-1ddc-4df3-8621-90a970c44e66"
+        "uuid": "4a247955-b1a1-46a4-9d5c-81247d542eb5"
+      },
+      {
+        "filename": "analog_pcb.kicad_sch",
+        "name": "ANALOG_PCB",
+        "uuid": "f52ca0a0-4120-4790-8319-170a8af18104"
       }
     ],
-    "used_designators": "H1-2,R1-20,M1-2,#SYM1-6,J1-14,HS1-3,TH1,F1,SW1-3,FB1-3,U1-8,C1-23,D1-4,D6-15,TR1-2,PS1-3,L1-4",
+    "used_designators": "R1-24,C1-37,J1-3,#PWR1-75,U1-11",
     "variants": []
   },
   "sheets": [
     [
-      "fa85d71b-1ddc-4df3-8621-90a970c44e66",
+      "4a247955-b1a1-46a4-9d5c-81247d542eb5",
       "Root"
+    ],
+    [
+      "f52ca0a0-4120-4790-8319-170a8af18104",
+      "ANALOG_PCB"
     ]
   ],
   "text_variables": {},
