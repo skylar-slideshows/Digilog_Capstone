@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('led__driver_8h
 </div><!--header-->
 <div class="contents">
 
-<p>Skylar's driver for the LED displays on the console, including knobs and buttons. Public API header.  
+<p>Skylar's driver for the LED displays on the console, including knobs and buttons.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
@@ -141,6 +141,16 @@ Enumerations</h2></td></tr>
 , <b>SCALE_CENTER</b> = 1
  }</td></tr>
 <tr class="memdesc:aebc7d96b3cd2b0247e0fee9facdd6306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).  <a href="#aebc7d96b3cd2b0247e0fee9facdd6306">More...</a><br /></td></tr>
+<tr class="memitem:a6afcab6c98a3c6739d16652079175474" id="r_a6afcab6c98a3c6739d16652079175474"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a6afcab6c98a3c6739d16652079175474">anim_t</a> { <br />
+&#160;&#160;<b>ANIM_NONE</b> = 0
+, <b>ANIM_LOAD</b>
+, <b>ANIM_SWEEP</b>
+, <b>ANIM_BREATHE_KEEP</b>
+, <br />
+&#160;&#160;<b>ANIM_BREATHE_ALL</b>
+<br />
+ }</td></tr>
+<tr class="memdesc:a6afcab6c98a3c6739d16652079175474"><td class="mdescLeft">&#160;</td><td class="mdescRight">type to store animation  <a href="#a6afcab6c98a3c6739d16652079175474">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -157,7 +167,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a117a1253b0b1c6ace75bcea6225320b5" id="r_a117a1253b0b1c6ace75bcea6225320b5"><td class="memItemLeft">uint8_t&#160;</td><td class="memItemRight"><a class="el" href="#a117a1253b0b1c6ace75bcea6225320b5">led_get_brightness</a> (void)</td></tr>
 <tr class="memdesc:a117a1253b0b1c6ace75bcea6225320b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the current brightness setting 0 - 255.  <br /></td></tr>
 <tr class="memitem:ac3632393db02297327f4a1f528cb6949" id="r_ac3632393db02297327f4a1f528cb6949"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac3632393db02297327f4a1f528cb6949">knob_led</a> (uint8_t ch, uint8_t knob, int8_t value)</td></tr>
-<tr class="memdesc:ac3632393db02297327f4a1f528cb6949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change a knob display's value.  <br /></td></tr>
+<tr class="memdesc:ac3632393db02297327f4a1f528cb6949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change a knob display's value, specify which knob by coords (chnl and knob number).  <br /></td></tr>
 <tr class="memitem:a3565437c6af8a8c9e5a9ae8bd08b2f2a" id="r_a3565437c6af8a8c9e5a9ae8bd08b2f2a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3565437c6af8a8c9e5a9ae8bd08b2f2a">knob_step</a> (uint8_t ch, uint8_t knob, int8_t delta)</td></tr>
 <tr class="memdesc:a3565437c6af8a8c9e5a9ae8bd08b2f2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes a knob display by delta LEDs from its current value, clamped to its scale.  <br /></td></tr>
 <tr class="memitem:a80b831ef64a605b33025a96aaf8a115c" id="r_a80b831ef64a605b33025a96aaf8a115c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a80b831ef64a605b33025a96aaf8a115c">knob_disp</a> (uint8_t ch, uint8_t knob, <a class="el" href="#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a> m)</td></tr>
@@ -167,29 +177,42 @@ Functions</h2></td></tr>
 <tr class="memitem:a4231cfb6291cb92b3e85ebc51a40c6d9" id="r_a4231cfb6291cb92b3e85ebc51a40c6d9"><td class="memItemLeft">int8_t&#160;</td><td class="memItemRight"><a class="el" href="#a4231cfb6291cb92b3e85ebc51a40c6d9">knob_get</a> (uint8_t ch, uint8_t knob)</td></tr>
 <tr class="memdesc:a4231cfb6291cb92b3e85ebc51a40c6d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a knob's current value, in the units of its own scale.  <br /></td></tr>
 <tr class="memitem:aabc9ae33ffeb690a072c354d5755f3b0" id="r_aabc9ae33ffeb690a072c354d5755f3b0"><td class="memItemLeft"><a class="el" href="#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a>&#160;</td><td class="memItemRight"><a class="el" href="#aabc9ae33ffeb690a072c354d5755f3b0">knob_get_disp</a> (uint8_t ch, uint8_t knob)</td></tr>
-<tr class="memdesc:aabc9ae33ffeb690a072c354d5755f3b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a knob's display mode (bar or point).  <br /></td></tr>
+<tr class="memdesc:aabc9ae33ffeb690a072c354d5755f3b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a knob's current display mode (bar or point).  <br /></td></tr>
 <tr class="memitem:a1f895c2496c16fda8ad9507755119c48" id="r_a1f895c2496c16fda8ad9507755119c48"><td class="memItemLeft"><a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306">knob_scale_t</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1f895c2496c16fda8ad9507755119c48">knob_get_scale</a> (uint8_t ch, uint8_t knob)</td></tr>
-<tr class="memdesc:a1f895c2496c16fda8ad9507755119c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a knob's scale mode (left or center).  <br /></td></tr>
+<tr class="memdesc:a1f895c2496c16fda8ad9507755119c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a knob's current scale mode (left or center).  <br /></td></tr>
 <tr class="memitem:aaa513118b1a81d398b810da029363dab" id="r_aaa513118b1a81d398b810da029363dab"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aaa513118b1a81d398b810da029363dab">knob_raw</a> (uint8_t ch, uint8_t knob, uint32_t bits)</td></tr>
 <tr class="memdesc:aaa513118b1a81d398b810da029363dab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes.  <br /></td></tr>
 <tr class="memitem:a9efcf9d850b2c1155299d086f5472b7d" id="r_a9efcf9d850b2c1155299d086f5472b7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9efcf9d850b2c1155299d086f5472b7d">button_led</a> (uint8_t ch, uint8_t btn, bool on)</td></tr>
-<tr class="memdesc:a9efcf9d850b2c1155299d086f5472b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes.  <br /></td></tr>
+<tr class="memdesc:a9efcf9d850b2c1155299d086f5472b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a specific button display LED to on or off by coordinate.  <br /></td></tr>
 <tr class="memitem:a5272b66ced227e818a4a38e813506a9c" id="r_a5272b66ced227e818a4a38e813506a9c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5272b66ced227e818a4a38e813506a9c">button_get</a> (uint8_t ch, uint8_t btn)</td></tr>
-<tr class="memdesc:a5272b66ced227e818a4a38e813506a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes.  <br /></td></tr>
+<tr class="memdesc:a5272b66ced227e818a4a38e813506a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if specified button LED is on or off.  <br /></td></tr>
 <tr class="memitem:a223b70e2d29cfa857c814f91db57d9bf" id="r_a223b70e2d29cfa857c814f91db57d9bf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a223b70e2d29cfa857c814f91db57d9bf">button_mask</a> (uint8_t ch, uint16_t mask)</td></tr>
-<tr class="memdesc:a223b70e2d29cfa857c814f91db57d9bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes.  <br /></td></tr>
+<tr class="memdesc:a223b70e2d29cfa857c814f91db57d9bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets 16 button LED states (entire channel) at once in the frame buffer.  <br /></td></tr>
+<tr class="memitem:a2a0747179642066308781e0047d71c43" id="r_a2a0747179642066308781e0047d71c43"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2a0747179642066308781e0047d71c43">anim_stop</a> (void)</td></tr>
+<tr class="memdesc:a2a0747179642066308781e0047d71c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_stop : Redraws every knob from its stored value, restores the saved brightness and  <br /></td></tr>
+<tr class="memitem:a78795bc24d9cc1972aa1aa5c11148721" id="r_a78795bc24d9cc1972aa1aa5c11148721"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a78795bc24d9cc1972aa1aa5c11148721">anim_claim</a> (<a class="el" href="#a6afcab6c98a3c6739d16652079175474">anim_t</a> a)</td></tr>
+<tr class="memdesc:a78795bc24d9cc1972aa1aa5c11148721"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_claim : stop what was running and claim display  <br /></td></tr>
+<tr class="memitem:a12e8fd2c8511fc8916e3fc231d54c873" id="r_a12e8fd2c8511fc8916e3fc231d54c873"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a12e8fd2c8511fc8916e3fc231d54c873">anim_loading</a> (int8_t knob)</td></tr>
+<tr class="memdesc:a12e8fd2c8511fc8916e3fc231d54c873"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly, one call = one advancement. When loading done just stop and call anim_stop.  <br /></td></tr>
+<tr class="memitem:a1be38eb4af54e20273ee84b2f586c00f" id="r_a1be38eb4af54e20273ee84b2f586c00f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1be38eb4af54e20273ee84b2f586c00f">anim_sweep</a> (uint8_t ch, uint8_t knob)</td></tr>
+<tr class="memdesc:a1be38eb4af54e20273ee84b2f586c00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in center mode the animation matches the mode.  <br /></td></tr>
+<tr class="memitem:a6db97b368a56f86d7509f25d452f2277" id="r_a6db97b368a56f86d7509f25d452f2277"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6db97b368a56f86d7509f25d452f2277">anim_breathe</a> (uint8_t mode)</td></tr>
+<tr class="memdesc:a6db97b368a56f86d7509f25d452f2277"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_breathe : Brightness breathing animation  <br /></td></tr>
 <tr class="memitem:a7c814e4dc44f419e86d97917801f7ced" id="r_a7c814e4dc44f419e86d97917801f7ced"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7c814e4dc44f419e86d97917801f7ced">led_debug</a> (bool on)</td></tr>
 <tr class="memdesc:a7c814e4dc44f419e86d97917801f7ced"><td class="mdescLeft">&#160;</td><td class="mdescRight">[DEBUG MODE] Toggles debug mode with input boolean  <br /></td></tr>
 <tr class="memitem:af46294a908fd1e649734cb45df495003" id="r_af46294a908fd1e649734cb45df495003"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af46294a908fd1e649734cb45df495003">led_print_config</a> (void)</td></tr>
 <tr class="memdesc:af46294a908fd1e649734cb45df495003"><td class="mdescLeft">&#160;</td><td class="mdescRight">[DEBUG MODE] Prints the configuration params to console  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Skylar's driver for the LED displays on the console, including knobs and buttons. Public API header. </p>
+<div class="textblock"><p>Skylar's driver for the LED displays on the console, including knobs and buttons. </p>
 <p>LED DISPLAYS DRIVER - DIGILOG CONSOLE</p>
+<p>Low level driver for showing stuff on the LEDs. Includes all basic writing functions and center/from-left writing for knob rings and both (bar/point) display style modes. There are 40, 32 LED knob rings for a bucket controller, and (up to) 64 more bits for 16 button LEDs per channel (Total 1344 LEDs per bucket). Part: 74HCT595.</p>
 <dl class="section author"><dt>Author</dt><dd>Skylar Denno (<a href="#" onclick="location.href='mai'+'lto:'+'den'+'no'+'.o@'+'no'+'rth'+'ea'+'ste'+'rn'+'.ed'+'u'; return false;">denno<span class="obfuscator">.nosp@m.</span>.o@n<span class="obfuscator">.nosp@m.</span>orthe<span class="obfuscator">.nosp@m.</span>aste<span class="obfuscator">.nosp@m.</span>rn.ed<span class="obfuscator">.nosp@m.</span>u</a>) </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2026-08-20 </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>No copyright </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026 Skylar Denno</dd></dl>
+<p>MIT License: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="af3070bb321915f647681d9303902b466" name="af3070bb321915f647681d9303902b466"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3070bb321915f647681d9303902b466">&#9670;&#160;</a></span>knob_dec</h2>
@@ -237,6 +260,25 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="a6afcab6c98a3c6739d16652079175474" name="a6afcab6c98a3c6739d16652079175474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6afcab6c98a3c6739d16652079175474">&#9670;&#160;</a></span>anim_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a6afcab6c98a3c6739d16652079175474">anim_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>type to store animation </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+autotoc_md39</h2>
+
+</div>
+</div>
 <a id="a204eeb2f62750691be88d11cee12e8fb" name="a204eeb2f62750691be88d11cee12e8fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a204eeb2f62750691be88d11cee12e8fb">&#9670;&#160;</a></span>knob_disp_t</h2>
 
@@ -276,6 +318,150 @@ autotoc_md3</h2>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a6db97b368a56f86d7509f25d452f2277" name="a6db97b368a56f86d7509f25d452f2277"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6db97b368a56f86d7509f25d452f2277">&#9670;&#160;</a></span>anim_breathe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anim_breathe </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>mode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>anim_breathe : Brightness breathing animation </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>mode 0 = just the LEDs that </td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+are currently on in normal state will do it, mode 1 = every single LED does it</h2>
+
+</div>
+</div>
+<a id="a78795bc24d9cc1972aa1aa5c11148721" name="a78795bc24d9cc1972aa1aa5c11148721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78795bc24d9cc1972aa1aa5c11148721">&#9670;&#160;</a></span>anim_claim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anim_claim </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a6afcab6c98a3c6739d16652079175474">anim_t</a></td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>anim_claim : stop what was running and claim display </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+autotoc_md43</h2>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="#a6afcab6c98a3c6739d16652079175474" title="type to store animation">anim_t</a> "animation type" type, changes what it does a bit </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a12e8fd2c8511fc8916e3fc231d54c873" name="a12e8fd2c8511fc8916e3fc231d54c873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12e8fd2c8511fc8916e3fc231d54c873">&#9670;&#160;</a></span>anim_loading()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anim_loading </td>
+          <td>(</td>
+          <td class="paramtype">int8_t</td>          <td class="paramname"><span class="paramname"><em>knob</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly, one call = one advancement. When loading done just stop and call anim_stop. </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+autotoc_md45</h2>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">knob</td><td>knob number 0-9 (all channels that knob will do loading), use -1 to do every knob </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2a0747179642066308781e0047d71c43" name="a2a0747179642066308781e0047d71c43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a0747179642066308781e0047d71c43">&#9670;&#160;</a></span>anim_stop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anim_stop </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>anim_stop : Redraws every knob from its stored value, restores the saved brightness and </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+resets all animation phases</h2>
+
+</div>
+</div>
+<a id="a1be38eb4af54e20273ee84b2f586c00f" name="a1be38eb4af54e20273ee84b2f586c00f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1be38eb4af54e20273ee84b2f586c00f">&#9670;&#160;</a></span>anim_sweep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anim_sweep </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>ch</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>knob</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in center mode the animation matches the mode. </p>
+<hr  />
+ <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ch</td><td>channel 0-3 </td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+autotoc_md47</h2>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">knob</td><td>knob 0-9 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a5272b66ced227e818a4a38e813506a9c" name="a5272b66ced227e818a4a38e813506a9c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5272b66ced227e818a4a38e813506a9c">&#9670;&#160;</a></span>button_get()</h2>
 
@@ -295,7 +481,7 @@ autotoc_md3</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes. </p>
+<p>Returns if specified button LED is on or off. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -334,11 +520,12 @@ autotoc_md35</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes. </p>
+<p>Set a specific button display LED to on or off by coordinate. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ch</td><td>channel number 0-3 </td></tr>
+    <tr><td class="paramname">btn</td><td>channel's button number 0-15 </td></tr>
   </table>
   </dd>
 </dl>
@@ -346,7 +533,7 @@ autotoc_md35</h2>
 autotoc_md33</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">btn</td><td>channel's button number 0-15 </td></tr>
+    <tr><td class="paramname">on</td><td>set that button LED on or off? true = on </td></tr>
   </table>
   </dd>
 </dl>
@@ -372,7 +559,7 @@ autotoc_md33</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes. </p>
+<p>Sets 16 button LED states (entire channel) at once in the frame buffer. </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -488,7 +675,7 @@ autotoc_md25</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Returns a knob's display mode (bar or point). </p>
+<p>Returns a knob's current display mode (bar or point). </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -522,7 +709,7 @@ autotoc_md27</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Returns a knob's scale mode (left or center). </p>
+<p>Returns a knob's current scale mode (left or center). </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -561,7 +748,7 @@ autotoc_md29</h2>
       </table>
 </div><div class="memdoc">
 
-<p>Change a knob display's value. </p>
+<p>Change a knob display's value, specify which knob by coords (chnl and knob number). </p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -780,8 +967,8 @@ autotoc_md11</h2>
 
 <p>[DEBUG MODE] Toggles debug mode with input boolean </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
-autotoc_md39</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+autotoc_md51</h2>
 
 </div>
 </div>
@@ -846,8 +1033,8 @@ autotoc_md5</h2>
 
 <p>[DEBUG MODE] Prints the configuration params to console </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
-autotoc_md41</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+autotoc_md53</h2>
 
 </div>
 </div>

@@ -1,7 +1,13 @@
 var led__driver_8h =
 [
+    [ "anim_t", "led__driver_8h.html#a6afcab6c98a3c6739d16652079175474", null ],
     [ "knob_disp_t", "led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb", null ],
     [ "knob_scale_t", "led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306", null ],
+    [ "anim_breathe", "led__driver_8h.html#a6db97b368a56f86d7509f25d452f2277", null ],
+    [ "anim_claim", "led__driver_8h.html#a78795bc24d9cc1972aa1aa5c11148721", null ],
+    [ "anim_loading", "led__driver_8h.html#a12e8fd2c8511fc8916e3fc231d54c873", null ],
+    [ "anim_stop", "led__driver_8h.html#a2a0747179642066308781e0047d71c43", null ],
+    [ "anim_sweep", "led__driver_8h.html#a1be38eb4af54e20273ee84b2f586c00f", null ],
     [ "button_get", "led__driver_8h.html#a5272b66ced227e818a4a38e813506a9c", null ],
     [ "button_led", "led__driver_8h.html#a9efcf9d850b2c1155299d086f5472b7d", null ],
     [ "button_mask", "led__driver_8h.html#a223b70e2d29cfa857c814f91db57d9bf", null ],

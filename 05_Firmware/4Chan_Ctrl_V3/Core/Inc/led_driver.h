@@ -2,7 +2,7 @@
   **********************************************************************************
   * LED DISPLAYS DRIVER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file led_driver.c
+  * @file led_driver.h
   * @brief Skylar's driver for the LED displays on the console, including knobs and buttons.
   *
   * Low level driver for showing stuff on the LEDs.

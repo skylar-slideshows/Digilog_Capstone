@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('led__driver_8h
   <div class="headertitle"><div class="title">led_driver.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<a href="led__driver_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#ifndef LED_DRIVER_H</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#define LED_DRIVER_H</span></div>
@@ -127,105 +127,138 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('led__driver_8h
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="foldopen" id="foldopen00052" data-start="{" data-end="};">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb">   52</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    DISP_BAR = 0,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    DISP_POINT = 1</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} knob_disp_t;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <a class="code hl_enumeration" href="led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a>;</div>
+</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="};">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306">   63</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    SCALE_LEFT = 0, <span class="comment">// 0-32 bar grows from the left</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    SCALE_CENTER = 1  <span class="comment">// -15 - +16, bar grows from the middle LED (0)</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} knob_scale_t;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <a class="code hl_enumeration" href="led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306">knob_scale_t</a>;</div>
+</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keywordtype">void</span> led_init(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66">   74</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66">led_init</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keywordtype">void</span> led_update(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f">   82</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f">led_update</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keywordtype">void</span> led_refresh(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a7356edcfb81a323c5f9ab6e3b8e90413">   90</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a7356edcfb81a323c5f9ab6e3b8e90413">led_refresh</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">void</span> led_clear(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="led__driver_8h.html#acc42bb9974f0987487ea0dc1c9abfb85">   98</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#acc42bb9974f0987487ea0dc1c9abfb85">led_clear</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keywordtype">void</span> led_brightness(uint8_t b);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a5fb33e61c65574293769a5ff7bbbc6dc">  107</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a5fb33e61c65574293769a5ff7bbbc6dc">led_brightness</a>(uint8_t b);</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>uint8_t led_get_brightness(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a117a1253b0b1c6ace75bcea6225320b5">  115</a></span>uint8_t <a class="code hl_function" href="led__driver_8h.html#a117a1253b0b1c6ace75bcea6225320b5">led_get_brightness</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keywordtype">void</span> knob_led(uint8_t ch, uint8_t knob, int8_t value);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="led__driver_8h.html#ac3632393db02297327f4a1f528cb6949">  126</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#ac3632393db02297327f4a1f528cb6949">knob_led</a>(uint8_t ch, uint8_t knob, int8_t value);</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="keywordtype">void</span> knob_step(uint8_t ch, uint8_t knob, int8_t delta);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a3565437c6af8a8c9e5a9ae8bd08b2f2a">  137</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a3565437c6af8a8c9e5a9ae8bd08b2f2a">knob_step</a>(uint8_t ch, uint8_t knob, int8_t delta);</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keywordtype">void</span> knob_disp(uint8_t ch, uint8_t knob, knob_disp_t m);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a80b831ef64a605b33025a96aaf8a115c">  148</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a80b831ef64a605b33025a96aaf8a115c">knob_disp</a>(uint8_t ch, uint8_t knob, <a class="code hl_enumeration" href="led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a> m);</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="keywordtype">void</span> knob_scale(uint8_t ch, uint8_t knob, knob_scale_t m);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a876a1b256e10040760aca72745e7f752">  160</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a876a1b256e10040760aca72745e7f752">knob_scale</a>(uint8_t ch, uint8_t knob, <a class="code hl_enumeration" href="led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306">knob_scale_t</a> m);</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>int8_t knob_get(uint8_t ch, uint8_t knob);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a4231cfb6291cb92b3e85ebc51a40c6d9">  171</a></span>int8_t <a class="code hl_function" href="led__driver_8h.html#a4231cfb6291cb92b3e85ebc51a40c6d9">knob_get</a>(uint8_t ch, uint8_t knob);</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>knob_disp_t knob_get_disp(uint8_t ch, uint8_t knob);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="led__driver_8h.html#aabc9ae33ffeb690a072c354d5755f3b0">  182</a></span><a class="code hl_enumeration" href="led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a> <a class="code hl_function" href="led__driver_8h.html#aabc9ae33ffeb690a072c354d5755f3b0">knob_get_disp</a>(uint8_t ch, uint8_t knob);</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>knob_scale_t knob_get_scale(uint8_t ch, uint8_t knob);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a1f895c2496c16fda8ad9507755119c48">  193</a></span><a class="code hl_enumeration" href="led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306">knob_scale_t</a> <a class="code hl_function" href="led__driver_8h.html#a1f895c2496c16fda8ad9507755119c48">knob_get_scale</a>(uint8_t ch, uint8_t knob);</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="keywordtype">void</span> knob_raw(uint8_t ch, uint8_t knob, uint32_t bits);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="led__driver_8h.html#aaa513118b1a81d398b810da029363dab">  205</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#aaa513118b1a81d398b810da029363dab">knob_raw</a>(uint8_t ch, uint8_t knob, uint32_t bits);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="preprocessor">#define knob_inc(ch, knob) knob_step((ch), (knob), +1)</span></div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="preprocessor">#define knob_dec(ch, knob) knob_step((ch), (knob), -1)</span></div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="keywordtype">void</span> button_led(uint8_t ch, uint8_t btn, <span class="keywordtype">bool</span> on);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a9efcf9d850b2c1155299d086f5472b7d">  220</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a9efcf9d850b2c1155299d086f5472b7d">button_led</a>(uint8_t ch, uint8_t btn, <span class="keywordtype">bool</span> on);</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="keywordtype">bool</span> button_get(uint8_t ch, uint8_t btn);</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a5272b66ced227e818a4a38e813506a9c">  231</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="led__driver_8h.html#a5272b66ced227e818a4a38e813506a9c">button_get</a>(uint8_t ch, uint8_t btn);</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="keywordtype">void</span> button_mask(uint8_t ch, uint16_t mask);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a223b70e2d29cfa857c814f91db57d9bf">  241</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a223b70e2d29cfa857c814f91db57d9bf">button_mask</a>(uint8_t ch, uint16_t mask);</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="foldopen" id="foldopen00249" data-start="{" data-end="};">
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a6afcab6c98a3c6739d16652079175474">  249</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    ANIM_NONE = 0, ANIM_LOAD, ANIM_SWEEP, ANIM_BREATHE_KEEP, ANIM_BREATHE_ALL</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>} anim_t;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>} <a class="code hl_enumeration" href="led__driver_8h.html#a6afcab6c98a3c6739d16652079175474">anim_t</a>;</div>
+</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="keywordtype">void</span> anim_stop(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a2a0747179642066308781e0047d71c43">  260</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a2a0747179642066308781e0047d71c43">anim_stop</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="keywordtype">void</span> anim_claim(anim_t a);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a78795bc24d9cc1972aa1aa5c11148721">  269</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a78795bc24d9cc1972aa1aa5c11148721">anim_claim</a>(<a class="code hl_enumeration" href="led__driver_8h.html#a6afcab6c98a3c6739d16652079175474">anim_t</a> a);</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keywordtype">void</span> anim_loading(int8_t knob);</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a12e8fd2c8511fc8916e3fc231d54c873">  280</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a12e8fd2c8511fc8916e3fc231d54c873">anim_loading</a>(int8_t knob);</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="keywordtype">void</span> anim_sweep(uint8_t ch, uint8_t knob);</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a1be38eb4af54e20273ee84b2f586c00f">  291</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a1be38eb4af54e20273ee84b2f586c00f">anim_sweep</a>(uint8_t ch, uint8_t knob);</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span></div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="keywordtype">void</span> anim_breathe(uint8_t mode);</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a6db97b368a56f86d7509f25d452f2277">  301</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a6db97b368a56f86d7509f25d452f2277">anim_breathe</a>(uint8_t mode);</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="keywordtype">void</span> led_debug(<span class="keywordtype">bool</span> on);</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="led__driver_8h.html#a7c814e4dc44f419e86d97917801f7ced">  309</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#a7c814e4dc44f419e86d97917801f7ced">led_debug</a>(<span class="keywordtype">bool</span> on);</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span></div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="keywordtype">void</span> led_print_config(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno"><a class="line" href="led__driver_8h.html#af46294a908fd1e649734cb45df495003">  317</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="led__driver_8h.html#af46294a908fd1e649734cb45df495003">led_print_config</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aled__driver_8h_html_a117a1253b0b1c6ace75bcea6225320b5"><div class="ttname"><a href="led__driver_8h.html#a117a1253b0b1c6ace75bcea6225320b5">led_get_brightness</a></div><div class="ttdeci">uint8_t led_get_brightness(void)</div><div class="ttdoc">Gives the current brightness setting 0 - 255.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a12e8fd2c8511fc8916e3fc231d54c873"><div class="ttname"><a href="led__driver_8h.html#a12e8fd2c8511fc8916e3fc231d54c873">anim_loading</a></div><div class="ttdeci">void anim_loading(int8_t knob)</div><div class="ttdoc">anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly,...</div></div>
+<div class="ttc" id="aled__driver_8h_html_a1be38eb4af54e20273ee84b2f586c00f"><div class="ttname"><a href="led__driver_8h.html#a1be38eb4af54e20273ee84b2f586c00f">anim_sweep</a></div><div class="ttdeci">void anim_sweep(uint8_t ch, uint8_t knob)</div><div class="ttdoc">anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep,...</div></div>
+<div class="ttc" id="aled__driver_8h_html_a1f895c2496c16fda8ad9507755119c48"><div class="ttname"><a href="led__driver_8h.html#a1f895c2496c16fda8ad9507755119c48">knob_get_scale</a></div><div class="ttdeci">knob_scale_t knob_get_scale(uint8_t ch, uint8_t knob)</div><div class="ttdoc">Returns a knob&#39;s current scale mode (left or center).</div></div>
+<div class="ttc" id="aled__driver_8h_html_a204eeb2f62750691be88d11cee12e8fb"><div class="ttname"><a href="led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb">knob_disp_t</a></div><div class="ttdeci">knob_disp_t</div><div class="ttdoc">Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator.</div><div class="ttdef"><b>Definition</b> led_driver.h:52</div></div>
+<div class="ttc" id="aled__driver_8h_html_a223b70e2d29cfa857c814f91db57d9bf"><div class="ttname"><a href="led__driver_8h.html#a223b70e2d29cfa857c814f91db57d9bf">button_mask</a></div><div class="ttdeci">void button_mask(uint8_t ch, uint16_t mask)</div><div class="ttdoc">Sets 16 button LED states (entire channel) at once in the frame buffer.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a2a0747179642066308781e0047d71c43"><div class="ttname"><a href="led__driver_8h.html#a2a0747179642066308781e0047d71c43">anim_stop</a></div><div class="ttdeci">void anim_stop(void)</div><div class="ttdoc">anim_stop : Redraws every knob from its stored value, restores the saved brightness and</div></div>
+<div class="ttc" id="aled__driver_8h_html_a3565437c6af8a8c9e5a9ae8bd08b2f2a"><div class="ttname"><a href="led__driver_8h.html#a3565437c6af8a8c9e5a9ae8bd08b2f2a">knob_step</a></div><div class="ttdeci">void knob_step(uint8_t ch, uint8_t knob, int8_t delta)</div><div class="ttdoc">Changes a knob display by delta LEDs from its current value, clamped to its scale.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a4231cfb6291cb92b3e85ebc51a40c6d9"><div class="ttname"><a href="led__driver_8h.html#a4231cfb6291cb92b3e85ebc51a40c6d9">knob_get</a></div><div class="ttdeci">int8_t knob_get(uint8_t ch, uint8_t knob)</div><div class="ttdoc">Returns a knob&#39;s current value, in the units of its own scale.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a5272b66ced227e818a4a38e813506a9c"><div class="ttname"><a href="led__driver_8h.html#a5272b66ced227e818a4a38e813506a9c">button_get</a></div><div class="ttdeci">bool button_get(uint8_t ch, uint8_t btn)</div><div class="ttdoc">Returns if specified button LED is on or off.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a5fb33e61c65574293769a5ff7bbbc6dc"><div class="ttname"><a href="led__driver_8h.html#a5fb33e61c65574293769a5ff7bbbc6dc">led_brightness</a></div><div class="ttdeci">void led_brightness(uint8_t b)</div><div class="ttdoc">Set brightness of all LEDs through OE pin PWM duty cycle.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a682da542ec0d880fe15e35c521dca40f"><div class="ttname"><a href="led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f">led_update</a></div><div class="ttdeci">void led_update(void)</div><div class="ttdoc">Push frame to hardware IF changed.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a6afcab6c98a3c6739d16652079175474"><div class="ttname"><a href="led__driver_8h.html#a6afcab6c98a3c6739d16652079175474">anim_t</a></div><div class="ttdeci">anim_t</div><div class="ttdoc">type to store animation</div><div class="ttdef"><b>Definition</b> led_driver.h:249</div></div>
+<div class="ttc" id="aled__driver_8h_html_a6db97b368a56f86d7509f25d452f2277"><div class="ttname"><a href="led__driver_8h.html#a6db97b368a56f86d7509f25d452f2277">anim_breathe</a></div><div class="ttdeci">void anim_breathe(uint8_t mode)</div><div class="ttdoc">anim_breathe : Brightness breathing animation</div></div>
+<div class="ttc" id="aled__driver_8h_html_a7356edcfb81a323c5f9ab6e3b8e90413"><div class="ttname"><a href="led__driver_8h.html#a7356edcfb81a323c5f9ab6e3b8e90413">led_refresh</a></div><div class="ttdeci">void led_refresh(void)</div><div class="ttdoc">Push frame to hardware UNCONDITIONALLY.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a78795bc24d9cc1972aa1aa5c11148721"><div class="ttname"><a href="led__driver_8h.html#a78795bc24d9cc1972aa1aa5c11148721">anim_claim</a></div><div class="ttdeci">void anim_claim(anim_t a)</div><div class="ttdoc">anim_claim : stop what was running and claim display</div></div>
+<div class="ttc" id="aled__driver_8h_html_a7c814e4dc44f419e86d97917801f7ced"><div class="ttname"><a href="led__driver_8h.html#a7c814e4dc44f419e86d97917801f7ced">led_debug</a></div><div class="ttdeci">void led_debug(bool on)</div><div class="ttdoc">[DEBUG MODE] Toggles debug mode with input boolean</div></div>
+<div class="ttc" id="aled__driver_8h_html_a7eb4d382bdd4b42c57dbb7154d03ac66"><div class="ttname"><a href="led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66">led_init</a></div><div class="ttdeci">void led_init(void)</div><div class="ttdoc">GPIO, OE PWM setup, turn off all LEDs.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a80b831ef64a605b33025a96aaf8a115c"><div class="ttname"><a href="led__driver_8h.html#a80b831ef64a605b33025a96aaf8a115c">knob_disp</a></div><div class="ttdeci">void knob_disp(uint8_t ch, uint8_t knob, knob_disp_t m)</div><div class="ttdoc">Sets whether a knob draws as a filled bar or a single point.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a876a1b256e10040760aca72745e7f752"><div class="ttname"><a href="led__driver_8h.html#a876a1b256e10040760aca72745e7f752">knob_scale</a></div><div class="ttdeci">void knob_scale(uint8_t ch, uint8_t knob, knob_scale_t m)</div><div class="ttdoc">Sets a knob to the left (0..32) or centre (-15..16) scale, converting its stored value so the ring do...</div></div>
+<div class="ttc" id="aled__driver_8h_html_a9efcf9d850b2c1155299d086f5472b7d"><div class="ttname"><a href="led__driver_8h.html#a9efcf9d850b2c1155299d086f5472b7d">button_led</a></div><div class="ttdeci">void button_led(uint8_t ch, uint8_t btn, bool on)</div><div class="ttdoc">Set a specific button display LED to on or off by coordinate.</div></div>
+<div class="ttc" id="aled__driver_8h_html_aaa513118b1a81d398b810da029363dab"><div class="ttname"><a href="led__driver_8h.html#aaa513118b1a81d398b810da029363dab">knob_raw</a></div><div class="ttdeci">void knob_raw(uint8_t ch, uint8_t knob, uint32_t bits)</div><div class="ttdoc">Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob&#39;s stored value and modes.</div></div>
+<div class="ttc" id="aled__driver_8h_html_aabc9ae33ffeb690a072c354d5755f3b0"><div class="ttname"><a href="led__driver_8h.html#aabc9ae33ffeb690a072c354d5755f3b0">knob_get_disp</a></div><div class="ttdeci">knob_disp_t knob_get_disp(uint8_t ch, uint8_t knob)</div><div class="ttdoc">Returns a knob&#39;s current display mode (bar or point).</div></div>
+<div class="ttc" id="aled__driver_8h_html_ac3632393db02297327f4a1f528cb6949"><div class="ttname"><a href="led__driver_8h.html#ac3632393db02297327f4a1f528cb6949">knob_led</a></div><div class="ttdeci">void knob_led(uint8_t ch, uint8_t knob, int8_t value)</div><div class="ttdoc">Change a knob display&#39;s value, specify which knob by coords (chnl and knob number).</div></div>
+<div class="ttc" id="aled__driver_8h_html_acc42bb9974f0987487ea0dc1c9abfb85"><div class="ttname"><a href="led__driver_8h.html#acc42bb9974f0987487ea0dc1c9abfb85">led_clear</a></div><div class="ttdeci">void led_clear(void)</div><div class="ttdoc">Clear all LED states (in the data, not with OE pin).</div></div>
+<div class="ttc" id="aled__driver_8h_html_aebc7d96b3cd2b0247e0fee9facdd6306"><div class="ttname"><a href="led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306">knob_scale_t</a></div><div class="ttdeci">knob_scale_t</div><div class="ttdoc">Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).</div><div class="ttdef"><b>Definition</b> led_driver.h:63</div></div>
+<div class="ttc" id="aled__driver_8h_html_af46294a908fd1e649734cb45df495003"><div class="ttname"><a href="led__driver_8h.html#af46294a908fd1e649734cb45df495003">led_print_config</a></div><div class="ttdeci">void led_print_config(void)</div><div class="ttdoc">[DEBUG MODE] Prints the configuration params to console</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Inc</b></li><li class="navelem"><b>led_driver.h</b></li>
+    <li class="navelem"><b>Inc</b></li><li class="navelem"><a href="led__driver_8h.html">led_driver.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>
