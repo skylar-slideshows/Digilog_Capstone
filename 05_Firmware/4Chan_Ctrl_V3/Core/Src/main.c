@@ -23,8 +23,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include <stdio.h>
+
 // Skylar
-#include "app.hpp"
+#include "cmsis_os2.h"
+#include "led_driver.h"
 
 /* USER CODE END Includes */
 
@@ -35,6 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 
 /* USER CODE END PD */
 
@@ -890,14 +894,48 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 
-  // Skylar
-  app_main();
+  // cute little animation thing
+  led_init();
+  led_debug(false);
+  led_brightness(10);
 
-  /* Infinite loop */
-  for(;;)
+  knob_scale(0, 0, SCALE_LEFT);
+  knob_scale(0, 1, SCALE_CENTER);
+  knob_disp(0, 0, 0);
+  knob_disp(0, 1, 0);
+  
+  knob_led(0, 1, 10);
+  knob_led(0, 0, 10);
+  led_update();
+  anim_stop();
+
+  anim_claim(ANIM_LOAD);
+
+  for (int i = 0; i < 10; i++)
   {
-    osDelay(1);
+    anim_loading(-1);
+    osDelay(80);
   }
+
+  for (int i = 0; i < 80; i++)
+  {
+    anim_sweep(0,1);
+    osDelay(20);
+  }
+
+  for (int i = 0; i < 80; i++)
+  {
+    anim_sweep(0,0);
+    osDelay(20);
+  }
+
+  for (;;)
+  {
+    anim_breathe(0);
+    osDelay(32);
+  }
+
+
   /* USER CODE END 5 */
 }
 

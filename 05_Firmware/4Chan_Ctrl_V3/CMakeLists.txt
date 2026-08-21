@@ -7,6 +7,16 @@ cmake_minimum_required(VERSION 3.22)
 # User is free to modify the file as much as necessary
 #
 
+
+
+#target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+#    Core/Src/app.cpp
+#)
+
+# ^^ put at bottom
+
+
+
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -75,7 +85,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
 # Skylar
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/app.cpp
+    Core/Src/led_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/mcp23017.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -85,3 +99,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions -fno-rtti -fno-threadsafe-statics>
 )
+
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_OBJCOPY} -O binary
+          $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+          $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.bin
+  COMMENT "Generating .bin")

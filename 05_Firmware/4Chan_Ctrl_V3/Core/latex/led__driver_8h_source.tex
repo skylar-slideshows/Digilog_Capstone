@@ -1,0 +1,107 @@
+\doxysection{led\+\_\+driver.\+h}
+\hypertarget{led__driver_8h_source}{}\label{led__driver_8h_source}\index{Inc/led\_driver.h@{Inc/led\_driver.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifndef\ LED\_DRIVER\_H}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ LED\_DRIVER\_H}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ DISP\_BAR\ =\ 0,}
+\DoxyCodeLine{00054\ \ \ \ \ DISP\_POINT\ =\ 1}
+\DoxyCodeLine{00055\ \}\ knob\_disp\_t;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ SCALE\_LEFT\ =\ 0,\ \textcolor{comment}{//\ 0-\/32\ bar\ grows\ from\ the\ left}}
+\DoxyCodeLine{00065\ \ \ \ \ SCALE\_CENTER\ =\ 1\ \ \textcolor{comment}{//\ -\/15\ -\/\ +16,\ bar\ grows\ from\ the\ middle\ LED\ (0)}}
+\DoxyCodeLine{00066\ \}\ knob\_scale\_t;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{void}\ led\_init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00082\ \textcolor{keywordtype}{void}\ led\_update(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ led\_refresh(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{void}\ led\_clear(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00107\ \textcolor{keywordtype}{void}\ led\_brightness(uint8\_t\ b);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00115\ uint8\_t\ led\_get\_brightness(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00126\ \textcolor{keywordtype}{void}\ knob\_led(uint8\_t\ ch,\ uint8\_t\ knob,\ int8\_t\ value);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00137\ \textcolor{keywordtype}{void}\ knob\_step(uint8\_t\ ch,\ uint8\_t\ knob,\ int8\_t\ delta);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00148\ \textcolor{keywordtype}{void}\ knob\_disp(uint8\_t\ ch,\ uint8\_t\ knob,\ knob\_disp\_t\ m);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00160\ \textcolor{keywordtype}{void}\ knob\_scale(uint8\_t\ ch,\ uint8\_t\ knob,\ knob\_scale\_t\ m);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00171\ int8\_t\ knob\_get(uint8\_t\ ch,\ uint8\_t\ knob);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00182\ knob\_disp\_t\ knob\_get\_disp(uint8\_t\ ch,\ uint8\_t\ knob);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00193\ knob\_scale\_t\ knob\_get\_scale(uint8\_t\ ch,\ uint8\_t\ knob);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00205\ \textcolor{keywordtype}{void}\ knob\_raw(uint8\_t\ ch,\ uint8\_t\ knob,\ uint32\_t\ bits);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ knob\_inc(ch,\ knob)\ knob\_step((ch),\ (knob),\ +1)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ knob\_dec(ch,\ knob)\ knob\_step((ch),\ (knob),\ -\/1)}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{void}\ button\_led(uint8\_t\ ch,\ uint8\_t\ btn,\ \textcolor{keywordtype}{bool}\ on);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00231\ \textcolor{keywordtype}{bool}\ button\_get(uint8\_t\ ch,\ uint8\_t\ btn);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00241\ \textcolor{keywordtype}{void}\ button\_mask(uint8\_t\ ch,\ uint16\_t\ mask);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00249\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ ANIM\_NONE\ =\ 0,\ ANIM\_LOAD,\ ANIM\_SWEEP,\ ANIM\_BREATHE\_KEEP,\ ANIM\_BREATHE\_ALL}
+\DoxyCodeLine{00251\ \}\ anim\_t;}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00260\ \textcolor{keywordtype}{void}\ anim\_stop(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00269\ \textcolor{keywordtype}{void}\ anim\_claim(anim\_t\ a);}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00280\ \textcolor{keywordtype}{void}\ anim\_loading(int8\_t\ knob);}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00291\ \textcolor{keywordtype}{void}\ anim\_sweep(uint8\_t\ ch,\ uint8\_t\ knob);}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00301\ \textcolor{keywordtype}{void}\ anim\_breathe(uint8\_t\ mode);}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00309\ \textcolor{keywordtype}{void}\ led\_debug(\textcolor{keywordtype}{bool}\ on);}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00317\ \textcolor{keywordtype}{void}\ led\_print\_config(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
