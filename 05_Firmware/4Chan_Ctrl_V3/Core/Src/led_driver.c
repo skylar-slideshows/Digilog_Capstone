@@ -42,6 +42,7 @@
 
 
 /*=============================== CONFIG ================================*/
+/** @brief Set the pin assignments, geometry, and other configuration below. */
 
 // Pins
 #define DATA_PORT    GPIOB
@@ -189,8 +190,8 @@ static void frame_out(void)
 /*=============================== FRAME BUFFER ================================*/
 /* Knob states / values -> sets of led bits ready to send out */
 
-#define KNOB_OFS(ci, ki) ((ci) * CHAN_BYTES + (ki) * KNOB_BYTES)
-#define BTN_OFS(ci)      ((ci) * CHAN_BYTES + KNOBS_PER_CHAN * KNOB_BYTES)
+#define KNOB_OFS(channel_idx, knob_idx) ((channel_idx) * CHAN_BYTES + (knob_idx) * KNOB_BYTES)
+#define BTN_OFS(channel_idx)      ((channel_idx) * CHAN_BYTES + KNOBS_PER_CHAN * KNOB_BYTES)
 
 
 /**
@@ -200,9 +201,9 @@ static void frame_out(void)
   Directly render: turns a knob's value into the set of bits that show that value
  ----------------------------------------------------------------------------------
 */
-static void render_val(uint8_t ci, uint8_t ki, int8_t val, uint8_t scale, uint8_t disp)
+static void render_val(uint8_t channel_idx, uint8_t knob_idx, int8_t val, uint8_t scale, uint8_t disp)
 {
-    uint8_t *p = &frame[KNOB_OFS(ci, ki)]; // pointer to the 32 bits, offset in the frame buffer to appear at this knob
+    uint8_t *p = &frame[KNOB_OFS(channel_idx, knob_idx)]; // pointer to the 32 bits, offset in the frame buffer to appear at this knob
     uint8_t lo, hi, i; // indicates where lit strip (or single) leds start and stop and an index for later sorry for short names
 
     p[0] = p[1] = p[2] = p[3] = 0x00; // replace whole ring so clear em
@@ -228,10 +229,10 @@ static void render_val(uint8_t ci, uint8_t ki, int8_t val, uint8_t scale, uint8_
   Unpack the params inside a knob at a coord and use render_val.
  ----------------------------------------------------------------------------------
 */
-static void knob_render(uint8_t ci, uint8_t ki)
+static void knob_render(uint8_t channel_idx, uint8_t knob_idx)
 {
-    knob_t *k = &knobs[ci * KNOBS_PER_CHAN + ki];
-    render_val(ci, ki, k->val, k->scale, k->disp);
+    knob_t *knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
+    render_val(channel_idx, knob_idx, knob_p->val, knob_p->scale, knob_p->disp);
 }
 
 
@@ -242,15 +243,15 @@ static void knob_render(uint8_t ci, uint8_t ki)
   Range checks external knob/channel coords and copies them out
  ----------------------------------------------------------------------------------
 */
-static bool ck_knob(uint8_t ch, uint8_t knob, uint8_t *ci, uint8_t *ki)
+static bool ck_knob(uint8_t channel, uint8_t knob, uint8_t *channel_idx, uint8_t *knob_idx)
 {
-    if (ch >= CHANNELS || knob >= KNOBS_PER_CHAN) {
+    if (channel >= CHANNELS || knob >= KNOBS_PER_CHAN) {
         DBG("LED ERR: bad knob coord ch%u k%u (max ch%u k%u)\n",
-            ch, knob, CHANNELS - 1, KNOBS_PER_CHAN - 1);
+            channel, knob, CHANNELS - 1, KNOBS_PER_CHAN - 1);
         return false;
     }
-    *ci = ch;
-    *ki = knob;
+    *channel_idx = channel;
+    *knob_idx = knob;
     return true;
 }
 
@@ -264,28 +265,28 @@ static bool ck_knob(uint8_t ch, uint8_t knob, uint8_t *ci, uint8_t *ki)
   Change a knob's display value, specify which knob by coords (chnl and knob number)
  ----------------------------------------------------------------------------------
 */
-void knob_led(uint8_t ch, uint8_t knob, int8_t value)
+void knob_led(uint8_t channel, uint8_t knob, int8_t value)
 {
-    uint8_t ci, ki;
-    knob_t *k;
-    if (!ck_knob(ch, knob, &ci, &ki)) return; // given coords bad
-    k = &knobs[ci * KNOBS_PER_CHAN + ki];
+    uint8_t channel_idx, knob_idx;
+    knob_t *knob_p;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return; // given coords bad
+    knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
 
-    int8_t lo = (k->scale == SCALE_LEFT) ? 0 : CENTER_MIN; // lower value limit is 0 for left mode and -15 for center mode
-    int8_t hi = (k->scale == SCALE_LEFT) ? LEDS_PER_KNOB : CENTER_MAX;
+    int8_t lo = (knob_p->scale == SCALE_LEFT) ? 0 : CENTER_MIN; // lower value limit is 0 for left mode and -15 for center mode
+    int8_t hi = (knob_p->scale == SCALE_LEFT) ? LEDS_PER_KNOB : CENTER_MAX;
 
     if (value < lo || value > hi)
     {
         DBG("LED ERR: ch%u k%u value %d outside [%d,%d], clamped\n",
-            ch, knob, value, lo, hi);
+            channel, knob, value, lo, hi);
         value = (value < lo) ? lo : hi;
     }
 
-    k->val = value;
-    knob_render(ci, ki);
+    knob_p->val = value;
+    knob_render(channel_idx, knob_idx);
     dirty = true;
-    DBG("LED: ch%u k%u = %d (%s/%s)\n", ch, knob, value,
-        k->scale ? "CENTER" : "LEFT", k->disp ? "POINT" : "BAR");
+    DBG("LED: ch%u k%u = %d (%s/%s)\n", channel, knob, value,
+        knob_p->scale ? "CENTER" : "LEFT", knob_p->disp ? "POINT" : "BAR");
 }
 
 
@@ -295,11 +296,11 @@ void knob_led(uint8_t ch, uint8_t knob, int8_t value)
   Incerment/decrement a knob's display value.
  ----------------------------------------------------------------------------------
 */
-void knob_step(uint8_t ch, uint8_t knob, int8_t delta)
+void knob_step(uint8_t channel, uint8_t knob, int8_t delta)
 {
-    uint8_t ci, ki;
-    if (!ck_knob(ch, knob, &ci, &ki)) return;
-    knob_led(ch, knob, (int8_t)(knobs[ci * KNOBS_PER_CHAN + ki].val + delta));
+    uint8_t channel_idx, knob_idx;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
+    knob_led(channel, knob, (int8_t)(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta));
 }
 
 
@@ -308,14 +309,14 @@ void knob_step(uint8_t ch, uint8_t knob, int8_t delta)
   PUBLIC knob_disp : Set display mode of knob
  ----------------------------------------------------------------------------------
 */
-void knob_disp(uint8_t ch, uint8_t knob, knob_disp_t m)
+void knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode)
 {
-    uint8_t ci, ki;
-    if (!ck_knob(ch, knob, &ci, &ki)) return;
-    knobs[ci * KNOBS_PER_CHAN + ki].disp = (uint8_t)(m & 1u);
-    knob_render(ci, ki);
+    uint8_t channel_idx, knob_idx;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
+    knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].disp = (uint8_t)(mode & 1u);
+    knob_render(channel_idx, knob_idx);
     dirty = true;
-    DBG("LED: ch%u k%u display = %s\n", ch, knob, m ? "POINT" : "BAR");
+    DBG("LED: ch%u k%u display = %s\n", channel, knob, mode ? "POINT" : "BAR");
 }
 
 
@@ -324,29 +325,29 @@ void knob_disp(uint8_t ch, uint8_t knob, knob_disp_t m)
   PUBLIC knob_scale : set scale mode of knob (left to right or center/pan)
  ----------------------------------------------------------------------------------
 */
-void knob_scale(uint8_t ch, uint8_t knob, knob_scale_t m)
+void knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode)
 {
-    uint8_t ci, ki;
-    knob_t *k;
-    if (!ck_knob(ch, knob, &ci, &ki)) return;
-    k = &knobs[ci * KNOBS_PER_CHAN + ki];
-    if ((knob_scale_t)k->scale != m) {
-        int16_t v = (m == SCALE_CENTER) ? ((k->val == 0) ? 0 : k->val - SCALE_OFFSET)
-                                        : (k->val + SCALE_OFFSET);
-        if (m == SCALE_CENTER) {
+    uint8_t channel_idx, knob_idx;
+    knob_t *knob_p;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
+    knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
+    if ((knob_scale_t)knob_p->scale != mode) {
+        int16_t v = (mode == SCALE_CENTER) ? ((knob_p->val == 0) ? 0 : knob_p->val - SCALE_OFFSET)
+                                        : (knob_p->val + SCALE_OFFSET);
+        if (mode == SCALE_CENTER) {
             if (v < CENTER_MIN) v = CENTER_MIN;
             if (v > CENTER_MAX) v = CENTER_MAX;
         } else {
             if (v < 0) v = 0;
             if (v > LEDS_PER_KNOB) v = LEDS_PER_KNOB;
         }
-        k->val   = (int8_t)v;
-        k->scale = (uint8_t)(m & 1u);
-        knob_render(ci, ki);
+        knob_p->val   = (int8_t)v;
+        knob_p->scale = (uint8_t)(mode & 1u);
+        knob_render(channel_idx, knob_idx);
         dirty = true;
     }
     DBG("LED: ch%u k%u scale = %s, value now %d\n",
-        ch, knob, m ? "CENTER" : "LEFT", k->val);
+        channel, knob, mode ? "CENTER" : "LEFT", knob_p->val);
 }
 
 
@@ -355,17 +356,17 @@ void knob_scale(uint8_t ch, uint8_t knob, knob_scale_t m)
   PUBLIC knob_raw : Put arbitrary 32 bits to a knob in frame buffer
  ----------------------------------------------------------------------------------
 */
-void knob_raw(uint8_t ch, uint8_t knob, uint32_t bits)
+void knob_raw(uint8_t channel, uint8_t knob, uint32_t bits)
 {
     uint8_t *p;
-    p = &frame[KNOB_OFS(ch, knob)];
+    p = &frame[KNOB_OFS(channel, knob)];
     p[0] = (uint8_t)(bits >> 24);
-    p[1] = (uint8_t)(bits >> 16);
+    p[1] = (uint8_t)(bits >> 16); PLEASE PLEASE PLEASE
     p[2] = (uint8_t)(bits >> 8);
     p[3] = (uint8_t)(bits);
     dirty = true;
     DBG("LED: ch%u k%u raw = 0x%08lX (state not updated)\n",
-        ch, knob, (unsigned long)bits);
+        channel, knob, (unsigned long)bits);
 }
 
 
@@ -378,23 +379,23 @@ void knob_raw(uint8_t ch, uint8_t knob, uint32_t bits)
   Set a specific button display LED by coordinate
  ----------------------------------------------------------------------------------
 */
-void button_led(uint8_t ch, uint8_t btn, bool on)
+void button_led(uint8_t channel, uint8_t button, bool on)
 {
     uint16_t o;
     uint8_t  i;
-    if (ch >= CHANNELS || btn >= BUTTONS_PER_CHAN)
+    if (channel >= CHANNELS || button >= BUTTONS_PER_CHAN)
     {
         DBG("LED ERR: bad button coord ch%u b%u (max ch%u b%u)\n",
-            ch, btn, CHANNELS - 1, BUTTONS_PER_CHAN);
+            channel, button, CHANNELS - 1, BUTTONS_PER_CHAN);
         return;
     }
 
-    i = btn;
-    o = (uint16_t)(BTN_OFS(ch) + (i >> 3));
+    i = button;
+    o = (uint16_t)(BTN_OFS(channel) + (i >> 3));
     if (on) frame[o] |=  (uint8_t)(0x80u >> (i & 7));
     else    frame[o] &= (uint8_t)~(0x80u >> (i & 7));
     dirty = true;
-    DBG("LED: ch%u btn%u = %u\n", ch, btn, (unsigned)on);
+    DBG("LED: ch%u btn%u = %u\n", channel, button, (unsigned)on);
 }
 
 
@@ -404,15 +405,15 @@ void button_led(uint8_t ch, uint8_t btn, bool on)
   Sets a whole channel's button LEDs at once
  ----------------------------------------------------------------------------------
 */
-void button_mask(uint8_t ch, uint16_t mask)
+void button_mask(uint8_t channel, uint16_t mask)
 {
     uint8_t b;
-    if (ch >= CHANNELS) {
-        DBG("LED ERR: button_mask bad channel %u (max %u)\n", ch, CHANNELS - 1);
+    if (channel >= CHANNELS) {
+        DBG("LED ERR: button_mask bad channel %u (max %u)\n", channel, CHANNELS - 1);
         return;
     }
     for (b = 0; b < BUTTONS_PER_CHAN; b++)
-        button_led(ch, b, (mask >> b) & 1U);
+        button_led(channel, b, (mask >> b) & 1U);
 }
 
 
@@ -424,24 +425,24 @@ void button_mask(uint8_t ch, uint16_t mask)
   PUBLIC knob_get : returns the value of specified knob
  ----------------------------------------------------------------------------------
 */
-int8_t knob_get(uint8_t ch, uint8_t knob)
+int8_t knob_get(uint8_t channel, uint8_t knob)
 {
-    uint8_t ci, ki;
-    if (!ck_knob(ch, knob, &ci, &ki)) return 0; PLEASE; { PRETTY_PLEASE; }
-    return knobs[ci * KNOBS_PER_CHAN + ki].val;
+    uint8_t channel_idx, knob_idx;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return 0; PLEASE PRETTY_PLEASE
+    return knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val;
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC knob_get_disp : 
+  PUBLIC knob_get_disp : returns the display mode (knob_scale_t type) of a specified knob
  ----------------------------------------------------------------------------------
 */
-knob_disp_t knob_get_disp(uint8_t ch, uint8_t knob)
+knob_disp_t knob_get_disp(uint8_t channel, uint8_t knob)
 {
-    uint8_t ci, ki;
-    if (!ck_knob(ch, knob, &ci, &ki)) return DISP_BAR;
-    return (knob_disp_t)knobs[ci * KNOBS_PER_CHAN + ki].disp;
+    uint8_t channel_idx, knob_idx;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return DISP_BAR;
+    return (knob_disp_t)knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].disp;
 }
 
 
@@ -450,11 +451,11 @@ knob_disp_t knob_get_disp(uint8_t ch, uint8_t knob)
   PUBLIC knob_get_scale : returns the scale mode (knob_scale_t type) of a specified knob
  ----------------------------------------------------------------------------------
 */
-knob_scale_t knob_get_scale(uint8_t ch, uint8_t knob)
+knob_scale_t knob_get_scale(uint8_t channel, uint8_t knob)
 {
-    uint8_t ci, ki;
-    if (!ck_knob(ch, knob, &ci, &ki)) return SCALE_LEFT;
-    return (knob_scale_t)knobs[ci * KNOBS_PER_CHAN + ki].scale;
+    uint8_t channel_idx, knob_idx; PRETTY_PLEASE
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return SCALE_LEFT;
+    return (knob_scale_t)knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].scale;
 }
 
 
@@ -464,16 +465,16 @@ knob_scale_t knob_get_scale(uint8_t ch, uint8_t knob)
   Returns whether the specified button LED is off or on.
  ----------------------------------------------------------------------------------
 */
-bool button_get(uint8_t ch, uint8_t btn)
+bool button_get(uint8_t channel, uint8_t button)
 {
     uint8_t i;
-    if (ch >= CHANNELS || btn >= BUTTONS_PER_CHAN) {
+    if (channel >= CHANNELS || button >= BUTTONS_PER_CHAN) {
         DBG("LED ERR: button_get bad coord ch%u b%u (max ch%u b%u)\n",
-            ch, btn, CHANNELS - 1, BUTTONS_PER_CHAN - 1);
+            channel, button, CHANNELS - 1, BUTTONS_PER_CHAN - 1);
         return false;
     }
-    i = btn;
-    return (frame[BTN_OFS(ch) + (i >> 3)] & (0x80U >> (i & 7))) != 0;
+    i = button;
+    return (frame[BTN_OFS(channel) + (i >> 3)] & (0x80U >> (i & 7))) != 0;
 }
 
 
@@ -496,7 +497,7 @@ uint8_t led_get_brightness(void) { return bright; }
 void led_update(void)
 {
     if (!dirty) return;
-    dirty = false; { PLEASE; }
+    dirty = false; PLEASE
     frame_out();
 }
 
@@ -521,20 +522,23 @@ void led_clear(void)
     for (i = 0; i < NUM_KNOBS; i++)   knobs[i].val = (knobs[i].scale == SCALE_CENTER)
                                                    ? CENTER_MIN : 0;
     frame_out();
-    dirty = false; PLEASE;
+    dirty = false; PLEASE
     DBG("LED: cleared, %u bytes\n", FRAME_BYTES);
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL oe_duty : Calc PWM duty cycle (0.0 to 1.0) from brightness int 0-255.
-  OE pin is active low so smaller duty cycle gives brighter output
+  INTERNAL oe_duty : Calc PWM duty cycle from brightness int 0-255.
+  OE pin is active low so smaller duty cycle gives brighter output. CCR2 contains the num
+  of CPU cycles (out of 7,083 CPU cycles per PWM cycle) to keep the PWM high each cycle.
+  (255 - brightness) * (7083 / 255) = number of CPU cycles for length of high part of PWM cycle
+  OE is active low so higher brightness needs less high time on PWM.
  ----------------------------------------------------------------------------------
 */
-static void oe_duty(uint8_t b)
+static void oe_duty(uint8_t brightness)
 {
-    OE_TIM->CCR2 = ((uint32_t)(255U - b) * (OE_TIM->ARR + 1U)) / 255U;
+    OE_TIM->CCR2 = ((uint32_t)(255U - brightness) * (OE_TIM->ARR + 1U)) / 255U;
 }
 
 
@@ -543,11 +547,11 @@ static void oe_duty(uint8_t b)
   PUBLIC led_brightness : Set the brightness of all LEDs externally.
  ----------------------------------------------------------------------------------
 */
-void led_brightness(uint8_t b)
+void led_brightness(uint8_t brightness)
 {
-    bright = b;
-    oe_duty(b); PRETTY_PLEASE;
-    DBG("LED: brightness = %u\n", b);
+    bright = brightness;
+    oe_duty(brightness); PRETTY_PLEASE
+    DBG("LED: brightness = %u\n", brightness);
 }
 
 
@@ -567,42 +571,68 @@ void led_brightness(uint8_t b)
 */
 void led_init(void)
 {
-    /* cycle counter, used for the bit clock */
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CYCCNT = 0;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
+    DWT->CYCCNT = 0; // cycle counter for PWM speed
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycles
 
-    RCC->AHB2ENR |= DATA_PORT_EN | OE_PORT_EN;
-    RCC->APB2ENR |= OE_TIM_EN;
+    RCC->AHB2ENR |= DATA_PORT_EN | OE_PORT_EN; // enables GPIO pins
+    RCC->APB2ENR |= OE_TIM_EN; // enables Timer 1
 
-    /* OE high (display blanked) before anything else */
-    OE_PORT->BSRR = (1U << OE_PIN);
+    OE_PORT->BSRR = (1U << OE_PIN); // set OE high (OE active low so hide all LEDs first)
     MODE_OUT(OE_PORT, OE_PIN);
 
-    MODE_OUT(DATA_PORT, SER_PIN);
-    MODE_OUT(DATA_PORT, SRCLK_PIN);
-    MODE_OUT(DATA_PORT, RCLK_PIN);
+    MODE_OUT(DATA_PORT, SER_PIN); // initialize the pins needed - serial data
+    MODE_OUT(DATA_PORT, SRCLK_PIN); // serial clock
+    MODE_OUT(DATA_PORT, RCLK_PIN); // latch pin
     DATA_PORT->BSRR = SER_RST | SRCLK_RST | RCLK_RST;
 
-    led_clear(); // known state in the latches
+    led_clear(); // clear previous state of LEDs - all off
 
-    /* OE PWM: TIM1_CH1, PWM mode 1, preloaded, starts fully blanked */
+    // timer prescale = 0, so use full CPU clock 170MHz when counting cycles for PWM timing
+    OE_TIM->PSC = 0;
+
+    // auto reload register (reset count) every 170MHz / 24kHz = 7,083 CPU cycles per PWM cycle.
+    OE_TIM->ARR = (CPU_HZ / PWM_HZ) - 1U;
+
+    // capture compare mode register - configuration: (all timer 1 channel 2 config locations)
+    // 110 at bit[14:12] -> PWM mode 1 (high when count < CCR2 controlling duty cycle),
+    // and 1 at bit[11] -> enable preload register which
+    // holds any change in the signal until the next PWM cycle, preventing PWM waveform corruption
+    OE_TIM->CCMR1 = (6U << 12) | (1U << 11);
+
+    // capture/compare enable register - configuration: 1 at bit[4] -> route
+    // the compare (CYCCNT < 7,083?) output to pin OC2
+    OE_TIM->CCER = (1U << 4);
+    
+    // capture/compare register holds the blanking duration to control duty cycle
+    // (how many CPU cycles [0 to 7,083] to hold PWM high for each cycle?) (OE is active high -> 1 = LEDs off so high CCR2 = dimmer)
+    // setting CCR2 to the max value of 7,083 cycles (ARR value + 1) initializes 0 brightness setting (PWM always high)
+    OE_TIM->CCR2 = OE_TIM->ARR + 1U;
+    
+    // control register bit[7] = 1 (keeping other settings' bits using OR) enables ARPE (auto-reload preload enable)
+    // if we change brightness while running, to a lower CPU cycles per PWM cycle, but we were already past that number,
+    // it would wait with full bright for the counter to get to 0xFFFF and wrap around before the new PWM applied -> a bright flash
+    OE_TIM->CR1 |= (1U << 7);
+    
+    // event generation register - force an update event (resets counter to 0, updates the value in CCR2 from 0 (full bright))
+    OE_TIM->EGR = 1U;
+
+    // clear timer status flags (since update interrupt flag is another thing that EGR = 1 causes)
+    OE_TIM->SR = 0;
+
+    // break and dead time register - bit[15] = 1 sets main output enable on. master switch for the PWM pin. or saves other bits
+    OE_TIM->BDTR |= (1U << 15);
+
+    // counter register 1. starts the counter
+    OE_TIM->CR1 |= 1U;
+
+    // hand over the OE pin to timer 1, channel 2 (timer on alternate function register, not gpio)
     OE_PORT->AFR[OE_PIN >> 3] =
         (OE_PORT->AFR[OE_PIN >> 3] & ~(0xFU << ((OE_PIN & 7) * 4)))
-        | (OE_TIM_AF << ((OE_PIN & 7) * 4));
+    |   (OE_TIM_AF << ((OE_PIN & 7) * 4));
     OE_PORT->BOYMODER = (OE_PORT->BOYMODER & ~(3U << (OE_PIN * 2))) | (2U << (OE_PIN * 2));
 
-    OE_TIM->PSC = 0;
-    OE_TIM->ARR = (CPU_HZ / PWM_HZ) - 1U; // 7082 -> 24.0 kHz */
-    OE_TIM->CCMR1 = (6U << 12) | (1U << 11); // PWM mode 1 + OC1PE */
-    OE_TIM->CCER = (1U << 4); // CC1E
-    OE_TIM->CCR2 = OE_TIM->ARR + 1U; // active low!!
-    OE_TIM->BDTR |= (1U << 15); // MOE (TIM1 is advanced)
-    OE_TIM->CR1 |= (1U << 7); // ARPE
-    OE_TIM->EGR = 1U; // load shadow regs
-    OE_TIM->CR1 |= 1U; // CEN
-
-    led_brightness(bright);
+    led_brightness(bright); // set chosen starting brightness
     DBG("LED: init done\n");
     if (dbg_on) led_print_config();
 }
@@ -666,16 +696,16 @@ static uint8_t  anim_phase[NUM_KNOBS];
 */
 void anim_stop(void)
 {
-    uint8_t ch, k;
+    uint8_t channel, knob_idx;
 
     anim_active = ANIM_NONE;
     anim_bits   = ANIM_LOAD_PATTERN;
     anim_bphase = 0;
 
-    for (ch = 0; ch < CHANNELS; ch++)
-        for (k = 0; k < KNOBS_PER_CHAN; k++) {
-            anim_phase[ch * KNOBS_PER_CHAN + k] = 0;
-            knob_render(ch, k);
+    for (channel = 0; channel < CHANNELS; channel++)
+        for (knob_idx = 0; knob_idx < KNOBS_PER_CHAN; knob_idx++) {
+            anim_phase[channel * KNOBS_PER_CHAN + knob_idx] = 0;
+            knob_render(channel, knob_idx);
         }
 
     oe_duty(bright);
@@ -704,14 +734,14 @@ void anim_claim(anim_t a)
 */
 void anim_loading(int8_t knob)
 {
-    uint8_t ch, k;
+    uint8_t channel, knob_idx;
 
     anim_claim(ANIM_LOAD);
     anim_bits = (anim_bits >> 1) | (anim_bits << 31);
 
-    for (ch = 0; ch < CHANNELS; ch++)
-        for (k = 0; k < KNOBS_PER_CHAN; k++)
-            knob_raw(ch, k, (knob < 0 || k == (uint8_t)knob) ? anim_bits : 0U);
+    for (channel = 0; channel < CHANNELS; channel++)
+        for (knob_idx = 0; knob_idx < KNOBS_PER_CHAN; knob_idx++)
+            knob_raw(channel, knob_idx, (knob < 0 || knob_idx == (uint8_t)knob) ? anim_bits : 0U);
 
     dirty = true;
     led_update();
@@ -725,20 +755,20 @@ void anim_loading(int8_t knob)
   center mode the animation matches the mode.
  ----------------------------------------------------------------------------------
 */
-void anim_sweep(uint8_t ch, uint8_t knob)
+void anim_sweep(uint8_t channel, uint8_t knob)
 {
-    uint8_t ci, ki, idx, ph;
-    knob_t *k;
+    uint8_t channel_idx, knob_idx, idx, ph;
+    knob_t *knob_p;
     int8_t  v;
 
-    if (!ck_knob(ch, knob, &ci, &ki)) return;
+    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
     anim_claim(ANIM_SWEEP);
 
-    idx = (uint8_t)(ci * KNOBS_PER_CHAN + ki);
-    k   = &knobs[idx];
+    idx = (uint8_t)(channel_idx * KNOBS_PER_CHAN + knob_idx);
+    knob_p   = &knobs[idx];
     ph  = anim_phase[idx];
 
-    if (k->scale == SCALE_LEFT) {
+    if (knob_p->scale == SCALE_LEFT) {
         if (ph >= 64) ph = 0;
         v = (int8_t)((ph <= 32) ? ph : (64 - ph));
     } else {
@@ -749,7 +779,7 @@ void anim_sweep(uint8_t ch, uint8_t knob)
     }
 
     anim_phase[idx] = (uint8_t)(ph + 1);
-    render_val(ci, ki, v, k->scale, k->disp);
+    render_val(channel_idx, knob_idx, v, knob_p->scale, knob_p->disp);
     dirty = true;
     led_update();
 }

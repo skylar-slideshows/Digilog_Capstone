@@ -101,10 +101,10 @@ void led_clear(void);
 /**
  ----------------------------------------------------------------------------------
   @brief Set brightness of all LEDs through OE pin PWM duty cycle
-  @param b Brightness 0 - 255 integer.
+  @param brightness Brightness 0 - 255 integer.
  ----------------------------------------------------------------------------------
 */
-void led_brightness(uint8_t b);
+void led_brightness(uint8_t brightness);
 
 
 /**
@@ -118,127 +118,127 @@ uint8_t led_get_brightness(void);
 /**
  ----------------------------------------------------------------------------------
   @brief Change a knob display's value, specify which knob by coords (chnl and knob number)
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @param value int between 0-32 for left/standard mode and -15 to 16 for center/pan mode (0 = center)
  ----------------------------------------------------------------------------------
 */
-void knob_led(uint8_t ch, uint8_t knob, int8_t value);
+void knob_led(uint8_t channel, uint8_t knob, int8_t value);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Changes a knob display by delta LEDs from its current value, clamped to its scale.
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @param delta int change by this value
  ----------------------------------------------------------------------------------
 */
-void knob_step(uint8_t ch, uint8_t knob, int8_t delta);
+void knob_step(uint8_t channel, uint8_t knob, int8_t delta);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Sets whether a knob draws as a filled bar or a single point.
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
-  @param m display mode (0 = bar, 1 = point, see knob_disp_t)
+  @param mode display mode (0 = bar, 1 = point, see knob_disp_t)
  ----------------------------------------------------------------------------------
 */
-void knob_disp(uint8_t ch, uint8_t knob, knob_disp_t m);
+void knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Sets a knob to the left (0..32) or centre (-15..16) scale, converting
          its stored value so the ring does not jump.
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
-  @param m scale mode (0 = from left, 1 = center/pan, see knob_scale_t)
+  @param mode scale mode (0 = from left, 1 = center/pan, see knob_scale_t)
  ----------------------------------------------------------------------------------
 */
-void knob_scale(uint8_t ch, uint8_t knob, knob_scale_t m);
+void knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Returns a knob's current value, in the units of its own scale.
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @return returns the value of the knob display (-15 to 16 or 0 to 32 depending on scale mode)
  ----------------------------------------------------------------------------------
 */
-int8_t knob_get(uint8_t ch, uint8_t knob);
+int8_t knob_get(uint8_t channel, uint8_t knob);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Returns a knob's current display mode (bar or point).
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @return returns a knob display mode 0 or 1 (see knob_disp_t)
  ----------------------------------------------------------------------------------
 */
-knob_disp_t knob_get_disp(uint8_t ch, uint8_t knob);
+knob_disp_t knob_get_disp(uint8_t channel, uint8_t knob);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Returns a knob's current scale mode (left or center).
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @return returns a knob scale mode 0 or 1 (see knob_scale_t)
  ----------------------------------------------------------------------------------
 */
-knob_scale_t knob_get_scale(uint8_t ch, uint8_t knob);
+knob_scale_t knob_get_scale(uint8_t channel, uint8_t knob);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the
          knob's stored value and modes.
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param knob knob inside that channel number 0-9
   @param bits 32 bits corresponding to LEDs left to right, 1 = on
  ----------------------------------------------------------------------------------
 */
-void knob_raw(uint8_t ch, uint8_t knob, uint32_t bits);
+void knob_raw(uint8_t channel, uint8_t knob, uint32_t bits);
 
 
-#define knob_inc(ch, knob) knob_step((ch), (knob), +1)
-#define knob_dec(ch, knob) knob_step((ch), (knob), -1)
+#define knob_inc(channel, knob) knob_step((channel), (knob), +1)
+#define knob_dec(channel, knob) knob_step((channel), (knob), -1)
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Set a specific button display LED to on or off by coordinate
-  @param ch channel number 0-3
-  @param btn channel's button number 0-15
+  @param channel channel number 0-3
+  @param button channel's button number 0-15
   @param on set that button LED on or off? true = on
  ----------------------------------------------------------------------------------
 */
-void button_led(uint8_t ch, uint8_t btn, bool on);
+void button_led(uint8_t channel, uint8_t button, bool on);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Returns if specified button LED is on or off
-  @param ch channel number 0-3
-  @param btn channel's button number 0-15
+  @param channel channel number 0-3
+  @param button channel's button number 0-15
   @return boolean value of that button's LED display on/off
  ----------------------------------------------------------------------------------
 */
-bool button_get(uint8_t ch, uint8_t btn);
+bool button_get(uint8_t channel, uint8_t button);
 
 
 /**
  ----------------------------------------------------------------------------------
   @brief Sets 16 button LED states (entire channel) at once in the frame buffer
-  @param ch channel number 0-3
+  @param channel channel number 0-3
   @param mask 16-bits representing that channel's 16 button displays, 1 = on
  ----------------------------------------------------------------------------------
 */
-void button_mask(uint8_t ch, uint16_t mask);
+void button_mask(uint8_t channel, uint16_t mask);
 
 
 /**
@@ -284,11 +284,11 @@ void anim_loading(int8_t knob);
   @brief anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -> Void
   One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in
   center mode the animation matches the mode.
-  @param ch channel 0-3
+  @param channel channel 0-3
   @param knob knob 0-9
  ----------------------------------------------------------------------------------
 */
-void anim_sweep(uint8_t ch, uint8_t knob);
+void anim_sweep(uint8_t channel, uint8_t knob);
 
 
 /**
