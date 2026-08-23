@@ -42,6 +42,7 @@
 */
 
 #include "i2c_driver.h"
+#include "stm32g474xx.h"
 #include "stm32g4xx.h"
 #include "stm32g4xx.h"
 #include "stm32g4xx_ll_bus.h"
@@ -54,8 +55,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define BLOCK_TIMEOUT_US 2000
-#define IDLE_TIMEOUT_US 1000
 #define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
 #define RESTART_US 4 // 4 microsec restart time
@@ -63,6 +62,7 @@
 #define I2C_MAX_TRANSFER_SLOT 5 // max num descriptors on one slot (slot_t.x[4] max)
 #define I2C_NUM_BUSES 4 // four i2c busses
 #define I2C_SLOTS_PER_FRAME 15 // superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)
+#define I2C_MAX_TRANSFER_LEN 8 // as long as nbytes is <255 for each transfer, it can be done at once and does not need reload mode
 
 
 /*=============================== DATA DEFINITIONS ================================*/
@@ -224,38 +224,143 @@ static void dwt_init(void)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address (everything except LSB) -> bool
+  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -> bool
   Returns whether a specific I2C chip is free or not
  ----------------------------------------------------------------------------------
 */
 bool i2c_probe (uint8_t bus, uint8_t addr)
 {
-    return true;
+    bus_t *b = &B[bus]; // i2c bus pointer
+
+    if(running) return false; // busy
+    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    {
+        abort_transfer(b);
+        return false;
+    } // bus is idle
+
+    LL_I2C_HandleTransfer(b->i2c,
+                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+                          LL_I2C_ADDRSLAVE_7BIT,
+                          0,
+                          LL_I2C_MODE_AUTOEND,
+                          LL_I2C_GENERATE_START_WRITE); // ping
+
+    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000)) // block timeout 2000us
+    {
+        abort_transfer(b);
+        return false;
+    } // bus is good to use!
+
+    bool ack = !(b->i2c->ISR & I2C_ISR_NACKF); // read before clearing
+    clear_flags(b);
+    return ack;
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address (everything except LSB)
-                       data pointer, number of bytes to write -> bool
-  Write (blocking)
- ----------------------------------------------------------------------------------
-*/
-bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
-{
-    return true;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address (everything except LSB)
+  PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address 
                        data pointer, number of bytes to write -> bool
   Read (blocking)
  ----------------------------------------------------------------------------------
 */
 bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 {
+    bus_t *b = &B[bus];
+    if(running || nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
+    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    {
+        abort_transfer(b);
+        return false;
+    } // bus is idle
+
+    // head of the read block
+    LL_I2C_HandleTransfer(b->i2c,
+                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+                          LL_I2C_ADDRSLAVE_7BIT,
+                          nbytes,
+                          LL_I2C_MODE_AUTOEND,
+                          LL_I2C_GENERATE_START_READ);
+
+    // read the content and save at *data
+    for(uint8_t i = 0; i < nbytes; i++)
+    {
+        if (!wait_flag(b, I2C_ISR_RXNE, true, 2000))
+        {
+            abort_xfer(b);
+            return false;
+        }
+        data[i] = (uint8_t)b->i2c->RXDR;
+    }
+
+
+    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
+    {
+        abort_xfer(b);
+        return false;
+    }
+
+    if(b->i2c->ISR & I2C_ISR_NACKF)
+    {
+        abort_xfer(b);
+        return false;
+    }
+
+    clear_flags(b);
+    return true;
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address 
+                       data pointer, number of bytes to write -> bool
+  Write (blocking)
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
+{
+    bus_t *b = &B[bus];
+    if(running || nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
+    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    {
+        abort_transfer(b);
+        return false;
+    } // bus is idle
+
+    // head of the message
+    LL_I2C_HandleTransfer(b->i2c,
+                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+                          LL_I2C_ADDRSLAVE_7BIT,
+                          nbytes,
+                          LL_I2C_MODE_AUTOEND,
+                          LL_I2C_GENERATE_START_WRITE);
+
+    // send the content of the message
+    for(uint8_t i = 0; i < nbytes; i++)
+    {
+        if (!wait_flag(b, I2C_ISR_TXIS, true, 2000))
+        {
+            abort_xfer(b);
+            return false;
+        }
+        b->i2c->TXDR = data[i];
+    }
+
+    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
+    {
+        abort_xfer(b);
+        return false;
+    }
+
+    if(b->i2c->ISR & I2C_ISR_NACKF)
+    {
+        abort_xfer(b);
+        return false;
+    }
+
+    clear_flags(b);
     return true;
 }
 

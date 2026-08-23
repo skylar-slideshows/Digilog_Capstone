@@ -46,6 +46,7 @@
 static bool mcp23017_init(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
 {
   uint8_t write_data[2] = { reg, value };
-  return i2c_write_b(bus, addr_lsb, write_data, 2);
+  return i2c_write_b(bus, addr, write_data, 2);
+  return true;
 }
 
