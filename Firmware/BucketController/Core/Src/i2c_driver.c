@@ -103,7 +103,7 @@ static bus_t B[I2C_NUM_BUSES];
 //static i2c_scan_cb scan_cb;
 static uint32_t cyc_us; // cpu cycles per microsec
 static volatile bool  running;
-static void advance(bus_t *bus);
+static void advance(bus_t *bus); // fwd declaration :c because is mutually recursive/cyclical w/ ISR path
 
 
 /*=============================== LOW LEVEL HELPERS ================================*/
