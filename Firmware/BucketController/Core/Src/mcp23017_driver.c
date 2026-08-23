@@ -5,12 +5,12 @@
   * @file mcp23017_driver.c
   * @brief 
   *
-  * @author
-  * @date
+  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @date 2026-08-23
   * @version 1.0
   *
   * @attention
-  *  Copyright (C) 2026
+  *  Copyright (C) 2026 Skylar Denno
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,6 +34,7 @@
 #include "mcp_regs.h"
 #include "mcp_funcs.h"
 #include "i2c_driver.h"
+#include <stdbool.h>
 
 
 /**

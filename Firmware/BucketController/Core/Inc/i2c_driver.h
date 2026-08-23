@@ -103,8 +103,37 @@
         - DACD Channel out gain R (fader/pan/compressor)
 */
 
-#ifdef I2C_DRIVER_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+
+#ifndef I2C_DRIVER_H
 #define I2C_DRIVER_H
+
+
+typedef enum { I2C_RD = 0, I2C_WR = 1 } i2c_dir_t;
+
+typedef struct {
+    uint8_t  addr; // 7 bits address
+    uint8_t  dir; // direction
+    uint8_t  nbytes; //  num bytes on wire
+    uint8_t *buf; // buffer ptr
+} i2c_transfer_t;
+
+typedef struct {
+    uint32_t overruns; // slot did not finish in the time frame
+    uint32_t nacks;
+    uint32_t bus_errors; // arlo and berr
+    uint32_t recoveries; // nine-clock unstick sequences run
+    uint32_t slots; // total slots started, the denominator
+    uint16_t peak_slot_us; // high water mark from DWT
+} i2c_stats_t;
+
+
+typedef void (*i2c_scan_cb)(uint8_t bus);
+const i2c_stats_t *i2c_stats(uint8_t bus);
+
 
 bool i2c_probe   (uint8_t bus, uint8_t addr7);
 bool i2c_write_b (uint8_t bus, uint8_t addr7, const uint8_t *d, uint8_t n);
