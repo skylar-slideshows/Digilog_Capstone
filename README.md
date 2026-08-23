@@ -6,5 +6,5 @@
 
 ### Advisor: Milad Siami
 
-### Firmware documentation (Doxygen) is in 05_Firmware --> (Specific project/version) --> Core --> html --> files.html (open w/ browser)
+### Firmware documentation (Doxygen) is in Firmware --> (Specific project/version) --> html --> files.html (open w/ browser)
 

@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['call_20anim_5fstop_0',['When loading done just stop and call anim_stop.',['../led__driver_8c.html#autotoc_md113',1,'']]],
+  ['call_20once_20during_20setup_20initializes_20led_20serial_20pins_20pwm_20timer_1',['PUBLIC led_init : Call once during setup, initializes LED serial pins, PWM timer',['../led__driver_8c.html#autotoc_md103',1,'']]],
+  ['center_20mode_20the_20animation_20matches_20the_20mode_2',['center mode the animation matches the mode.',['../led__driver_8c.html#autotoc_md115',1,'']]],
+  ['center_20pan_3',['PUBLIC knob_scale : set scale mode of knob (left to right or center/pan)',['../led__driver_8c.html#autotoc_md75',1,'']]],
+  ['change_20a_20knob_20s_20display_20value_20specify_20which_20knob_20by_20coords_20chnl_20and_20knob_20number_4',['Change a knob&apos;s display value, specify which knob by coords (chnl and knob number)',['../led__driver_8c.html#autotoc_md69',1,'']]],
+  ['changed_20dirty_5',['pushing changes to LEDs only if frame has been changed &quot;dirty&quot;',['../led__driver_8c.html#autotoc_md93',1,'']]],
+  ['changes_20to_20leds_20only_20if_20frame_20has_20been_20changed_20dirty_6',['pushing changes to LEDs only if frame has been changed &quot;dirty&quot;',['../led__driver_8c.html#autotoc_md93',1,'']]],
+  ['channel_20coords_20and_20copies_20them_20out_7',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md67',1,'']]],
+  ['channel_20s_20button_20leds_20at_20once_8',['Sets a whole channel&apos;s button LEDs at once',['../led__driver_8c.html#autotoc_md81',1,'']]],
+  ['checks_20external_20knob_20channel_20coords_20and_20copies_20them_20out_9',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md67',1,'']]],
+  ['chnl_20and_20knob_20number_10',['Change a knob&apos;s display value, specify which knob by coords (chnl and knob number)',['../led__driver_8c.html#autotoc_md69',1,'']]],
+  ['claim_20display_11',['PUBLIC anim_claim : stop what was running and claim display',['../led__driver_8c.html#autotoc_md111',1,'']]],
+  ['clock_12',['INTERNAL wait_half : Count half cycle of serial LED out clock',['../led__driver_8c.html#autotoc_md55',1,'']]],
+  ['configuration_20params_20defined_20at_20top_13',['PUBLIC led_print_config : Debug mode only, print the current configuration params defined at top.',['../led__driver_8c.html#autotoc_md107',1,'']]],
+  ['console_20every_20time_20stuff_20happens_14',['PUBLIC led_debug : Toggle debug mode, it basically just dumps things to console every time stuff happens',['../led__driver_8c.html#autotoc_md105',1,'']]],
+  ['coord_20and_20use_20render_5fval_15',['Unpack the params inside a knob at a coord and use render_val.',['../led__driver_8c.html#autotoc_md65',1,'']]],
+  ['coordinate_16',['Set a specific button display LED by coordinate',['../led__driver_8c.html#autotoc_md79',1,'']]],
+  ['coords_20and_20copies_20them_20out_17',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md67',1,'']]],
+  ['coords_20chnl_20and_20knob_20number_18',['Change a knob&apos;s display value, specify which knob by coords (chnl and knob number)',['../led__driver_8c.html#autotoc_md69',1,'']]],
+  ['copies_20them_20out_19',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md67',1,'']]],
+  ['count_20half_20cycle_20of_20serial_20led_20out_20clock_20',['INTERNAL wait_half : Count half cycle of serial LED out clock',['../led__driver_8c.html#autotoc_md55',1,'']]],
+  ['current_20brightness_20setting_200_20255_21',['PUBLIC led_get_brightness : Returns the current brightness setting 0-255',['../led__driver_8c.html#autotoc_md91',1,'']]],
+  ['current_20configuration_20params_20defined_20at_20top_22',['PUBLIC led_print_config : Debug mode only, print the current configuration params defined at top.',['../led__driver_8c.html#autotoc_md107',1,'']]],
+  ['currently_20on_20in_20normal_20state_20will_20do_20it_20mode_201_20every_20single_20led_20does_20it_23',['currently on in normal state will do it mode 1 every single LED does it',['../led__driver_8c.html#autotoc_md49',1,'are currently on in normal state will do it, mode 1 = every single LED does it'],['../led__driver_8c.html#autotoc_md117',1,'are currently on in normal state will do it, mode 1 = every single LED does it)']]],
+  ['cycle_20of_20serial_20led_20out_20clock_24',['INTERNAL wait_half : Count half cycle of serial LED out clock',['../led__driver_8c.html#autotoc_md55',1,'']]]
+];

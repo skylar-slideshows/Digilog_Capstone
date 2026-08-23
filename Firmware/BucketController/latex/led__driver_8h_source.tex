@@ -1,0 +1,107 @@
+\doxysection{led\+\_\+driver.\+h}
+\hypertarget{led__driver_8h_source}{}\label{led__driver_8h_source}\index{Core/Inc/led\_driver.h@{Core/Inc/led\_driver.h}}
+\doxymbox{\hyperlink{led__driver_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifndef\ LED\_DRIVER\_H}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ LED\_DRIVER\_H}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ DISP\_BAR\ =\ 0,}
+\DoxyCodeLine{00055\ \ \ \ \ DISP\_POINT\ =\ 1}
+\DoxyCodeLine{00056\ \}\ \doxymbox{\hyperlink{led__driver_8h_a204eeb2f62750691be88d11cee12e8fb}{knob\_disp\_t}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ SCALE\_LEFT\ =\ 0,\ \textcolor{comment}{//\ 0-\/32\ bar\ grows\ from\ the\ left}}
+\DoxyCodeLine{00066\ \ \ \ \ SCALE\_CENTER\ =\ 1\ \ \textcolor{comment}{//\ -\/15\ -\/\ +16,\ bar\ grows\ from\ the\ middle\ LED\ (0)}}
+\DoxyCodeLine{00067\ \}\ \doxymbox{\hyperlink{led__driver_8h_aebc7d96b3cd2b0247e0fee9facdd6306}{knob\_scale\_t}};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a7eb4d382bdd4b42c57dbb7154d03ac66}{led\_init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a682da542ec0d880fe15e35c521dca40f}{led\_update}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a7356edcfb81a323c5f9ab6e3b8e90413}{led\_refresh}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00099\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_acc42bb9974f0987487ea0dc1c9abfb85}{led\_clear}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00108\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a396048955e13a769f2b853af5eada30d}{led\_brightness}}(uint8\_t\ brightness);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00116\ uint8\_t\ \doxymbox{\hyperlink{led__driver_8h_a117a1253b0b1c6ace75bcea6225320b5}{led\_get\_brightness}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00127\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a9ace46ff6d8a6d6834ea339c6ef95d4a}{knob\_led}}(uint8\_t\ channel,\ uint8\_t\ knob,\ int8\_t\ value);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00138\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a93508efe763fcffeb732f87a34ebc989}{knob\_step}}(uint8\_t\ channel,\ uint8\_t\ knob,\ int8\_t\ delta);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00149\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_ac7be65bc72611f124bd4e28a2c676581}{knob\_disp}}(uint8\_t\ channel,\ uint8\_t\ knob,\ \doxymbox{\hyperlink{led__driver_8h_a204eeb2f62750691be88d11cee12e8fb}{knob\_disp\_t}}\ mode);}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00161\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a491fcfcf1db04a9e0266f938801f1f1e}{knob\_scale}}(uint8\_t\ channel,\ uint8\_t\ knob,\ \doxymbox{\hyperlink{led__driver_8h_aebc7d96b3cd2b0247e0fee9facdd6306}{knob\_scale\_t}}\ mode);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00172\ int8\_t\ \doxymbox{\hyperlink{led__driver_8h_a1b8859b0c70a908794180ecc8c826e4a}{knob\_get}}(uint8\_t\ channel,\ uint8\_t\ knob);}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00183\ \doxymbox{\hyperlink{led__driver_8h_a204eeb2f62750691be88d11cee12e8fb}{knob\_disp\_t}}\ \doxymbox{\hyperlink{led__driver_8h_a540c64d74063b76493c23f057f49c5ad}{knob\_get\_disp}}(uint8\_t\ channel,\ uint8\_t\ knob);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00194\ \doxymbox{\hyperlink{led__driver_8h_aebc7d96b3cd2b0247e0fee9facdd6306}{knob\_scale\_t}}\ \doxymbox{\hyperlink{led__driver_8h_a72d66c5f01cc6b9faa04ba2232ff3c52}{knob\_get\_scale}}(uint8\_t\ channel,\ uint8\_t\ knob);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00206\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_ae5f7ad07b06e4c7e662050cffb95b2a4}{knob\_raw}}(uint8\_t\ channel,\ uint8\_t\ knob,\ uint32\_t\ bits);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ knob\_inc(channel,\ knob)\ knob\_step((channel),\ (knob),\ +1)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ knob\_dec(channel,\ knob)\ knob\_step((channel),\ (knob),\ -\/1)}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00221\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a8247db1e6cd453845247e0628c59bdca}{button\_led}}(uint8\_t\ channel,\ uint8\_t\ button,\ \textcolor{keywordtype}{bool}\ on);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00232\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{led__driver_8h_a599fe495e6dda2a086e681dd316c21bb}{button\_get}}(uint8\_t\ channel,\ uint8\_t\ button);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00242\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a007decc2a5b99b7464b2d0b7a73ec981}{button\_mask}}(uint8\_t\ channel,\ uint16\_t\ mask);}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00250\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ ANIM\_NONE\ =\ 0,\ ANIM\_LOAD,\ ANIM\_SWEEP,\ ANIM\_BREATHE\_KEEP,\ ANIM\_BREATHE\_ALL}
+\DoxyCodeLine{00252\ \}\ \doxymbox{\hyperlink{led__driver_8h_a6afcab6c98a3c6739d16652079175474}{anim\_t}};}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00261\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a2a0747179642066308781e0047d71c43}{anim\_stop}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00270\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a78795bc24d9cc1972aa1aa5c11148721}{anim\_claim}}(\doxymbox{\hyperlink{led__driver_8h_a6afcab6c98a3c6739d16652079175474}{anim\_t}}\ a);}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00281\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a12e8fd2c8511fc8916e3fc231d54c873}{anim\_loading}}(int8\_t\ knob);}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00292\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a370cffd56c599df656a50b858ac3eb52}{anim\_sweep}}(uint8\_t\ channel,\ uint8\_t\ knob);}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00302\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a6db97b368a56f86d7509f25d452f2277}{anim\_breathe}}(uint8\_t\ mode);}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00310\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_a7c814e4dc44f419e86d97917801f7ced}{led\_debug}}(\textcolor{keywordtype}{bool}\ on);}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00318\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{led__driver_8h_af46294a908fd1e649734cb45df495003}{led\_print\_config}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

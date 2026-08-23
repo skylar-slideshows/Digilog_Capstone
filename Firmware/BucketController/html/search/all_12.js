@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['oe_20is_20active_20low_20so_20higher_20brightness_20needs_20less_20high_20time_20on_20pwm_0',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md99',1,'']]],
+  ['of_20a_20specified_20knob_1',['of a specified knob',['../led__driver_8c.html#autotoc_md85',1,'PUBLIC knob_get_disp : returns the display mode (knob_scale_t type) of a specified knob'],['../led__driver_8c.html#autotoc_md87',1,'PUBLIC knob_get_scale : returns the scale mode (knob_scale_t type) of a specified knob']]],
+  ['of_20all_20leds_20externally_2',['PUBLIC led_brightness : Set the brightness of all LEDs externally.',['../led__driver_8c.html#autotoc_md101',1,'']]],
+  ['of_20bits_20that_20show_20that_20value_3',['Directly render: turns a knob&apos;s value into the set of bits that show that value',['../led__driver_8c.html#autotoc_md63',1,'']]],
+  ['of_20knob_4',['PUBLIC knob_disp : Set display mode of knob',['../led__driver_8c.html#autotoc_md73',1,'']]],
+  ['of_20knob_20left_20to_20right_20or_20center_20pan_5',['PUBLIC knob_scale : set scale mode of knob (left to right or center/pan)',['../led__driver_8c.html#autotoc_md75',1,'']]],
+  ['of_20led_20bits_20out_20end_20sent_20first_6',['INTERNAL frame_out : Sends an entire frame of LED bits out, end sent first',['../led__driver_8c.html#autotoc_md61',1,'']]],
+  ['of_20serial_20led_20out_20clock_7',['INTERNAL wait_half : Count half cycle of serial LED out clock',['../led__driver_8c.html#autotoc_md55',1,'']]],
+  ['of_20specified_20knob_8',['PUBLIC knob_get : returns the value of specified knob',['../led__driver_8c.html#autotoc_md83',1,'']]],
+  ['off_20and_20latch_9',['PUBLIC led_clear : Set all led states to off and latch',['../led__driver_8c.html#autotoc_md97',1,'']]],
+  ['off_20or_20on_10',['Returns whether the specified button LED is off or on.',['../led__driver_8c.html#autotoc_md89',1,'']]],
+  ['on_11',['Returns whether the specified button LED is off or on.',['../led__driver_8c.html#autotoc_md89',1,'']]],
+  ['on_20in_20normal_20state_20will_20do_20it_20mode_201_20every_20single_20led_20does_20it_12',['on in normal state will do it mode 1 every single LED does it',['../led__driver_8c.html#autotoc_md49',1,'are currently on in normal state will do it, mode 1 = every single LED does it'],['../led__driver_8c.html#autotoc_md117',1,'are currently on in normal state will do it, mode 1 = every single LED does it)']]],
+  ['on_20pwm_13',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md99',1,'']]],
+  ['once_14',['Sets a whole channel&apos;s button LEDs at once',['../led__driver_8c.html#autotoc_md81',1,'']]],
+  ['once_20during_20setup_20initializes_20led_20serial_20pins_20pwm_20timer_15',['PUBLIC led_init : Call once during setup, initializes LED serial pins, PWM timer',['../led__driver_8c.html#autotoc_md103',1,'']]],
+  ['only_20if_20frame_20has_20been_20changed_20dirty_16',['pushing changes to LEDs only if frame has been changed &quot;dirty&quot;',['../led__driver_8c.html#autotoc_md93',1,'']]],
+  ['only_20print_20the_20current_20configuration_20params_20defined_20at_20top_17',['PUBLIC led_print_config : Debug mode only, print the current configuration params defined at top.',['../led__driver_8c.html#autotoc_md107',1,'']]],
+  ['or_20center_20pan_18',['PUBLIC knob_scale : set scale mode of knob (left to right or center/pan)',['../led__driver_8c.html#autotoc_md75',1,'']]],
+  ['or_20on_19',['Returns whether the specified button LED is off or on.',['../led__driver_8c.html#autotoc_md89',1,'']]],
+  ['out_20',['out',['../led__driver_8c.html#autotoc_md57',1,'INTERNAL shift_bit : uint32 -&amp;gt; Shifts a single bit out.'],['../led__driver_8c.html#autotoc_md67',1,'Range checks external knob/channel coords and copies them out']]],
+  ['out_20clock_21',['INTERNAL wait_half : Count half cycle of serial LED out clock',['../led__driver_8c.html#autotoc_md55',1,'']]],
+  ['out_20end_20sent_20first_22',['INTERNAL frame_out : Sends an entire frame of LED bits out, end sent first',['../led__driver_8c.html#autotoc_md61',1,'']]],
+  ['outputs_20no_20matter_20what_23',['PUBLIC led_refresh : latch outputs, no matter what',['../led__driver_8c.html#autotoc_md95',1,'']]]
+];
