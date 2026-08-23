@@ -4,7 +4,7 @@
 
 ### Contributors: Skylar Denno, Evan Forcucci, Daniil Petrov, Xinhao Chen, Luke Garrity, Daniel Salas
 
-### Advisor: Milad Siami
+### Advisor: [Milad Siami](https://coe.northeastern.edu/people/siami-milad/)
 
-## [Firmware Documentation](http://docs.skylar.lgbt/files.html)
+## [Firmware Documentation](https://docs.skylar.lgbt/)
 
