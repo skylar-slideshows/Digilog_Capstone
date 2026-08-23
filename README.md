@@ -6,5 +6,5 @@
 
 ### Advisor: Milad Siami
 
-### Firmware documentation (Doxygen) is in Firmware --> (Specific project/version) --> html --> files.html (open w/ browser)
+## [Firmware Documentation](http://docs.skylar.lgbt/files.html)
 

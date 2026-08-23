@@ -1,6 +1,6 @@
 # Firmware Developer Documentation
 
-####Browse the [full file list](files.html), or here is some of the most useful documentation:
+####Browse the [full file list](http://docs.skylar.lgbt/files.html), or here is some of the most useful documentation:
 
 - [mcp_funcs.h](@ref mcp_funcs.h) - Functions to interface with MCP23017 GPIO expander and MCP4728 DAC
 - [mcp_regs.h](@ref mcp_regs.h) - Initialization and command macros and constraints for MCP23017 GPIO expander and MCP4728 DAC
