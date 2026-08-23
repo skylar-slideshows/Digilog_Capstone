@@ -24,8 +24,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
       - name: Build docs
+	working-directory: Firmware_Documentation
         run: doxygen Doxyfile
-  	working-directory: Firmware_Documentation
 
       - uses: actions/configure-pages@v5
 
