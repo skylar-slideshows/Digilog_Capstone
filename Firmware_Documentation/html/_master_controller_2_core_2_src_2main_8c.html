@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.17.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/BucketController/Core/Src/main.c File Reference</title>
+<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/MasterController/Core/Src/main.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="codefolding.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded',() => { initNavTree('main_8c.html','',''); });
+document.addEventListener('DOMContentLoaded',() => { initNavTree('_master_controller_2_core_2_src_2main_8c.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -121,11 +121,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('main_8c.html',
 
 <p>: Main program body  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;main.h&quot;</code><br />
 <code>#include &quot;cmsis_os.h&quot;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &quot;cmsis_os2.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="led__driver_8h_source.html">led_driver.h</a>&quot;</code><br />
+<code>#include &quot;app_fatfs.h&quot;</code><br />
+<code>#include &quot;usb_device.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -142,16 +141,10 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a22b804736f5648d52f639b2647d4ed13" id="r_a22b804736f5648d52f639b2647d4ed13"><td class="memItemLeft"><a id="a22b804736f5648d52f639b2647d4ed13" name="a22b804736f5648d52f639b2647d4ed13"></a>
-ADC_HandleTypeDef&#160;</td><td class="memItemRight"><b>hadc1</b></td></tr>
 <tr class="memitem:af7b2c26e44dadaaa798a5c3d82914ba7" id="r_af7b2c26e44dadaaa798a5c3d82914ba7"><td class="memItemLeft"><a id="af7b2c26e44dadaaa798a5c3d82914ba7" name="af7b2c26e44dadaaa798a5c3d82914ba7"></a>
 I2C_HandleTypeDef&#160;</td><td class="memItemRight"><b>hi2c1</b></td></tr>
 <tr class="memitem:ac379bcc152d860f08b1279fd3e232295" id="r_ac379bcc152d860f08b1279fd3e232295"><td class="memItemLeft"><a id="ac379bcc152d860f08b1279fd3e232295" name="ac379bcc152d860f08b1279fd3e232295"></a>
 I2C_HandleTypeDef&#160;</td><td class="memItemRight"><b>hi2c2</b></td></tr>
-<tr class="memitem:a5ccf4a01a8d7f08d3190181f843f7515" id="r_a5ccf4a01a8d7f08d3190181f843f7515"><td class="memItemLeft"><a id="a5ccf4a01a8d7f08d3190181f843f7515" name="a5ccf4a01a8d7f08d3190181f843f7515"></a>
-I2C_HandleTypeDef&#160;</td><td class="memItemRight"><b>hi2c3</b></td></tr>
-<tr class="memitem:a818789480a74b70bbcaf6d73e8e763ed" id="r_a818789480a74b70bbcaf6d73e8e763ed"><td class="memItemLeft"><a id="a818789480a74b70bbcaf6d73e8e763ed" name="a818789480a74b70bbcaf6d73e8e763ed"></a>
-I2C_HandleTypeDef&#160;</td><td class="memItemRight"><b>hi2c4</b></td></tr>
 <tr class="memitem:a9c6222bae4d0328dd843ae099623b40b" id="r_a9c6222bae4d0328dd843ae099623b40b"><td class="memItemLeft"><a id="a9c6222bae4d0328dd843ae099623b40b" name="a9c6222bae4d0328dd843ae099623b40b"></a>
 SPI_HandleTypeDef&#160;</td><td class="memItemRight"><b>hspi1</b></td></tr>
 <tr class="memitem:ab9da65f935e805137e2eb4e18c5ab224" id="r_ab9da65f935e805137e2eb4e18c5ab224"><td class="memItemLeft"><a id="ab9da65f935e805137e2eb4e18c5ab224" name="ab9da65f935e805137e2eb4e18c5ab224"></a>
@@ -160,10 +153,6 @@ SPI_HandleTypeDef&#160;</td><td class="memItemRight"><b>hspi2</b></td></tr>
 SPI_HandleTypeDef&#160;</td><td class="memItemRight"><b>hspi3</b></td></tr>
 <tr class="memitem:a25fc663547539bc49fecc0011bd76ab5" id="r_a25fc663547539bc49fecc0011bd76ab5"><td class="memItemLeft"><a id="a25fc663547539bc49fecc0011bd76ab5" name="a25fc663547539bc49fecc0011bd76ab5"></a>
 TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim1</b></td></tr>
-<tr class="memitem:a2c80fd5510e2990a59a5c90d745c716c" id="r_a2c80fd5510e2990a59a5c90d745c716c"><td class="memItemLeft"><a id="a2c80fd5510e2990a59a5c90d745c716c" name="a2c80fd5510e2990a59a5c90d745c716c"></a>
-TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim2</b></td></tr>
-<tr class="memitem:aac3d2c59ee0e3bbae1b99529a154eb62" id="r_aac3d2c59ee0e3bbae1b99529a154eb62"><td class="memItemLeft"><a id="aac3d2c59ee0e3bbae1b99529a154eb62" name="aac3d2c59ee0e3bbae1b99529a154eb62"></a>
-TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim3</b></td></tr>
 <tr class="memitem:a6a263905468b0c37de4ee5e50ede4e74" id="r_a6a263905468b0c37de4ee5e50ede4e74"><td class="memItemLeft"><a id="a6a263905468b0c37de4ee5e50ede4e74" name="a6a263905468b0c37de4ee5e50ede4e74"></a>
 osThreadId_t&#160;</td><td class="memItemRight"><b>defaultTaskHandle</b></td></tr>
 <tr class="memitem:a25fbb54afdba71c24ba51ed50166ac8d" id="r_a25fbb54afdba71c24ba51ed50166ac8d"><td class="memItemLeft">const osThreadAttr_t&#160;</td><td class="memItemRight"><a class="el" href="#a25fbb54afdba71c24ba51ed50166ac8d">defaultTask_attributes</a></td></tr>
@@ -215,7 +204,7 @@ osThreadId_t&#160;</td><td class="memItemRight"><b>defaultTaskHandle</b></td></t
 </div><div class="memdoc">
 
 <p>Period elapsed callback in non blocking mode. </p>
-<dl class="section note"><dt>Note</dt><dd>This function is called when TIM7 interrupt took place, inside HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment a global variable "uwTick" used as application time base. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function is called when TIM8 interrupt took place, inside HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment a global variable "uwTick" used as application time base. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">htim</td><td>: TIM handle </td></tr>
@@ -348,7 +337,7 @@ osThreadId_t&#160;</td><td class="memItemRight"><b>defaultTaskHandle</b></td></t
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><a href="main_8c.html">main.c</a></li>
+    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>MasterController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><a href="_master_controller_2_core_2_src_2main_8c.html">main.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

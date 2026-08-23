@@ -9,6 +9,5 @@ var searchData=
   ['led_5finit_6',['led_init',['../led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66',1,'led_driver.h']]],
   ['led_5fprint_5fconfig_7',['led_print_config',['../led__driver_8h.html#af46294a908fd1e649734cb45df495003',1,'led_driver.h']]],
   ['led_5frefresh_8',['led_refresh',['../led__driver_8h.html#a7356edcfb81a323c5f9ab6e3b8e90413',1,'led_driver.h']]],
-  ['led_5fupdate_9',['led_update',['../led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f',1,'led_driver.h']]],
-  ['list_20or_20here_20is_20some_20of_20the_20most_20useful_20documentation_3a_10',['Browse the &lt;a href=&quot;files.html&quot;&gt;full file list&lt;/a&gt;, or here is some of the most useful documentation:',['../index.html#autotoc_md55',1,'']]]
+  ['led_5fupdate_9',['led_update',['../led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f',1,'led_driver.h']]]
 ];

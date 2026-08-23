@@ -31,8 +31,7 @@ var NAVTREE =
       [ "Globals", "globals.html", [
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
-        [ "Enumerations", "globals_enum.html", null ],
-        [ "Macros", "globals_defs.html", null ]
+        [ "Enumerations", "globals_enum.html", null ]
       ] ]
     ] ]
   ] ]
@@ -40,7 +39,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"console__state__bucket_8h.html"
+"_bucket_controller_2_core_2_inc_2main_8h.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

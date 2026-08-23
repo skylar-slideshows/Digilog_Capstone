@@ -1026,7 +1026,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../Firmware/BucketController/Core/Src/main.c ../Firmware/BucketController/Core/Inc/main.h ../Firmware/BucketController/Core/Inc/led_driver.h ../Firmware/BucketController/Core/Src/mcp4728_driver.c ../Firmware/BucketController/Core/Src/cpp_template.cpp ../Firmware/BucketController/Core/Inc/cpp_template.hpp ../Firmware/BucketController/Core/Src/mcp23017_driver.c ../Firmware/BucketController/Core/Inc/console_state_bucket.h ../Firmware/BucketController/Core/Inc/mcp_funcs.h ../Firmware/BucketController/Core/Inc/mcp_regs.h ../Firmware/BucketController/Core/Inc/cv.h mainpage.md src include
+INPUT                  = ../Firmware/BucketController/Core/Src/main.c ../Firmware/BucketController/Core/Inc/main.h ../Firmware/BucketController/Core/Inc/led_driver.h ../Firmware/BucketController/Core/Src/mcp4728_driver.c ../Firmware/BucketController/Core/Src/cpp_template.cpp ../Firmware/BucketController/Core/Inc/cpp_template.hpp ../Firmware/BucketController/Core/Src/mcp23017_driver.c ../Firmware/BucketController/Core/Inc/console_state_bucket.h ../Firmware/BucketController/Core/Inc/mcp_funcs.h ../Firmware/BucketController/Core/Inc/mcp_regs.h ../Firmware/BucketController/Core/Inc/cv.h mainpage.md src include ../Firmware/MasterController/Core/Src/main.c ../Firmware/MasterController/Core/Inc/main.h ../Firmware/BucketController/Core/Src/i2c_driver.c
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
