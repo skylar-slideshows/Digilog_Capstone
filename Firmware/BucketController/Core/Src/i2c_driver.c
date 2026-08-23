@@ -11,7 +11,7 @@
   * Each of these I2C busses contains 3 MCP23017s (0x20, 0x21, 0x22) and 5 MCP4728s
   * (0x60, 0x61, 0x62, 0x63, 0x64). The first two MCP23017s are connected to the rotation pins
   * of the rotary encoders on their respective channel are polled at a higher rate (1,500 times/sec)
-  * than the third one (only 100 times/sec), which is only connected to push buttons.
+  * than the third one (only 100 times/sec, every superframe), which is only connected to push buttons.
   * The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control
   * voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).
   *
@@ -43,16 +43,7 @@
 
 #include "i2c_driver.h"
 #include "stm32g474xx.h"
-#include "stm32g4xx.h"
-#include "stm32g4xx.h"
-#include "stm32g4xx_ll_bus.h"
-#include "stm32g4xx_ll_rcc.h"
-#include "stm32g4xx_ll_gpio.h"
 #include "stm32g4xx_ll_i2c.h"
-#include "stm32g4xx_ll_dma.h"
-#include "stm32g4xx_ll_dmamux.h"
-#include "stm32g4xx_ll_tim.h"
-#include <string.h>
 #include <stdbool.h>
 
 #define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
@@ -109,25 +100,9 @@ typedef struct
 
 
 static bus_t B[I2C_NUM_BUSES];
-static i2c_scan_cb scan_cb;
+//static i2c_scan_cb scan_cb;
 static uint32_t cyc_us; // cpu cycles per microsec
 static volatile bool  running;
-
-
-/*=============================== FORWARD DECLARATIONS ================================*/
-/* All from the STM32 I2C boilerplate */
-
-static void dwt_init(void);
-static void gpio_af(bus_t *bus);
-static void periph_init(bus_t *bus);
-static void bus_recover(bus_t *bus);
- 
-static bool wait_flag(bus_t *bus, uint32_t flag, bool abort_on_nack, uint32_t us);
-static void clear_flags(bus_t *bus);
-static bool bus_idle(bus_t *bus, uint32_t us);
-static void abort_xfer(bus_t *bus);
- 
-static void launch(bus_t *bus, const i2c_transfer_t *x);
 static void advance(bus_t *bus);
 
 
@@ -207,7 +182,7 @@ static void abort_transfer(bus_t *bus)
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL dwt_init : Initialize data watchpoint and trace for debugging
+  PUBLIC dwt_init : Initialize data watchpoint and trace for debugging
  ----------------------------------------------------------------------------------
 */
 static void dwt_init(void)
@@ -217,6 +192,7 @@ static void dwt_init(void)
     DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
     cyc_us = SystemCoreClock / 1000000U;
 }
+
 
 
 /*=============================== PUBLIC I2C FUNCTIONS ================================*/
@@ -288,7 +264,7 @@ bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     {
         if (!wait_flag(b, I2C_ISR_RXNE, true, 2000))
         {
-            abort_xfer(b);
+            abort_transfer(b);
             return false;
         }
         data[i] = (uint8_t)b->i2c->RXDR;
@@ -297,13 +273,13 @@ bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 
     if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
     {
-        abort_xfer(b);
+        abort_transfer(b);
         return false;
     }
 
     if(b->i2c->ISR & I2C_ISR_NACKF)
     {
-        abort_xfer(b);
+        abort_transfer(b);
         return false;
     }
 
@@ -342,7 +318,7 @@ bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes
     {
         if (!wait_flag(b, I2C_ISR_TXIS, true, 2000))
         {
-            abort_xfer(b);
+            abort_transfer(b);
             return false;
         }
         b->i2c->TXDR = data[i];
@@ -350,13 +326,13 @@ bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes
 
     if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
     {
-        abort_xfer(b);
+        abort_transfer(b);
         return false;
     }
 
     if(b->i2c->ISR & I2C_ISR_NACKF)
     {
-        abort_xfer(b);
+        abort_transfer(b);
         return false;
     }
 

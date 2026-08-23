@@ -40,7 +40,8 @@
   **********************************************************************************
 */
 
-/* PIN ASSIGNMENTS (for one I2C bus / 1 channel):
+/** @attention
+    PIN ASSIGNMENTS (for one I2C bus / 1 channel):
 
       0x20 (MCP23017 #1):
         - GPA0/GPA1 Input gain encoder A/B
@@ -115,9 +116,9 @@
 typedef enum { I2C_RD = 0, I2C_WR = 1 } i2c_dir_t;
 
 typedef struct {
-    uint8_t  addr; // 7 bits address
-    uint8_t  dir; // direction
-    uint8_t  nbytes; //  num bytes on wire
+    uint8_t addr; // 7 bits address
+    uint8_t dir; // direction
+    uint8_t nbytes; //  num bytes on wire
     uint8_t *buf; // buffer ptr
 } i2c_transfer_t;
 
@@ -135,8 +136,9 @@ typedef void (*i2c_scan_cb)(uint8_t bus);
 const i2c_stats_t *i2c_stats(uint8_t bus);
 
 
-bool i2c_probe   (uint8_t bus, uint8_t addr7);
+bool i2c_probe (uint8_t bus, uint8_t addr7);
 bool i2c_write_b (uint8_t bus, uint8_t addr7, const uint8_t *d, uint8_t n);
-bool i2c_read_b  (uint8_t bus, uint8_t addr7, uint8_t *d, uint8_t n);
+bool i2c_read_b (uint8_t bus, uint8_t addr7, uint8_t *d, uint8_t n);
+
 
 #endif
