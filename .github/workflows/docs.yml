@@ -25,6 +25,7 @@ jobs:
 
       - name: Build docs
         run: doxygen Doxyfile
+  	working-directory: Firmware_Documentation
 
       - uses: actions/configure-pages@v5
 
