@@ -1,9 +1,18 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
+  * I2C SCHEDULER AND DRIVER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file console_state_bucket.c
-  * @brief 
+  * @file i2c_driver.c
+  * @brief Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams
+  *        to MCP4728 DACs at a fixed rate.
+  *
+  * The bucket controller has four identical I2C busses, one for each channel it controls.
+  * Each of these I2C busses contains 3 MCP23017s (0x20, 0x21, 0x22) and 5 MCP4728s
+  * (0x60, 0x61, 0x62, 0x63, 0x64). The first two MCP23017s are connected to the rotation pins
+  * of the rotary encoders on their respective channel are polled at a higher rate (1,500 times/sec)
+  * than the third one (only 100 times/sec), which is only connected to push buttons.
+  * The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control
+  * voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).
   *
   * @author
   * @date
@@ -31,5 +40,6 @@
   **********************************************************************************
 */
 
-#include "console_state_bucket.h"
+#include "i2c_driver.h"
 #include "stm32g4xx.h"
+

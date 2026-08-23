@@ -1,16 +1,16 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket Controller Slave)
+  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
   **********************************************************************************
   * @file console_state_bucket.h
   * @brief 
   *
-  * @author Skylar Denno (denno.o@northeastern.edu)
-  * @date 2026-08-23
+  * @author
+  * @date
   * @version 1.0
   *
   * @attention
-  *  Copyright (C) 2026 Skylar Denno
+  *  Copyright (C) 2026
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,3 +30,9 @@
   *  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   **********************************************************************************
 */
+
+#ifndef CONSOLE_STATE_H
+#define CONSOLE_STATE_H
+
+
+#endif

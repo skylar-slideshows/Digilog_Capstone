@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
+  * EC11 ROTARY ENCODER DRIVER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file console_state_bucket.c
+  * @file encoder_driver.c
   * @brief 
   *
   * @author
@@ -30,6 +30,3 @@
   *  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   **********************************************************************************
 */
-
-#include "console_state_bucket.h"
-#include "stm32g4xx.h"

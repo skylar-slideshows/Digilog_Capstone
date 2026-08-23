@@ -85,22 +85,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
 
 # Skylar
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/led_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/mcp23017.c
-)
-
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Inc
-)
-
-target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions -fno-rtti -fno-threadsafe-statics>
-)
-
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_OBJCOPY} -O binary
           $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
@@ -121,3 +105,37 @@ if(DOXYGEN_FOUND)
 else()
     message(STATUS "Doxygen not found: 'docs' target will be unavailable")
 endif()
+
+
+# Skylar
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/led_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/i2c_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/mcp23017_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/mcp4728_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/encoder_driver.c
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/cv.c
+)
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Inc
+)
+
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions -fno-rtti -fno-threadsafe-statics>
+)

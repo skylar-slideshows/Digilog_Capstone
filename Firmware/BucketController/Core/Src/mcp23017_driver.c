@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
+  * MCP23017 GPIO EXPANDER DRIVER - DIGILOG CONSOLE (Bucket)
   **********************************************************************************
-  * @file console_state_bucket.c
+  * @file mcp23017_driver.c
   * @brief 
   *
   * @author
@@ -31,5 +31,5 @@
   **********************************************************************************
 */
 
-#include "console_state_bucket.h"
-#include "stm32g4xx.h"
+#include "mcp_regs.h"
+#include "mcp_funcs.h"

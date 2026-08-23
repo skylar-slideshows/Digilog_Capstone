@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
+  * CONTROL VOLTAGE GENERATION ENGINE - DIGILOG CONSOLE
   **********************************************************************************
-  * @file console_state_bucket.c
+  * @file cv.h
   * @brief 
   *
   * @author
@@ -31,5 +31,7 @@
   **********************************************************************************
 */
 
-#include "console_state_bucket.h"
-#include "stm32g4xx.h"
+#ifdef CV_H
+#define CV_H
+
+#endif

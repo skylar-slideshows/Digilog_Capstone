@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * PARAMETER SAVING AND DATA INFRASTRUCTURE - DIGILOG CONSOLE (Bucket)
+  * MCP23017 / MCP4728 DRIVER FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file console_state_bucket.c
+  * @file mcp_funcs.h
   * @brief 
   *
   * @author
@@ -31,5 +31,7 @@
   **********************************************************************************
 */
 
-#include "console_state_bucket.h"
-#include "stm32g4xx.h"
+#ifdef MCP_FUNCS
+#define MCP_FUNCS
+
+#endif
