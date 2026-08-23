@@ -33,3 +33,18 @@
 
 #include "mcp_regs.h"
 #include "mcp_funcs.h"
+#include "i2c_driver.h"
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Writes one register during initialization startup. ALWAYS EXACTLY TWO BYTES.
+ ----------------------------------------------------------------------------------
+*/
+static bool mcp23017_init(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
+{
+  uint8_t write_data[2] = { reg, value };
+  return i2c_write_b(bus, addr_lsb, write_data, 2);
+}
+

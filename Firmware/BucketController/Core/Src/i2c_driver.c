@@ -14,12 +14,12 @@
   * The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control
   * voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).
   *
-  * @author
-  * @date
+  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @date 2026-08-23
   * @version 1.0
   *
   * @attention
-  *  Copyright (C) 2026
+  *  Copyright (C) 2026 Skylar Denno
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,4 +42,39 @@
 
 #include "i2c_driver.h"
 #include "stm32g4xx.h"
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address (everything except LSB) -> bool
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_probe (uint8_t bus, uint8_t addr)
+{
+
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address (everything except LSB)
+                       data pointer, number of bytes to write -> bool
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
+{
+
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address (everything except LSB)
+                       data pointer, number of bytes to write -> bool
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
+{
+
+}
 

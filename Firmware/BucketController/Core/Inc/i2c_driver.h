@@ -106,4 +106,8 @@
 #ifdef I2C_DRIVER_H
 #define I2C_DRIVER_H
 
+bool i2c_probe   (uint8_t bus, uint8_t addr7);
+bool i2c_write_b (uint8_t bus, uint8_t addr7, const uint8_t *d, uint8_t n);
+bool i2c_read_b  (uint8_t bus, uint8_t addr7, uint8_t *d, uint8_t n);
+
 #endif
