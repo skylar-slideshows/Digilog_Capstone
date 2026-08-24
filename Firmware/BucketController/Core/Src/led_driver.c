@@ -713,6 +713,7 @@ void anim_stop(void)
     led_update();
 }
 
+
 /**
  ----------------------------------------------------------------------------------
   PUBLIC anim_claim : stop what was running and claim display
@@ -783,6 +784,7 @@ void anim_sweep(uint8_t channel, uint8_t knob)
     dirty = true;
     led_update();
 }
+
 
 /**
  ----------------------------------------------------------------------------------

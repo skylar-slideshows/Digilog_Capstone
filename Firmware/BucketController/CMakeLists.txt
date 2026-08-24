@@ -125,10 +125,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/encoder_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/cv.c
 )
 

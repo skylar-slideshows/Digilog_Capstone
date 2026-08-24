@@ -46,14 +46,8 @@
 #include "stm32g4xx_ll_i2c.h"
 #include <stdbool.h>
 
-#define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
-#define RESTART_US 4 // 4 microsec restart time
 #define BUDGET_LIMIT ((I2C_SLOT_PERIOD_US * 92) / 100) // max time budget during send frame.
-#define I2C_MAX_TRANSFER_SLOT 5 // max num descriptors on one slot (slot_t.x[4] max)
-#define I2C_NUM_BUSES 4 // four i2c busses
-#define I2C_SLOTS_PER_FRAME 15 // superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)
-#define I2C_MAX_TRANSFER_LEN 8 // as long as nbytes is <255 for each transfer, it can be done at once and does not need reload mode
 
 
 /*=============================== DATA DEFINITIONS ================================*/
@@ -87,7 +81,7 @@ typedef struct
     uint32_t pin_scl, pin_sda;
     uint32_t af; // to restore flag after send
 
-    slot_t frame[I2C_SLOTS_PER_FRAME]; // set at init
+    slot_t frame[I2C_SLOTS_PER_SUPERFRAME];
     uint8_t scan_len; // leading descriptors that are scan reads: when to fire the callback
 
     volatile uint8_t slot; // ISR index into frame
@@ -103,7 +97,6 @@ static bus_t B[I2C_NUM_BUSES];
 //static i2c_scan_cb scan_cb;
 static uint32_t cyc_us; // cpu cycles per microsec
 static volatile bool  running;
-static void advance(bus_t *bus); // fwd declaration :c because is mutually recursive/cyclical w/ ISR path
 
 
 /*=============================== LOW LEVEL HELPERS ================================*/
@@ -170,7 +163,7 @@ static void abort_transfer(bus_t *bus)
         bus->i2c->CR2 |= I2C_CR2_STOP;
         uint32_t t0 = DWT->CYCCNT;
         while ((bus->i2c->ISR & I2C_ISR_BUSY) &&
-               (DWT->CYCCNT - t0) < 1000u * cyc_us) { }
+               (DWT->CYCCNT - t0) < 1000U * cyc_us) { }
         if (bus->i2c->ISR & I2C_ISR_BUSY) {
             LL_I2C_Disable(bus->i2c);
             LL_I2C_Enable(bus->i2c);
@@ -209,7 +202,7 @@ bool i2c_probe (uint8_t bus, uint8_t addr)
     bus_t *b = &B[bus]; // i2c bus pointer
 
     if(running) return false; // busy
-    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    if(!bus_idle(b, IDLE_TIMEOUT_US)) // idle timeout 1000us
     {
         abort_transfer(b);
         return false;
@@ -222,7 +215,7 @@ bool i2c_probe (uint8_t bus, uint8_t addr)
                           LL_I2C_MODE_AUTOEND,
                           LL_I2C_GENERATE_START_WRITE); // ping
 
-    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000)) // block timeout 2000us
+    if(!wait_flag(b, I2C_ISR_STOPF, false, BLOCK_TIMEOUT_US)) // block timeout 2000us
     {
         abort_transfer(b);
         return false;

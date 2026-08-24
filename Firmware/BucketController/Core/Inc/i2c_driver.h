@@ -7,12 +7,28 @@
   *        to MCP4728 DACs at a fixed rate.
   *
   * The bucket controller has four identical I2C busses, one for each channel it controls.
+  * I2C busses run at fast rate (400kHz) and loop a fixed cycle of polling the 23017s and sending to 4728s.
   * Each of these I2C busses contains 3 MCP23017s (0x20, 0x21, 0x22) and 5 MCP4728s
   * (0x60, 0x61, 0x62, 0x63, 0x64). The first two MCP23017s are connected to the rotation pins
-  * of the rotary encoders on their respective channel are polled at a higher rate (1,500 times/sec)
-  * than the third one (only 100 times/sec), which is only connected to push buttons.
-  * The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control
-  * voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).
+  * of the rotary encoders on their respective channel and must be polled at a higher rate (1,500 times/sec)
+  * than the third one (MCP23017 #3) (only 100 times/sec), which is only connected to push buttons.
+  * The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream.
+  * 
+  * The fixed loop runs 1,500 times per second (667us = 1 "slot"):
+  *  - read MCP23017 #1 0x20 (73us - cumulative 73us)
+  *  - read MCP23017 #2 0x21 (73us - cumulative 146us)
+  *  - fast write to one of the 5 DAC chips (210us - cumulative 356us)
+  *  - fast write to one of the 5 DAC chips (210us - cumulative 566us)
+  *  - idle (101us - cumulative 667us)
+  *
+  * This slot loop is inside a "superframe" consisting of 15 slots (10,000us = 10ms = 100Hz)
+  *  - The last slot in superframe additionally reads the MCP23017 #3 0x22 (dropping idle time to 28us for that slot)
+  *    therefore, MCP23017 #3 (buttons only and does need fast polling) is read 100 times per second instead of 1500.
+  *  - Only two of the DAC chips are written to each slot: this is the sequence [slot]DAC,DAC
+  *     [0]0,1;  [1]2,3;  [2]4,0;  [3]1,2;  [4]3,4;
+  *     [5]0,1;  [6]2,3;  [7]4,0;  [8]1,2;  [9]3,4;
+  *    [10]0,1; [11]2,3; [12]4,0; [13]1,2; [14]3,4;
+  *    Therefore, each individual DAC is written to 6 times per superframe, evenly spread (1.667ms between writes for one chip)
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-08-23
@@ -104,13 +120,37 @@
         - DACD Channel out gain R (fader/pan/compressor)
 */
 
-
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #ifndef I2C_DRIVER_H
 #define I2C_DRIVER_H
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Define I2C geometry
+ ----------------------------------------------------------------------------------
+*/
+#define I2C_NUM_BUSES    4
+#define MCP23017_PER_BUS 3
+#define MCP4728_PER_BUS  5
+#define I2C_MAX_TRANSFER_LEN 8 // as long as nbytes is <255 for each transfer, it can be done at once and does not need reload mode
+#define I2C_MAX_TRANSFER_SLOT 5 // max num descriptors on one slot (slot_t.x[4] max)
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Define I2C timings
+ ----------------------------------------------------------------------------------
+*/
+#define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
+#define I2C_SLOTS_PER_SUPERFRAME 15 // superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)
+#define RESTART_US 4 // 4 microsec restart time
+#define IDLE_TIMEOUT_US 1000 // 1ms waiting for bus to go idle before error
+#define BLOCK_TIMEOUT_US 2000 // 2ms waiting for 
+
+
 
 
 typedef enum { I2C_RD = 0, I2C_WR = 1 } i2c_dir_t;
@@ -135,10 +175,32 @@ typedef struct {
 typedef void (*i2c_scan_cb)(uint8_t bus);
 const i2c_stats_t *i2c_stats(uint8_t bus);
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_probe : I2C bus (0,1,2,3), chip address -> bool
+  Returns whether a specific I2C chip is free or not
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_probe (uint8_t bus, uint8_t addr);
 
-bool i2c_probe (uint8_t bus, uint8_t addr7);
-bool i2c_write_b (uint8_t bus, uint8_t addr7, const uint8_t *d, uint8_t n);
-bool i2c_read_b (uint8_t bus, uint8_t addr7, uint8_t *d, uint8_t n);
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief  i2c_read_b : I2C bus (0,1,2,3), chip address 
+                       data pointer, number of bytes to write -> bool
+  Read bytes from i2c chip (blocking)
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_write_b : I2C bus (0,1,2,3), chip address 
+                       data pointer, number of bytes to write -> bool
+  Write bytes to i2c chip (blocking)
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes);
 
 #endif
