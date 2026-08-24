@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['i2c_5fdriver_2ec_0',['i2c_driver.c',['../i2c__driver_8c.html',1,'']]],
-  ['in_20normal_20state_20will_20do_20it_20mode_201_20every_20single_20led_20does_20it_1',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]],
-  ['it_2',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]],
-  ['it_20mode_201_20every_20single_20led_20does_20it_3',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]]
+  ['hal_5ftim_5fperiodelapsedcallback_0',['HAL_TIM_PeriodElapsedCallback',['../_bucket_controller_2_core_2_src_2main_8c.html#a8a3b0ad512a6e6c6157440b68d395eac',1,'HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim):&#160;main.c'],['../_master_controller_2_core_2_src_2main_8c.html#a8a3b0ad512a6e6c6157440b68d395eac',1,'HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim):&#160;main.c']]],
+  ['hardware_20identity_20params_20set_20at_20init_1',['INTERNAL bus type : hardware identity params, set at init',['../structbus__t.html#autotoc_md74',1,'']]]
 ];

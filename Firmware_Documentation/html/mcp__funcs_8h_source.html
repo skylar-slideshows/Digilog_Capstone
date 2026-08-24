@@ -120,10 +120,27 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp__funcs_8h_
 <div class="contents">
 <a href="mcp__funcs_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#ifdef MCP_FUNCS</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#ifndef MCP_FUNCS</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#define MCP_FUNCS</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">static</span> <span class="keywordtype">bool</span> mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">static</span> <span class="keywordtype">bool</span> mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp__funcs_8h.html#a4b97544c19b5d30f09144d6c767900ab">mcp23017_init</a>(uint8_t bus, uint8_t addr);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp__funcs_8h.html#a5e95f4d597eae0504918c0ac9c8ffd2d">mcp23017_init_all</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amcp__funcs_8h_html_a4b97544c19b5d30f09144d6c767900ab"><div class="ttname"><a href="mcp__funcs_8h.html#a4b97544c19b5d30f09144d6c767900ab">mcp23017_init</a></div><div class="ttdeci">bool mcp23017_init(uint8_t bus, uint8_t addr)</div><div class="ttdoc">mcp23017_init : I2C bus num, chip&#39;s address (0x20, 0x21, 0x22) -&gt; bool</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:73</div></div>
+<div class="ttc" id="amcp__funcs_8h_html_a5e95f4d597eae0504918c0ac9c8ffd2d"><div class="ttname"><a href="mcp__funcs_8h.html#a5e95f4d597eae0504918c0ac9c8ffd2d">mcp23017_init_all</a></div><div class="ttdeci">bool mcp23017_init_all(void)</div><div class="ttdoc">mcp23017_init_all : void -&gt; bool</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:113</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

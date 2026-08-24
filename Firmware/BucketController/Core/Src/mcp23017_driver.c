@@ -40,19 +40,6 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
-  Writes one register ALWAYS EXACTLY TWO BYTES.
- ----------------------------------------------------------------------------------
-*/
-static bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
-{
-  uint8_t data[2] = { reg, value };
-  return i2c_write_b(bus, addr, data, 2);
-}
-
-
-/**
- ----------------------------------------------------------------------------------
   @brief mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
@@ -61,6 +48,19 @@ static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value
 {
     if(!i2c_write_b(bus, addr, &reg, 1)) return false; // set pointer
     return i2c_read_b(bus, addr, value, 1); // read 1 byte
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Writes one register ALWAYS EXACTLY TWO BYTES.
+ ----------------------------------------------------------------------------------
+*/
+static bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
+{
+  uint8_t data[2] = { reg, value };
+  return i2c_write_b(bus, addr, data, 2);
 }
 
 

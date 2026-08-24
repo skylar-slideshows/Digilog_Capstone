@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['led_20does_20it_0',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]],
-  ['led_5fbrightness_1',['led_brightness',['../led__driver_8h.html#a396048955e13a769f2b853af5eada30d',1,'led_driver.h']]],
-  ['led_5fclear_2',['led_clear',['../led__driver_8h.html#acc42bb9974f0987487ea0dc1c9abfb85',1,'led_driver.h']]],
-  ['led_5fdebug_3',['led_debug',['../led__driver_8h.html#a7c814e4dc44f419e86d97917801f7ced',1,'led_driver.h']]],
-  ['led_5fdriver_2eh_4',['led_driver.h',['../led__driver_8h.html',1,'']]],
-  ['led_5fget_5fbrightness_5',['led_get_brightness',['../led__driver_8h.html#a117a1253b0b1c6ace75bcea6225320b5',1,'led_driver.h']]],
-  ['led_5finit_6',['led_init',['../led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66',1,'led_driver.h']]],
-  ['led_5fprint_5fconfig_7',['led_print_config',['../led__driver_8h.html#af46294a908fd1e649734cb45df495003',1,'led_driver.h']]],
-  ['led_5frefresh_8',['led_refresh',['../led__driver_8h.html#a7356edcfb81a323c5f9ab6e3b8e90413',1,'led_driver.h']]],
-  ['led_5fupdate_9',['led_update',['../led__driver_8h.html#a682da542ec0d880fe15e35c521dca40f',1,'led_driver.h']]]
+  ['knob_5fdisp_0',['knob_disp',['../led__driver_8h.html#ac7be65bc72611f124bd4e28a2c676581',1,'led_driver.h']]],
+  ['knob_5fdisp_5ft_1',['knob_disp_t',['../led__driver_8h.html#a204eeb2f62750691be88d11cee12e8fb',1,'led_driver.h']]],
+  ['knob_5fget_2',['knob_get',['../led__driver_8h.html#a1b8859b0c70a908794180ecc8c826e4a',1,'led_driver.h']]],
+  ['knob_5fget_5fdisp_3',['knob_get_disp',['../led__driver_8h.html#a540c64d74063b76493c23f057f49c5ad',1,'led_driver.h']]],
+  ['knob_5fget_5fscale_4',['knob_get_scale',['../led__driver_8h.html#a72d66c5f01cc6b9faa04ba2232ff3c52',1,'led_driver.h']]],
+  ['knob_5fled_5',['knob_led',['../led__driver_8h.html#a9ace46ff6d8a6d6834ea339c6ef95d4a',1,'led_driver.h']]],
+  ['knob_5fraw_6',['knob_raw',['../led__driver_8h.html#ae5f7ad07b06e4c7e662050cffb95b2a4',1,'led_driver.h']]],
+  ['knob_5fscale_7',['knob_scale',['../led__driver_8h.html#a491fcfcf1db04a9e0266f938801f1f1e',1,'led_driver.h']]],
+  ['knob_5fscale_5ft_8',['knob_scale_t',['../led__driver_8h.html#aebc7d96b3cd2b0247e0fee9facdd6306',1,'led_driver.h']]],
+  ['knob_5fstep_9',['knob_step',['../led__driver_8h.html#a93508efe763fcffeb732f87a34ebc989',1,'led_driver.h']]]
 ];

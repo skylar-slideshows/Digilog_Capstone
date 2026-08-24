@@ -119,21 +119,174 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('i2c__driver_8c
 </div><!--header-->
 <div class="contents">
 
-<p>Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate.  
+<p>Sets up and manages traffic on the four I2C busses. Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;i2c_driver.h&quot;</code><br />
-<code>#include &quot;stm32g4xx.h&quot;</code><br />
-</div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate. </p>
+<div class="textblock"><code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">i2c_driver.h</a>&quot;</code><br />
+<code>#include &quot;stm32g474xx.h&quot;</code><br />
+<code>#include &quot;stm32g4xx_ll_i2c.h&quot;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:slot_5Ft" id="r_slot_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structslot__t.html">slot_t</a></td></tr>
+<tr class="memitem:bus_5Ft" id="r_bus_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structbus__t.html">bus_t</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a54417991f16f772f24f440bf2d3d4de2" id="r_a54417991f16f772f24f440bf2d3d4de2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a54417991f16f772f24f440bf2d3d4de2">TRANSFER_US</a>(n)</td></tr>
+<tr class="memitem:abf2afdbbf006ed09f62f1b52f076c184" id="r_abf2afdbbf006ed09f62f1b52f076c184"><td class="memItemLeft"><a id="abf2afdbbf006ed09f62f1b52f076c184" name="abf2afdbbf006ed09f62f1b52f076c184"></a>
+#define&#160;</td><td class="memItemRight"><b>BUDGET_LIMIT</b>&#160;&#160;&#160;((I2C_SLOT_PERIOD_US * 92) / 100)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab44979517d1b7b394d341c8b7d09b7e2" id="r_ab44979517d1b7b394d341c8b7d09b7e2"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab44979517d1b7b394d341c8b7d09b7e2">i2c_probe</a> (uint8_t bus, uint8_t addr)</td></tr>
+<tr class="memdesc:ab44979517d1b7b394d341c8b7d09b7e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool  <br /></td></tr>
+<tr class="memitem:a640bafa742929be4c4f5dc1f9cbe77d5" id="r_a640bafa742929be4c4f5dc1f9cbe77d5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a640bafa742929be4c4f5dc1f9cbe77d5">i2c_read_b</a> (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)</td></tr>
+<tr class="memdesc:a640bafa742929be4c4f5dc1f9cbe77d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
+<tr class="memitem:ae1de99c80c148ed224e2f0e0535216ca" id="r_ae1de99c80c148ed224e2f0e0535216ca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae1de99c80c148ed224e2f0e0535216ca">i2c_write_b</a> (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)</td></tr>
+<tr class="memdesc:ae1de99c80c148ed224e2f0e0535216ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Sets up and manages traffic on the four I2C busses. Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate. </p>
 <p>I2C SCHEDULER AND DRIVER - DIGILOG CONSOLE</p>
-<p>The bucket controller has four identical I2C busses, one for each channel it controls. Each of these I2C busses contains 3 MCP23017s (0x20, 0x21, 0x22) and 5 MCP4728s (0x60, 0x61, 0x62, 0x63, 0x64). The first two MCP23017s are connected to the rotation pins of the rotary encoders on their respective channel are polled at a higher rate (1,500 times/sec) than the third one (only 100 times/sec), which is only connected to push buttons. The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).</p>
-<dl class="section author"><dt>Author</dt><dd></dd></dl>
-<dl class="section date"><dt>Date</dt><dd></dd></dl>
+<p>The bucket controller has four identical I2C busses, one for each channel it controls. Each of these I2C busses contains 3 MCP23017s (0x20, 0x21, 0x22) and 5 MCP4728s (0x60, 0x61, 0x62, 0x63, 0x64). The first two MCP23017s are connected to the rotation pins of the rotary encoders on their respective channel are polled at a higher rate (1,500 times/sec) than the third one (only 100 times/sec, every superframe), which is only connected to push buttons. The MCP4728s are fed a 12-bit, low speed 600Hz sample rate stream and provide 20 control voltage DAC channels per console channel. I2C busses run at fast rate (400kHz).</p>
+<dl class="section author"><dt>Author</dt><dd>Skylar Denno (<a href="#" onclick="location.href='mai'+'lto:'+'den'+'no'+'.o@'+'no'+'rth'+'ea'+'ste'+'rn'+'.ed'+'u'; return false;">denno<span class="obfuscator">.nosp@m.</span>.o@n<span class="obfuscator">.nosp@m.</span>orthe<span class="obfuscator">.nosp@m.</span>aste<span class="obfuscator">.nosp@m.</span>rn.ed<span class="obfuscator">.nosp@m.</span>u</a>) </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2026-08-23 </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026 Skylar Denno</dd></dl>
 <p>MIT License: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="a54417991f16f772f24f440bf2d3d4de2" name="a54417991f16f772f24f440bf2d3d4de2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54417991f16f772f24f440bf2d3d4de2">&#9670;&#160;</a></span>TRANSFER_US</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRANSFER_US</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">(((((n) + 1) * 9 + 3) * 5) / 2)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ab44979517d1b7b394d341c8b7d09b7e2" name="ab44979517d1b7b394d341c8b7d09b7e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab44979517d1b7b394d341c8b7d09b7e2">&#9670;&#160;</a></span>i2c_probe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool i2c_probe </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool </p>
+<hr  />
+<p> PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md86"></a>
+Returns whether a specific I2C chip is free or not</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md96"></a>
+Returns whether a specific I2C chip is free or not</h2>
+
+</div>
+</div>
+<a id="a640bafa742929be4c4f5dc1f9cbe77d5" name="a640bafa742929be4c4f5dc1f9cbe77d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a640bafa742929be4c4f5dc1f9cbe77d5">&#9670;&#160;</a></span>i2c_read_b()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool i2c_read_b </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>nbytes</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<hr  />
+<p> PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
+Read (blocking)</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md98"></a>
+Read bytes from i2c chip (blocking)</h2>
+
+</div>
+</div>
+<a id="ae1de99c80c148ed224e2f0e0535216ca" name="ae1de99c80c148ed224e2f0e0535216ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1de99c80c148ed224e2f0e0535216ca">&#9670;&#160;</a></span>i2c_write_b()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool i2c_write_b </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>nbytes</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<hr  />
+<p> PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
+Write (blocking)</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
+Write bytes to i2c chip (blocking)</h2>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

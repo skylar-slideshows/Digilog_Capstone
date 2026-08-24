@@ -119,16 +119,82 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp__funcs_8h.
 </div><!--header-->
 <div class="contents">
 
+<p>All public funtions for using the MCP23017s and MCP4728s.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
+</div>
 <p><a href="mcp__funcs_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a4b97544c19b5d30f09144d6c767900ab" id="r_a4b97544c19b5d30f09144d6c767900ab"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a4b97544c19b5d30f09144d6c767900ab">mcp23017_init</a> (uint8_t bus, uint8_t addr)</td></tr>
+<tr class="memdesc:a4b97544c19b5d30f09144d6c767900ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -&gt; bool  <br /></td></tr>
+<tr class="memitem:a5e95f4d597eae0504918c0ac9c8ffd2d" id="r_a5e95f4d597eae0504918c0ac9c8ffd2d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5e95f4d597eae0504918c0ac9c8ffd2d">mcp23017_init_all</a> (void)</td></tr>
+<tr class="memdesc:a5e95f4d597eae0504918c0ac9c8ffd2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_init_all : void -&gt; bool  <br /></td></tr>
+</table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>MCP23017 / MCP4728 DRIVER FUNCTIONS HEADER - DIGILOG CONSOLE</p>
-<dl class="section author"><dt>Author</dt><dd></dd></dl>
-<dl class="section date"><dt>Date</dt><dd></dd></dl>
+<div class="textblock"><p>All public funtions for using the MCP23017s and MCP4728s. </p>
+<p>MCP23017 / MCP4728 DRIVER FUNCTIONS HEADER - DIGILOG CONSOLE</p>
+<dl class="section author"><dt>Author</dt><dd>Skylar Denno (<a href="#" onclick="location.href='mai'+'lto:'+'den'+'no'+'.o@'+'no'+'rth'+'ea'+'ste'+'rn'+'.ed'+'u'; return false;">denno<span class="obfuscator">.nosp@m.</span>.o@n<span class="obfuscator">.nosp@m.</span>orthe<span class="obfuscator">.nosp@m.</span>aste<span class="obfuscator">.nosp@m.</span>rn.ed<span class="obfuscator">.nosp@m.</span>u</a>) </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2026-08-23 </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026 Skylar Denno</dd></dl>
 <p>MIT License: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
-</div></div><!-- contents -->
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a4b97544c19b5d30f09144d6c767900ab" name="a4b97544c19b5d30f09144d6c767900ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b97544c19b5d30f09144d6c767900ab">&#9670;&#160;</a></span>mcp23017_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mcp23017_init </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -&gt; bool </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
+Initializes a single MCP23017 chip with no interrupt pin setup.</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+Initializes a single MCP23017 chip with no interrupt pin setup.</h2>
+
+</div>
+</div>
+<a id="a5e95f4d597eae0504918c0ac9c8ffd2d" name="a5e95f4d597eae0504918c0ac9c8ffd2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e95f4d597eae0504918c0ac9c8ffd2d">&#9670;&#160;</a></span>mcp23017_init_all()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mcp23017_init_all </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>mcp23017_init_all : void -&gt; bool </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
+Initialize all MCP23017s described in macro defns.</h2>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

@@ -151,8 +151,6 @@
 #define BLOCK_TIMEOUT_US 2000 // 2ms waiting for 
 
 
-
-
 typedef enum { I2C_RD = 0, I2C_WR = 1 } i2c_dir_t;
 
 typedef struct {

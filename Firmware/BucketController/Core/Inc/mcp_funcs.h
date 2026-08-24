@@ -3,14 +3,14 @@
   * MCP23017 / MCP4728 DRIVER FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
   * @file mcp_funcs.h
-  * @brief 
+  * @brief All public funtions for using the MCP23017s and MCP4728s
   *
-  * @author
-  * @date
+  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @date 2026-08-23
   * @version 1.0
   *
   * @attention
-  *  Copyright (C) 2026
+  *  Copyright (C) 2026 Skylar Denno
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,7 +31,46 @@
   **********************************************************************************
 */
 
-#ifdef MCP_FUNCS
+#ifndef MCP_FUNCS
 #define MCP_FUNCS
+
+#include <stdint.h>
+#include <stdbool.h>
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Reads one register ALWAYS EXACTLY TWO BYTES.
+ ----------------------------------------------------------------------------------
+*/
+static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Writes one register ALWAYS EXACTLY TWO BYTES.
+ ----------------------------------------------------------------------------------
+*/
+static bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -> bool
+  Initializes a single MCP23017 chip with no interrupt pin setup.
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_init(uint8_t bus, uint8_t addr);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_init_all : void -> bool
+  Initialize all MCP23017s described in macro defns.
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_init_all(void);
 
 #endif

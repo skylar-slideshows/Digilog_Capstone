@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode_201_20every_20single_20led_20does_20it_0',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]]
+  ['hardware_20identity_20params_20set_20at_20init_0',['INTERNAL bus type : hardware identity params, set at init',['../structbus__t.html#autotoc_md74',1,'']]]
 ];
