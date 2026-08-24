@@ -147,8 +147,9 @@
 #define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
 #define I2C_SLOTS_PER_SUPERFRAME 15 // superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)
 #define RESTART_US 4 // 4 microsec restart time
-#define IDLE_TIMEOUT_US 1000 // 1ms waiting for bus to go idle before error
-#define BLOCK_TIMEOUT_US 2000 // 2ms waiting for 
+#define IDLE_TIMEOUT_US 1000 // 1ms waiting for bus to go idle before transfer
+#define BLOCK_TIMEOUT_US 2000 // 2ms waiting for transfer to complete
+#define I2C_SLOT_PERIOD_US 667 // maximum time of one slot within a superframe
 
 
 typedef enum { I2C_RD = 0, I2C_WR = 1 } i2c_dir_t;
@@ -184,21 +185,47 @@ bool i2c_probe (uint8_t bus, uint8_t addr);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief  i2c_read_b : I2C bus (0,1,2,3), chip address 
+  @brief  i2c_read : I2C bus (0,1,2,3), chip address 
                        data pointer, number of bytes to write -> bool
   Read bytes from i2c chip (blocking)
  ----------------------------------------------------------------------------------
 */
-bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes);
+bool i2c_read (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief i2c_write_b : I2C bus (0,1,2,3), chip address 
+  @brief i2c_write : I2C bus (0,1,2,3), chip address 
                        data pointer, number of bytes to write -> bool
   Write bytes to i2c chip (blocking)
  ----------------------------------------------------------------------------------
 */
-bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes);
+bool i2c_write (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_hw_init : Initialize the i2c busses
+ ----------------------------------------------------------------------------------
+*/
+void i2c_hw_init(void);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_debug_msg : [DEBUG] Prints lots of stuff to USART2
+ ----------------------------------------------------------------------------------
+*/
+void i2c_debug_msg(void);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief test_mcp23017s : [DEBUG] Prints lots of stuff to USART2
+ ----------------------------------------------------------------------------------
+*/
+void test_mcp23017s(void);
+
+
 
 #endif

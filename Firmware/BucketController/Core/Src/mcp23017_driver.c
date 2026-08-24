@@ -44,10 +44,10 @@
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value)
+bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value)
 {
-    if(!i2c_write_b(bus, addr, &reg, 1)) return false; // set pointer
-    return i2c_read_b(bus, addr, value, 1); // read 1 byte
+    if(!i2c_write(bus, addr, &reg, 1)) return false; // set pointer
+    return i2c_read(bus, addr, value, 1); // read 1 byte
 }
 
 
@@ -57,10 +57,10 @@ static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-static bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
+bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
 {
   uint8_t data[2] = { reg, value };
-  return i2c_write_b(bus, addr, data, 2);
+  return i2c_write(bus, addr, data, 2);
 }
 
 
@@ -78,7 +78,7 @@ bool mcp23017_init(uint8_t bus, uint8_t addr)
     // write both ports seqop (0x0A and 0x0B), disabling auto-increment (see mcp_regs.h)
     {
         uint8_t io[3] = { MCP_IOCONA, IOCON_SEQOP, IOCON_SEQOP };
-        if(!i2c_write_b(bus, addr, io, 3)) return false;
+        if(!i2c_write(bus, addr, io, 3)) return false;
     }
 
     // write config data to one register at a time, returning false if fail
@@ -91,12 +91,12 @@ bool mcp23017_init(uint8_t bus, uint8_t addr)
 
     // check to make sure sequential mode (above) is off
     if(!mcp23017_read(bus, addr, MCP_IOCONA, &iocon)) return false;
-    if(iocon != IOCON_SEQOP) return false;
+    if(!(iocon & IOCON_SEQOP)) return false;
 
      // park the pointer (permanately since seq mode off) @ gpioA
     {
         uint8_t reg = MCP_GPIOA;
-        return i2c_write_b(bus, addr, &reg, 1);
+        return i2c_write(bus, addr, &reg, 1);
     }
 }
 

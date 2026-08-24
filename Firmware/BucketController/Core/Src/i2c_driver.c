@@ -42,9 +42,11 @@
 */
 
 #include "i2c_driver.h"
-#include "stm32g474xx.h"
+#include "stm32g4xx.h"
 #include "stm32g4xx_ll_i2c.h"
 #include <stdbool.h>
+#include "mcp_funcs.h"
+#include <stdio.h>
 
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
 #define BUDGET_LIMIT ((I2C_SLOT_PERIOD_US * 92) / 100) // max time budget during send frame.
@@ -107,11 +109,11 @@ static volatile bool  running;
   Polls the I2C status register until transfer suceeds or fails 
  ----------------------------------------------------------------------------------
 */
-static bool wait_flag(bus_t *bus, uint32_t flag, bool abort_on_nack, uint32_t us)
+static bool wait_flag(bus_t *bus_ptr, uint32_t flag, bool abort_on_nack, uint32_t us)
 {
     uint32_t t0 = DWT->CYCCNT, lim = us * cyc_us;
     for (;;) {
-        uint32_t isr = bus->i2c->ISR;
+        uint32_t isr = bus_ptr->i2c->ISR;
         if (isr & flag)                             return true;
         if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false; // flag will never reach with NACK
         if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO))    return false;
@@ -126,9 +128,9 @@ static bool wait_flag(bus_t *bus, uint32_t flag, bool abort_on_nack, uint32_t us
   Clears flags on a bus
  ----------------------------------------------------------------------------------
 */
-static inline void clear_flags(bus_t *bus)
+static inline void clear_flags(bus_t *bus_ptr)
 {
-    bus->i2c->ICR = I2C_ICR_STOPCF | I2C_ICR_NACKCF |
+    bus_ptr->i2c->ICR = I2C_ICR_STOPCF | I2C_ICR_NACKCF |
                     I2C_ICR_BERRCF | I2C_ICR_ARLOCF | I2C_ICR_OVRCF;
 }
 
@@ -139,37 +141,37 @@ static inline void clear_flags(bus_t *bus)
   Clears stale flags and confirms the bus is actually free (idle) before starting
  ----------------------------------------------------------------------------------
 */
-static bool bus_idle(bus_t *bus, uint32_t us)
+static bool bus_idle(bus_t *bus_ptr, uint32_t us)
 {
-    clear_flags(bus);
+    clear_flags(bus_ptr);
     uint32_t t0 = DWT->CYCCNT, lim = us * cyc_us;
-    while (bus->i2c->ISR & I2C_ISR_BUSY)
+    while (bus_ptr->i2c->ISR & I2C_ISR_BUSY)
         if ((DWT->CYCCNT - t0) > lim) return false;
     return true;
 }
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL abort_xfer : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
-  Writes one register during initialization startup. ALWAYS EXACTLY TWO BYTES.
+  INTERNAL abort_transfer : bus -> void
+  Aborts transfer
  ----------------------------------------------------------------------------------
 */
-static void abort_transfer(bus_t *bus)
+static void abort_transfer(bus_t *bus_ptr)
 {
-    bus->i2c->ISR = I2C_ISR_TXE; // flush TXDR
-    clear_flags(bus);
+    bus_ptr->i2c->ISR = I2C_ISR_TXE; // flush TXDR
+    clear_flags(bus_ptr);
 
-    if (bus->i2c->ISR & I2C_ISR_BUSY) {
-        bus->i2c->CR2 |= I2C_CR2_STOP;
+    if (bus_ptr->i2c->ISR & I2C_ISR_BUSY) {
+        bus_ptr->i2c->CR2 |= I2C_CR2_STOP;
         uint32_t t0 = DWT->CYCCNT;
-        while ((bus->i2c->ISR & I2C_ISR_BUSY) &&
+        while ((bus_ptr->i2c->ISR & I2C_ISR_BUSY) &&
                (DWT->CYCCNT - t0) < 1000U * cyc_us) { }
-        if (bus->i2c->ISR & I2C_ISR_BUSY) {
-            LL_I2C_Disable(bus->i2c);
-            LL_I2C_Enable(bus->i2c);
+        if (bus_ptr->i2c->ISR & I2C_ISR_BUSY) {
+            LL_I2C_Disable(bus_ptr->i2c);
+            LL_I2C_Enable(bus_ptr->i2c);
         }
     }
-    clear_flags(bus);
+    clear_flags(bus_ptr);
 }
 
 
@@ -181,9 +183,28 @@ static void abort_transfer(bus_t *bus)
 static void dwt_init(void)
 {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CYCCNT = 0;
-    DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
+    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk))
+    {
+        DWT->CYCCNT = 0;
+        DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
+    }
     cyc_us = SystemCoreClock / 1000000U;
+}
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC dwt_init : Initialize the i2c busses
+ ----------------------------------------------------------------------------------
+*/
+void i2c_hw_init(void)
+{
+    static I2C_TypeDef *const P[I2C_NUM_BUSES] = { I2C1, I2C2, I2C3, I2C4 };
+
+    dwt_init();
+    running = false;
+
+    for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
+        B[bus].i2c = P[bus];
 }
 
 
@@ -200,6 +221,7 @@ static void dwt_init(void)
 bool i2c_probe (uint8_t bus, uint8_t addr)
 {
     bus_t *b = &B[bus]; // i2c bus pointer
+    uint8_t dummy = 0xAA;
 
     if(running) return false; // busy
     if(!bus_idle(b, IDLE_TIMEOUT_US)) // idle timeout 1000us
@@ -211,9 +233,18 @@ bool i2c_probe (uint8_t bus, uint8_t addr)
     LL_I2C_HandleTransfer(b->i2c,
                           (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
                           LL_I2C_ADDRSLAVE_7BIT,
-                          0,
+                          1, // transfer test dummy byte
                           LL_I2C_MODE_AUTOEND,
                           LL_I2C_GENERATE_START_WRITE); // ping
+
+    if (!wait_flag(b, I2C_ISR_TXIS, true, BLOCK_TIMEOUT_US))
+    {
+        bool nacked = (b->i2c->ISR & I2C_ISR_NACKF) != 0;
+        abort_transfer(b);
+        return !nacked ? false : false;
+    }
+    
+    b->i2c->TXDR = dummy;
 
     if(!wait_flag(b, I2C_ISR_STOPF, false, BLOCK_TIMEOUT_US)) // block timeout 2000us
     {
@@ -229,16 +260,16 @@ bool i2c_probe (uint8_t bus, uint8_t addr)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address 
+  PUBLIC i2c_read : I2C bus (0,1,2,3), chip address 
                        data pointer, number of bytes to write -> bool
   Read (blocking)
  ----------------------------------------------------------------------------------
 */
-bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
+bool i2c_read (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 {
     bus_t *b = &B[bus];
-    if(running || nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
-    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    if(running || nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data) || nbytes == 0) return false;
+    if(!bus_idle(b, IDLE_TIMEOUT_US)) // idle timeout 1000us
     {
         abort_transfer(b);
         return false;
@@ -255,7 +286,7 @@ bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     // read the content and save at *data
     for(uint8_t i = 0; i < nbytes; i++)
     {
-        if (!wait_flag(b, I2C_ISR_RXNE, true, 2000))
+        if (!wait_flag(b, I2C_ISR_RXNE, true, BLOCK_TIMEOUT_US))
         {
             abort_transfer(b);
             return false;
@@ -264,7 +295,7 @@ bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     }
 
 
-    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
+    if(!wait_flag(b, I2C_ISR_STOPF, false, BLOCK_TIMEOUT_US))
     {
         abort_transfer(b);
         return false;
@@ -283,16 +314,16 @@ bool i2c_read_b (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address 
+  PUBLIC i2c_write : I2C bus (0,1,2,3), chip address 
                        data pointer, number of bytes to write -> bool
   Write (blocking)
  ----------------------------------------------------------------------------------
 */
-bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
+bool i2c_write (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
 {
     bus_t *b = &B[bus];
     if(running || nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
-    if(!bus_idle(b, 1000)) // idle timeout 1000us
+    if(!bus_idle(b, IDLE_TIMEOUT_US)) // idle timeout 1000us
     {
         abort_transfer(b);
         return false;
@@ -309,7 +340,7 @@ bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes
     // send the content of the message
     for(uint8_t i = 0; i < nbytes; i++)
     {
-        if (!wait_flag(b, I2C_ISR_TXIS, true, 2000))
+        if (!wait_flag(b, I2C_ISR_TXIS, true, BLOCK_TIMEOUT_US))
         {
             abort_transfer(b);
             return false;
@@ -317,7 +348,7 @@ bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes
         b->i2c->TXDR = data[i];
     }
 
-    if(!wait_flag(b, I2C_ISR_STOPF, false, 2000))
+    if(!wait_flag(b, I2C_ISR_STOPF, false, BLOCK_TIMEOUT_US))
     {
         abort_transfer(b);
         return false;
@@ -333,3 +364,100 @@ bool i2c_write_b (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes
     return true;
 }
 
+
+/*=============================== TEST FUNCTIONS ================================*/
+
+
+#include <stdio.h>
+#include <stdint.h>
+#define GIRLMODER MODER
+
+volatile uint32_t dbg_cyc_us;
+volatile uint32_t dbg_cr1;
+volatile uint32_t dbg_isr_before;
+volatile uint32_t dbg_isr_after;
+volatile uint32_t dbg_i2c_addr;
+volatile uint8_t  dbg_probe_result;
+volatile uint8_t  ports[I2C_NUM_BUSES][MCP23017_PER_BUS][2];
+volatile uint16_t init_fails;
+volatile uint32_t read_errors;
+
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_debug_msg : Writes messages to USART2 debug.
+ ----------------------------------------------------------------------------------
+*/
+void i2c_debug_msg(void)
+{
+    static const uint32_t EXPECT[I2C_NUM_BUSES] = {
+    0x40005400,   /* I2C1 */
+    0x40005800,   /* I2C2 */
+    0x40007800,   /* I2C3 */
+    0x40008400,   /* I2C4 */
+    };
+
+    printf("\r\n\nDIAGNOSTICS: I2C start-up\r\n");
+
+    for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
+    {
+        printf("    B[%u].i2c    = %08lX (expect %08lX) %s\r\n",
+               bus, (uint32_t)B[bus].i2c, EXPECT[bus],
+               ((uint32_t)B[bus].i2c == EXPECT[bus]) ? "OK" : "MISMATCH");
+    }
+
+    printf("    cyc_us      = %lu (expect 170)\r\n", cyc_us);
+    printf("    HSIRDY      = %lu (expect 1)\r\n", (RCC->CR >> 10) & 1);
+    printf("    I2C1EN      = %lu (expect 1)\r\n", (RCC->APB1ENR1 >> 21) & 1);
+    printf("    CR1         = %08lX ([0]=PE should be 1)\r\n", I2C1->CR1);
+    printf("    TIMINGR     = %08lX (expect 00300617)\r\n", I2C1->TIMINGR);
+    printf("    RCC->CCIPR  = %08lX (bits 13:12 = I2C1SEL, expect 10b)\r\n", RCC->CCIPR);
+    printf("    MODER       = %08lX\r\n", GPIOB->GIRLMODER);
+    printf("    AFRH        = %08lX (low 2 nibbles expect 4,4)\r\n", GPIOB->AFR[1]);
+    printf("    ISR before  = %08lX ([15]=BUSY should be 0)\r\n", I2C1->ISR);
+
+    bool r = i2c_probe(0, 0x20);
+  
+    printf("    probe       = %d\r\n", r);
+    printf("    ISR after   = %08lX\r\n\n", I2C1->ISR);
+
+    // probe sweep
+    for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++) {
+        printf("  + Probing bus %u... Present: ", bus);
+        for (uint16_t a = 0x08; a <= 0x77; a++)
+        {
+            if (i2c_probe(bus, (uint8_t)a)) printf(" 0x%02X", a);
+        }
+        printf("\r\n");
+    }
+    printf("\rCompleted I2C startup.\r\n\n");
+}
+
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC test_mcp23017s : Writes messages to USART2 debug.
+ ----------------------------------------------------------------------------------
+*/
+void test_mcp23017s(void)
+{
+    static const uint8_t ADDR[MCP23017_PER_BUS] = { 0x20, 0x21, 0x22 };
+
+    mcp23017_init_all();
+
+    uint16_t fails = mcp23017_fail_query();
+    printf("\r\nDIAGNOSTICS: MCP23017 checks (build %s %s) \r\n", __DATE__, __TIME__);
+    printf("\r    init_fails = %04X (expect 0000 when all present)\r\n\n", fails);
+
+    for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
+    {
+        for (uint8_t c = 0; c < MCP23017_PER_BUS; c++)
+        {
+            if (fails & (1U << (bus * MCP23017_PER_BUS + c)))
+                printf("    bus %u chip 0x%02X: FAILED or not present\r\n", bus, ADDR[c]);
+            else
+                printf("    bus %u chip 0x%02X: GOOD\r\n", bus, ADDR[c]);
+        }       
+    }
+    printf("\nMCP23017 Initialization complete\r\n\n");
+
+}

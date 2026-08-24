@@ -27,6 +27,9 @@
 
 // Skylar
 #include "cmsis_os2.h"
+#include "i2c_driver.h"
+#include "mcp_funcs.h"
+#include "mcp_regs.h"
 #include "led_driver.h"
 
 /* USER CODE END Includes */
@@ -39,6 +42,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+#define DEBUG 1
 
 /* USER CODE END PD */
 
@@ -63,6 +67,8 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
+UART_HandleTypeDef huart2;
+
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -80,7 +86,6 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-static void MX_I2C3_Init(void);
 static void MX_I2C4_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
@@ -88,6 +93,8 @@ static void MX_SPI3_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_USART2_UART_Init(void);
+static void MX_I2C3_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -96,6 +103,14 @@ void StartDefaultTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+// USART2 FOR DEBUGGING - Skylar
+int __io_putchar(int ch)
+{
+    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 100);
+    return ch;
+}
+
 
 /* USER CODE END 0 */
 
@@ -131,7 +146,6 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  MX_I2C3_Init();
   MX_I2C4_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
@@ -139,7 +153,28 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM1_Init();
+  MX_USART2_UART_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
+
+  // make lines never disappear debug
+  setvbuf(stdout, NULL, _IONBF, 0);
+
+  i2c_hw_init();
+
+  if(DEBUG)
+  {
+    printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
+    printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
+    printf("*******************************************************\r\n");
+    i2c_debug_msg();
+    test_mcp23017s();
+  }
+
+  while (1) {
+    i2c_probe(0, 0x20);
+    HAL_Delay(1);
+  }
 
   /* USER CODE END 2 */
 
@@ -417,7 +452,7 @@ static void MX_I2C3_Init(void)
 
   /* USER CODE END I2C3_Init 1 */
   hi2c3.Instance = I2C3;
-  hi2c3.Init.Timing = 0x00300617;
+  hi2c3.Init.Timing = 0x00503D58;
   hi2c3.Init.OwnAddress1 = 0;
   hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -815,6 +850,54 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -827,24 +910,37 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(_DAC_INIT_Latch_GPIO_Port, _DAC_INIT_Latch_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|FlashADC_CS_ADC_Pin
                           |FlashADC_CS_Flash_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : __MASTER__CS_in_Pin */
-  GPIO_InitStruct.Pin = __MASTER__CS_in_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, _DAC_INIT_Clock_Pin|_DAC_INIT_Data_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : _DAC_INIT_Latch_Pin */
+  GPIO_InitStruct.Pin = _DAC_INIT_Latch_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(_DAC_INIT_Latch_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : __MASTER__CS_in_Pin Fader1_Touch_Pin */
+  GPIO_InitStruct.Pin = __MASTER__CS_in_Pin|Fader1_Touch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(__MASTER__CS_in_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Fader3_Touch_Pin Fader4_Touch_Pin Fader1_Touch_Pin */
-  GPIO_InitStruct.Pin = Fader3_Touch_Pin|Fader4_Touch_Pin|Fader1_Touch_Pin;
+  /*Configure GPIO pins : Fader3_Touch_Pin Fader4_Touch_Pin */
+  GPIO_InitStruct.Pin = Fader3_Touch_Pin|Fader4_Touch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -857,6 +953,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : _DAC_INIT_Clock_Pin _DAC_INIT_Data_Pin */
+  GPIO_InitStruct.Pin = _DAC_INIT_Clock_Pin|_DAC_INIT_Data_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Fader2_Touch_Pin */
   GPIO_InitStruct.Pin = Fader2_Touch_Pin;
@@ -884,8 +987,9 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 
+
   // cute little animation thing
-  led_init();
+  /*led_init();
   led_debug(false);
   led_brightness(10);
 
@@ -924,7 +1028,7 @@ void StartDefaultTask(void *argument)
     anim_breathe(0);
     osDelay(32);
   }
-
+*/
 
   /* USER CODE END 5 */
 }

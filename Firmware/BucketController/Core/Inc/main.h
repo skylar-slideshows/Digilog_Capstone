@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define _DAC_INIT_Latch_Pin GPIO_PIN_13
+#define _DAC_INIT_Latch_GPIO_Port GPIOC
 #define _OSC_IN_Pin GPIO_PIN_0
 #define _OSC_IN_GPIO_Port GPIOF
 #define _OSC_OUT_Pin GPIO_PIN_1
@@ -69,14 +71,12 @@ void Error_Handler(void);
 #define LED_PWM_GPIO_Port GPIOC
 #define Disp_PWM_Pin GPIO_PIN_2
 #define Disp_PWM_GPIO_Port GPIOC
+#define Fader1_Touch_Pin GPIO_PIN_3
+#define Fader1_Touch_GPIO_Port GPIOC
 #define Fader1_ADC_Pin GPIO_PIN_0
 #define Fader1_ADC_GPIO_Port GPIOA
 #define Fader2_ADC_Pin GPIO_PIN_1
 #define Fader2_ADC_GPIO_Port GPIOA
-#define Fader3_ADC_Pin GPIO_PIN_2
-#define Fader3_ADC_GPIO_Port GPIOA
-#define Fader4_ADC_Pin GPIO_PIN_3
-#define Fader4_ADC_GPIO_Port GPIOA
 #define Fader3_MotB_Pin GPIO_PIN_4
 #define Fader3_MotB_GPIO_Port GPIOA
 #define __MASTER__Clock_Pin GPIO_PIN_5
@@ -117,10 +117,10 @@ void Error_Handler(void);
 #define I2C2_Clock_GPIO_Port GPIOA
 #define Fader2_MotB_Pin GPIO_PIN_10
 #define Fader2_MotB_GPIO_Port GPIOA
-#define I2C1_Clock_Pin GPIO_PIN_13
-#define I2C1_Clock_GPIO_Port GPIOA
-#define I2C1_Data_Pin GPIO_PIN_14
-#define I2C1_Data_GPIO_Port GPIOA
+#define _DAC_INIT_Clock_Pin GPIO_PIN_11
+#define _DAC_INIT_Clock_GPIO_Port GPIOA
+#define _DAC_INIT_Data_Pin GPIO_PIN_12
+#define _DAC_INIT_Data_GPIO_Port GPIOA
 #define Fader1_MotA_Pin GPIO_PIN_15
 #define Fader1_MotA_GPIO_Port GPIOA
 #define FlashADC_Clock_Pin GPIO_PIN_10
@@ -135,14 +135,16 @@ void Error_Handler(void);
 #define Fader1_MotB_GPIO_Port GPIOB
 #define __MASTER__MISO_Pin GPIO_PIN_4
 #define __MASTER__MISO_GPIO_Port GPIOB
-#define I2C1_DataB5_Pin GPIO_PIN_5
-#define I2C1_DataB5_GPIO_Port GPIOB
+#define I2C3_Data_Pin GPIO_PIN_5
+#define I2C3_Data_GPIO_Port GPIOB
 #define FlashADC_CS_ADC_Pin GPIO_PIN_6
 #define FlashADC_CS_ADC_GPIO_Port GPIOB
 #define FlashADC_CS_Flash_Pin GPIO_PIN_7
 #define FlashADC_CS_Flash_GPIO_Port GPIOB
-#define Fader1_Touch_Pin GPIO_PIN_9
-#define Fader1_Touch_GPIO_Port GPIOB
+#define I2C1_Clock_Pin GPIO_PIN_8
+#define I2C1_Clock_GPIO_Port GPIOB
+#define I2C1_Data_Pin GPIO_PIN_9
+#define I2C1_Data_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

@@ -44,7 +44,7 @@
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);
+bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);
 
 
 /**
@@ -53,7 +53,7 @@ static bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-static bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);
+bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);
 
 
 /**
@@ -72,5 +72,14 @@ bool mcp23017_init(uint8_t bus, uint8_t addr);
  ----------------------------------------------------------------------------------
 */
 bool mcp23017_init_all(void);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_fail_query : void -> uint16
+  Return the number of fails during initialization
+ ----------------------------------------------------------------------------------
+*/
+uint16_t mcp23017_fail_query(void);
 
 #endif
