@@ -22,6 +22,7 @@ Master Controller
 
 <br><br><br>
 <img src="fullui.png" width="66%"><br><br><br>
-<img src="diagram1.png" width="73%"><br><br><br>
-<img src="diagram2.png" width="40%"><br><br><br>
+<img src="diagram2.png" width="65%"><br><br><br>
 <img src="pins.png" width="60%"><br><br><br>
+<img src="pinout.png" width="60%"><br><br><br>
+<img src="diagram1.png" width="73%"><br><br><br>

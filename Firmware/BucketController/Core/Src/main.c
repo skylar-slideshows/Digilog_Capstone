@@ -168,11 +168,11 @@ int main(void)
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
     i2c_debug_msg();
-    test_mcp23017s();
+    
   }
 
   while (1) {
-    i2c_probe(0, 0x20);
+    i2c_probe(0, 0x22);
     HAL_Delay(1);
   }
 

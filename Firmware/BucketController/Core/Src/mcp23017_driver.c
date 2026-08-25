@@ -99,32 +99,3 @@ bool mcp23017_init(uint8_t bus, uint8_t addr)
         return i2c_write(bus, addr, &reg, 1);
     }
 }
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief mcp23017_init_all : void -> bool
-  Initialize all MCP23017s described in macro defns.
- ----------------------------------------------------------------------------------
-*/
-static uint16_t mcp23017_fails;
-uint16_t mcp23017_fail_query(void) { return mcp23017_fails; }
-
-bool mcp23017_init_all(void)
-{
-    static const uint8_t ADDR[MCP23017_PER_BUS] = { 0x20, 0x21, 0x22 }; // address of each chip
-    bool success = true;
-
-    for(uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
-    {
-      for(uint8_t chip = 0; chip < MCP23017_PER_BUS; chip++)
-      {
-        if(!mcp23017_init(bus, ADDR[chip]))
-          {
-            mcp23017_fails |= (1u << (bus * MCP23017_PER_BUS + chip));
-            success = false;
-          }
-      }
-    }
-    return success;
-}

@@ -89,6 +89,10 @@
         - GPB5/GPB6 Btn10/Btn11
         - GPA7/GPB7 N.C.
 
+        i2c_init(uint8_);
+
+        mcp23017_init(uint8_t bus, uint8_t addr, );
+
       0x60 (MCP4728 #1):
         - DACA Input gain CV
         - DACB Send 1L gain CV
@@ -217,14 +221,6 @@ void i2c_hw_init(void);
  ----------------------------------------------------------------------------------
 */
 void i2c_debug_msg(void);
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief test_mcp23017s : [DEBUG] Prints lots of stuff to USART2
- ----------------------------------------------------------------------------------
-*/
-void test_mcp23017s(void);
 
 
 

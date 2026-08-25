@@ -175,13 +175,19 @@ static void abort_transfer(bus_t *bus_ptr)
 }
 
 
+/*=============================== PUBLIC I2C FUNCTIONS ================================*/
+/* Higher-level functions to interact with I2C */
+
+
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC dwt_init : Initialize data watchpoint and trace for debugging
+  PUBLIC i2c_init : Initialize the i2c busses
  ----------------------------------------------------------------------------------
 */
-static void dwt_init(void)
+void i2c_init(void)
 {
+    static I2C_TypeDef *const P[I2C_NUM_BUSES] = { I2C1, I2C2, I2C3, I2C4 };
+
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk))
     {
@@ -189,72 +195,11 @@ static void dwt_init(void)
         DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
     }
     cyc_us = SystemCoreClock / 1000000U;
-}
 
-/**
- ----------------------------------------------------------------------------------
-  PUBLIC dwt_init : Initialize the i2c busses
- ----------------------------------------------------------------------------------
-*/
-void i2c_hw_init(void)
-{
-    static I2C_TypeDef *const P[I2C_NUM_BUSES] = { I2C1, I2C2, I2C3, I2C4 };
-
-    dwt_init();
     running = false;
 
     for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
         B[bus].i2c = P[bus];
-}
-
-
-
-/*=============================== PUBLIC I2C FUNCTIONS ================================*/
-/* Higher-level functions to interact with I2C */
-
-/**
- ----------------------------------------------------------------------------------
-  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -> bool
-  Returns whether a specific I2C chip is free or not
- ----------------------------------------------------------------------------------
-*/
-bool i2c_probe (uint8_t bus, uint8_t addr)
-{
-    bus_t *b = &B[bus]; // i2c bus pointer
-    uint8_t dummy = 0xAA;
-
-    if(running) return false; // busy
-    if(!bus_idle(b, IDLE_TIMEOUT_US)) // idle timeout 1000us
-    {
-        abort_transfer(b);
-        return false;
-    } // bus is idle
-
-    LL_I2C_HandleTransfer(b->i2c,
-                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
-                          LL_I2C_ADDRSLAVE_7BIT,
-                          1, // transfer test dummy byte
-                          LL_I2C_MODE_AUTOEND,
-                          LL_I2C_GENERATE_START_WRITE); // ping
-
-    if (!wait_flag(b, I2C_ISR_TXIS, true, BLOCK_TIMEOUT_US))
-    {
-        bool nacked = (b->i2c->ISR & I2C_ISR_NACKF) != 0;
-        abort_transfer(b);
-        return !nacked ? false : false;
-    }
-    
-    b->i2c->TXDR = dummy;
-
-    if(!wait_flag(b, I2C_ISR_STOPF, false, BLOCK_TIMEOUT_US)) // block timeout 2000us
-    {
-        abort_transfer(b);
-        return false;
-    } // bus is good to use!
-
-    bool ack = !(b->i2c->ISR & I2C_ISR_NACKF); // read before clearing
-    clear_flags(b);
-    return ack;
 }
 
 
@@ -365,7 +310,20 @@ bool i2c_write (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
 }
 
 
-/*=============================== TEST FUNCTIONS ================================*/
+/**
+ ----------------------------------------------------------------------------------
+  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -> bool
+  Returns whether a specific I2C chip is free or not
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_probe (uint8_t bus, uint8_t addr)
+{
+    uint8_t test_byte = 0xAA;
+    return i2c_write(bus, addr, &test_byte, sizeof(test_byte));
+}
+
+
+/*=============================== DEBUG ================================*/
 
 
 #include <stdio.h>
@@ -431,33 +389,4 @@ void i2c_debug_msg(void)
         printf("\r\n");
     }
     printf("\rCompleted I2C startup.\r\n\n");
-}
-
-/**
- ----------------------------------------------------------------------------------
-  PUBLIC test_mcp23017s : Writes messages to USART2 debug.
- ----------------------------------------------------------------------------------
-*/
-void test_mcp23017s(void)
-{
-    static const uint8_t ADDR[MCP23017_PER_BUS] = { 0x20, 0x21, 0x22 };
-
-    mcp23017_init_all();
-
-    uint16_t fails = mcp23017_fail_query();
-    printf("\r\nDIAGNOSTICS: MCP23017 checks (build %s %s) \r\n", __DATE__, __TIME__);
-    printf("\r    init_fails = %04X (expect 0000 when all present)\r\n\n", fails);
-
-    for (uint8_t bus = 0; bus < I2C_NUM_BUSES; bus++)
-    {
-        for (uint8_t c = 0; c < MCP23017_PER_BUS; c++)
-        {
-            if (fails & (1U << (bus * MCP23017_PER_BUS + c)))
-                printf("    bus %u chip 0x%02X: FAILED or not present\r\n", bus, ADDR[c]);
-            else
-                printf("    bus %u chip 0x%02X: GOOD\r\n", bus, ADDR[c]);
-        }       
-    }
-    printf("\nMCP23017 Initialization complete\r\n\n");
-
 }
