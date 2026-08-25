@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * MCP4728 DAC DRIVER - DIGILOG CONSOLE (Bucket)
+  * CONTROL VOLTAGE GENERATION ENGINE - DIGILOG CONSOLE
   **********************************************************************************
-  * @file mcp4728_driver.c
+  * @file control_voltage.h
   * @brief 
   *
   * @author
@@ -31,5 +31,7 @@
   **********************************************************************************
 */
 
-#include "mcp_regs.h"
-#include "mcp_funcs.h"
+#ifdef CONTROL_VOLTAGE_H
+#define CONTROL_VOLTAGE_H
+
+#endif

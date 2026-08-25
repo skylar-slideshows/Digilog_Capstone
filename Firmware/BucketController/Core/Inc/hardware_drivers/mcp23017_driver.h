@@ -1,6 +1,6 @@
 /**
   **********************************************************************************
-  * MCP23017 / MCP4728 REGISTER MAPS, CONSTRAINTS, COMMANDS - DIGILOG CONSOLE
+  * MCP23017 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
   * @file mcp_regs.h
   * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
@@ -11,7 +11,7 @@
   * from a PDF by hand. Re-check it against the datasheet revision for the
   * silicon actually being purchased before a production run.
   *
-  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @author Skylar Denno (denno.o@northeastern.edu), Darya Petrova (petrov.da@northeastern.edu)
   * @date 2026-08-22
   * @version 1.0
   *
@@ -41,6 +41,7 @@
 #define MCP23017_DRIVER_H
 #include <stdint.h>
 #include <stdbool.h>
+#include "stm32g474xx.h"
 
 
 /*=============================== REGISTER DEFINITIONS ================================*/
@@ -76,7 +77,7 @@
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);
 
 
 /**
@@ -85,7 +86,7 @@ bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value);
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);
+bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);
 
 
 /**
@@ -94,6 +95,6 @@ bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value);
   Initializes a single MCP23017 chip with no interrupt pin setup.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_init(uint8_t bus, uint8_t addr);
+bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr);
 
 #endif

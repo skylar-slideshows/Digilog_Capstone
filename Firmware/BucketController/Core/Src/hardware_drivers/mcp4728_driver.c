@@ -1,8 +1,8 @@
 /**
   **********************************************************************************
-  * CONTROL VOLTAGE GENERATION ENGINE - DIGILOG CONSOLE
+  * MCP4728 DAC DRIVER - DIGILOG CONSOLE (Bucket)
   **********************************************************************************
-  * @file cv.h
+  * @file mcp4728_driver.c
   * @brief 
   *
   * @author
@@ -31,7 +31,7 @@
   **********************************************************************************
 */
 
-#ifdef CV_H
-#define CV_H
+#ifndef MCP4728_DRIVER_H
+#define MCP4728_DRIVER_H
 
 #endif

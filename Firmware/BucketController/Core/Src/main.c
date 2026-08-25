@@ -27,10 +27,11 @@
 
 // Skylar
 #include "cmsis_os2.h"
-#include "i2c_driver.h"
-#include "mcp_funcs.h"
-#include "mcp_regs.h"
-#include "led_driver.h"
+#include "hardware_drivers/i2c_driver.h"
+#include "hardware_drivers/mcp23017_driver.h"
+#include "hardware_drivers/mcp4728_driver.h"
+#include "hardware_drivers/led_driver.h"
+#include "stm32g474xx.h"
 
 /* USER CODE END Includes */
 
@@ -157,24 +158,34 @@ int main(void)
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
-  // make lines never disappear debug
+  // Make lines never disappear debug - Skylar
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  i2c_hw_init();
-
+  // i2c startup
   if(DEBUG)
   {
+    i2c_debug_init();
     printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
-    i2c_debug_msg();
-    
+
+    uint8_t chip_addrs[] = { 0x20, 0x21, 0x22, 0x60, 0x61, 0x62, 0x63, 0x64 };
+    I2C_TypeDef *busses[] = { I2C1, I2C2, I2C3, I2C4 };
+    uint8_t bus_ct = sizeof(busses) / sizeof(busses[0]);
+    uint8_t chip_ct = sizeof(chip_addrs);
+
+    for(uint8_t b = 0; b < bus_ct; b++)
+    {
+      for(uint8_t a = 0; a < chip_ct; a++)
+      {
+        bool succ = i2c_probe(busses[b], chip_addrs[a]);
+        printf("\r\n    Probing 0x%x @ I2C %d %s\r", chip_addrs[a], b, succ ? "GOOD" : "FAILED or not present");
+      }
+      printf("\r\n");
+    }
+
   }
 
-  while (1) {
-    i2c_probe(0, 0x22);
-    HAL_Delay(1);
-  }
 
   /* USER CODE END 2 */
 

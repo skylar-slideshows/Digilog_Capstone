@@ -1,6 +1,6 @@
 /**
   **********************************************************************************
-  * MCP23017 / MCP4728 REGISTER MAPS, CONSTRAINTS, COMMANDS - DIGILOG CONSOLE
+  * MCP4728 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
   * @file mcp_regs.h
   * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
@@ -11,7 +11,7 @@
   * from a PDF by hand. Re-check it against the datasheet revision for the
   * silicon actually being purchased before a production run.
   *
-  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @author Skylar Denno (denno.o@northeastern.edu), Darya Petrova (petrov.da@northeastern.edu)
   * @date 2026-08-22
   * @version 1.0
   *
@@ -41,6 +41,7 @@
 #define MCP4728_DRIVER_H
 #include <stdint.h>
 
+/*=============================== REGISTER DEFINITIONS ================================*/
 /** @brief MCP4728 has no register map. The first byte after the address byte is an opcode.
 Only intialization commands listed below. During operation, no commands at all. Runs statically */
 
@@ -61,5 +62,8 @@ Only intialization commands listed below. During operation, no commands at all. 
 
 #define MCP23017_BASE 0x20 // addrs set in hardware by pins A[2:0]
 #define MCP4728_BASE  0x60 // addrs set during startup by the dedicated 74HC595 programmer lines
+
+
+/*=============================== FUNCTIONS ================================*/
 
 #endif

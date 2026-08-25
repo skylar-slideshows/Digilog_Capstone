@@ -5,7 +5,7 @@
   * @file mcp23017_driver.c
   * @brief 
   *
-  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @author Skylar Denno (denno.o@northeastern.edu), Darya Petrova (petrov.da@northeastern.edu)
   *         
   * @date 2026-08-23
   * @version 1.0
@@ -32,10 +32,10 @@
   **********************************************************************************
 */
 
-#include "mcp_regs.h"
-#include "mcp_funcs.h"
-#include "i2c_driver.h"
+#include "hardware_drivers/mcp23017_driver.h"
+#include "hardware_drivers/i2c_driver.h"
 #include <stdbool.h>
+#include "stm32g474xx.h"
 
 
 /**
@@ -44,7 +44,7 @@
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value)
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)
 {
     if(!i2c_write(bus, addr, &reg, 1)) return false; // set pointer
     return i2c_read(bus, addr, value, 1); // read 1 byte
@@ -57,7 +57,7 @@ bool mcp23017_read(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t *value)
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
+bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)
 {
   uint8_t data[2] = { reg, value };
   return i2c_write(bus, addr, data, 2);
@@ -70,7 +70,7 @@ bool mcp23017_write(uint8_t bus, uint8_t addr, uint8_t reg, uint8_t value)
   Initializes a single MCP23017 chip with no interrupt pin setup.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_init(uint8_t bus, uint8_t addr)
+bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr)
 {
     uint8_t iocon;
     if(!i2c_probe(bus, addr)) return false; // does chip exist?

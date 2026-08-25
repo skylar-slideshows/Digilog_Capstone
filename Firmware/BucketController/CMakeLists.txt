@@ -109,23 +109,11 @@ endif()
 
 # Skylar
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/led_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/i2c_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/mcp23017_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/mcp4728_driver.c
-)
-
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/cv.c
+    Core/Src/hardware_drivers/led_driver.c
+    Core/Src/hardware_drivers/i2c_driver.c
+    Core/Src/hardware_drivers/mcp23017_driver.c
+    Core/Src/hardware_drivers/mcp4728_driver.c
+    Core/Src/control_voltage.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -134,4 +122,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions -fno-rtti -fno-threadsafe-statics>
+    -Wall
+    -Wextra
+    -Wpedantic
+    # -Werror -- Disabled for development but I recommend resolving all warnings if possible
+    # - D. Petrova
 )
