@@ -2,7 +2,7 @@
   **********************************************************************************
   * MCP23017 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file mcp_regs.h
+  * @file mcp_23017.h
   * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
   *        pins are used, for simplicity. Only the necessary parts for this case are included.
   *
