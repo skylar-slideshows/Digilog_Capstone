@@ -198,8 +198,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:a370cffd56c599df656a50b858ac3eb52"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in center mode the animation matches the mode.  <br /></td></tr>
 <tr class="memitem:a6db97b368a56f86d7509f25d452f2277" id="r_a6db97b368a56f86d7509f25d452f2277"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6db97b368a56f86d7509f25d452f2277">anim_breathe</a> (uint8_t mode)</td></tr>
 <tr class="memdesc:a6db97b368a56f86d7509f25d452f2277"><td class="mdescLeft">&#160;</td><td class="mdescRight">anim_breathe : Brightness breathing animation  <br /></td></tr>
-<tr class="memitem:a7c814e4dc44f419e86d97917801f7ced" id="r_a7c814e4dc44f419e86d97917801f7ced"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7c814e4dc44f419e86d97917801f7ced">led_debug</a> (bool on)</td></tr>
-<tr class="memdesc:a7c814e4dc44f419e86d97917801f7ced"><td class="mdescLeft">&#160;</td><td class="mdescRight">[DEBUG MODE] Toggles debug mode with input boolean  <br /></td></tr>
 <tr class="memitem:af46294a908fd1e649734cb45df495003" id="r_af46294a908fd1e649734cb45df495003"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af46294a908fd1e649734cb45df495003">led_print_config</a> (void)</td></tr>
 <tr class="memdesc:af46294a908fd1e649734cb45df495003"><td class="mdescLeft">&#160;</td><td class="mdescRight">[DEBUG MODE] Prints the configuration params to console  <br /></td></tr>
 </table>
@@ -233,7 +231,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_function" href="#a93508efe763fcffeb732f87a34ebc989">knob_step</a>((channel), (knob), -1)</div>
-<div class="ttc" id="aled__driver_8h_html_a93508efe763fcffeb732f87a34ebc989"><div class="ttname"><a href="#a93508efe763fcffeb732f87a34ebc989">knob_step</a></div><div class="ttdeci">void knob_step(uint8_t channel, uint8_t knob, int8_t delta)</div><div class="ttdoc">Changes a knob display by delta LEDs from its current value, clamped to its scale.</div></div>
+<div class="ttc" id="aled__driver_8h_html_a93508efe763fcffeb732f87a34ebc989"><div class="ttname"><a href="#a93508efe763fcffeb732f87a34ebc989">knob_step</a></div><div class="ttdeci">void knob_step(uint8_t channel, uint8_t knob, int8_t delta)</div><div class="ttdoc">Changes a knob display by delta LEDs from its current value, clamped to its scale.</div><div class="ttdef"><b>Definition</b> led_driver.c:260</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -274,8 +272,8 @@ Functions</h2></td></tr>
 
 <p>type to store animation </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
-autotoc_md39</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+autotoc_md47</h2>
 
 </div>
 </div>
@@ -293,8 +291,8 @@ autotoc_md39</h2>
 
 <p>Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator. </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
-autotoc_md1</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+autotoc_md9</h2>
 
 </div>
 </div>
@@ -312,8 +310,8 @@ autotoc_md1</h2>
 
 <p>Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten). </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
-autotoc_md3</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+autotoc_md11</h2>
 
 </div>
 </div>
@@ -334,6 +332,7 @@ autotoc_md3</h2>
 </div><div class="memdoc">
 
 <p>anim_breathe : Brightness breathing animation </p>
+<p>PUBLIC anim_breathe : Brightness breathing animation (mode 0 = just the LEDs that.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -341,8 +340,12 @@ autotoc_md3</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 are currently on in normal state will do it, mode 1 = every single LED does it</h2>
+<p>anim_breathe : Brightness breathing animation</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md143"></a>
+are currently on in normal state will do it, mode 1 = every single LED does it)</h2>
 
 </div>
 </div>
@@ -362,15 +365,20 @@ are currently on in normal state will do it, mode 1 = every single LED does it</
 </div><div class="memdoc">
 
 <p>anim_claim : stop what was running and claim display </p>
+<p>PUBLIC anim_claim : stop what was running and claim display.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
-autotoc_md43</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+autotoc_md51</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="#a6afcab6c98a3c6739d16652079175474" title="type to store animation">anim_t</a> "animation type" type, changes what it does a bit </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="#a6afcab6c98a3c6739d16652079175474" title="type to store animation">anim_t</a> "animation type" type, changes what it does a bit</td></tr>
   </table>
   </dd>
 </dl>
+<p>anim_claim : stop what was running and claim display</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
+autotoc_md137</h2>
 
 </div>
 </div>
@@ -390,15 +398,20 @@ autotoc_md43</h2>
 </div><div class="memdoc">
 
 <p>anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly, one call = one advancement. When loading done just stop and call anim_stop. </p>
+<p>PUBLIC anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly, one call = one advancement.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
-autotoc_md45</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+autotoc_md53</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">knob</td><td>knob number 0-9 (all channels that knob will do loading), use -1 to do every knob </td></tr>
+    <tr><td class="paramname">knob</td><td>knob number 0-9 (all channels that knob will do loading), use -1 to do every knob</td></tr>
   </table>
   </dd>
 </dl>
+<p>anim_loading : Knob 0-9 or -1 for all (int8) -&gt; Void Spinning loading wheel, call repeatedly, one call = one advancement. When loading done just stop and call anim_stop.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md139"></a>
+When loading done just stop and call anim_stop.</h2>
 
 </div>
 </div>
@@ -418,8 +431,13 @@ autotoc_md45</h2>
 </div><div class="memdoc">
 
 <p>anim_stop : Redraws every knob from its stored value, restores the saved brightness and </p>
+<p>PUBLIC anim_stop : Redraws every knob from its stored value, restores the saved brightness and.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+resets all animation phases</h2>
+<p>anim_stop : Redraws every knob from its stored value, restores the saved brightness and</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md135"></a>
 resets all animation phases</h2>
 
 </div>
@@ -444,6 +462,7 @@ resets all animation phases</h2>
 </div><div class="memdoc">
 
 <p>anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in center mode the animation matches the mode. </p>
+<p>PUBLIC anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -451,14 +470,18 @@ resets all animation phases</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
-autotoc_md47</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+autotoc_md55</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">knob</td><td>knob 0-9 </td></tr>
+    <tr><td class="paramname">knob</td><td>knob 0-9</td></tr>
   </table>
   </dd>
 </dl>
+<p>anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -&gt; Void One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in center mode the animation matches the mode.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
+center mode the animation matches the mode.</h2>
 
 </div>
 </div>
@@ -482,6 +505,7 @@ autotoc_md47</h2>
 </div><div class="memdoc">
 
 <p>Returns if specified button LED is on or off. </p>
+<p>PUBLIC button_get : channel 0-3, button on that channel 0-15 -&gt; bool (off/on).</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -490,9 +514,13 @@ autotoc_md47</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
-autotoc_md35</h2>
-<dl class="section return"><dt>Returns</dt><dd>boolean value of that button's LED display on/off </dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+autotoc_md43</h2>
+<dl class="section return"><dt>Returns</dt><dd>boolean value of that button's LED display on/off</dd></dl>
+<p>Returns if specified button LED is on or off.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md117"></a>
+Returns whether the specified button LED is off or on.</h2>
 
 </div>
 </div>
@@ -521,6 +549,7 @@ autotoc_md35</h2>
 </div><div class="memdoc">
 
 <p>Set a specific button display LED to on or off by coordinate. </p>
+<p>PUBLIC button_led : channel 0-3, button on that channel 0-15, bool off/on -&gt; Void.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -529,14 +558,18 @@ autotoc_md35</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
-autotoc_md33</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+autotoc_md41</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">on</td><td>set that button LED on or off? true = on </td></tr>
+    <tr><td class="paramname">on</td><td>set that button LED on or off? true = on</td></tr>
   </table>
   </dd>
 </dl>
+<p>Set a specific button display LED to on or off by coordinate.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md107"></a>
+Set a specific button display LED by coordinate</h2>
 
 </div>
 </div>
@@ -560,6 +593,7 @@ autotoc_md33</h2>
 </div><div class="memdoc">
 
 <p>Sets 16 button LED states (entire channel) at once in the frame buffer. </p>
+<p>PUBLIC button_mask : channel 0-3, 16 bit mask -&gt; Void.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -567,14 +601,18 @@ autotoc_md33</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
-autotoc_md37</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+autotoc_md45</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mask</td><td>16-bits representing that channel's 16 button displays, 1 = on </td></tr>
+    <tr><td class="paramname">mask</td><td>16-bits representing that channel's 16 button displays, 1 = on</td></tr>
   </table>
   </dd>
 </dl>
+<p>Sets 16 button LED states (entire channel) at once in the frame buffer.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md109"></a>
+Sets a whole channel's button LEDs at once</h2>
 
 </div>
 </div>
@@ -603,6 +641,7 @@ autotoc_md37</h2>
 </div><div class="memdoc">
 
 <p>Sets whether a knob draws as a filled bar or a single point. </p>
+<p>PUBLIC knob_disp : Set display mode of knob.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -611,14 +650,18 @@ autotoc_md37</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
-autotoc_md21</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+autotoc_md29</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mode</td><td>display mode (0 = bar, 1 = point, see <a class="el" href="#a204eeb2f62750691be88d11cee12e8fb" title="Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator.">knob_disp_t</a>) </td></tr>
+    <tr><td class="paramname">mode</td><td>display mode (0 = bar, 1 = point, see <a class="el" href="#a204eeb2f62750691be88d11cee12e8fb" title="Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator.">knob_disp_t</a>)</td></tr>
   </table>
   </dd>
 </dl>
+<p>Sets whether a knob draws as a filled bar or a single point.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md101"></a>
+autotoc_md101</h2>
 
 </div>
 </div>
@@ -642,6 +685,7 @@ autotoc_md21</h2>
 </div><div class="memdoc">
 
 <p>Returns a knob's current value, in the units of its own scale. </p>
+<p>PUBLIC knob_get : returns the value of specified knob.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -650,9 +694,13 @@ autotoc_md21</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
-autotoc_md25</h2>
-<dl class="section return"><dt>Returns</dt><dd>returns the value of the knob display (-15 to 16 or 0 to 32 depending on scale mode) </dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+autotoc_md33</h2>
+<dl class="section return"><dt>Returns</dt><dd>returns the value of the knob display (-15 to 16 or 0 to 32 depending on scale mode)</dd></dl>
+<p>Returns a knob's current value, in the units of its own scale.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md111"></a>
+autotoc_md111</h2>
 
 </div>
 </div>
@@ -676,6 +724,7 @@ autotoc_md25</h2>
 </div><div class="memdoc">
 
 <p>Returns a knob's current display mode (bar or point). </p>
+<p>PUBLIC knob_get_disp : returns the display mode (<a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a> type) of a specified knob.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -684,9 +733,13 @@ autotoc_md25</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
-autotoc_md27</h2>
-<dl class="section return"><dt>Returns</dt><dd>returns a knob display mode 0 or 1 (see <a class="el" href="#a204eeb2f62750691be88d11cee12e8fb" title="Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator.">knob_disp_t</a>) </dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+autotoc_md35</h2>
+<dl class="section return"><dt>Returns</dt><dd>returns a knob display mode 0 or 1 (see <a class="el" href="#a204eeb2f62750691be88d11cee12e8fb" title="Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator.">knob_disp_t</a>)</dd></dl>
+<p>Returns a knob's current display mode (bar or point).</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md113"></a>
+autotoc_md113</h2>
 
 </div>
 </div>
@@ -710,6 +763,7 @@ autotoc_md27</h2>
 </div><div class="memdoc">
 
 <p>Returns a knob's current scale mode (left or center). </p>
+<p>PUBLIC knob_get_scale : returns the scale mode (<a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a> type) of a specified knob.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -718,9 +772,13 @@ autotoc_md27</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
-autotoc_md29</h2>
-<dl class="section return"><dt>Returns</dt><dd>returns a knob scale mode 0 or 1 (see <a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a>) </dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+autotoc_md37</h2>
+<dl class="section return"><dt>Returns</dt><dd>returns a knob scale mode 0 or 1 (see <a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a>)</dd></dl>
+<p>Returns a knob's current scale mode (left or center).</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md115"></a>
+autotoc_md115</h2>
 
 </div>
 </div>
@@ -749,6 +807,7 @@ autotoc_md29</h2>
 </div><div class="memdoc">
 
 <p>Change a knob display's value, specify which knob by coords (chnl and knob number). </p>
+<p>PUBLIC knob_led : Channel 0-3 (uint8), Knob 0-9 (uint8), Value 0 to 32 or -15 to 16.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -757,14 +816,18 @@ autotoc_md29</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
-autotoc_md17</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+autotoc_md25</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>int between 0-32 for left/standard mode and -15 to 16 for center/pan mode (0 = center) </td></tr>
+    <tr><td class="paramname">value</td><td>int between 0-32 for left/standard mode and -15 to 16 for center/pan mode (0 = center)</td></tr>
   </table>
   </dd>
 </dl>
+<p>Change a knob display's value, specify which knob by coords (chnl and knob number).</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md97"></a>
+Change a knob's display value, specify which knob by coords (chnl and knob number)</h2>
 
 </div>
 </div>
@@ -793,6 +856,7 @@ autotoc_md17</h2>
 </div><div class="memdoc">
 
 <p>Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes. </p>
+<p>PUBLIC knob_raw : Put arbitrary 32 bits to a knob in frame buffer.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -801,14 +865,18 @@ autotoc_md17</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
-autotoc_md31</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+autotoc_md39</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">bits</td><td>32 bits corresponding to LEDs left to right, 1 = on </td></tr>
+    <tr><td class="paramname">bits</td><td>32 bits corresponding to LEDs left to right, 1 = on</td></tr>
   </table>
   </dd>
 </dl>
+<p>Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the knob's stored value and modes.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md105"></a>
+autotoc_md105</h2>
 
 </div>
 </div>
@@ -837,6 +905,7 @@ autotoc_md31</h2>
 </div><div class="memdoc">
 
 <p>Sets a knob to the left (0..32) or centre (-15..16) scale, converting its stored value so the ring does not jump. </p>
+<p>PUBLIC knob_scale : set scale mode of knob (left to right or center/pan).</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -845,14 +914,18 @@ autotoc_md31</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
-autotoc_md23</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+autotoc_md31</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mode</td><td>scale mode (0 = from left, 1 = center/pan, see <a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a>) </td></tr>
+    <tr><td class="paramname">mode</td><td>scale mode (0 = from left, 1 = center/pan, see <a class="el" href="#aebc7d96b3cd2b0247e0fee9facdd6306" title="Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten).">knob_scale_t</a>)</td></tr>
   </table>
   </dd>
 </dl>
+<p>Sets a knob to the left (0..32) or centre (-15..16) scale, converting its stored value so the ring does not jump.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md103"></a>
+autotoc_md103</h2>
 
 </div>
 </div>
@@ -881,6 +954,7 @@ autotoc_md23</h2>
 </div><div class="memdoc">
 
 <p>Changes a knob display by delta LEDs from its current value, clamped to its scale. </p>
+<p>PUBLIC knob_step : Channel 0-3 (uint8), Knob 0-9 (uint8), int Delta -&gt; Void.</p>
 <hr  />
  <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -889,14 +963,18 @@ autotoc_md23</h2>
   </table>
   </dd>
 </dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
-autotoc_md19</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+autotoc_md27</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">delta</td><td>int change by this value </td></tr>
+    <tr><td class="paramname">delta</td><td>int change by this value</td></tr>
   </table>
   </dd>
 </dl>
+<p>Changes a knob display by delta LEDs from its current value, clamped to its scale.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md99"></a>
+Incerment/decrement a knob's display value.</h2>
 
 </div>
 </div>
@@ -916,15 +994,20 @@ autotoc_md19</h2>
 </div><div class="memdoc">
 
 <p>Set brightness of all LEDs through OE pin PWM duty cycle (0 to 255). </p>
+<p>PUBLIC led_brightness : Set the brightness of all LEDs externally.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
-autotoc_md13</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+autotoc_md21</h2>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">brightness</td><td>Brightness 0 - 255 integer. </td></tr>
+    <tr><td class="paramname">brightness</td><td>Brightness 0 - 255 integer.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Set brightness of all LEDs through OE pin PWM duty cycle (0 to 255).</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md129"></a>
+autotoc_md129</h2>
 
 </div>
 </div>
@@ -944,31 +1027,14 @@ autotoc_md13</h2>
 </div><div class="memdoc">
 
 <p>Clear all LED states (in the data, not with OE pin), turning them all off. </p>
+<p>PUBLIC led_clear : Set all led states to off and latch.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
-autotoc_md11</h2>
-
-</div>
-</div>
-<a id="a7c814e4dc44f419e86d97917801f7ced" name="a7c814e4dc44f419e86d97917801f7ced"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c814e4dc44f419e86d97917801f7ced">&#9670;&#160;</a></span>led_debug()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void led_debug </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>on</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>[DEBUG MODE] Toggles debug mode with input boolean </p>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+autotoc_md19</h2>
+<p>Clear all LED states (in the data, not with OE pin), turning them all off.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
-autotoc_md51</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md125"></a>
+autotoc_md125</h2>
 
 </div>
 </div>
@@ -988,9 +1054,14 @@ autotoc_md51</h2>
 </div><div class="memdoc">
 
 <p>Gives the current brightness setting 0 - 255. </p>
+<p>PUBLIC led_get_brightness : Returns the current brightness setting 0-255.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
-autotoc_md15</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+autotoc_md23</h2>
+<p>Gives the current brightness setting 0 - 255.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md119"></a>
+autotoc_md119</h2>
 
 </div>
 </div>
@@ -1010,9 +1081,14 @@ autotoc_md15</h2>
 </div><div class="memdoc">
 
 <p>GPIO, OE PWM setup, turn off all LEDs. </p>
+<p>PUBLIC led_init : Call once during setup, initializes LED serial pins, PWM timer.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-autotoc_md5</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+autotoc_md13</h2>
+<p>GPIO, OE PWM setup, turn off all LEDs.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md131"></a>
+autotoc_md131</h2>
 
 </div>
 </div>
@@ -1032,9 +1108,14 @@ autotoc_md5</h2>
 </div><div class="memdoc">
 
 <p>[DEBUG MODE] Prints the configuration params to console </p>
+<p>PUBLIC led_print_config : Debug mode only, print the current configuration params defined at top.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
-autotoc_md53</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+autotoc_md59</h2>
+<p>[DEBUG MODE] Prints the configuration params to console</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md133"></a>
+autotoc_md133</h2>
 
 </div>
 </div>
@@ -1054,9 +1135,14 @@ autotoc_md53</h2>
 </div><div class="memdoc">
 
 <p>Push frame to hardware UNCONDITIONALLY. </p>
+<p>PUBLIC led_refresh : latch outputs, no matter what.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
-autotoc_md9</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+autotoc_md17</h2>
+<p>Push frame to hardware UNCONDITIONALLY.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md123"></a>
+autotoc_md123</h2>
 
 </div>
 </div>
@@ -1076,9 +1162,14 @@ autotoc_md9</h2>
 </div><div class="memdoc">
 
 <p>Push frame to hardware IF changed. </p>
+<p>PUBLIC led_update : latch outputs, push the streamed frame buffer to register outputs.</p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
-autotoc_md7</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+autotoc_md15</h2>
+<p>Push frame to hardware IF changed.</p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md121"></a>
+pushing changes to LEDs only if frame has been changed "dirty"</h2>
 
 </div>
 </div>

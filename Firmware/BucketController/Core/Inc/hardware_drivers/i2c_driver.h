@@ -131,35 +131,14 @@
 #ifndef I2C_DRIVER_H
 #define I2C_DRIVER_H
 
-
 /**
  ----------------------------------------------------------------------------------
-  @brief Define I2C geometry
- ----------------------------------------------------------------------------------
-*/
-#define MCP23017_PER_BUS 3
-#define MCP4728_PER_BUS  5
-#define I2C_MAX_TRANSFER_LEN 8 // as long as nbytes is <255 for each transfer, it can be done at once and does not need reload mode
-#define I2C_MAX_TRANSFER_SLOT 5 // max num descriptors on one slot (slot_t.x[4] max)
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief Define I2C timings
- ----------------------------------------------------------------------------------
-*/
-#define I2C_TIMINGR_400K 0x1032050AU // i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope
-#define I2C_SLOTS_PER_SUPERFRAME 15 // superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)
-#define RESTART_US 4 // 4 microsec restart time
-#define TIMEOUT_US 2000 // 2ms waiting for transfer to complete
-#define I2C_SLOT_PERIOD_US 667 // maximum time of one slot within a superframe
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief  i2c_read : I2C bus (0,1,2,3), chip address 
-                       data pointer, number of bytes to write -> bool
+  @brief  i2c_read : I2C bus, chip address, data pointer, number of bytes to write -> bool
   Read bytes from i2c chip (blocking)
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017_0, mcp4728s are write only
+  @param data pointer to read data to
+  @param nbytes number of bytes to read in
  ----------------------------------------------------------------------------------
 */
 bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes);
@@ -167,9 +146,12 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief i2c_write : I2C bus (0,1,2,3), chip address 
-                       data pointer, number of bytes to write -> bool
+  @brief i2c_write : I2C bus, chip address, data pointer, number of bytes to write -> bool
   Write bytes to i2c chip (blocking)
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x60 = MCP4728_0, mcp23017s are read only
+  @param data pointer to data to write
+  @param nbytes number of bytes to write
  ----------------------------------------------------------------------------------
 */
 bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes);
@@ -177,8 +159,10 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
 
 /**
  ----------------------------------------------------------------------------------
-  @brief i2c_probe : I2C bus (0,1,2,3), chip address -> bool
+  @brief i2c_probe : I2C bus, chip address -> bool
   Returns whether a specific I2C chip is free or not
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017_0, 0x60 = MCP4728_0
  ----------------------------------------------------------------------------------
 */
 bool i2c_probe (I2C_TypeDef *bus, uint8_t addr);

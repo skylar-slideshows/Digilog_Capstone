@@ -2,7 +2,7 @@
   **********************************************************************************
   * MCP4728 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file mcp_4728.h
+  * @file mcp4728_driver.h
   * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
   *        pins are used, for simplicity. Only the necessary parts for this case are included.
   *
@@ -59,9 +59,6 @@ Only intialization commands listed below. During operation, no commands at all. 
 
 #define DAC_GC_ADDR      0x00 // general call, used to verify initialization was written at start
 #define DAC_GC_READ_ADDR 0x0C
-
-#define MCP23017_BASE 0x20 // addrs set in hardware by pins A[2:0]
-#define MCP4728_BASE  0x60 // addrs set during startup by the dedicated 74HC595 programmer lines
 
 
 /*=============================== FUNCTIONS ================================*/

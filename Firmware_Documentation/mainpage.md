@@ -4,6 +4,7 @@ Browse the <a href="files.html">full file list</a>, or here is some of the most 
 
 Bucket Controller
 
+- [CONFIG.h](@ref CONFIG.h) - Main configuration file
 - [mcp23017_driver.h](@ref mcp23017_driver.h) - Functions to interface with MCP23017 GPIO expander
 - [mcp4728_driver.h](@ref mcp4728_driver.h) - Functions to interface with MCP4728 quad DAC
 - [i2c_driver.h](@ref i2c_driver.h) - I2C functions

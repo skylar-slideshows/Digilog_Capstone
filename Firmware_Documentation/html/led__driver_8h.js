@@ -21,7 +21,6 @@ var led__driver_8h =
     [ "knob_step", "led__driver_8h.html#a93508efe763fcffeb732f87a34ebc989", null ],
     [ "led_brightness", "led__driver_8h.html#a396048955e13a769f2b853af5eada30d", null ],
     [ "led_clear", "led__driver_8h.html#acc42bb9974f0987487ea0dc1c9abfb85", null ],
-    [ "led_debug", "led__driver_8h.html#a7c814e4dc44f419e86d97917801f7ced", null ],
     [ "led_get_brightness", "led__driver_8h.html#a117a1253b0b1c6ace75bcea6225320b5", null ],
     [ "led_init", "led__driver_8h.html#a7eb4d382bdd4b42c57dbb7154d03ac66", null ],
     [ "led_print_config", "led__driver_8h.html#af46294a908fd1e649734cb45df495003", null ],

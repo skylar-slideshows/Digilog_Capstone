@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['the_20bus_20is_20actually_20free_20idle_20before_20starting_0',['Clears stale flags and confirms the bus is actually free (idle) before starting',['../i2c__driver_8c.html#autotoc_md72',1,'']]],
-  ['the_20i2c_20busses_20call_20on_20i2c1_20i2c4_1',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['the_20i2c_20status_20register_20until_20transfer_20suceeds_20or_20fails_2',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md68',1,'']]],
-  ['to_20i2c_20chip_20blocking_3',['Write bytes to i2c chip (blocking)',['../i2c__driver_8c.html#autotoc_md90',1,'']]],
-  ['transfer_4',['Aborts transfer',['../i2c__driver_8c.html#autotoc_md74',1,'']]],
-  ['transfer_20suceeds_20or_20fails_5',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md68',1,'']]],
-  ['two_20bytes_6',['TWO BYTES',['../mcp23017__driver_8c.html#autotoc_md55',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md61',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md57',1,'Writes one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md63',1,'Writes one register ALWAYS EXACTLY TWO BYTES.']]]
+  ['needs_20less_20high_20time_20on_20pwm_0',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md127',1,'']]],
+  ['no_20helper_20to_20abstract_20this_1',['(since not using 23017s for write, no helper to abstract this)',['../mcp23017__driver_8c.html#autotoc_md63',1,'']]],
+  ['no_20interrupt_20pin_20setup_2',['Initializes a single MCP23017 chip with a no interrupt pin setup.',['../mcp23017__driver_8c.html#autotoc_md149',1,'']]],
+  ['normal_20state_20will_20do_20it_20mode_201_20every_20single_20led_20does_20it_3',['normal state will do it mode 1 every single LED does it',['../led__driver_8c.html#autotoc_md57',1,'are currently on in normal state will do it, mode 1 = every single LED does it'],['../led__driver_8c.html#autotoc_md143',1,'are currently on in normal state will do it, mode 1 = every single LED does it)']]],
+  ['not_4',['Returns whether a specific I2C chip is free or not',['../i2c__driver_8c.html#autotoc_md81',1,'']]],
+  ['not_20using_2023017s_20for_20write_20no_20helper_20to_20abstract_20this_5',['(since not using 23017s for write, no helper to abstract this)',['../mcp23017__driver_8c.html#autotoc_md63',1,'']]],
+  ['number_6',['Change a knob&apos;s display value, specify which knob by coords (chnl and knob number)',['../led__driver_8c.html#autotoc_md97',1,'']]]
 ];

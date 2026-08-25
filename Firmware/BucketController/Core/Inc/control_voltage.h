@@ -31,7 +31,7 @@
   **********************************************************************************
 */
 
-#ifdef CONTROL_VOLTAGE_H
+#ifndef CONTROL_VOLTAGE_H
 #define CONTROL_VOLTAGE_H
 
 #endif

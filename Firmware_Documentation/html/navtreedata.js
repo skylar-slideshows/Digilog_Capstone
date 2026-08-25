@@ -26,6 +26,11 @@ var NAVTREE =
 [
   [ "Digilog Console Firmware", "index.html", [
     [ "Firmware Developer Documentation", "index.html", null ],
+    [ "Topics", "topics.html", "topics" ],
+    [ "Data Structures", "annotated.html", [
+      [ "Data Structures", "annotated.html", "annotated_dup" ],
+      [ "Data Structure Index", "classes.html", null ]
+    ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
@@ -40,7 +45,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_bucket_controller_2_core_2_inc_2main_8h.html"
+"_c_o_n_f_i_g_8h.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

@@ -2,7 +2,7 @@
   **********************************************************************************
   * MCP23017 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file mcp_23017.h
+  * @file mcp23017_driver.h
   * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
   *        pins are used, for simplicity. Only the necessary parts for this case are included.
   *
@@ -73,8 +73,12 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
   Reads one register ALWAYS EXACTLY TWO BYTES.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+  @param reg what register to read from (MCP_GPIOA/B)
+  @param value pointer to where to save full byte read in (each of the pin's bit for the 8 pin reg)
  ----------------------------------------------------------------------------------
 */
 bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);
@@ -82,8 +86,13 @@ bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  @brief mcp23017_write : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
   Writes one register ALWAYS EXACTLY TWO BYTES.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+  @param reg what register to write to (MCP_GPIOA/B)
+  @param value ptr to data to write every pin state concurrently (full byte)
+               (since not using 23017s for write, no helper to abstract this)
  ----------------------------------------------------------------------------------
 */
 bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);
@@ -91,8 +100,10 @@ bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -> bool
+  @brief mcp23017_init : I2C bus, chip's address (0x20, 0x21, 0x22) -> bool
   Initializes a single MCP23017 chip with no interrupt pin setup.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
  ----------------------------------------------------------------------------------
 */
 bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr);

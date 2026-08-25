@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 // Skylar
+#include "CONFIG.h"
 #include "cmsis_os2.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017_driver.h"
@@ -42,8 +43,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-#define DEBUG 1
 
 /* USER CODE END PD */
 
@@ -105,11 +104,16 @@ void StartDefaultTask(void *argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-// USART2 FOR DEBUGGING - Skylar
+
+// start usart2 usb debug
+// picocom -b 115200 /dev/cu.usbmodem11203
 int __io_putchar(int ch)
 {
+  if (DEVELOPER_MODE)
+  {
     HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 100);
-    return ch;
+  }
+  return ch;
 }
 
 
@@ -158,33 +162,42 @@ int main(void)
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
-  // Make lines never disappear debug - Skylar
-  setvbuf(stdout, NULL, _IONBF, 0);
+  /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
+  // SKYLAR 
 
   // i2c startup
-  if(DEBUG)
+  if(DEVELOPER_MODE)
   {
+    setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
+
     i2c_debug_init();
     printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
 
-    uint8_t chip_addrs[] = { 0x20, 0x21, 0x22, 0x60, 0x61, 0x62, 0x63, 0x64 };
-    I2C_TypeDef *busses[] = { I2C1, I2C2, I2C3, I2C4 };
-    uint8_t bus_ct = sizeof(busses) / sizeof(busses[0]);
-    uint8_t chip_ct = sizeof(chip_addrs);
+    uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
 
     for(uint8_t b = 0; b < bus_ct; b++)
     {
-      for(uint8_t a = 0; a < chip_ct; a++)
+      
+      for(uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
       {
-        bool succ = i2c_probe(busses[b], chip_addrs[a]);
-        printf("\r\n    Probing 0x%x @ I2C %d %s\r", chip_addrs[a], b, succ ? "GOOD" : "FAILED or not present");
+        bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
+        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
       }
+
+      for(uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
+      {
+        bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
+        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+      }
+
       printf("\r\n");
     }
 
   }
+
+  /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
 
 
   /* USER CODE END 2 */

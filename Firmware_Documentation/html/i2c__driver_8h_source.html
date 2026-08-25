@@ -127,37 +127,23 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('i2c__driver_8h
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">#ifndef I2C_DRIVER_H</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#define I2C_DRIVER_H</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="i2c__driver_8h.html#a988f7dd07b2b3b126f77e444116a03bb">  140</a></span><span class="preprocessor">#define MCP23017_PER_BUS 3</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#define MCP4728_PER_BUS  5</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#define I2C_MAX_TRANSFER_LEN 8 </span><span class="comment">// as long as nbytes is &lt;255 for each transfer, it can be done at once and does not need reload mode</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="preprocessor">#define I2C_MAX_TRANSFER_SLOT 5 </span><span class="comment">// max num descriptors on one slot (slot_t.x[4] max)</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="i2c__driver_8h.html#ad00bfbd17dd0c87340b4e86223d70778">  151</a></span><span class="preprocessor">#define I2C_TIMINGR_400K 0x1032050AU </span><span class="comment">// i2c uses the HSI 16mhz clock. we need to verify signal looks good on scope</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="preprocessor">#define I2C_SLOTS_PER_SUPERFRAME 15 </span><span class="comment">// superframe length (how many I2C frames per superframe, at 1.5khz = 10ms)</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="preprocessor">#define RESTART_US 4 </span><span class="comment">// 4 microsec restart time</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">#define TIMEOUT_US 2000 </span><span class="comment">// 2ms waiting for transfer to complete</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="preprocessor">#define I2C_SLOT_PERIOD_US 667 </span><span class="comment">// maximum time of one slot within a superframe</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#a436cda29bab138d25db37fea0f866bd8">i2c_read</a> (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#ab039a5e0e9b3fb3107d770504fc4dd04">i2c_write</a> (I2C_TypeDef *bus, uint8_t addr, <span class="keyword">const</span> uint8_t *data, uint8_t nbytes);</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#ae0471fb17891a42f74b29ac67f2a591b">i2c_probe</a> (I2C_TypeDef *bus, uint8_t addr);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="keywordtype">void</span> <a class="code hl_function" href="i2c__driver_8h.html#a44cbee79f4be2ac6cf53ae9d98b250c9">i2c_debug_init</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="ai2c__driver_8h_html_a436cda29bab138d25db37fea0f866bd8"><div class="ttname"><a href="i2c__driver_8h.html#a436cda29bab138d25db37fea0f866bd8">i2c_read</a></div><div class="ttdeci">bool i2c_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)</div><div class="ttdoc">i2c_read : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool</div><div class="ttdef"><b>Definition</b> i2c_driver.c:157</div></div>
-<div class="ttc" id="ai2c__driver_8h_html_a44cbee79f4be2ac6cf53ae9d98b250c9"><div class="ttname"><a href="i2c__driver_8h.html#a44cbee79f4be2ac6cf53ae9d98b250c9">i2c_debug_init</a></div><div class="ttdeci">void i2c_debug_init(void)</div><div class="ttdoc">i2c_debug_init : Initialize the i2c busses</div><div class="ttdef"><b>Definition</b> i2c_driver.c:139</div></div>
-<div class="ttc" id="ai2c__driver_8h_html_ab039a5e0e9b3fb3107d770504fc4dd04"><div class="ttname"><a href="i2c__driver_8h.html#ab039a5e0e9b3fb3107d770504fc4dd04">i2c_write</a></div><div class="ttdeci">bool i2c_write(I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)</div><div class="ttdoc">i2c_write : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool</div><div class="ttdef"><b>Definition</b> i2c_driver.c:210</div></div>
-<div class="ttc" id="ai2c__driver_8h_html_ae0471fb17891a42f74b29ac67f2a591b"><div class="ttname"><a href="i2c__driver_8h.html#ae0471fb17891a42f74b29ac67f2a591b">i2c_probe</a></div><div class="ttdeci">bool i2c_probe(I2C_TypeDef *bus, uint8_t addr)</div><div class="ttdoc">i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool</div><div class="ttdef"><b>Definition</b> i2c_driver.c:261</div></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#a436cda29bab138d25db37fea0f866bd8">i2c_read</a> (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#ab039a5e0e9b3fb3107d770504fc4dd04">i2c_write</a> (I2C_TypeDef *bus, uint8_t addr, <span class="keyword">const</span> uint8_t *data, uint8_t nbytes);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="keywordtype">bool</span> <a class="code hl_function" href="i2c__driver_8h.html#ae0471fb17891a42f74b29ac67f2a591b">i2c_probe</a> (I2C_TypeDef *bus, uint8_t addr);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="keywordtype">void</span> <a class="code hl_function" href="i2c__driver_8h.html#a44cbee79f4be2ac6cf53ae9d98b250c9">i2c_debug_init</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="ai2c__driver_8h_html_a436cda29bab138d25db37fea0f866bd8"><div class="ttname"><a href="i2c__driver_8h.html#a436cda29bab138d25db37fea0f866bd8">i2c_read</a></div><div class="ttdeci">bool i2c_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)</div><div class="ttdoc">i2c_read : I2C bus, chip address, data pointer, number of bytes to write -&gt; bool Read bytes from i2c ...</div><div class="ttdef"><b>Definition</b> i2c_driver.c:158</div></div>
+<div class="ttc" id="ai2c__driver_8h_html_a44cbee79f4be2ac6cf53ae9d98b250c9"><div class="ttname"><a href="i2c__driver_8h.html#a44cbee79f4be2ac6cf53ae9d98b250c9">i2c_debug_init</a></div><div class="ttdeci">void i2c_debug_init(void)</div><div class="ttdoc">i2c_debug_init : Initialize the i2c busses</div><div class="ttdef"><b>Definition</b> i2c_driver.c:140</div></div>
+<div class="ttc" id="ai2c__driver_8h_html_ab039a5e0e9b3fb3107d770504fc4dd04"><div class="ttname"><a href="i2c__driver_8h.html#ab039a5e0e9b3fb3107d770504fc4dd04">i2c_write</a></div><div class="ttdeci">bool i2c_write(I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)</div><div class="ttdoc">i2c_write : I2C bus, chip address, data pointer, number of bytes to write -&gt; bool Write bytes to i2c ...</div><div class="ttdef"><b>Definition</b> i2c_driver.c:211</div></div>
+<div class="ttc" id="ai2c__driver_8h_html_ae0471fb17891a42f74b29ac67f2a591b"><div class="ttname"><a href="i2c__driver_8h.html#ae0471fb17891a42f74b29ac67f2a591b">i2c_probe</a></div><div class="ttdeci">bool i2c_probe(I2C_TypeDef *bus, uint8_t addr)</div><div class="ttdoc">i2c_probe : I2C bus, chip address -&gt; bool Returns whether a specific I2C chip is free or not</div><div class="ttdef"><b>Definition</b> i2c_driver.c:262</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

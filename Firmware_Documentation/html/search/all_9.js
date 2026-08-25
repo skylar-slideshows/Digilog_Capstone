@@ -1,26 +1,8 @@
 var searchData=
 [
-  ['i2c_20busses_20call_20on_20i2c1_20i2c4_0',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['i2c_20chip_20blocking_1',['i2c chip blocking',['../i2c__driver_8c.html#autotoc_md88',1,'Read bytes from i2c chip (blocking)'],['../i2c__driver_8c.html#autotoc_md90',1,'Write bytes to i2c chip (blocking)']]],
-  ['i2c_20chip_20is_20free_20or_20not_2',['I2C chip is free or not',['../i2c__driver_8c.html#autotoc_md82',1,'Returns whether a specific I2C chip is free or not'],['../i2c__driver_8c.html#autotoc_md92',1,'Returns whether a specific I2C chip is free or not']]],
-  ['i2c_20status_20register_20until_20transfer_20suceeds_20or_20fails_3',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md68',1,'']]],
-  ['i2c1_20i2c4_4',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['i2c4_5',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['i2c_5fdebug_5finit_6',['i2c_debug_init',['../i2c__driver_8c.html#a44cbee79f4be2ac6cf53ae9d98b250c9',1,'i2c_debug_init(void):&#160;i2c_driver.c'],['../i2c__driver_8h.html#a44cbee79f4be2ac6cf53ae9d98b250c9',1,'i2c_debug_init(void):&#160;i2c_driver.c']]],
-  ['i2c_5fdriver_2ec_7',['i2c_driver.c',['../i2c__driver_8c.html',1,'']]],
-  ['i2c_5fdriver_2eh_8',['i2c_driver.h',['../i2c__driver_8h.html',1,'']]],
-  ['i2c_5finit_20_3a_20initialize_20the_20i2c_20busses_20call_20on_20i2c1_20i2c4_9',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['i2c_5fprobe_10',['i2c_probe',['../i2c__driver_8c.html#ae0471fb17891a42f74b29ac67f2a591b',1,'i2c_probe(I2C_TypeDef *bus, uint8_t addr):&#160;i2c_driver.c'],['../i2c__driver_8h.html#ae0471fb17891a42f74b29ac67f2a591b',1,'i2c_probe(I2C_TypeDef *bus, uint8_t addr):&#160;i2c_driver.c']]],
-  ['i2c_5fread_11',['i2c_read',['../i2c__driver_8c.html#a436cda29bab138d25db37fea0f866bd8',1,'i2c_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes):&#160;i2c_driver.c'],['../i2c__driver_8h.html#a436cda29bab138d25db37fea0f866bd8',1,'i2c_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes):&#160;i2c_driver.c']]],
-  ['i2c_5ftimingr_5f400k_12',['I2C_TIMINGR_400K',['../i2c__driver_8h.html#ad00bfbd17dd0c87340b4e86223d70778',1,'i2c_driver.h']]],
-  ['i2c_5fwrite_13',['i2c_write',['../i2c__driver_8c.html#ab039a5e0e9b3fb3107d770504fc4dd04',1,'i2c_write(I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes):&#160;i2c_driver.c'],['../i2c__driver_8h.html#ab039a5e0e9b3fb3107d770504fc4dd04',1,'i2c_write(I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes):&#160;i2c_driver.c']]],
-  ['idle_20before_20starting_14',['Clears stale flags and confirms the bus is actually free (idle) before starting',['../i2c__driver_8c.html#autotoc_md72',1,'']]],
-  ['in_20normal_20state_20will_20do_20it_20mode_201_20every_20single_20led_20does_20it_15',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]],
-  ['initialize_20the_20i2c_20busses_20call_20on_20i2c1_20i2c4_16',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]],
-  ['initializes_20a_20single_20mcp23017_20chip_20with_20no_20interrupt_20pin_20setup_17',['Initializes a single MCP23017 chip with no interrupt pin setup',['../mcp23017__driver_8c.html#autotoc_md59',1,'Initializes a single MCP23017 chip with no interrupt pin setup.'],['../mcp23017__driver_8c.html#autotoc_md65',1,'Initializes a single MCP23017 chip with no interrupt pin setup.']]],
-  ['interrupt_20pin_20setup_18',['interrupt pin setup',['../mcp23017__driver_8c.html#autotoc_md59',1,'Initializes a single MCP23017 chip with no interrupt pin setup.'],['../mcp23017__driver_8c.html#autotoc_md65',1,'Initializes a single MCP23017 chip with no interrupt pin setup.']]],
-  ['is_20actually_20free_20idle_20before_20starting_19',['Clears stale flags and confirms the bus is actually free (idle) before starting',['../i2c__driver_8c.html#autotoc_md72',1,'']]],
-  ['is_20free_20or_20not_20',['is free or not',['../i2c__driver_8c.html#autotoc_md82',1,'Returns whether a specific I2C chip is free or not'],['../i2c__driver_8c.html#autotoc_md92',1,'Returns whether a specific I2C chip is free or not']]],
-  ['it_21',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]],
-  ['it_20mode_201_20every_20single_20led_20does_20it_22',['are currently on in normal state will do it, mode 1 = every single LED does it',['../led__driver_8h.html#autotoc_md49',1,'']]]
+  ['error_5fhandler_0',['Error_Handler',['../main_8h.html#a1730ffe1e560465665eb47d9264826f9',1,'Error_Handler(void):&#160;main.c'],['../main_8c.html#a1730ffe1e560465665eb47d9264826f9',1,'Error_Handler(void):&#160;main.c']]],
+  ['every_20single_20led_20does_20it_1',['every single LED does it',['../led__driver_8c.html#autotoc_md57',1,'are currently on in normal state will do it, mode 1 = every single LED does it'],['../led__driver_8c.html#autotoc_md143',1,'are currently on in normal state will do it, mode 1 = every single LED does it)']]],
+  ['exactly_20two_20bytes_2',['EXACTLY TWO BYTES',['../mcp23017__driver_8c.html#autotoc_md145',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md147',1,'Writes one register ALWAYS EXACTLY TWO BYTES.']]],
+  ['external_20knob_20channel_20coords_20and_20copies_20them_20out_3',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md95',1,'']]],
+  ['external_5fclock_5fvalue_4',['EXTERNAL_CLOCK_VALUE',['../stm32g4xx__hal__conf_8h.html#a8c47c935e91e70569098b41718558648',1,'stm32g4xx_hal_conf.h']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_3a_20initialize_20the_20i2c_20busses_20call_20on_20i2c1_20i2c4_0',['PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4',['../i2c__driver_8c.html#autotoc_md76',1,'']]]
+  ['2_0',['2',['../system__stm32g4xx_8c.html#autotoc_md160',1,'PLL_Q | 2'],['../system__stm32g4xx_8c.html#autotoc_md161',1,'PLL_R | 2']]],
+  ['23017s_20for_20write_20no_20helper_20to_20abstract_20this_1',['(since not using 23017s for write, no helper to abstract this)',['../mcp23017__driver_8c.html#autotoc_md63',1,'']]]
 ];

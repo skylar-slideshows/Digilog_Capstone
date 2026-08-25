@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp23017__driv
   <div class="headertitle"><div class="title">mcp23017_driver.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<a href="mcp23017__driver_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#ifndef MCP23017_DRIVER_H</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#define MCP23017_DRIVER_H</span></div>
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp23017__driv
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">/*=============================== REGISTER DEFINITIONS ================================*/</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#define MCP_IODIRA 0x00 </span><span class="comment">// direction, port A: 1 = input, POR 0xFF, we will write 0xFF (all inputs)</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="mcp23017__driver_8h.html#afef3c35f0f8e07b696ff0ff2d2208c30">   51</a></span><span class="preprocessor">#define MCP_IODIRA 0x00 </span><span class="comment">// direction, port A: 1 = input, POR 0xFF, we will write 0xFF (all inputs)</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#define MCP_IODIRB 0x01 </span><span class="comment">// same as above, B</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#define MCP_IPOLA  0x02 </span><span class="comment">// input polarity, port A. 1 = invert the value read from GPIO. we use 0</span></div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#define MCP_IPOLB  0x03 </span><span class="comment">// same as above, B</span></div>
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp23017__driv
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#define MCP_GPIOB  0x13 </span><span class="comment">// never addressed directly at runtime: the A/B toggle reaches it from 0x12</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#define IOCON_BANK 0x80 </span><span class="comment">// input output command (IOCON) - do not write this bit!</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#define IOCON_SEQOP  0x20</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="mcp23017__driver_8h.html#a7fee8fa87380ef5bec298c27c5154826">   66</a></span><span class="preprocessor">#define IOCON_SEQOP  0x20</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#define MCP_POR_IODIR 0xFF </span><span class="comment">// keep power-on reset states</span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#define MCP_POR_OTHER 0x00</span></div>
@@ -149,25 +149,25 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp23017__driv
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">/*=============================== FUNCTIONS ================================*/</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8c.html#a7920e3d587ec2b5db7a322ba1a8880e1">mcp23017_read</a>(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8c.html#a625cf8ce56ea2969b70f301c5cad3d18">mcp23017_write</a>(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8c.html#a39a290f7c55bb07f452330f99b73160a">mcp23017_init</a>(I2C_TypeDef *bus, uint8_t addr);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8h.html#a7920e3d587ec2b5db7a322ba1a8880e1">mcp23017_read</a>(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8h.html#a625cf8ce56ea2969b70f301c5cad3d18">mcp23017_write</a>(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="amcp23017__driver_8c_html_a39a290f7c55bb07f452330f99b73160a"><div class="ttname"><a href="mcp23017__driver_8c.html#a39a290f7c55bb07f452330f99b73160a">mcp23017_init</a></div><div class="ttdeci">bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr)</div><div class="ttdoc">mcp23017_init : I2C bus num, chip&#39;s address (0x20, 0x21, 0x22) -&gt; bool</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:73</div></div>
-<div class="ttc" id="amcp23017__driver_8c_html_a625cf8ce56ea2969b70f301c5cad3d18"><div class="ttname"><a href="mcp23017__driver_8c.html#a625cf8ce56ea2969b70f301c5cad3d18">mcp23017_write</a></div><div class="ttdeci">bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)</div><div class="ttdoc">mcp23017_write : I2C bus num, chip&#39;s address (0x20, 0x21, 0x22), register, value -&gt; bool</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:60</div></div>
-<div class="ttc" id="amcp23017__driver_8c_html_a7920e3d587ec2b5db7a322ba1a8880e1"><div class="ttname"><a href="mcp23017__driver_8c.html#a7920e3d587ec2b5db7a322ba1a8880e1">mcp23017_read</a></div><div class="ttdeci">bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)</div><div class="ttdoc">mcp23017_read : I2C bus num, chip&#39;s address (0x20, 0x21, 0x22), register, value -&gt; bool</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:47</div></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keywordtype">bool</span> <a class="code hl_function" href="mcp23017__driver_8h.html#a39a290f7c55bb07f452330f99b73160a">mcp23017_init</a>(I2C_TypeDef *bus, uint8_t addr);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amcp23017__driver_8h_html_a39a290f7c55bb07f452330f99b73160a"><div class="ttname"><a href="mcp23017__driver_8h.html#a39a290f7c55bb07f452330f99b73160a">mcp23017_init</a></div><div class="ttdeci">bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr)</div><div class="ttdoc">mcp23017_init : I2C bus, chip&#39;s address (0x20, 0x21, 0x22) -&gt; bool Initializes a single MCP23017 chip...</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:73</div></div>
+<div class="ttc" id="amcp23017__driver_8h_html_a625cf8ce56ea2969b70f301c5cad3d18"><div class="ttname"><a href="mcp23017__driver_8h.html#a625cf8ce56ea2969b70f301c5cad3d18">mcp23017_write</a></div><div class="ttdeci">bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)</div><div class="ttdoc">mcp23017_write : I2C bus, chip&#39;s address (0x20, 0x21, 0x22), register, value -&gt; bool Writes one regis...</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:60</div></div>
+<div class="ttc" id="amcp23017__driver_8h_html_a7920e3d587ec2b5db7a322ba1a8880e1"><div class="ttname"><a href="mcp23017__driver_8h.html#a7920e3d587ec2b5db7a322ba1a8880e1">mcp23017_read</a></div><div class="ttdeci">bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)</div><div class="ttdoc">mcp23017_read : I2C bus, chip&#39;s address (0x20, 0x21, 0x22), register, value -&gt; bool Reads one registe...</div><div class="ttdef"><b>Definition</b> mcp23017_driver.c:47</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Inc</b></li><li class="navelem"><b>hardware_drivers</b></li><li class="navelem"><b>mcp23017_driver.h</b></li>
+    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Inc</b></li><li class="navelem"><b>hardware_drivers</b></li><li class="navelem"><a href="mcp23017__driver_8h.html">mcp23017_driver.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

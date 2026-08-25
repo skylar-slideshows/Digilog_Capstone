@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['read_20blocking_0',['Read (blocking)',['../i2c__driver_8c.html#autotoc_md78',1,'']]],
-  ['read_20bytes_20from_20i2c_20chip_20blocking_1',['Read bytes from i2c chip (blocking)',['../i2c__driver_8c.html#autotoc_md88',1,'']]],
-  ['reads_20one_20register_20always_20exactly_20two_20bytes_2',['Reads one register ALWAYS EXACTLY TWO BYTES',['../mcp23017__driver_8c.html#autotoc_md55',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md61',1,'Reads one register ALWAYS EXACTLY TWO BYTES.']]],
-  ['register_20always_20exactly_20two_20bytes_3',['register ALWAYS EXACTLY TWO BYTES',['../mcp23017__driver_8c.html#autotoc_md55',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md61',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md57',1,'Writes one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md63',1,'Writes one register ALWAYS EXACTLY TWO BYTES.']]],
-  ['register_20until_20transfer_20suceeds_20or_20fails_4',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md68',1,'']]],
-  ['resets_20all_20animation_20phases_5',['resets all animation phases',['../led__driver_8h.html#autotoc_md41',1,'']]],
-  ['returns_20whether_20a_20specific_20i2c_20chip_20is_20free_20or_20not_6',['Returns whether a specific I2C chip is free or not',['../i2c__driver_8c.html#autotoc_md82',1,'Returns whether a specific I2C chip is free or not'],['../i2c__driver_8c.html#autotoc_md92',1,'Returns whether a specific I2C chip is free or not']]]
+  ['led_20by_20coordinate_0',['Set a specific button display LED by coordinate',['../led__driver_8c.html#autotoc_md107',1,'']]],
+  ['led_20does_20it_1',['LED does it',['../led__driver_8c.html#autotoc_md57',1,'are currently on in normal state will do it, mode 1 = every single LED does it'],['../led__driver_8c.html#autotoc_md143',1,'are currently on in normal state will do it, mode 1 = every single LED does it)']]],
+  ['led_20is_20off_20or_20on_2',['Returns whether the specified button LED is off or on.',['../led__driver_8c.html#autotoc_md117',1,'']]],
+  ['leds_20at_20once_3',['Sets a whole channel&apos;s button LEDs at once',['../led__driver_8c.html#autotoc_md109',1,'']]],
+  ['leds_20only_20if_20frame_20has_20been_20changed_20dirty_4',['pushing changes to LEDs only if frame has been changed &quot;dirty&quot;',['../led__driver_8c.html#autotoc_md121',1,'']]],
+  ['less_20high_20time_20on_20pwm_5',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md127',1,'']]],
+  ['loading_20done_20just_20stop_20and_20call_20anim_5fstop_6',['When loading done just stop and call anim_stop.',['../led__driver_8c.html#autotoc_md139',1,'']]],
+  ['low_20so_20higher_20brightness_20needs_20less_20high_20time_20on_20pwm_7',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md127',1,'']]]
 ];

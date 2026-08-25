@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['main_0',['main',['../_bucket_controller_2_core_2_src_2main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;main.c'],['../_master_controller_2_core_2_src_2main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main(void):&#160;main.c']]],
-  ['mcp23017_5finit_1',['mcp23017_init',['../mcp23017__driver_8c.html#a39a290f7c55bb07f452330f99b73160a',1,'mcp23017_driver.c']]],
-  ['mcp23017_5fread_2',['mcp23017_read',['../mcp23017__driver_8c.html#a7920e3d587ec2b5db7a322ba1a8880e1',1,'mcp23017_driver.c']]],
-  ['mcp23017_5fwrite_3',['mcp23017_write',['../mcp23017__driver_8c.html#a625cf8ce56ea2969b70f301c5cad3d18',1,'mcp23017_driver.c']]]
+  ['knob_5fdisp_0',['knob_disp',['../led__driver_8h.html#ac7be65bc72611f124bd4e28a2c676581',1,'knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode):&#160;led_driver.c'],['../led__driver_8c.html#ac7be65bc72611f124bd4e28a2c676581',1,'knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode):&#160;led_driver.c']]],
+  ['knob_5fget_1',['knob_get',['../led__driver_8h.html#a1b8859b0c70a908794180ecc8c826e4a',1,'knob_get(uint8_t channel, uint8_t knob):&#160;led_driver.c'],['../led__driver_8c.html#a1b8859b0c70a908794180ecc8c826e4a',1,'knob_get(uint8_t channel, uint8_t knob):&#160;led_driver.c']]],
+  ['knob_5fget_5fdisp_2',['knob_get_disp',['../led__driver_8h.html#a540c64d74063b76493c23f057f49c5ad',1,'knob_get_disp(uint8_t channel, uint8_t knob):&#160;led_driver.c'],['../led__driver_8c.html#a540c64d74063b76493c23f057f49c5ad',1,'knob_get_disp(uint8_t channel, uint8_t knob):&#160;led_driver.c']]],
+  ['knob_5fget_5fscale_3',['knob_get_scale',['../led__driver_8h.html#a72d66c5f01cc6b9faa04ba2232ff3c52',1,'knob_get_scale(uint8_t channel, uint8_t knob):&#160;led_driver.c'],['../led__driver_8c.html#a72d66c5f01cc6b9faa04ba2232ff3c52',1,'knob_get_scale(uint8_t channel, uint8_t knob):&#160;led_driver.c']]],
+  ['knob_5fled_4',['knob_led',['../led__driver_8h.html#a9ace46ff6d8a6d6834ea339c6ef95d4a',1,'knob_led(uint8_t channel, uint8_t knob, int8_t value):&#160;led_driver.c'],['../led__driver_8c.html#a9ace46ff6d8a6d6834ea339c6ef95d4a',1,'knob_led(uint8_t channel, uint8_t knob, int8_t value):&#160;led_driver.c']]],
+  ['knob_5fraw_5',['knob_raw',['../led__driver_8h.html#ae5f7ad07b06e4c7e662050cffb95b2a4',1,'knob_raw(uint8_t channel, uint8_t knob, uint32_t bits):&#160;led_driver.c'],['../led__driver_8c.html#ae5f7ad07b06e4c7e662050cffb95b2a4',1,'knob_raw(uint8_t channel, uint8_t knob, uint32_t bits):&#160;led_driver.c']]],
+  ['knob_5fscale_6',['knob_scale',['../led__driver_8h.html#a491fcfcf1db04a9e0266f938801f1f1e',1,'knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode):&#160;led_driver.c'],['../led__driver_8c.html#a491fcfcf1db04a9e0266f938801f1f1e',1,'knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode):&#160;led_driver.c']]],
+  ['knob_5fstep_7',['knob_step',['../led__driver_8h.html#a93508efe763fcffeb732f87a34ebc989',1,'knob_step(uint8_t channel, uint8_t knob, int8_t delta):&#160;led_driver.c'],['../led__driver_8c.html#a93508efe763fcffeb732f87a34ebc989',1,'knob_step(uint8_t channel, uint8_t knob, int8_t delta):&#160;led_driver.c']]]
 ];

@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['that_20show_20that_20value_0',['Directly render: turns a knob&apos;s value into the set of bits that show that value',['../led__driver_8c.html#autotoc_md91',1,'']]],
+  ['that_20value_1',['Directly render: turns a knob&apos;s value into the set of bits that show that value',['../led__driver_8c.html#autotoc_md91',1,'']]],
+  ['the_20animation_20matches_20the_20mode_2',['center mode the animation matches the mode.',['../led__driver_8c.html#autotoc_md141',1,'']]],
+  ['the_20bus_20is_20actually_20free_20idle_20before_20starting_3',['Clears stale flags and confirms the bus is actually free (idle) before starting',['../i2c__driver_8c.html#autotoc_md71',1,'']]],
+  ['the_20i2c_20status_20register_20until_20transfer_20suceeds_20or_20fails_4',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md67',1,'']]],
+  ['the_20mode_5',['center mode the animation matches the mode.',['../led__driver_8c.html#autotoc_md141',1,'']]],
+  ['the_20params_20inside_20a_20knob_20at_20a_20coord_20and_20use_20render_5fval_6',['Unpack the params inside a knob at a coord and use render_val.',['../led__driver_8c.html#autotoc_md93',1,'']]],
+  ['the_20set_20of_20bits_20that_20show_20that_20value_7',['Directly render: turns a knob&apos;s value into the set of bits that show that value',['../led__driver_8c.html#autotoc_md91',1,'']]],
+  ['the_20specified_20button_20led_20is_20off_20or_20on_8',['Returns whether the specified button LED is off or on.',['../led__driver_8c.html#autotoc_md117',1,'']]],
+  ['the_20system_20clock_20as_20follows_3a_9',['This file configures the system clock as follows:',['../system__stm32g4xx_8c.html#autotoc_md150',1,'']]],
+  ['them_20out_10',['Range checks external knob/channel coords and copies them out',['../led__driver_8c.html#autotoc_md95',1,'']]],
+  ['this_11',['(since not using 23017s for write, no helper to abstract this)',['../mcp23017__driver_8c.html#autotoc_md63',1,'']]],
+  ['this_20file_20configures_20the_20system_20clock_20as_20follows_3a_12',['This file configures the system clock as follows:',['../system__stm32g4xx_8c.html#autotoc_md150',1,'']]],
+  ['time_20on_20pwm_13',['OE is active low so higher brightness needs less high time on PWM.',['../led__driver_8c.html#autotoc_md127',1,'']]],
+  ['to_20abstract_20this_14',['(since not using 23017s for write, no helper to abstract this)',['../mcp23017__driver_8c.html#autotoc_md63',1,'']]],
+  ['to_20leds_20only_20if_20frame_20has_20been_20changed_20dirty_15',['pushing changes to LEDs only if frame has been changed &quot;dirty&quot;',['../led__driver_8c.html#autotoc_md121',1,'']]],
+  ['transfer_16',['Aborts transfer',['../i2c__driver_8c.html#autotoc_md73',1,'']]],
+  ['transfer_20suceeds_20or_20fails_17',['Polls the I2C status register until transfer suceeds or fails',['../i2c__driver_8c.html#autotoc_md67',1,'']]],
+  ['turns_20a_20knob_20s_20value_20into_20the_20set_20of_20bits_20that_20show_20that_20value_18',['Directly render: turns a knob&apos;s value into the set of bits that show that value',['../led__driver_8c.html#autotoc_md91',1,'']]],
+  ['two_20bytes_19',['TWO BYTES',['../mcp23017__driver_8c.html#autotoc_md145',1,'Reads one register ALWAYS EXACTLY TWO BYTES.'],['../mcp23017__driver_8c.html#autotoc_md147',1,'Writes one register ALWAYS EXACTLY TWO BYTES.']]]
+];

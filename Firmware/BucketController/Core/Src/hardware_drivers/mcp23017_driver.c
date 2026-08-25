@@ -40,7 +40,7 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
@@ -53,7 +53,7 @@ bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  @brief mcp23017_write : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
@@ -66,8 +66,8 @@ bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -> bool
-  Initializes a single MCP23017 chip with no interrupt pin setup.
+  @brief mcp23017_init : I2C bus, chip's address (0x20, 0x21, 0x22) -> bool
+  Initializes a single MCP23017 chip with a no interrupt pin setup.
  ----------------------------------------------------------------------------------
 */
 bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr)

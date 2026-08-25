@@ -47,6 +47,7 @@
 #include "system_stm32g4xx.h"
 #include <stdbool.h>
 #include "hardware_drivers/i2c_driver.h"
+#include "CONFIG.h"
 
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
 #define BUDGET_LIMIT ((I2C_SLOT_PERIOD_US * 92) / 100) // max time budget during send frame.
@@ -57,7 +58,7 @@
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL wait_flag : bus, flag, abort on negative acknoledge?, microseconds -> bool
+  @brief INTERNAL wait_flag : bus, flag, abort on negative acknoledge?, microseconds -> bool
   Polls the I2C status register until transfer suceeds or fails 
  ----------------------------------------------------------------------------------
 */
@@ -76,7 +77,7 @@ static bool wait_flag(I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL clear_flags : bus -> Void
+  @brief INTERNAL clear_flags : bus -> Void
   Clears flags on a bus
  ----------------------------------------------------------------------------------
 */
@@ -89,7 +90,7 @@ static inline void clear_flags(I2C_TypeDef *bus)
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL bus_idle : bus, microseconds -> bool
+  @brief INTERNAL bus_idle : bus, microseconds -> bool
   Clears stale flags and confirms the bus is actually free (idle) before starting
  ----------------------------------------------------------------------------------
 */
@@ -104,7 +105,7 @@ static bool bus_idle(I2C_TypeDef *bus)
 
 /**
  ----------------------------------------------------------------------------------
-  INTERNAL abort_transfer : bus -> void
+  @brief INTERNAL abort_transfer : bus -> void
   Aborts transfer
  ----------------------------------------------------------------------------------
 */
@@ -133,7 +134,7 @@ static void abort_transfer(I2C_TypeDef *bus)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4
+  @brief PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4
  ----------------------------------------------------------------------------------
 */
 void i2c_debug_init(void)
@@ -149,7 +150,7 @@ void i2c_debug_init(void)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_read : I2C bus (0,1,2,3), chip address 
+  @brief PUBLIC i2c_read : I2C bus (I2C1 ... I2C4 = I2C_TypeDef), chip address 
                        data pointer, number of bytes to write -> bool
   Read (blocking)
  ----------------------------------------------------------------------------------
@@ -202,7 +203,7 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_write : I2C bus (0,1,2,3), chip address 
+  @brief PUBLIC i2c_write : I2C bus (I2C1 ... I2C4 = I2C_TypeDef), chip address 
                        data pointer, number of bytes to write -> bool
   Write (blocking)
  ----------------------------------------------------------------------------------
@@ -254,7 +255,7 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
 
 /**
  ----------------------------------------------------------------------------------
-  PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -> bool
+  @brief PUBLIC i2c_probe : I2C bus (I2C1 ... I2C4 = I2C_TypeDef), chip address -> bool
   Returns whether a specific I2C chip is free or not
  ----------------------------------------------------------------------------------
 */
