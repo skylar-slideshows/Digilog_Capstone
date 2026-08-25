@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.17.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/BucketController/Core/Src/mcp23017_driver.c File Reference</title>
+<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/BucketController/Core/Src/hardware_drivers/mcp23017_driver.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="codefolding.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
@@ -118,31 +118,31 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mcp23017__driv
   <div class="headertitle"><div class="title">mcp23017_driver.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="mcp__regs_8h_source.html">mcp_regs.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="mcp__funcs_8h_source.html">mcp_funcs.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">i2c_driver.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;hardware_drivers/mcp23017_driver.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">hardware_drivers/i2c_driver.h</a>&quot;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &quot;stm32g474xx.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4b97544c19b5d30f09144d6c767900ab" id="r_a4b97544c19b5d30f09144d6c767900ab"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a4b97544c19b5d30f09144d6c767900ab">mcp23017_init</a> (uint8_t bus, uint8_t addr)</td></tr>
-<tr class="memdesc:a4b97544c19b5d30f09144d6c767900ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -&gt; bool  <br /></td></tr>
-<tr class="memitem:a087719a0a178904c367c7b06e8b6f763" id="r_a087719a0a178904c367c7b06e8b6f763"><td class="memItemLeft"><a id="a087719a0a178904c367c7b06e8b6f763" name="a087719a0a178904c367c7b06e8b6f763"></a>
-uint16_t&#160;</td><td class="memItemRight"><b>mcp23017_fail_query</b> (void)</td></tr>
-<tr class="memitem:a5e95f4d597eae0504918c0ac9c8ffd2d" id="r_a5e95f4d597eae0504918c0ac9c8ffd2d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5e95f4d597eae0504918c0ac9c8ffd2d">mcp23017_init_all</a> (void)</td></tr>
-<tr class="memdesc:a5e95f4d597eae0504918c0ac9c8ffd2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_init_all : void -&gt; bool  <br /></td></tr>
+<tr class="memitem:a7920e3d587ec2b5db7a322ba1a8880e1" id="r_a7920e3d587ec2b5db7a322ba1a8880e1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a7920e3d587ec2b5db7a322ba1a8880e1">mcp23017_read</a> (I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)</td></tr>
+<tr class="memdesc:a7920e3d587ec2b5db7a322ba1a8880e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -&gt; bool  <br /></td></tr>
+<tr class="memitem:a625cf8ce56ea2969b70f301c5cad3d18" id="r_a625cf8ce56ea2969b70f301c5cad3d18"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a625cf8ce56ea2969b70f301c5cad3d18">mcp23017_write</a> (I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)</td></tr>
+<tr class="memdesc:a625cf8ce56ea2969b70f301c5cad3d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -&gt; bool  <br /></td></tr>
+<tr class="memitem:a39a290f7c55bb07f452330f99b73160a" id="r_a39a290f7c55bb07f452330f99b73160a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a39a290f7c55bb07f452330f99b73160a">mcp23017_init</a> (I2C_TypeDef *bus, uint8_t addr)</td></tr>
+<tr class="memdesc:a39a290f7c55bb07f452330f99b73160a"><td class="mdescLeft">&#160;</td><td class="mdescRight">mcp23017_init : I2C bus num, chip's address (0x20, 0x21, 0x22) -&gt; bool  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MCP23017 GPIO EXPANDER DRIVER - DIGILOG CONSOLE (Bucket)</p>
-<dl class="section author"><dt>Author</dt><dd>Skylar Denno (<a href="#" onclick="location.href='mai'+'lto:'+'den'+'no'+'.o@'+'no'+'rth'+'ea'+'ste'+'rn'+'.ed'+'u'; return false;">denno<span class="obfuscator">.nosp@m.</span>.o@n<span class="obfuscator">.nosp@m.</span>orthe<span class="obfuscator">.nosp@m.</span>aste<span class="obfuscator">.nosp@m.</span>rn.ed<span class="obfuscator">.nosp@m.</span>u</a>)</dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Skylar Denno (<a href="#" onclick="location.href='mai'+'lto:'+'den'+'no'+'.o@'+'no'+'rth'+'ea'+'ste'+'rn'+'.ed'+'u'; return false;">denno<span class="obfuscator">.nosp@m.</span>.o@n<span class="obfuscator">.nosp@m.</span>orthe<span class="obfuscator">.nosp@m.</span>aste<span class="obfuscator">.nosp@m.</span>rn.ed<span class="obfuscator">.nosp@m.</span>u</a>), Darya Petrova (<a href="#" onclick="location.href='mai'+'lto:'+'pet'+'ro'+'v.d'+'a@'+'nor'+'th'+'eas'+'te'+'rn.'+'ed'+'u'; return false;">petro<span class="obfuscator">.nosp@m.</span>v.da<span class="obfuscator">.nosp@m.</span>@nort<span class="obfuscator">.nosp@m.</span>heas<span class="obfuscator">.nosp@m.</span>tern.<span class="obfuscator">.nosp@m.</span>edu</a>)</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2026-08-23 </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>Copyright (C) 2026 Skylar Denno</dd></dl>
 <p>MIT License: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a4b97544c19b5d30f09144d6c767900ab" name="a4b97544c19b5d30f09144d6c767900ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b97544c19b5d30f09144d6c767900ab">&#9670;&#160;</a></span>mcp23017_init()</h2>
+<a id="a39a290f7c55bb07f452330f99b73160a" name="a39a290f7c55bb07f452330f99b73160a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39a290f7c55bb07f452330f99b73160a">&#9670;&#160;</a></span>mcp23017_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,7 +150,7 @@ uint16_t&#160;</td><td class="memItemRight"><b>mcp23017_fail_query</b> (void)</t
         <tr>
           <td class="memname">bool mcp23017_init </td>
           <td>(</td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -165,30 +165,86 @@ uint16_t&#160;</td><td class="memItemRight"><b>mcp23017_fail_query</b> (void)</t
  <h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 Initializes a single MCP23017 chip with no interrupt pin setup.</h2>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
 Initializes a single MCP23017 chip with no interrupt pin setup.</h2>
 
 </div>
 </div>
-<a id="a5e95f4d597eae0504918c0ac9c8ffd2d" name="a5e95f4d597eae0504918c0ac9c8ffd2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e95f4d597eae0504918c0ac9c8ffd2d">&#9670;&#160;</a></span>mcp23017_init_all()</h2>
+<a id="a7920e3d587ec2b5db7a322ba1a8880e1" name="a7920e3d587ec2b5db7a322ba1a8880e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7920e3d587ec2b5db7a322ba1a8880e1">&#9670;&#160;</a></span>mcp23017_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool mcp23017_init_all </td>
+          <td class="memname">bool mcp23017_read </td>
           <td>(</td>
-          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>reg</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>mcp23017_init_all : void -&gt; bool </p>
+<p>mcp23017_read : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -&gt; bool </p>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
-Initialize all MCP23017s described in macro defns.</h2>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+Reads one register ALWAYS EXACTLY TWO BYTES.</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
+Reads one register ALWAYS EXACTLY TWO BYTES.</h2>
+
+</div>
+</div>
+<a id="a625cf8ce56ea2969b70f301c5cad3d18" name="a625cf8ce56ea2969b70f301c5cad3d18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a625cf8ce56ea2969b70f301c5cad3d18">&#9670;&#160;</a></span>mcp23017_write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mcp23017_write </td>
+          <td>(</td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>reg</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>mcp23017_write : I2C bus num, chip's address (0x20, 0x21, 0x22), register, value -&gt; bool </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+Writes one register ALWAYS EXACTLY TWO BYTES.</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
+Writes one register ALWAYS EXACTLY TWO BYTES.</h2>
 
 </div>
 </div>
@@ -205,7 +261,7 @@ Initialize all MCP23017s described in macro defns.</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><a href="mcp23017__driver_8c.html">mcp23017_driver.c</a></li>
+    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><b>hardware_drivers</b></li><li class="navelem"><a href="mcp23017__driver_8c.html">mcp23017_driver.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

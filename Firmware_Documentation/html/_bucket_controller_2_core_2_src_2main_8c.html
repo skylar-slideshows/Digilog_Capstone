@@ -125,14 +125,25 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_bucket_contro
 <code>#include &quot;cmsis_os.h&quot;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &quot;cmsis_os2.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="led__driver_8h_source.html">led_driver.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">hardware_drivers/i2c_driver.h</a>&quot;</code><br />
+<code>#include &quot;hardware_drivers/mcp23017_driver.h&quot;</code><br />
+<code>#include &quot;hardware_drivers/mcp4728_driver.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="led__driver_8h_source.html">hardware_drivers/led_driver.h</a>&quot;</code><br />
+<code>#include &quot;stm32g474xx.h&quot;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ad72dbcf6d0153db1b8d8a58001feed83" id="r_ad72dbcf6d0153db1b8d8a58001feed83"><td class="memItemLeft"><a id="ad72dbcf6d0153db1b8d8a58001feed83" name="ad72dbcf6d0153db1b8d8a58001feed83"></a>
+#define&#160;</td><td class="memItemRight"><b>DEBUG</b>&#160;&#160;&#160;1</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a70af21c671abfcc773614a9a4f63d920" id="r_a70af21c671abfcc773614a9a4f63d920"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a70af21c671abfcc773614a9a4f63d920">SystemClock_Config</a> (void)</td></tr>
 <tr class="memdesc:a70af21c671abfcc773614a9a4f63d920"><td class="mdescLeft">&#160;</td><td class="mdescRight">System Clock Configuration.  <br /></td></tr>
 <tr class="memitem:a99d0fdb0434092bcb24d9c9af917e4e9" id="r_a99d0fdb0434092bcb24d9c9af917e4e9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a99d0fdb0434092bcb24d9c9af917e4e9">StartDefaultTask</a> (void *argument)</td></tr>
 <tr class="memdesc:a99d0fdb0434092bcb24d9c9af917e4e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function implementing the defaultTask thread.  <br /></td></tr>
+<tr class="memitem:abc513dd972081ae765b6949a62872eb7" id="r_abc513dd972081ae765b6949a62872eb7"><td class="memItemLeft"><a id="abc513dd972081ae765b6949a62872eb7" name="abc513dd972081ae765b6949a62872eb7"></a>
+int&#160;</td><td class="memItemRight"><b>__io_putchar</b> (int ch)</td></tr>
 <tr class="memitem:a840291bc02cba5474a4cb46a9b9566fe" id="r_a840291bc02cba5474a4cb46a9b9566fe"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a840291bc02cba5474a4cb46a9b9566fe">main</a> (void)</td></tr>
 <tr class="memdesc:a840291bc02cba5474a4cb46a9b9566fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The application entry point.  <br /></td></tr>
 <tr class="memitem:a8a3b0ad512a6e6c6157440b68d395eac" id="r_a8a3b0ad512a6e6c6157440b68d395eac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8a3b0ad512a6e6c6157440b68d395eac">HAL_TIM_PeriodElapsedCallback</a> (TIM_HandleTypeDef *htim)</td></tr>
@@ -164,6 +175,8 @@ TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim1</b></td></tr>
 TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim2</b></td></tr>
 <tr class="memitem:aac3d2c59ee0e3bbae1b99529a154eb62" id="r_aac3d2c59ee0e3bbae1b99529a154eb62"><td class="memItemLeft"><a id="aac3d2c59ee0e3bbae1b99529a154eb62" name="aac3d2c59ee0e3bbae1b99529a154eb62"></a>
 TIM_HandleTypeDef&#160;</td><td class="memItemRight"><b>htim3</b></td></tr>
+<tr class="memitem:aa9479c261d65eecedd3d9582f7f0f89c" id="r_aa9479c261d65eecedd3d9582f7f0f89c"><td class="memItemLeft"><a id="aa9479c261d65eecedd3d9582f7f0f89c" name="aa9479c261d65eecedd3d9582f7f0f89c"></a>
+UART_HandleTypeDef&#160;</td><td class="memItemRight"><b>huart2</b></td></tr>
 <tr class="memitem:a6a263905468b0c37de4ee5e50ede4e74" id="r_a6a263905468b0c37de4ee5e50ede4e74"><td class="memItemLeft"><a id="a6a263905468b0c37de4ee5e50ede4e74" name="a6a263905468b0c37de4ee5e50ede4e74"></a>
 osThreadId_t&#160;</td><td class="memItemRight"><b>defaultTaskHandle</b></td></tr>
 <tr class="memitem:a25fbb54afdba71c24ba51ed50166ac8d" id="r_a25fbb54afdba71c24ba51ed50166ac8d"><td class="memItemLeft">const osThreadAttr_t&#160;</td><td class="memItemRight"><a class="el" href="#a25fbb54afdba71c24ba51ed50166ac8d">defaultTask_attributes</a></td></tr>

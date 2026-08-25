@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.17.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/BucketController/Core/Src/i2c_driver.c File Reference</title>
+<title>Digilog Console Firmware: /Users/skylar/Desktop/CAPSTONE/Firmware/BucketController/Core/Src/hardware_drivers/i2c_driver.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="codefolding.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
@@ -121,30 +121,30 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('i2c__driver_8c
 
 <p>Sets up and manages traffic on the four I2C busses. Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">i2c_driver.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="i2c__driver_8h_source.html">hardware_drivers/i2c_driver.h</a>&quot;</code><br />
 <code>#include &quot;stm32g474xx.h&quot;</code><br />
 <code>#include &quot;stm32g4xx_ll_i2c.h&quot;</code><br />
+<code>#include &quot;system_stm32g4xx.h&quot;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:slot_5Ft" id="r_slot_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structslot__t.html">slot_t</a></td></tr>
-<tr class="memitem:bus_5Ft" id="r_bus_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structbus__t.html">bus_t</a></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a54417991f16f772f24f440bf2d3d4de2" id="r_a54417991f16f772f24f440bf2d3d4de2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a54417991f16f772f24f440bf2d3d4de2">TRANSFER_US</a>(n)</td></tr>
 <tr class="memitem:abf2afdbbf006ed09f62f1b52f076c184" id="r_abf2afdbbf006ed09f62f1b52f076c184"><td class="memItemLeft"><a id="abf2afdbbf006ed09f62f1b52f076c184" name="abf2afdbbf006ed09f62f1b52f076c184"></a>
 #define&#160;</td><td class="memItemRight"><b>BUDGET_LIMIT</b>&#160;&#160;&#160;((I2C_SLOT_PERIOD_US * 92) / 100)</td></tr>
+<tr class="memitem:abc4cb51523917a384f177f076e1a72d5" id="r_abc4cb51523917a384f177f076e1a72d5"><td class="memItemLeft"><a id="abc4cb51523917a384f177f076e1a72d5" name="abc4cb51523917a384f177f076e1a72d5"></a>
+#define&#160;</td><td class="memItemRight"><b>TIMEOUT_CYCLES</b>&#160;&#160;&#160;((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab44979517d1b7b394d341c8b7d09b7e2" id="r_ab44979517d1b7b394d341c8b7d09b7e2"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab44979517d1b7b394d341c8b7d09b7e2">i2c_probe</a> (uint8_t bus, uint8_t addr)</td></tr>
-<tr class="memdesc:ab44979517d1b7b394d341c8b7d09b7e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool  <br /></td></tr>
-<tr class="memitem:a640bafa742929be4c4f5dc1f9cbe77d5" id="r_a640bafa742929be4c4f5dc1f9cbe77d5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a640bafa742929be4c4f5dc1f9cbe77d5">i2c_read_b</a> (uint8_t bus, uint8_t addr, uint8_t *data, uint8_t nbytes)</td></tr>
-<tr class="memdesc:a640bafa742929be4c4f5dc1f9cbe77d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
-<tr class="memitem:ae1de99c80c148ed224e2f0e0535216ca" id="r_ae1de99c80c148ed224e2f0e0535216ca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae1de99c80c148ed224e2f0e0535216ca">i2c_write_b</a> (uint8_t bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)</td></tr>
-<tr class="memdesc:ae1de99c80c148ed224e2f0e0535216ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
+<tr class="memitem:a44cbee79f4be2ac6cf53ae9d98b250c9" id="r_a44cbee79f4be2ac6cf53ae9d98b250c9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a44cbee79f4be2ac6cf53ae9d98b250c9">i2c_debug_init</a> (void)</td></tr>
+<tr class="memdesc:a44cbee79f4be2ac6cf53ae9d98b250c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_debug_init : Initialize the i2c busses  <br /></td></tr>
+<tr class="memitem:a436cda29bab138d25db37fea0f866bd8" id="r_a436cda29bab138d25db37fea0f866bd8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a436cda29bab138d25db37fea0f866bd8">i2c_read</a> (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)</td></tr>
+<tr class="memdesc:a436cda29bab138d25db37fea0f866bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_read : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
+<tr class="memitem:ab039a5e0e9b3fb3107d770504fc4dd04" id="r_ab039a5e0e9b3fb3107d770504fc4dd04"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab039a5e0e9b3fb3107d770504fc4dd04">i2c_write</a> (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)</td></tr>
+<tr class="memdesc:ab039a5e0e9b3fb3107d770504fc4dd04"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_write : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool  <br /></td></tr>
+<tr class="memitem:ae0471fb17891a42f74b29ac67f2a591b" id="r_ae0471fb17891a42f74b29ac67f2a591b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae0471fb17891a42f74b29ac67f2a591b">i2c_probe</a> (I2C_TypeDef *bus, uint8_t addr)</td></tr>
+<tr class="memdesc:ae0471fb17891a42f74b29ac67f2a591b"><td class="mdescLeft">&#160;</td><td class="mdescRight">i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Sets up and manages traffic on the four I2C busses. Polls the MCP23017 GPIO expanders at a fixed rate and provides the CV streams to MCP4728 DACs at a fixed rate. </p>
@@ -176,8 +176,33 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ab44979517d1b7b394d341c8b7d09b7e2" name="ab44979517d1b7b394d341c8b7d09b7e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab44979517d1b7b394d341c8b7d09b7e2">&#9670;&#160;</a></span>i2c_probe()</h2>
+<a id="a44cbee79f4be2ac6cf53ae9d98b250c9" name="a44cbee79f4be2ac6cf53ae9d98b250c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44cbee79f4be2ac6cf53ae9d98b250c9">&#9670;&#160;</a></span>i2c_debug_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void i2c_debug_init </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>i2c_debug_init : Initialize the i2c busses </p>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md76"></a>
+PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4</h2>
+<hr  />
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md94"></a>
+autotoc_md94</h2>
+
+</div>
+</div>
+<a id="ae0471fb17891a42f74b29ac67f2a591b" name="ae0471fb17891a42f74b29ac67f2a591b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0471fb17891a42f74b29ac67f2a591b">&#9670;&#160;</a></span>i2c_probe()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +210,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool i2c_probe </td>
           <td>(</td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -198,24 +223,24 @@ Functions</h2></td></tr>
 <p>i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool </p>
 <hr  />
 <p> PUBLIC i2c_probe : I2C bus (0,1,2,3), chip address -&gt; bool </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md86"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md82"></a>
 Returns whether a specific I2C chip is free or not</h2>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md96"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md92"></a>
 Returns whether a specific I2C chip is free or not</h2>
 
 </div>
 </div>
-<a id="a640bafa742929be4c4f5dc1f9cbe77d5" name="a640bafa742929be4c4f5dc1f9cbe77d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a640bafa742929be4c4f5dc1f9cbe77d5">&#9670;&#160;</a></span>i2c_read_b()</h2>
+<a id="a436cda29bab138d25db37fea0f866bd8" name="a436cda29bab138d25db37fea0f866bd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a436cda29bab138d25db37fea0f866bd8">&#9670;&#160;</a></span>i2c_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool i2c_read_b </td>
+          <td class="memname">bool i2c_read </td>
           <td>(</td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -235,27 +260,27 @@ Returns whether a specific I2C chip is free or not</h2>
       </table>
 </div><div class="memdoc">
 
-<p>i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<p>i2c_read : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
 <hr  />
-<p> PUBLIC i2c_read_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
+<p> PUBLIC i2c_read : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md78"></a>
 Read (blocking)</h2>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md98"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
 Read bytes from i2c chip (blocking)</h2>
 
 </div>
 </div>
-<a id="ae1de99c80c148ed224e2f0e0535216ca" name="ae1de99c80c148ed224e2f0e0535216ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1de99c80c148ed224e2f0e0535216ca">&#9670;&#160;</a></span>i2c_write_b()</h2>
+<a id="ab039a5e0e9b3fb3107d770504fc4dd04" name="ab039a5e0e9b3fb3107d770504fc4dd04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab039a5e0e9b3fb3107d770504fc4dd04">&#9670;&#160;</a></span>i2c_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool i2c_write_b </td>
+          <td class="memname">bool i2c_write </td>
           <td>(</td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
+          <td class="paramtype">I2C_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>bus</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -275,13 +300,13 @@ Read bytes from i2c chip (blocking)</h2>
       </table>
 </div><div class="memdoc">
 
-<p>i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<p>i2c_write : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
 <hr  />
-<p> PUBLIC i2c_write_b : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
+<p> PUBLIC i2c_write : I2C bus (0,1,2,3), chip address data pointer, number of bytes to write -&gt; bool </p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md80"></a>
 Write (blocking)</h2>
 <hr  />
- <h2 class="doxsection"><a class="anchor" id="autotoc_md100"></a>
+ <h2 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
 Write bytes to i2c chip (blocking)</h2>
 
 </div>
@@ -299,7 +324,7 @@ Write bytes to i2c chip (blocking)</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><a href="i2c__driver_8c.html">i2c_driver.c</a></li>
+    <li class="navelem"><b>Firmware</b></li><li class="navelem"><b>BucketController</b></li><li class="navelem"><b>Core</b></li><li class="navelem"><b>Src</b></li><li class="navelem"><b>hardware_drivers</b></li><li class="navelem"><a href="i2c__driver_8c.html">i2c_driver.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

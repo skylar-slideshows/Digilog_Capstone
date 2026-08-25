@@ -26,10 +26,6 @@ var NAVTREE =
 [
   [ "Digilog Console Firmware", "index.html", [
     [ "Firmware Developer Documentation", "index.html", null ],
-    [ "Data Structures", "annotated.html", [
-      [ "Data Structures", "annotated.html", "annotated_dup" ],
-      [ "Data Structure Index", "classes.html", null ]
-    ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
