@@ -60,10 +60,10 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.2,
+          "min_clearance": 0.5,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
-          "pad_connection": 2,
+          "pad_connection": 1,
           "remove_islands": 0,
           "thermal_relief_gap": 0.5,
           "thermal_relief_spoke_width": 0.5
@@ -148,7 +148,7 @@
         "max_error": 0.005,
         "min_clearance": 0.0,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.4,
+        "min_copper_edge_clearance": 0.5,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
@@ -213,10 +213,9 @@
         0.0,
         0.2,
         0.3,
+        0.4,
         0.5,
-        0.65,
-        1.0,
-        2.0
+        0.7
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -507,7 +506,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "channel.kicad_pro",
+    "filename": "FullChanDevBoard.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -544,7 +543,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "channelblank.dsn",
+      "specctra_dsn": "",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -580,10 +579,10 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Value",
           "name": "Value",
           "show": true
@@ -592,7 +591,7 @@
           "group_by": false,
           "label": "DNP",
           "name": "${DNP}",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -610,7 +609,7 @@
           "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -625,7 +624,7 @@
           "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "LCSC",
           "name": "LCSC",
           "show": true
@@ -662,6 +661,18 @@
         },
         {
           "group_by": false,
+          "label": "Sim.Device",
+          "name": "Sim.Device",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
           "label": "SnapEDA_Link",
           "name": "SnapEDA_Link",
           "show": false
@@ -682,6 +693,18 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Field5",
+          "name": "Field5",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PURC_LINK",
+          "name": "PURC_LINK",
           "show": false
         }
       ],
@@ -728,17 +751,17 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "channel.kicad_sch",
+        "filename": "FullChanDevBoard.kicad_sch",
         "name": "Root",
-        "uuid": "a1a465fb-4037-4e7d-a809-83087b8afcbb"
+        "uuid": "e1098fa9-7c31-41dd-9291-aea558e4b53d"
       }
     ],
-    "used_designators": "R1-16,#PWR1-7,#PWR170-175,J1-3",
+    "used_designators": "X1,L1,DZ1-3,R1-107,FB1-2,C1-103,SW1-23,U1-13,F1,D1-18,#PWR1-241,J1-10,J21-62",
     "variants": []
   },
   "sheets": [
     [
-      "a1a465fb-4037-4e7d-a809-83087b8afcbb",
+      "e1098fa9-7c31-41dd-9291-aea558e4b53d",
       "Root"
     ]
   ],

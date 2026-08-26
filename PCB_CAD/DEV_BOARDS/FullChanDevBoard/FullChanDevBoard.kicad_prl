@@ -2,18 +2,18 @@
   "board": {
     "active_layer": 0,
     "active_layer_preset": "",
-    "auto_track_width": false,
+    "auto_track_width": true,
     "hidden_netclasses": [],
     "hidden_nets": [],
     "high_contrast_mode": 0,
     "net_color_mode": 1,
     "opacity": {
-      "images": 1.0,
+      "images": 0.6,
       "pads": 1.0,
       "shapes": 1.0,
       "tracks": 1.0,
       "vias": 1.0,
-      "zones": 1.0
+      "zones": 0.6
     },
     "prototype_zone_fills": false,
     "selection_filter": {
@@ -52,7 +52,7 @@
       "board_outline_area",
       "ly_points"
     ],
-    "visible_layers": "ffffffff_ffffffff_fffffff7_fff7ffff",
+    "visible_layers": "ffffffff_ffffffff_fffffff7_ffffffaf",
     "zone_display_mode": 0
   },
   "git": {
@@ -62,7 +62,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "channel.kicad_prl",
+    "filename": "FullChanDevBoard.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {
