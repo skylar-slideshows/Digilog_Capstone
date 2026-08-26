@@ -48,17 +48,19 @@
 /** @brief Addresses below are for IOCON.BANK = 0 (POR default), where the A and B
    registers of each pair are interleaved. We never change BANK to keep fixed addresses. */
 
-#define MCP_IODIRA 0x00 // direction, port A: 1 = input, POR 0xFF, we will write 0xFF (all inputs)
-#define MCP_IODIRB 0x01 // same as above, B
-#define MCP_IPOLA  0x02 // input polarity, port A. 1 = invert the value read from GPIO. we use 0
-#define MCP_IPOLB  0x03 // same as above, B
-#define MCP_IOCONA 0x0A // config; written FIRST, while still sequential, so it can be one 3-byte write
-#define MCP_IOCONB 0x0B // same as above, B
-#define MCP_GPPUA  0x0C // pull-up enable, port A: 1 = internal ~100k on, we will write 0xFF to use internal
-#define MCP_GPPUB  0x0D // same as above, B
-#define MCP_GPIOA  0x12 // read = live pin state. WRITE lands in OLAT, not here, pointer is parked here
-#define MCP_GPIOB  0x13 // never addressed directly at runtime: the A/B toggle reaches it from 0x12
-#define IOCON_BANK 0x80 // input output command (IOCON) - do not write this bit!
+typedef uint8_t MCP23017_Reg;
+
+#define MCP_IODIRA ((MCP23017_Reg)0x00) // direction, port A: 1 = input, POR 0xFF, we will write 0xFF (all inputs)
+#define MCP_IODIRB ((MCP23017_Reg)0x01) // same as above, B
+#define MCP_IPOLA  ((MCP23017_Reg)0x02) // input polarity, port A. 1 = invert the value read from GPIO. we use 0
+#define MCP_IPOLB  ((MCP23017_Reg)0x03) // same as above, B
+#define MCP_IOCONA ((MCP23017_Reg)0x0A) // config; written FIRST, while still sequential, so it can be one 3-byte write
+#define MCP_IOCONB ((MCP23017_Reg)0x0B) // same as above, B
+#define MCP_GPPUA  ((MCP23017_Reg)0x0C) // pull-up enable, port A: 1 = internal ~100k on, we will write 0xFF to use internal
+#define MCP_GPPUB  ((MCP23017_Reg)0x0D) // same as above, B
+#define MCP_GPIOA  ((MCP23017_Reg)0x12) // read = live pin state. WRITE lands in OLAT, not here, pointer is parked here
+#define MCP_GPIOB  ((MCP23017_Reg)0x13) // never addressed directly at runtime: the A/B toggle reaches it from 0x12
+#define IOCON_BANK ((MCP23017_Reg)0x80) // input output command (IOCON) - do not write this bit!
 
 /** @brief 0 on reset - address pointer increments after each byte
 1 = byte mode (what we want) no increment so we can access the same address repeatedly
@@ -81,7 +83,7 @@
   @param value pointer to where to save full byte read in (each of the pin's bit for the 8 pin reg)
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t *value);
 
 
 /**
@@ -95,7 +97,7 @@ bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value);
                (since not using 23017s for write, no helper to abstract this)
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value);
+bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t value);
 
 
 /**

@@ -44,7 +44,7 @@
   Reads one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t *value)
 {
     if(!i2c_write(bus, addr, &reg, 1)) return false; // set pointer
     return i2c_read(bus, addr, value, 1); // read 1 byte
@@ -57,7 +57,7 @@ bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t *value)
   Writes one register ALWAYS EXACTLY TWO BYTES.
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, uint8_t reg, uint8_t value)
+bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t value)
 {
   uint8_t data[2] = { reg, value };
   return i2c_write(bus, addr, data, 2);
