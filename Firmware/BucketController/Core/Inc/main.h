@@ -85,6 +85,8 @@ void Error_Handler(void);
 #define Fader3_MotA_GPIO_Port GPIOA
 #define __MASTER__MOSI_Pin GPIO_PIN_7
 #define __MASTER__MOSI_GPIO_Port GPIOA
+#define MCP23S17_CS_Pin GPIO_PIN_5
+#define MCP23S17_CS_GPIO_Port GPIOC
 #define Fader4_MotA_Pin GPIO_PIN_0
 #define Fader4_MotA_GPIO_Port GPIOB
 #define Fader3_Touch_Pin GPIO_PIN_1
