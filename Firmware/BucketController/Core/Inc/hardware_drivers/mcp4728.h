@@ -25,16 +25,16 @@ typedef struct {
 } ChannelConfig;
 
 /* Function Prototypes */
-HAL_StatusTypeDef mcp4728_vrefSelect(I2C_HandleTypeDef *i2cHandler, ChannelConfig config);
-HAL_StatusTypeDef mcp4728_gainSelect(I2C_HandleTypeDef *i2cHandler, ChannelConfig config);
-HAL_StatusTypeDef mcp4728_writePwrDownSelect(I2C_HandleTypeDef *i2cHandler, uint8_t power_modes);
+HAL_StatusTypeDef mcp4728_vrefSelect(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config);
+HAL_StatusTypeDef mcp4728_gainSelect(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config);
+HAL_StatusTypeDef mcp4728_writePwrDownSelect(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, uint8_t power_modes);
 HAL_StatusTypeDef mcp4728_generalCall(I2C_HandleTypeDef *i2cHandler, uint8_t command);
-HAL_StatusTypeDef mcp4728_fastWrite(I2C_HandleTypeDef *i2cHandler, ChannelConfig config);
-HAL_StatusTypeDef mcp4728_multiWrite(I2C_HandleTypeDef *i2cHandler, ChannelConfig config, uint8_t channel);
-HAL_StatusTypeDef mcp4728_sequentialWrite(I2C_HandleTypeDef *i2cHandler, ChannelConfig config, uint8_t channel);
-HAL_StatusTypeDef mcp4728_singleWrite(I2C_HandleTypeDef *i2cHandler, ChannelConfig config, uint8_t channel);
-HAL_StatusTypeDef mcp4728_newI2CAddress(I2C_HandleTypeDef *i2cHandler, uint8_t address);
-HAL_StatusTypeDef mcp4728_configure(I2C_HandleTypeDef *i2cHandler, ChannelConfig config);
+HAL_StatusTypeDef mcp4728_fastWrite(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config);
+HAL_StatusTypeDef mcp4728_multiWrite(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config, uint8_t channel);
+HAL_StatusTypeDef mcp4728_sequentialWrite(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config, uint8_t channel);
+HAL_StatusTypeDef mcp4728_singleWrite(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config, uint8_t channel);
+HAL_StatusTypeDef mcp4728_newI2CAddress(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, uint8_t address);
+HAL_StatusTypeDef mcp4728_configure(I2C_HandleTypeDef *i2cHandler, uint8_t mcp4728_base_addr, ChannelConfig config);
 
 /* Commands and Modes */
 #define MCP4728_GENERAL_RESET           0x06
@@ -51,7 +51,7 @@ HAL_StatusTypeDef mcp4728_configure(I2C_HandleTypeDef *i2cHandler, ChannelConfig
 #define MCP4728_GAIN_WRITE              0xC0
 #define MCP4728_PWRDOWN_WRITE           0xA0
 
-#define MCP4728_BASE_ADDR               (0x60 << 1) // 7-bit address shifted left
+// #define MCP4728_BASE_ADDR               (0x60 << 1) // 7-bit address shifted left
 
 #define MCP4728_GAIN_1                  0x0
 #define MCP4728_GAIN_2                  0x1
