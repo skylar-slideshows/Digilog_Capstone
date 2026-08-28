@@ -2,8 +2,8 @@
   **********************************************************************************
   * EC11 ROTARY ENCODER DRIVER AND MOTION DECODER
   **********************************************************************************
-  * @file hardware_drivers/rotary_encoder.c
-  * @brief 
+  * @file rotary_encoder.h
+  * @brief Functions for the status and motion of the EC11 rotary encoders.
   *
   * @author Darya Petrova (petrov.da@northeastern.edu)
   *         

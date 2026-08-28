@@ -1,3 +1,5 @@
+/** @file mcp4728.c */
+
 /*
  * Copied from https://github.com/arda-kara/MCP4728-DAC-HAL-Driver
  * 06a2047954bc5d6053fb7c4ba4d271389b37b41e

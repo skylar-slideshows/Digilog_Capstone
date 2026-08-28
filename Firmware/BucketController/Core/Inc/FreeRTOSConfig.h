@@ -1,5 +1,6 @@
 /* USER CODE BEGIN Header */
-/*
+/**
+ * @file FreeRTOSConfig.h
  * FreeRTOS Kernel V10.3.1
  * Portion Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  * Portion Copyright (C) 2019 StMicroelectronics, Inc.  All Rights Reserved.
