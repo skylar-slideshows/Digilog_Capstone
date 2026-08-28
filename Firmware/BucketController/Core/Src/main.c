@@ -1013,46 +1013,21 @@ void StartDefaultTask(void *argument)
 
 
   // cute little animation thing
-  /*led_init();
-  led_debug(false);
+  led_init();
   led_brightness(10);
 
   knob_scale(0, 0, SCALE_LEFT);
-  knob_scale(0, 1, SCALE_CENTER);
   knob_disp(0, 0, 0);
-  knob_disp(0, 1, 0);
   
-  knob_led(0, 1, 10);
-  knob_led(0, 0, 10);
+  knob_led(0, 0, 32);
   led_update();
-  anim_stop();
-
-  anim_claim(ANIM_LOAD);
-
-  for (int i = 0; i < 10; i++)
-  {
-    anim_loading(-1);
-    osDelay(80);
-  }
-
-  for (int i = 0; i < 80; i++)
-  {
-    anim_sweep(0,1);
-    osDelay(20);
-  }
-
-  for (int i = 0; i < 80; i++)
-  {
-    anim_sweep(0,0);
-    osDelay(20);
-  }
 
   for (;;)
   {
     anim_breathe(0);
     osDelay(32);
   }
-*/
+
 
   /* USER CODE END 5 */
 }
