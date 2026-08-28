@@ -30,7 +30,7 @@
 #include "cmsis_os2.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017_driver.h"
-#include "hardware_drivers/mcp4728_driver.h"
+#include "hardware_drivers/mcp4728.h"
 #include "hardware_drivers/led_driver.h"
 #include "stm32g474xx.h"
 
@@ -941,7 +941,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(_DAC_INIT_Latch_GPIO_Port, _DAC_INIT_Latch_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, _DAC_INIT_Latch_Pin|MCP23S17_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|FlashADC_CS_ADC_Pin
@@ -950,12 +950,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, _DAC_INIT_Clock_Pin|_DAC_INIT_Data_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : _DAC_INIT_Latch_Pin */
-  GPIO_InitStruct.Pin = _DAC_INIT_Latch_Pin;
+  /*Configure GPIO pins : _DAC_INIT_Latch_Pin MCP23S17_CS_Pin */
+  GPIO_InitStruct.Pin = _DAC_INIT_Latch_Pin|MCP23S17_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(_DAC_INIT_Latch_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : __MASTER__CS_in_Pin Fader1_Touch_Pin */
   GPIO_InitStruct.Pin = __MASTER__CS_in_Pin|Fader1_Touch_Pin;
@@ -1013,46 +1013,21 @@ void StartDefaultTask(void *argument)
 
 
   // cute little animation thing
-  /*led_init();
-  led_debug(false);
+  led_init();
   led_brightness(10);
 
   knob_scale(0, 0, SCALE_LEFT);
-  knob_scale(0, 1, SCALE_CENTER);
   knob_disp(0, 0, 0);
-  knob_disp(0, 1, 0);
   
-  knob_led(0, 1, 10);
-  knob_led(0, 0, 10);
+  knob_led(0, 0, 32);
   led_update();
-  anim_stop();
-
-  anim_claim(ANIM_LOAD);
-
-  for (int i = 0; i < 10; i++)
-  {
-    anim_loading(-1);
-    osDelay(80);
-  }
-
-  for (int i = 0; i < 80; i++)
-  {
-    anim_sweep(0,1);
-    osDelay(20);
-  }
-
-  for (int i = 0; i < 80; i++)
-  {
-    anim_sweep(0,0);
-    osDelay(20);
-  }
 
   for (;;)
   {
     anim_breathe(0);
     osDelay(32);
   }
-*/
+
 
   /* USER CODE END 5 */
 }

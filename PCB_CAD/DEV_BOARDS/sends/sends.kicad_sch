@@ -5,7 +5,7 @@
 	(uuid "4a247955-b1a1-46a4-9d5c-81247d542eb5")
 	(paper "A3")
 	(lib_symbols
-		(symbol "Amplifier_Operational:NE5532"
+		(symbol "Amplifier_Operational:OPA1678"
 			(pin_names
 				(offset 0.127)
 			)
@@ -25,7 +25,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "NE5532"
+			(property "Value" "OPA1678"
 				(at 0 -5.08 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -47,7 +47,7 @@
 					)
 				)
 			)
-			(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+			(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -58,7 +58,7 @@
 					)
 				)
 			)
-			(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+			(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -101,7 +101,7 @@
 					)
 				)
 			)
-			(symbol "NE5532_1_1"
+			(symbol "OPA1678_1_1"
 				(polyline
 					(pts
 						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
@@ -169,7 +169,7 @@
 					)
 				)
 			)
-			(symbol "NE5532_2_1"
+			(symbol "OPA1678_2_1"
 				(polyline
 					(pts
 						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
@@ -237,7 +237,7 @@
 					)
 				)
 			)
-			(symbol "NE5532_3_1"
+			(symbol "OPA1678_3_1"
 				(pin power_in line
 					(at -2.54 -7.62 90)
 					(length 3.81)
@@ -1809,6 +1809,184 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:C_Polarized_Small"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.254 1.778 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "C_Polarized_Small"
+				(at 0.254 -2.032 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Polarized capacitor, small symbol"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "CP_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_Polarized_Small_0_1"
+				(rectangle
+					(start -1.524 0.6858)
+					(end 1.524 0.3048)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.524 -0.3048)
+					(end 1.524 -0.6858)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 1.524) (xy -0.762 1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.016 1.27) (xy -1.016 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_Polarized_Small_1_1"
+				(pin passive line
+					(at 0 2.54 270)
+					(length 1.8542)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -2.54 90)
+					(length 1.8542)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:C_Small"
 			(pin_numbers
 				(hide yes)
@@ -2702,7 +2880,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "PINS: (Power)\n+16.6V\n-16.6V\nAGND\n\nPINS: (CV)\n1_send1L\n1_send1R\n1_send2L\n1_send2R\n1_send3L\n1_send3R\n1_send4L\n1_send4R\n\nPINS: (Analog)\n1_1L\n1_1R\n1_2L\n1_2R\n1_3L\n1_3R\n1_4L\n1_4R\n\n1_IN\n\n"
+	(text "PINS: (Power)\n+16.6V\n-16.6V\nAGND\n\nPINS: (CV)\nCV_send1L\nCV_send1R\nCV_send2L\nCV_send2R\nCV_send3L\nCV_send3R\nCV_send4\n\nPINS: (Analog)\nOUT_1L\nOUT_1R\nOUT_2L\nOUT_2R\nOUT_3L\nOUT_3R\nOUT_4\n\nIN\n\n"
 		(exclude_from_sim no)
 		(at 26.162 81.534 0)
 		(effects
@@ -2714,6 +2892,16 @@
 			(justify left)
 		)
 		(uuid "6a069558-6eb3-4ac4-a57c-a28dec4dea72")
+	)
+	(text "use tl074\n"
+		(exclude_from_sim no)
+		(at 246.634 60.96 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "769b1699-765f-4a42-8f16-f1af8a9d2881")
 	)
 	(junction
 		(at 278.13 190.5)
@@ -3114,16 +3302,6 @@
 			(type default)
 		)
 		(uuid "0ad7850d-d369-478e-97e1-4e398728e9a8")
-	)
-	(wire
-		(pts
-			(xy 328.93 93.98) (xy 344.17 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0b573b66-339d-4e0f-99fc-23d2794af3ef")
 	)
 	(wire
 		(pts
@@ -3767,16 +3945,6 @@
 	)
 	(wire
 		(pts
-			(xy 332.74 157.48) (xy 332.74 156.21)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "57c07130-bdb0-4ab3-b85b-e1b611d0359e")
-	)
-	(wire
-		(pts
 			(xy 214.63 96.52) (xy 214.63 85.09)
 		)
 		(stroke
@@ -3877,16 +4045,6 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 88.9) (xy 344.17 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "64f6611c-21ad-4259-a804-b16fc66ccf52")
-	)
-	(wire
-		(pts
 			(xy 270.51 142.24) (xy 278.13 142.24)
 		)
 		(stroke
@@ -3914,16 +4072,6 @@
 			(type default)
 		)
 		(uuid "66dcb017-f5f8-4acb-9ecc-37b8ffc787e6")
-	)
-	(wire
-		(pts
-			(xy 356.87 76.2) (xy 372.11 76.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "67c9d81a-3ae3-443d-969d-6acd792dcd8a")
 	)
 	(wire
 		(pts
@@ -3987,26 +4135,6 @@
 	)
 	(wire
 		(pts
-			(xy 356.87 91.44) (xy 372.11 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "704acedd-98b6-4165-8d5b-0194685c6395")
-	)
-	(wire
-		(pts
-			(xy 328.93 83.82) (xy 344.17 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "71253da1-6e0a-46d8-801b-b362a672487f")
-	)
-	(wire
-		(pts
 			(xy 276.86 92.71) (xy 276.86 96.52)
 		)
 		(stroke
@@ -4064,16 +4192,6 @@
 			(type default)
 		)
 		(uuid "75159eda-c629-4882-a32e-04a35160ecae")
-	)
-	(wire
-		(pts
-			(xy 356.87 86.36) (xy 372.11 86.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7919b598-a7df-49fa-a703-3b0226308875")
 	)
 	(wire
 		(pts
@@ -4237,13 +4355,13 @@
 	)
 	(wire
 		(pts
-			(xy 340.36 158.75) (xy 349.25 158.75)
+			(xy 332.74 156.21) (xy 332.74 157.48)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "969fae4d-1490-464e-a530-8c3282e94b7e")
+		(uuid "950ef517-bd0d-4d39-88fb-5e126a4dabe8")
 	)
 	(wire
 		(pts
@@ -4304,16 +4422,6 @@
 			(type default)
 		)
 		(uuid "9cbea2bb-c7ca-4e54-bf1d-94e730ecdfb8")
-	)
-	(wire
-		(pts
-			(xy 332.74 156.21) (xy 349.25 156.21)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9d5d4eec-96b8-4425-9c17-f09d4d22cbc9")
 	)
 	(wire
 		(pts
@@ -4494,6 +4602,16 @@
 			(type default)
 		)
 		(uuid "ae1bfba1-fc9f-4376-aff0-dab875bb10e3")
+	)
+	(wire
+		(pts
+			(xy 340.36 158.75) (xy 349.25 158.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ae5de4cf-c635-4efa-9f6f-065384edd9e9")
 	)
 	(wire
 		(pts
@@ -4684,6 +4802,16 @@
 			(type default)
 		)
 		(uuid "c0b955df-1b01-4ca7-9719-5a1d1785920f")
+	)
+	(wire
+		(pts
+			(xy 325.12 85.09) (xy 334.01 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c0fc1089-814d-4d4a-a510-b655f7df1fdc")
 	)
 	(wire
 		(pts
@@ -5027,6 +5155,16 @@
 	)
 	(wire
 		(pts
+			(xy 349.25 156.21) (xy 332.74 156.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4b80815-ca82-410f-b338-ea7e45b38059")
+	)
+	(wire
+		(pts
 			(xy 295.91 179.07) (xy 306.07 179.07)
 		)
 		(stroke
@@ -5227,16 +5365,6 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 78.74) (xy 344.17 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f9e56d7a-13b7-46d7-b6b2-b4f900df11c0")
-	)
-	(wire
-		(pts
 			(xy 251.46 87.63) (xy 254 87.63)
 		)
 		(stroke
@@ -5265,29 +5393,19 @@
 		)
 		(uuid "fb6e356c-2044-410b-b6f6-7fe6fa29f918")
 	)
-	(wire
-		(pts
-			(xy 356.87 81.28) (xy 372.11 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ff35f667-5649-480b-9e69-011a06015b18")
-	)
 	(global_label "1_send2R"
 		(shape input)
-		(at 356.87 83.82 0)
+		(at 334.01 74.93 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "13bc2f54-3707-4bbb-a42b-cbc33577e099")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 368.9265 83.82 0)
+			(at 321.9535 74.93 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5295,7 +5413,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 	)
@@ -5421,7 +5539,7 @@
 	)
 	(global_label "1_send1L"
 		(shape input)
-		(at 344.17 76.2 180)
+		(at 334.01 67.31 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5431,7 +5549,7 @@
 		)
 		(uuid "3bf2d263-ea22-48e0-9c79-872212bb2888")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 332.3554 76.2 0)
+			(at 322.1954 67.31 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5541,7 +5659,7 @@
 	)
 	(global_label "1_send3L"
 		(shape input)
-		(at 344.17 86.36 180)
+		(at 334.01 77.47 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5551,7 +5669,7 @@
 		)
 		(uuid "5d5e1e91-8926-418b-9788-8abbdb5dffb7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 332.3554 86.36 0)
+			(at 322.1954 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5589,17 +5707,17 @@
 	)
 	(global_label "1_send1R"
 		(shape input)
-		(at 356.87 78.74 0)
+		(at 334.01 69.85 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "60b87a60-3b5e-4596-a5e7-2c601ccf58d4")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 368.9265 78.74 0)
+			(at 321.9535 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5607,7 +5725,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 	)
@@ -5637,7 +5755,7 @@
 	)
 	(global_label "1_send2L"
 		(shape input)
-		(at 344.17 81.28 180)
+		(at 334.01 72.39 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5647,31 +5765,7 @@
 		)
 		(uuid "666c3a58-11c9-4024-9e82-aba6b1e8dff6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 332.3554 81.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
-	(global_label "1_send4L"
-		(shape input)
-		(at 185.42 190.5 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "7738d06e-51fc-42e6-bf52-abcedb19d228")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 173.6054 190.5 0)
+			(at 322.1954 72.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5728,30 +5822,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-	)
-	(global_label "1_send4R"
-		(shape input)
-		(at 356.87 93.98 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "8ea9d7b6-9889-4675-b395-70d13dfbc3ea")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 368.9265 93.98 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 	)
@@ -5923,30 +5993,6 @@
 			)
 		)
 	)
-	(global_label "1_send4R"
-		(shape input)
-		(at 185.42 198.12 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e2adce89-e3b3-49de-aa8c-fa6adfb06208")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 173.3635 198.12 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "1_3L"
 		(shape output)
 		(at 356.87 107.95 0)
@@ -5971,9 +6017,9 @@
 			)
 		)
 	)
-	(global_label "1_send4L"
+	(global_label "1_send4"
 		(shape input)
-		(at 344.17 91.44 180)
+		(at 334.01 82.55 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5983,7 +6029,7 @@
 		)
 		(uuid "eb4f1430-a49b-40e0-abaa-bebab09bbcad")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 332.3554 91.44 0)
+			(at 323.2235 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6069,17 +6115,17 @@
 	)
 	(global_label "1_send3R"
 		(shape input)
-		(at 356.87 88.9 0)
+		(at 334.01 80.01 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "fe72190b-ba94-4459-87d8-a6e8cc7e47b6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 368.9265 88.9 0)
+			(at 321.9535 80.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6087,7 +6133,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 	)
@@ -6340,7 +6386,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 266.7 190.5 0)
 		(mirror x)
 		(unit 1)
@@ -6361,7 +6407,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 269.494 194.564 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6371,7 +6417,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 266.7 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -6382,7 +6428,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 266.7 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -6393,7 +6439,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 266.7 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -6527,7 +6573,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 241.3 209.55 0)
 		(mirror x)
 		(unit 2)
@@ -6548,7 +6594,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 244.348 213.36 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6558,7 +6604,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 241.3 209.55 0)
 			(hide yes)
 			(show_name no)
@@ -6569,7 +6615,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 241.3 209.55 0)
 			(hide yes)
 			(show_name no)
@@ -6580,7 +6626,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 241.3 209.55 0)
 			(hide yes)
 			(show_name no)
@@ -8713,8 +8759,9 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_02x08_Odd_Even")
-		(at 349.25 83.82 0)
+		(lib_id "Connector:Conn_01x08_Pin")
+		(at 339.09 74.93 0)
+		(mirror y)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -8722,10 +8769,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "3d65a41c-6738-4d15-b7da-e76712b1944a")
 		(property "Reference" "J1"
-			(at 350.52 69.85 0)
+			(at 338.455 62.23 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8734,8 +8780,8 @@
 				)
 			)
 		)
-		(property "Value" "Conn_02x08_Odd_Even"
-			(at 350.52 72.39 0)
+		(property "Value" "CV_IN"
+			(at 338.455 64.77 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8745,7 +8791,7 @@
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_2.54mm:PinSocket_2x08_P2.54mm_Vertical"
-			(at 349.25 83.82 0)
+			(at 339.09 74.93 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8756,7 +8802,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 349.25 83.82 0)
+			(at 339.09 74.93 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8766,8 +8812,8 @@
 				)
 			)
 		)
-		(property "Description" "Generic connector, double row, 02x08, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 349.25 83.82 0)
+		(property "Description" "Generic connector, single row, 01x08, script generated"
+			(at 339.09 74.93 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8789,41 +8835,17 @@
 		(pin "8"
 			(uuid "05deaf78-a8b9-4889-a79d-4234da987cd2")
 		)
-		(pin "10"
-			(uuid "27a9d404-1c68-47e5-80fb-996ab8028882")
-		)
 		(pin "4"
 			(uuid "98eb3fb7-d628-45b0-94a4-7753eded9f09")
 		)
-		(pin "15"
-			(uuid "0bdb958d-d564-412e-b74d-ae53d25c2925")
-		)
 		(pin "1"
 			(uuid "7a24ee97-57e9-40a4-8d4a-3ecb51a729fc")
-		)
-		(pin "11"
-			(uuid "0d7fdb50-3d4d-4c39-9838-ab70e07001eb")
-		)
-		(pin "9"
-			(uuid "a4b2c120-aceb-40a5-aedb-8688815ffd17")
-		)
-		(pin "16"
-			(uuid "472efb7b-fa37-4cec-b2ca-a1cccb8b21bd")
 		)
 		(pin "2"
 			(uuid "7e13d97d-a736-4059-b3cc-adc413094424")
 		)
 		(pin "3"
 			(uuid "7e23b078-c05e-4d7c-8956-8c8928ff5e76")
-		)
-		(pin "14"
-			(uuid "712068fd-6120-4815-8c3a-4a48942daa31")
-		)
-		(pin "13"
-			(uuid "5283b9bd-afc3-4b50-bbc2-c5034f00445d")
-		)
-		(pin "12"
-			(uuid "91971e98-2802-4bf8-aa05-38526c5b0633")
 		)
 		(instances
 			(project "sends"
@@ -8998,6 +9020,83 @@
 			(project "sends"
 				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
 					(reference "#PWR027")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 325.12 85.09 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "4b72d36b-6087-4017-9c1f-e7881d7be184")
+		(property "Reference" "#PWR076"
+			(at 325.12 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 321.056 86.106 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 325.12 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 325.12 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "931be316-d50d-4cca-a088-681c7e5e0875")
+		)
+		(instances
+			(project "sends"
+				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
+					(reference "#PWR076")
 					(unit 1)
 				)
 			)
@@ -9187,7 +9286,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 240.03 125.73 0)
 		(mirror x)
 		(unit 2)
@@ -9208,7 +9307,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 243.078 129.54 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9218,7 +9317,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 240.03 125.73 0)
 			(hide yes)
 			(show_name no)
@@ -9229,7 +9328,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 240.03 125.73 0)
 			(hide yes)
 			(show_name no)
@@ -9240,7 +9339,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 240.03 125.73 0)
 			(hide yes)
 			(show_name no)
@@ -9451,7 +9550,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 265.43 68.58 0)
 		(mirror x)
 		(unit 1)
@@ -9472,7 +9571,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 268.224 72.644 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9482,7 +9581,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 265.43 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -9493,7 +9592,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 265.43 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -9504,7 +9603,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 265.43 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -10160,83 +10259,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 328.93 93.98 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6172e2e7-96f2-498f-9ea7-f3c8fe039517")
-		(property "Reference" "#PWR060"
-			(at 328.93 100.33 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 324.866 94.996 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 328.93 93.98 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 93.98 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 328.93 93.98 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0987c41f-6d24-40f4-84d3-a6fd8268f89f")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR060")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R_US")
 		(at 157.48 187.96 90)
 		(unit 1)
@@ -10661,7 +10683,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 241.3 171.45 0)
 		(mirror x)
 		(unit 2)
@@ -10682,7 +10704,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 244.094 175.768 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10692,7 +10714,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 241.3 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -10703,7 +10725,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 241.3 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -10714,7 +10736,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 241.3 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -11494,7 +11516,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 298.45 186.69 0)
 		(unit 3)
 		(body_style 1)
@@ -11516,7 +11538,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 297.18 187.9599 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11527,7 +11549,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 298.45 186.69 0)
 			(hide yes)
 			(show_name no)
@@ -11538,7 +11560,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 298.45 186.69 0)
 			(hide yes)
 			(show_name no)
@@ -11549,7 +11571,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 298.45 186.69 0)
 			(hide yes)
 			(show_name no)
@@ -11772,7 +11794,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
+		(lib_id "Device:C_Polarized_Small")
 		(at 109.22 181.61 0)
 		(mirror y)
 		(unit 1)
@@ -11827,7 +11849,7 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
+		(property "Description" "Polarized capacitor, small symbol"
 			(at 109.22 181.61 0)
 			(hide yes)
 			(show_name no)
@@ -12215,9 +12237,9 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
+		(lib_id "Device:C_Polarized_Small")
 		(at 78.74 201.93 0)
-		(mirror y)
+		(mirror x)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -12227,7 +12249,7 @@
 		(dnp no)
 		(uuid "8624b916-90aa-4492-82fe-7dcfcaabcb13")
 		(property "Reference" "C31"
-			(at 82.804 200.152 0)
+			(at 72.136 203.708 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12238,7 +12260,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 83.82 203.962 0)
+			(at 73.66 199.898 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12270,7 +12292,7 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
+		(property "Description" "Polarized capacitor, small symbol"
 			(at 78.74 201.93 0)
 			(hide yes)
 			(show_name no)
@@ -12331,6 +12353,7 @@
 		)
 		(property "Value" "GND"
 			(at 336.296 154.686 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12701,160 +12724,6 @@
 			(project "sends"
 				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
 					(reference "R2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 328.93 78.74 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "911eda6e-6399-4337-b7c1-a30b7bda92f7")
-		(property "Reference" "#PWR045"
-			(at 328.93 85.09 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 324.866 79.756 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 328.93 78.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 78.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 328.93 78.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "d8f387f4-1ec6-4083-9a2c-f6b66acb66b7")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR045")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 372.11 81.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "91456b51-328d-4940-96a0-76338cf1b22a")
-		(property "Reference" "#PWR047"
-			(at 372.11 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 376.428 82.296 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 372.11 81.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 372.11 81.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 372.11 81.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ee46b641-5623-4ead-a06c-645921c91e82")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR047")
 					(unit 1)
 				)
 			)
@@ -13383,83 +13252,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 372.11 86.36 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "9c76f214-626e-4c2e-93f2-798675659f2b")
-		(property "Reference" "#PWR048"
-			(at 372.11 92.71 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 376.428 87.376 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 372.11 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 372.11 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 372.11 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "9655bba9-b331-48b7-bfa6-541d13eb37f3")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR048")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+16.6V")
 		(at 294.64 57.15 0)
 		(unit 1)
@@ -13917,7 +13709,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 298.45 102.87 0)
 		(unit 3)
 		(body_style 1)
@@ -13939,7 +13731,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 297.18 104.1399 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13950,7 +13742,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 298.45 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -13961,7 +13753,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 298.45 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -13972,7 +13764,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 298.45 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -14442,7 +14234,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 297.18 64.77 0)
 		(unit 3)
 		(body_style 1)
@@ -14464,7 +14256,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 295.91 66.0399 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14475,7 +14267,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 297.18 64.77 0)
 			(hide yes)
 			(show_name no)
@@ -14486,7 +14278,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 297.18 64.77 0)
 			(hide yes)
 			(show_name no)
@@ -14497,7 +14289,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 297.18 64.77 0)
 			(hide yes)
 			(show_name no)
@@ -14903,7 +14695,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 240.03 87.63 0)
 		(mirror x)
 		(unit 2)
@@ -14924,7 +14716,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 243.078 91.948 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14934,7 +14726,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 240.03 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -14945,7 +14737,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 240.03 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -14956,7 +14748,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 240.03 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -15669,7 +15461,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 298.45 148.59 0)
 		(unit 3)
 		(body_style 1)
@@ -15691,7 +15483,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 297.18 149.8599 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15702,7 +15494,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 298.45 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -15713,7 +15505,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 298.45 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -15724,7 +15516,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 298.45 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -15775,83 +15567,6 @@
 				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
 					(reference "U6")
 					(unit 3)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 328.93 83.82 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c5bd8387-33a3-4fa6-a860-f0ea7b1c4b9b")
-		(property "Reference" "#PWR058"
-			(at 328.93 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 324.866 84.836 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 328.93 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 328.93 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "96ed10e0-211c-47f1-9709-3f1ae9c15d0e")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR058")
-					(unit 1)
 				)
 			)
 		)
@@ -16546,7 +16261,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
+		(lib_id "Device:C_Polarized_Small")
 		(at 78.74 181.61 0)
 		(mirror y)
 		(unit 1)
@@ -16558,7 +16273,7 @@
 		(dnp no)
 		(uuid "d795025e-3d91-4810-8de0-2d1c1cc690d8")
 		(property "Reference" "C30"
-			(at 82.804 179.832 0)
+			(at 84.074 179.832 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16601,7 +16316,7 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
+		(property "Description" "Polarized capacitor, small symbol"
 			(at 78.74 181.61 0)
 			(hide yes)
 			(show_name no)
@@ -16809,237 +16524,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 372.11 91.44 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "dbd823c9-0a9c-4c48-919d-42ca3f383b7e")
-		(property "Reference" "#PWR049"
-			(at 372.11 97.79 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 376.428 92.456 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 372.11 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 372.11 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 372.11 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ca7f8f52-d4e5-4c49-a6d3-41e91ddb0bb4")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR049")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 328.93 88.9 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "dd552c15-c61d-4c39-a968-5ad81a3ea8e4")
-		(property "Reference" "#PWR059"
-			(at 328.93 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 324.866 89.916 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 328.93 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 328.93 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "968ae877-a644-4697-b5e4-c9351b39c385")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR059")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 372.11 76.2 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "df07da70-8e85-40b2-9468-7324c75d3ea8")
-		(property "Reference" "#PWR046"
-			(at 372.11 82.55 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 376.428 77.216 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 372.11 76.2 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 372.11 76.2 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 372.11 76.2 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "831c3c08-79fb-4ff0-935c-93738ff075ac")
-		)
-		(instances
-			(project "sends"
-				(path "/4a247955-b1a1-46a4-9d5c-81247d542eb5"
-					(reference "#PWR046")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:-16.6V")
 		(at 93.98 198.12 0)
 		(unit 1)
@@ -17194,7 +16678,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 265.43 106.68 0)
 		(mirror x)
 		(unit 1)
@@ -17215,7 +16699,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 268.478 110.49 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17225,7 +16709,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 265.43 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -17236,7 +16720,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 265.43 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -17247,7 +16731,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 265.43 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -17547,7 +17031,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Amplifier_Operational:NE5532")
+		(lib_id "Amplifier_Operational:OPA1678")
 		(at 266.7 152.4 0)
 		(mirror x)
 		(unit 1)
@@ -17568,7 +17052,7 @@
 				)
 			)
 		)
-		(property "Value" "NE5532"
+		(property "Value" "OPA1678"
 			(at 269.748 156.464 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17578,7 +17062,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x6.2mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 266.7 152.4 0)
 			(hide yes)
 			(show_name no)
@@ -17589,7 +17073,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ne5532.pdf"
+		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa1678.pdf"
 			(at 266.7 152.4 0)
 			(hide yes)
 			(show_name no)
@@ -17600,7 +17084,7 @@
 				)
 			)
 		)
-		(property "Description" "Dual Low-Noise Operational Amplifiers, DIP-8/SOIC-8"
+		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-8/VSSOP-8"
 			(at 266.7 152.4 0)
 			(hide yes)
 			(show_name no)
