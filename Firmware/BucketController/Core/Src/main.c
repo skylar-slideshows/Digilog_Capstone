@@ -29,7 +29,7 @@
 #include "CONFIG.h"
 #include "cmsis_os2.h"
 #include "hardware_drivers/i2c_driver.h"
-#include "hardware_drivers/mcp23017_driver.h"
+#include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728.h"
 #include "hardware_drivers/led_driver.h"
 #include "stm32g474xx.h"

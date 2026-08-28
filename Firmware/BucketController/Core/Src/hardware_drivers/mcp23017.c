@@ -2,7 +2,7 @@
   **********************************************************************************
   * MCP23017 GPIO EXPANDER DRIVER - DIGILOG CONSOLE (Bucket)
   **********************************************************************************
-  * @file hardware_drivers/mcp23017_driver.c
+  * @file hardware_drivers/mcp23017.c
   * @brief 
   *
   * @author Skylar Denno (denno.o@northeastern.edu), Darya Petrova (petrov.da@northeastern.edu)
@@ -32,7 +32,7 @@
   **********************************************************************************
 */
 
-#include "hardware_drivers/mcp23017_driver.h"
+#include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/i2c_driver.h"
 #include <stdbool.h>
 #include "stm32g474xx.h"

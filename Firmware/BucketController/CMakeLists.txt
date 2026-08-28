@@ -111,7 +111,7 @@ endif()
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/led_driver.c
     Core/Src/hardware_drivers/i2c_driver.c
-    Core/Src/hardware_drivers/mcp23017_driver.c
+    Core/Src/hardware_drivers/mcp23017.c
     Core/Src/hardware_drivers/mcp4728.c
     Core/Src/hardware_drivers/rotary_encoder.c
     Core/Src/control_voltage.c

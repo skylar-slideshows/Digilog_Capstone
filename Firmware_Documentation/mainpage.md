@@ -5,10 +5,11 @@ Browse the <a href="files.html">full file list</a>, or here is some of the most 
 Bucket Controller
 
 - [CONFIG.h](@ref CONFIG.h) - Main configuration file
-- [mcp23017_driver.h](@ref mcp23017_driver.h) - Functions to interface with MCP23017 GPIO expander
-- [mcp4728_driver.h](@ref mcp4728_driver.h) - Functions to interface with MCP4728 quad DAC
+- [mcp23017.h](@ref mcp23017.h) - Functions to interface with MCP23017 GPIO expander
+- [mcp4728.c](@ref mcp4728.c) - Functions to interface with MCP4728 quad DAC
 - [i2c_driver.h](@ref i2c_driver.h) - I2C functions
 - [led_driver.h](@ref led_driver.h) - Functions to control LED and knob ring displays
+- [rotary_encoder.h](@ref rotary_encoder.h) - Functions to find the status and motion of the EC11 rotary encoders
 - [control_voltage.h](@ref control_voltage.h) - Control voltage generation engine header
 - [console_state_bucket.h](@ref console_state_bucket.h) - Header file for console parameter data saving and reporting code (for the bucket controller)
 - LCD DISPLAY DRIVER (need)
