@@ -31,6 +31,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728.h"
+#include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/led_driver.h"
 #include "stm32g474xx.h"
 
@@ -116,6 +117,8 @@ int __io_putchar(int ch)
   return ch;
 }
 
+encoder_state enc0;
+encoder_info enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_pin=0, .b_pin=1, .mcp_register=MCP_GPIOB };
 
 /* USER CODE END 0 */
 
@@ -127,6 +130,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+
+  
 
   /* USER CODE END 1 */
 
@@ -197,6 +202,8 @@ int main(void)
 
   }
 
+  get_encoder_motion(enc0_info, enc0, &enc0);
+
   /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
 
 
@@ -243,6 +250,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+
 
     /* USER CODE BEGIN 3 */
   }
@@ -1018,14 +1027,34 @@ void StartDefaultTask(void *argument)
 
   knob_scale(0, 0, SCALE_LEFT);
   knob_disp(0, 0, 0);
-  
-  knob_led(0, 0, 32);
+  knob_led(0, 0, 0);
   led_update();
+
+  uint8_t knob = 0;
+  uint8_t knob_sens_mult = 2;
+  
 
   for (;;)
   {
-    anim_breathe(0);
-    osDelay(32);
+    encoder_turn_action enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
+
+    if(enc0_turn == ENCODER_TURN_A) // LEFT
+    {
+
+      // printf("\r\nLEFT\n");
+      if(knob > 0) { knob--; }
+      knob_led(0, 0, knob / knob_sens_mult);
+      led_update();
+
+    } else if(enc0_turn == ENCODER_TURN_B) // RIGHT
+    {
+
+      // printf("\r\nRIGHT\n");
+      if(knob < 32*knob_sens_mult) { knob++; }
+      knob_led(0, 0, knob / knob_sens_mult);
+      led_update();
+
+    }
   }
 
 

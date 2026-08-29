@@ -60,7 +60,6 @@ typedef struct
     MCP23017_Reg mcp_register; // Either MCP_GPIOA or MCP_GPIOB
     uint8_t a_pin;             // Pin on MCP23017 which encoder output A is connected to
     uint8_t b_pin;             // Pin on MCP23017 which encoder output B is connected to
-    uint8_t btn_pin;           // Pin on the MCP23017
 } encoder_info;
 
 /**

@@ -66,13 +66,6 @@
 /*=============================== STATE ================================*/
 /* All data stored by the driver is here */
 
-typedef struct
-{
-    int8_t  val;
-    uint8_t disp: 1;
-    uint8_t scale: 1;
-} knob_t;
-
 static uint8_t  frame[FRAME_BYTES];
 static knob_t   knobs[NUM_KNOBS];
 static uint8_t  bright = 255;
@@ -239,16 +232,16 @@ void knob_led(uint8_t channel, uint8_t knob, int8_t value)
 
     if (value < lo || value > hi)
     {
-        if(DEVELOPER_MODE) printf("LED ERR: ch%u k%u value %d outside [%d,%d], clamped\n",
-            channel, knob, value, lo, hi);
+        /*if(DEVELOPER_MODE) printf("LED ERR: ch%u k%u value %d outside [%d,%d], clamped\n",
+            channel, knob, value, lo, hi);*/
         value = (value < lo) ? lo : hi;
     }
 
     knob_p->val = value;
     knob_render(channel_idx, knob_idx);
     dirty = true;
-    if(DEVELOPER_MODE) printf("LED: ch%u k%u = %d (%s/%s)\n", channel, knob, value,
-        knob_p->scale ? "CENTER" : "LEFT", knob_p->disp ? "POINT" : "BAR");
+    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u = %d (%s/%s)\n", channel, knob, value,
+        knob_p->scale ? "CENTER" : "LEFT", knob_p->disp ? "POINT" : "BAR");*/
 }
 
 /**
@@ -261,7 +254,11 @@ void knob_step(uint8_t channel, uint8_t knob, int8_t delta)
 {
     uint8_t channel_idx, knob_idx;
     if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
-    knob_led(channel, knob, (int8_t)(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta));
+    if(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta > 32)
+    {
+        knob_led(channel, knob, (int8_t)(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta));
+    }
+    return;
 }
 
 
@@ -594,7 +591,7 @@ void led_init(void)
     LED_OE_PORT->BOYMODER = (LED_OE_PORT->BOYMODER & ~(3U << (LED_OE_PIN * 2))) | (2U << (LED_OE_PIN * 2));
 
     led_brightness(bright); // set chosen starting brightness
-    if (DEVELOPER_MODE) { printf("LED: init done\n"); led_print_config(); }
+    //if (DEVELOPER_MODE) { printf("LED: init done\n"); led_print_config(); }
 }
 
 
