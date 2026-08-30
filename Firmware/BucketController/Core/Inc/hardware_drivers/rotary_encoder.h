@@ -40,20 +40,33 @@
 #include "stm32g474xx.h"
 
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief High/Low states of the encoder's A/B pins
+ ----------------------------------------------------------------------------------
+*/
 typedef struct
 {
-    bool a;
-    bool b;
+    bool a; //!< High/Low state of the encoder's A pin
+    bool b; //!< High/Low state of the encoder's B pin
 } encoder_state_t;
 
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief I2C / pin information on how to reach the rotary encoder
+
+  An I2C bus/address to the GPIO expander that the encoder is on, and the pin information on that GPIO expander
+ ----------------------------------------------------------------------------------
+*/
 typedef struct
 {
-    I2C_TypeDef *i2c_bus;      // i2c bus which the associated GPIO expander is connected to
-    uint8_t i2c_addr;          // Address of the associated GPIO expander on i2c_bus
-    MCP23017_Reg a_register;   // MCP_GPIOA or MCP_GPIOB
-    uint8_t a_pin;             // Pin on MCP23017 which encoder output A is connected to
-    MCP23017_Reg b_register;   // MCP_GPIOA or MCP_GPIOB
-    uint8_t b_pin;             // Pin on MCP23017 which encoder output B is connected to
+    I2C_TypeDef *i2c_bus;      //!< i2c bus which the associated GPIO expander is connected to
+    uint8_t i2c_addr;          //!< Address of the associated GPIO expander on i2c_bus
+    MCP23017_Reg a_register;   //!< MCP_GPIOA or MCP_GPIOB
+    uint8_t a_pin;             //!< Pin on MCP23017 which encoder output A is connected to
+    MCP23017_Reg b_register;   //!< MCP_GPIOA or MCP_GPIOB
+    uint8_t b_pin;             //!< Pin on MCP23017 which encoder output B is connected to
 } encoder_info_t;
 
 
