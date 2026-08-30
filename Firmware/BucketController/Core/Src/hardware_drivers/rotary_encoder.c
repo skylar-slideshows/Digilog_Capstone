@@ -47,7 +47,10 @@
   @param out
  ----------------------------------------------------------------------------------
 */
-static bool poll_encoder_state (encoder_info *encoder, encoder_state *out)
+static bool poll_encoder_state (
+    encoder_info_t *encoder, //!< A pointer to location information of the encoder that should be polled
+    encoder_state_t *out     //!< A pointer to a struct where the encoder's pin states will be stored
+)
 {
     uint8_t ports[2];   // [0] = GPIOA, [1] = GPIOB
     if (!mcp23017_read(encoder->i2c_bus, encoder->i2c_addr, ports)) return false;
@@ -60,13 +63,13 @@ static bool poll_encoder_state (encoder_info *encoder, encoder_state *out)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief INTERNAL encoder_turn_action : encoder_state, encoder_state
-  // Darya please add the brief description here
-  @param from
-  @param to
+  @brief Determine how a rotary encoder was turned between two polled states
  ----------------------------------------------------------------------------------
 */
-static encoder_turn_action get_encoder_turn_action (encoder_state *from, encoder_state *to)
+static encoder_turn_action_t get_encoder_turn_action (
+    encoder_state_t *from, //!< The starting state of the rotary encoder
+    encoder_state_t *to    //!< The ending state of the rotary encoder
+)
 {
     bool a_change = from->a ^ to->a;
     bool b_change = from->b ^ to->b;
@@ -91,22 +94,13 @@ static encoder_turn_action get_encoder_turn_action (encoder_state *from, encoder
 }
 
 
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC get_encoder_motion : encoder info, previous encoder state -> encoder rotation direction, new encoder state
-  Returns an encoder_turn_action detailing how the rotary encoder has moved
-  @param encoder connection configuration of the rotary encoder to read
-  @param previous_state last polled state of the rotary encoder
-  @param new_state pointer to an encoder_state object in which to store the polled state of the rotary encoder
- ----------------------------------------------------------------------------------
-*/
-encoder_turn_action get_encoder_motion (
-    encoder_info encoder,         // address/location of encoder to poll
-    encoder_state previous_state, // previous polled state of the encoder
-    encoder_state *new_state      // pointer to location for saving new polled state of encoder
+encoder_turn_action_t get_encoder_motion (
+    encoder_info_t encoder,         // address/location of encoder to poll
+    encoder_state_t previous_state, // previous polled state of the encoder
+    encoder_state_t *new_state      // pointer to location for saving new polled state of encoder
 )
 {
-    encoder_state new_polled_state;
+    encoder_state_t new_polled_state;
     bool poll_succeeded = poll_encoder_state(&encoder, &new_polled_state);
 
     if (!poll_succeeded)
@@ -114,7 +108,7 @@ encoder_turn_action get_encoder_motion (
         return ENCODER_TURN_ERROR;
     }
 
-    encoder_turn_action turn_action = get_encoder_turn_action(&previous_state, &new_polled_state);
+    encoder_turn_action_t turn_action = get_encoder_turn_action(&previous_state, &new_polled_state);
 
     *new_state = new_polled_state;
     return turn_action;

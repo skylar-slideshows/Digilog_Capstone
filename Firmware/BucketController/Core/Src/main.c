@@ -117,8 +117,8 @@ int __io_putchar(int ch)
   return ch;
 }
 
-encoder_state enc0;
-encoder_info enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=0, .b_register=MCP_GPIOB, .b_pin=1 };
+encoder_state_t enc0;
+encoder_info_t enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=0, .b_register=MCP_GPIOB, .b_pin=1 };
 
 /* USER CODE END 0 */
 
@@ -1037,7 +1037,7 @@ void StartDefaultTask(void *argument)
 
   for (;;)
   {
-    encoder_turn_action enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
+    encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
 
     if(enc0_turn == ENCODER_TURN_A) // LEFT
     {

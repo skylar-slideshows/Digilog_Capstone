@@ -2,7 +2,7 @@
 
 ### Capstone, 2026, Northeastern University Department of Electrical Engineering
 
-### Contributors: Skylar Denno, Evan Forcucci, Daniil Petrov, Xinhao Chen, Luke Garrity, Daniel Salas
+### Contributors: Skylar Denno, Evan Forcucci, Darya Petrova, Xinhao Chen, Luke Garrity, Daniel Salas
 
 ### Advisor: [Milad Siami](https://coe.northeastern.edu/people/siami-milad/)
 
