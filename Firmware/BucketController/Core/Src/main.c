@@ -107,7 +107,7 @@ void StartDefaultTask(void *argument);
 
 
 // start usart2 usb debug
-// picocom -b 115200 /dev/cu.usbmodem11203
+// picocom -b 115200 /dev/cu.usbmodem#####
 int __io_putchar(int ch)
 {
   if (DEVELOPER_MODE)
@@ -118,7 +118,7 @@ int __io_putchar(int ch)
 }
 
 encoder_state enc0;
-encoder_info enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_pin=0, .b_pin=1, .mcp_register=MCP_GPIOB };
+encoder_info enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=0, .b_register=MCP_GPIOB, .b_pin=1 };
 
 /* USER CODE END 0 */
 
@@ -175,7 +175,7 @@ int main(void)
   {
     setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
 
-    i2c_debug_init();
+    i2c_init();
     printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
@@ -1021,7 +1021,6 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN 5 */
 
 
-  // cute little animation thing
   led_init();
   led_brightness(10);
 
@@ -1029,6 +1028,8 @@ void StartDefaultTask(void *argument)
   knob_disp(0, 0, 0);
   knob_led(0, 0, 0);
   led_update();
+
+  mcp23017_init(I2C1, 0x20);
 
   uint8_t knob = 0;
   uint8_t knob_sens_mult = 2;
@@ -1041,7 +1042,7 @@ void StartDefaultTask(void *argument)
     if(enc0_turn == ENCODER_TURN_A) // LEFT
     {
 
-      // printf("\r\nLEFT\n");
+      //printf("\r\nLEFT\n");
       if(knob > 0) { knob--; }
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();
@@ -1049,14 +1050,14 @@ void StartDefaultTask(void *argument)
     } else if(enc0_turn == ENCODER_TURN_B) // RIGHT
     {
 
-      // printf("\r\nRIGHT\n");
+      //printf("\r\nRIGHT\n");
       if(knob < 32*knob_sens_mult) { knob++; }
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();
 
     }
+    
   }
-
 
   /* USER CODE END 5 */
 }

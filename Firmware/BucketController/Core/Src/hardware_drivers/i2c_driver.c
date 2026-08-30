@@ -46,12 +46,12 @@
 #include "stm32g4xx_ll_i2c.h"
 #include "system_stm32g4xx.h"
 #include <stdbool.h>
-#include "hardware_drivers/i2c_driver.h"
 #include "CONFIG.h"
+#include <stdio.h>
 
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
 #define BUDGET_LIMIT ((I2C_SLOT_PERIOD_US * 92) / 100) // max time budget during send frame.
-#define TIMEOUT_CYCLES ((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U
+static uint32_t timeout_cycles;
 
 
 /*=============================== LOW LEVEL HELPERS ================================*/
@@ -70,7 +70,7 @@ static bool wait_flag(I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
         if (isr & flag)                             return true;
         if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false; // flag will never reach with NACK
         if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO))    return false;
-        if ((DWT->CYCCNT - time0) > TIMEOUT_CYCLES) return false;
+        if ((DWT->CYCCNT - time0) > timeout_cycles) return false;
     }
 }
 
@@ -99,7 +99,7 @@ static bool bus_idle(I2C_TypeDef *bus)
     clear_flags(bus);
     uint32_t t0 = DWT->CYCCNT;
     while (bus->ISR & I2C_ISR_BUSY)
-        if ((DWT->CYCCNT - t0) > TIMEOUT_CYCLES) return false;
+        if ((DWT->CYCCNT - t0) > timeout_cycles) return false;
     return true;
 }
 
@@ -118,7 +118,7 @@ static void abort_transfer(I2C_TypeDef *bus)
         bus->CR2 |= I2C_CR2_STOP;
         uint32_t t0 = DWT->CYCCNT;
         while ((bus->ISR & I2C_ISR_BUSY) &&
-               (DWT->CYCCNT - t0) < TIMEOUT_CYCLES) { }
+               (DWT->CYCCNT - t0) < timeout_cycles) { }
         if (bus->ISR & I2C_ISR_BUSY) {
             LL_I2C_Disable(bus);
             LL_I2C_Enable(bus);
@@ -137,14 +137,15 @@ static void abort_transfer(I2C_TypeDef *bus)
   @brief PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4
  ----------------------------------------------------------------------------------
 */
-void i2c_debug_init(void)
+void i2c_init(void)
 {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk))
-    {
+    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk)) {
         DWT->CYCCNT = 0;
         DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
     }
+    timeout_cycles = (uint64_t)(((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U);
+    printf("timeout_cycles=%lu (want 340000)\r\n", timeout_cycles);
 }
 
 
@@ -261,6 +262,6 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
 */
 bool i2c_probe (I2C_TypeDef *bus, uint8_t addr)
 {
-    uint8_t test_byte = 0xAA;
-    return i2c_write(bus, addr, &test_byte, sizeof(test_byte));
+    uint8_t dummy[2];
+    return i2c_read(bus, addr, dummy, 2);
 }

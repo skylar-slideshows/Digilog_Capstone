@@ -8,15 +8,6 @@ cmake_minimum_required(VERSION 3.22)
 #
 
 
-# ADD YOUR SOURCE TO THE BUILD
-
-#target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-#    Core/Src/cfile.c
-#)
-
-# ^^ put at bottom
-
-
 
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)

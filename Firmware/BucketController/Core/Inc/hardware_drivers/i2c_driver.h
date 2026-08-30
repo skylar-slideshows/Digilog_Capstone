@@ -170,9 +170,9 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief i2c_debug_init : Initialize the i2c busses
+  @brief i2c_init : Initialize the i2c busses
  ----------------------------------------------------------------------------------
 */
-void i2c_debug_init(void);
+void i2c_init(void);
 
 #endif

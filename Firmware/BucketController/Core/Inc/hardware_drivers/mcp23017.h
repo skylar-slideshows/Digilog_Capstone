@@ -76,14 +76,15 @@ typedef uint8_t MCP23017_Reg;
 /**
  ----------------------------------------------------------------------------------
   @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
-  Reads one register ALWAYS EXACTLY TWO BYTES.
+  Reads both GPIOA and GOIPB registers in one transaction ALWAYS EXACTLY TWO BYTES.
   @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
   @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
-  @param reg what register to read from (MCP_GPIOA/B)
-  @param value pointer to where to save full byte read in (each of the pin's bit for the 8 pin reg)
+  @param out pointer to output bytes [2]
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t *value);
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *out);
+
+bool mcp23017_init_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg,uint8_t *out);
 
 
 /**

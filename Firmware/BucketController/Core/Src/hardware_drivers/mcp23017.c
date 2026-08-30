@@ -40,14 +40,26 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
-  Reads one register ALWAYS EXACTLY TWO BYTES.
+  @brief PRIVATE mcp23017_init_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  SPECIFY REGISTER, NOT FOR THE SCHEDULER (DATA INTENSIVE)
  ----------------------------------------------------------------------------------
 */
-bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t *value)
+bool mcp23017_init_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t *value)
 {
     if(!i2c_write(bus, addr, &reg, 1)) return false; // set pointer
     return i2c_read(bus, addr, value, 1); // read 1 byte
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), output -> bool
+  Reads both GPIOA and B registers ALWAYS EXACTLY TWO BYTES.
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
+{
+    return i2c_read(bus, addr, out, 2);
 }
 
 
@@ -90,7 +102,7 @@ bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr)
     if(!mcp23017_write(bus, addr, MCP_IPOLB,  0x00)) return false;
 
     // check to make sure sequential mode (above) is off
-    if(!mcp23017_read(bus, addr, MCP_IOCONA, &iocon)) return false;
+    if(!mcp23017_init_read(bus, addr, MCP_IOCONA, &iocon)) return false;
     if(!(iocon & IOCON_SEQOP)) return false;
 
      // park the pointer (permanately since seq mode off) @ gpioA
