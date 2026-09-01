@@ -1,4 +1,41 @@
-/** @file mcp4728.h */
+/**
+  **********************************************************************************
+  * MCP4728 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
+  **********************************************************************************
+  * @file mcp4728.h
+  * @brief MCP4728s are scanned at constant rate on I2C, and no interrupt
+  *        pins are used, for simplicity. The necessary parts for this case are included.
+  *
+  * Transcribed from MCP4728 DS22187E.
+  * This file is the transcription boundary: every number below was copied
+  * from a PDF by hand. Re-check it against the datasheet revision for the
+  * silicon actually being purchased before a production run.
+  *
+  * @author Darya Petrova (petrov.da@northeastern.edu)
+  * @date 2026-09-01
+  * @version 1.0
+  *
+  * @attention
+  *  Copyright (C) 2026 Skylar Denno
+  *
+  *  MIT License:
+  *  Permission is hereby granted, free of charge, to any person obtaining a copy
+  *  of this software and associated documentation files (the “Software”), to deal
+  *  in the Software without restriction, including without limitation the rights
+  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+  *  of the Software, and to permit persons to whom the Software is furnished to do so,
+  *  subject to the following conditions:
+  *
+  *  The above copyright notice and this permission notice shall be included in all
+  *  copies or substantial portions of the Software.
+  *  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  *  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+  *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  *  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  **********************************************************************************
+*/
 
 #ifndef INC_MCP4728_H_
 #define INC_MCP4728_H_
@@ -15,7 +52,7 @@
  * 0: The chip's VDD input is used as a reference voltage
  * 1: The chip's internal 2.048V reference is used
  *
- * e.g: 0b00001010, DAC channels B and D use the internal reference
+ * e.g: 0b00001010, DAC channels A and C use the internal reference
  */
 typedef uint8_t mcp4728_vref_selection_t;
 
@@ -28,7 +65,7 @@ typedef uint8_t mcp4728_vref_selection_t;
  * 0: The chip outputs with 1x gain
  * 1: The chip outputs with 2x gain
  *
- * e.g: 0b00001010, DAC channels B and D use 2x gain, while A and C use 1x gain
+ * e.g: 0b00001010, DAC channels A and C use 2x gain, while B and D use 1x gain
  */
 typedef uint8_t mcp4728_gain_selection_t;
 #define MCP4728_ALL_GAINS_1X ((mcp4728_gain_selection_t)0x00)
@@ -40,7 +77,7 @@ typedef uint8_t mcp4728_gain_selection_t;
  * 0: The chip outputs with 1x gain
  * 1: The chip outputs with 2x gain
  *
- * e.g: 0b11100100: A uses 0, B uses 1, C uses 2, D uses 3
+ * e.g: 0b11100100: A uses 3, B uses 2, C uses 1, D uses 0
  */
 typedef uint8_t mcp4728_power_mode_selection_t;
 #define MCP4728_PWRDWN_ALL_NORMAL 0x00
@@ -58,6 +95,9 @@ typedef uint8_t mcp4728_power_mode_selection_t;
  */
 typedef uint16_t mcp4728_output_value_t;
 
+/**
+ * @brief General i2c command used by the mcp4728
+ */
 typedef uint8_t mcp4728_general_command_t;
 #define MCP4728_GENERAL_RESET ((mcp4728_general_command_t)0x06)
 #define MCP4728_GENERAL_WKUP ((mcp4728_general_command_t)0x09)
@@ -65,7 +105,7 @@ typedef uint8_t mcp4728_general_command_t;
 #define MCP4728_GENERAL_READ_ADDR ((mcp4728_general_command_t)0x0C)
 
 /**
- * @brief 3-bit number (least-significant bits of a uint8_t) matching a command code of the mcp4728
+ * @brief 5-bit number (most-significant bits of a uint8_t) matching a command code of the mcp4728
  */
 typedef uint8_t mcp4728_command_code;
 #define MCP4728_FAST_WRITE ((mcp4728_command_code)0x00)
@@ -165,10 +205,9 @@ uint8_t mcp4728_generalCall (
  * @brief Performs a fast write operation on the MCP4728.
  *
  * This function performs a fast write operation on the MCP4728 device, updating
- * the DAC output values for all four channels in a single I2C transaction. It
- * then sends a general call command to update the outputs. Gain, voltage
- * reference, power mode options are not configurable. They are not changed in
- * the transaction. Prior values are used from EEPROM.
+ * the DAC output values for all four channels in a single I2C transaction. Gain,
+ * voltage reference, power mode options are not configurable. They are not changed
+ * in the transaction. Prior values are used.
  *
  * @return uint8_t Error code (0 for success)
  */
