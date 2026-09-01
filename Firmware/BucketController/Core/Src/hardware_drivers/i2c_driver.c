@@ -1,6 +1,6 @@
 /**
   **********************************************************************************
-  * I2C SCHEDULER AND DRIVER - DIGILOG CONSOLE
+  * I2C DRIVER - DIGILOG CONSOLE
   **********************************************************************************
   * @file i2c_driver.c
   * @brief Sets up and manages traffic on the four I2C busses. Polls the MCP23017

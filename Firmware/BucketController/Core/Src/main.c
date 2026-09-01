@@ -174,11 +174,12 @@ int main(void)
   if(DEVELOPER_MODE)
   {
     setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
-
-    i2c_init();
     printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
+
+    i2c_init();
+    printf("\r\n\n\n");
 
     uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
 
@@ -201,6 +202,8 @@ int main(void)
     }
 
   }
+
+  led_print_config();
 
   get_encoder_motion(enc0_info, enc0, &enc0);
 
@@ -1041,16 +1044,12 @@ void StartDefaultTask(void *argument)
 
     if(enc0_turn == ENCODER_TURN_A) // LEFT
     {
-
-      //printf("\r\nLEFT\n");
       if(knob > 0) { knob--; }
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();
 
     } else if(enc0_turn == ENCODER_TURN_B) // RIGHT
     {
-
-      //printf("\r\nRIGHT\n");
       if(knob < 32*knob_sens_mult) { knob++; }
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();

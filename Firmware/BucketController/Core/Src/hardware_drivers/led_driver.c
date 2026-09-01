@@ -274,7 +274,7 @@ void knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode)
     knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].disp = (uint8_t)(mode & 1u);
     knob_render(channel_idx, knob_idx);
     dirty = true;
-    if(DEVELOPER_MODE) printf("LED: ch%u k%u display = %s\n", channel, knob, mode ? "POINT" : "BAR");
+    //if(DEVELOPER_MODE) printf("LED: ch%u k%u display = %s\n", channel, knob, mode ? "POINT" : "BAR");
 }
 
 
@@ -304,8 +304,8 @@ void knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode)
         knob_render(channel_idx, knob_idx);
         dirty = true;
     }
-    if(DEVELOPER_MODE) printf("LED: ch%u k%u scale = %s, value now %d\n",
-        channel, knob, mode ? "CENTER" : "LEFT", knob_p->val);
+    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u scale = %s, value now %d\n",
+        channel, knob, mode ? "CENTER" : "LEFT", knob_p->val);*/
 }
 
 
@@ -323,8 +323,8 @@ void knob_raw(uint8_t channel, uint8_t knob, uint32_t bits)
     p[2] = (uint8_t)(bits >> 8);
     p[3] = (uint8_t)(bits);
     dirty = true;
-    if(DEVELOPER_MODE) printf("LED: ch%u k%u raw = 0x%08lX (state not updated)\n",
-        channel, knob, (unsigned long)bits);
+    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u raw = 0x%08lX (state not updated)\n",
+        channel, knob, (unsigned long)bits);*/
 }
 
 
@@ -481,7 +481,7 @@ void led_clear(void)
                                                    ? CENTER_MIN : 0;
     frame_out();
     dirty = false; PLEASE
-    if(DEVELOPER_MODE) printf("LED: cleared, %u bytes\n", FRAME_BYTES);
+    //if(DEVELOPER_MODE) printf("LED: cleared, %u bytes\n", FRAME_BYTES);
 }
 
 
@@ -509,7 +509,7 @@ void led_brightness(uint8_t brightness)
 {
     bright = brightness;
     oe_duty(brightness); PRETTY_PLEASE
-    if(DEVELOPER_MODE) printf("LED: brightness = %u\n", brightness);
+    //if(DEVELOPER_MODE) printf("LED: brightness = %u\n", brightness);
 }
 
 
@@ -602,15 +602,15 @@ void led_init(void)
 */
 void led_print_config(void)
 {
-    printf("LED driver: %u ch x (%u knobs x %u + %u btn) = %u LEDs, %u bytes\n",
+    printf("\r\nLED driver: %u ch x (%u knobs x %u + %u btn) = %u LEDs, %u bytes",
                CHANNELS, KNOBS_PER_CHAN, LEDS_PER_KNOB, BUTTONS_PER_CHAN,
                TOTAL_LEDS, FRAME_BYTES);
-    printf("  SER=P%c%u SRCLK=P%c%u RCLK=P%c%u OE=P%c%u\n",
+    printf("\r\n  SER=P%c%u SRCLK=P%c%u RCLK=P%c%u OE=P%c%u",
                'B', LED_SER_PIN, 'B', LED_SRCLK_PIN, 'B', LED_RCLK_PIN, 'C', LED_OE_PIN);
-    printf("  bit clock %lu Hz (%lu cyc/half), frame %lu us\n",
+    printf("\r\n  bit clock %lu Hz (%lu cyc/half), frame %lu us",
                (unsigned long)LED_SERIAL_HZ, (unsigned long)HALF_CYC,
                (unsigned long)(FRAME_BYTES * 8UL * 1000000UL / LED_SERIAL_HZ));
-    printf("  OE PWM %lu Hz, ARR %lu, brightness %u\n",
+    printf("\r\n  OE PWM %lu Hz, ARR %lu, brightness %u\n",
                (unsigned long)BRIGHTNESS_PWM_HZ, (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1), bright);
 }
 
@@ -697,23 +697,23 @@ void anim_sweep(uint8_t channel, uint8_t knob)
 {
     uint8_t channel_idx, knob_idx, idx, ph;
     knob_t *knob_p;
-    int8_t  v;
+    int8_t v;
 
     if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
     anim_claim(ANIM_SWEEP);
 
     idx = (uint8_t)(channel_idx * KNOBS_PER_CHAN + knob_idx);
-    knob_p   = &knobs[idx];
-    ph  = anim_phase[idx];
+    knob_p = &knobs[idx];
+    ph = anim_phase[idx];
 
     if (knob_p->scale == SCALE_LEFT) {
         if (ph >= 64) ph = 0;
         v = (int8_t)((ph <= 32) ? ph : (64 - ph));
     } else {
         if (ph >= 62) ph = 0;
-        if      (ph <= 16) v = (int8_t)ph;
+        if (ph <= 16) v = (int8_t)ph;
         else if (ph <= 47) v = (int8_t)(16 - (ph - 16));
-        else               v = (int8_t)(-15 + (ph - 47));
+        else v = (int8_t)(-15 + (ph - 47));
     }
 
     anim_phase[idx] = (uint8_t)(ph + 1);
