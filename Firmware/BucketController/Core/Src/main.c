@@ -33,6 +33,7 @@
 #include "hardware_drivers/mcp4728.h"
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/led_driver.h"
+#include "hardware_drivers/74hc595.h"
 #include "stm32g474xx.h"
 
 /* USER CODE END Includes */
@@ -171,6 +172,7 @@ int main(void)
   // SKYLAR 
 
   // i2c startup
+  i2c_init();
   if(DEVELOPER_MODE)
   {
     setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
@@ -178,33 +180,14 @@ int main(void)
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
 
-    i2c_init();
-    printf("\r\n\n\n");
-
-    uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
-
-    for(uint8_t b = 0; b < bus_ct; b++)
-    {
-      
-      for(uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
-      {
-        bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
-        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
-      }
-
-      for(uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
-      {
-        bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
-        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
-      }
-
-      printf("\r\n");
-    }
+    i2c_probeall();
 
   }
 
+  led_init();
   led_print_config();
 
+  dac_shiftreg_init();
   get_encoder_motion(enc0_info, enc0, &enc0);
 
   /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
@@ -1022,9 +1005,6 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-
-
-  led_init();
   led_brightness(10);
 
   knob_scale(0, 0, SCALE_LEFT);

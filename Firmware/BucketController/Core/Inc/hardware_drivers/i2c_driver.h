@@ -175,4 +175,12 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr);
 */
 void i2c_init(void);
 
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_probeall : Developer mode only - probe all i2c busses with uart output
+ ----------------------------------------------------------------------------------
+*/
+void i2c_probeall(void);
+
 #endif

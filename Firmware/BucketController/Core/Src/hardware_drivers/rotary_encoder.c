@@ -34,7 +34,6 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/mcp23017.h"
 
