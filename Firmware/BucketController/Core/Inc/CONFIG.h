@@ -51,10 +51,10 @@
 
     /*=============================== CLOCKS ================================*/
     /** @brief Set clock rates below*/
-    #define CPU_HZ             (uint64_t)SystemCoreClock // nominal 170MHz, but is set in CubeMX.
-                                                         // this value is just used by functions to calc their own clocks   
-    #define LED_SERIAL_HZ      (uint64_t)480000U         // Frequency of serial output to LED shift registers
-    #define BRIGHTNESS_PWM_HZ  (uint64_t) 24000U         // To control brightness of LEDs and LCD backlights, PWM frequency
+    #define CPU_HZ              (uint64_t)SystemCoreClock // nominal 170MHz, but is set in CubeMX.
+                                                          // this value is just used by functions to calc their own clocks   
+    #define SHIFT_REG_SERIAL_HZ (uint64_t)480000U         // Frequency of serial output to shift registers
+    #define BRIGHTNESS_PWM_HZ   (uint64_t) 24000U         // To control brightness of LEDs and LCD backlights, PWM frequency
 
 
     /*=============================== CONSOLE SIZE ================================*/
@@ -82,6 +82,15 @@
     // timeouts (how long to try busy bus until declare fail?)
     #define RESTART_US               4   // 4 microsec restart time
     #define TIMEOUT_US            2000   // 2ms waiting for transfer to complete
+
+
+    /*=============================== MCP4728 DAC INITIALIZATION ================================*/
+
+    #define DACADDR_DATA_PORT          GPIOA               // serial, sck on same port for timing
+    #define DACADDR_SER_PIN            12                  // DAC_INIT_Data = PA12
+    #define DACADDR_SRCLK_PIN          11                  // DAC_INIT_Clock = PA11
+    #define DACADDR_LATCH_PORT         GPIOC
+    #define DACADDR_RCLK_PIN           13                  // DAC_INIT_Data = PC13
 
 
     /*=============================== SPI 1 ================================*/

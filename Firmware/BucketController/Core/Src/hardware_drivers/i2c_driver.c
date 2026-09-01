@@ -145,7 +145,7 @@ void i2c_init(void)
         DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
     }
     timeout_cycles = (uint64_t)(((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U);
-    printf("timeout_cycles=%lu (want 340000)\r\n", timeout_cycles);
+    printf("    timeout_cycles=%lu (want 340000)", timeout_cycles);
 }
 
 
@@ -264,4 +264,36 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr)
 {
     uint8_t dummy[2];
     return i2c_read(bus, addr, dummy, 2);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC i2c_probeall : void --> void
+  (Developer mode) probes all the i2c busses with uart messages
+ ----------------------------------------------------------------------------------
+*/
+void i2c_probeall(void)
+{
+
+    uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
+
+    for(uint8_t b = 0; b < bus_ct; b++)
+    {
+      
+      for(uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
+      {
+        bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
+        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+      }
+
+      for(uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
+      {
+        bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
+        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+      }
+
+      printf("\r\n");
+    }
+
 }

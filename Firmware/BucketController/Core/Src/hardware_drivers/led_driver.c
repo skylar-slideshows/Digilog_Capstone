@@ -38,9 +38,11 @@
 */
 
 #include "hardware_drivers/led_driver.h"
+#include "hardware_drivers/74hc595.h"
 #include "stm32g4xx.h"
 #include "CONFIG.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 
 /*=============================== DEFINE CALCS ================================*/
@@ -72,81 +74,28 @@ static uint8_t  bright = 255;
 static volatile bool dirty = true;
 
 
-/*=============================== BIT OUT ================================*/
-/* Low lvl fn's for sending the actual bits out to the shift registers */
+/*=============================== FRAME BUFFER ================================*/
+/* Knob states / values -> sets of led bits ready to send out */
 
-#define HALF_CYC  ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)LED_SERIAL_HZ)) // 177 cycles at 170MHz/480kHz
-
-#define SER_SET   (1U << LED_SER_PIN)
-#define SER_RST   (1U << (LED_SER_PIN + 16))
-#define SRCLK_SET (1U << LED_SRCLK_PIN)
-#define SRCLK_RST (1U << (LED_SRCLK_PIN + 16))
-#define RCLK_SET  (1U << LED_RCLK_PIN)
-#define RCLK_RST  (1U << (LED_RCLK_PIN + 16))
+#define KNOB_OFS(channel_idx, knob_idx) ((channel_idx) * CHAN_BYTES + (knob_idx) * KNOB_BYTES)
+#define BTN_OFS(channel_idx)((channel_idx) * CHAN_BYTES + KNOBS_PER_CHAN * KNOB_BYTES)
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief INTERNAL wait_half : Count half cycle of serial LED out clock
+  @brief PUBLIC frame_out : Sends an entire frame of LED bits out, end sent first
  ----------------------------------------------------------------------------------
 */
-static inline void wait_half(void)
-{
-    uint32_t t0 = DWT->CYCCNT;
-    while ((DWT->CYCCNT - t0) < HALF_CYC) { }
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief INTERNAL shift_bit : uint32 -> Shifts a single bit out.
- ----------------------------------------------------------------------------------
-*/
-static inline void shift_bit(uint32_t bit)
-{
-    LED_DATA_PORT->BSRR = (bit ? SER_SET : SER_RST) | SRCLK_RST;
-    wait_half();
-    LED_DATA_PORT->BSRR = SRCLK_SET;
-    wait_half();
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief INTERNAL latch_out : Pulse latch low to update LEDs
- ----------------------------------------------------------------------------------
-*/
-static void latch_out(void)
-{
-    LED_DATA_PORT->BSRR = SRCLK_RST;
-    wait_half(); PLEASE
-    LED_DATA_PORT->BSRR = RCLK_SET;
-    wait_half(); PRETTY_PLEASE
-    LED_DATA_PORT->BSRR = RCLK_RST;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief INTERNAL frame_out : Sends an entire frame of LED bits out, end sent first
- ----------------------------------------------------------------------------------
-*/
-static void frame_out(void)
+void frame_out(void)
 {
     uint16_t n = FRAME_BYTES;
     while (n--)
     {
         uint8_t b = frame[n];
-        for (int8_t i = 0; i < 8; i++) shift_bit((uint32_t)((b >> i) & 1U));
+        for (int8_t i = 0; i < 8; i++) shift_bit((uint32_t)((b >> i) & 1U), 1);
     }
-    latch_out();
+    latch_out(1);
 }
-
-/*=============================== FRAME BUFFER ================================*/
-/* Knob states / values -> sets of led bits ready to send out */
-
-#define KNOB_OFS(channel_idx, knob_idx) ((channel_idx) * CHAN_BYTES + (knob_idx) * KNOB_BYTES)
-#define BTN_OFS(channel_idx)      ((channel_idx) * CHAN_BYTES + KNOBS_PER_CHAN * KNOB_BYTES)
 
 
 /**
@@ -516,10 +465,6 @@ void led_brightness(uint8_t brightness)
 /*=============================== INIT / SETUP ================================*/
 
 #define BOYMODER MODER
-#define MODE_OUT(port, pin) do { \
-    (port)->BOYMODER = ((port)->BOYMODER & ~(3U << ((pin) * 2))) | (1U << ((pin) * 2)); \
-    (port)->OSPEEDR |= (3U << ((pin) * 2)); \
-} while (0)
 
 
 /**
@@ -529,21 +474,8 @@ void led_brightness(uint8_t brightness)
 */
 void led_init(void)
 {
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
-    DWT->CYCCNT = 0; // cycle counter for PWM speed
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycles
 
-    RCC->AHB2ENR |= LED_DATA_PORT_EN | LED_OE_PORT_EN; // enables GPIO pins
-    RCC->APB2ENR |= LED_OE_TIM_EN; // enables Timer 1
-
-    LED_OE_PORT->BSRR = (1U << LED_OE_PIN); // set OE high (OE active low so hide all LEDs first)
-    MODE_OUT(LED_OE_PORT, LED_OE_PIN);
-
-    MODE_OUT(LED_DATA_PORT, LED_SER_PIN); // initialize the pins needed - serial data
-    MODE_OUT(LED_DATA_PORT, LED_SRCLK_PIN); // serial clock
-    MODE_OUT(LED_DATA_PORT, LED_RCLK_PIN); // latch pin
-    LED_DATA_PORT->BSRR = SER_RST | SRCLK_RST | RCLK_RST;
-
+    led_shiftreg_init();
     led_clear(); // clear previous state of LEDs - all off
 
     // timer prescale = 0, so use full CPU clock 170MHz when counting cycles for PWM timing
@@ -607,11 +539,11 @@ void led_print_config(void)
                TOTAL_LEDS, FRAME_BYTES);
     printf("\r\n  SER=P%c%u SRCLK=P%c%u RCLK=P%c%u OE=P%c%u",
                'B', LED_SER_PIN, 'B', LED_SRCLK_PIN, 'B', LED_RCLK_PIN, 'C', LED_OE_PIN);
-    printf("\r\n  bit clock %lu Hz (%lu cyc/half), frame %lu us",
-               (unsigned long)LED_SERIAL_HZ, (unsigned long)HALF_CYC,
-               (unsigned long)(FRAME_BYTES * 8UL * 1000000UL / LED_SERIAL_HZ));
-    printf("\r\n  OE PWM %lu Hz, ARR %lu, brightness %u\n",
-               (unsigned long)BRIGHTNESS_PWM_HZ, (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1), bright);
+    printf("\r\n  bit clock %lu Hz, frame %lu us",
+               (unsigned long)SHIFT_REG_SERIAL_HZ,
+               (unsigned long)(FRAME_BYTES * 8UL * 1000000UL / SHIFT_REG_SERIAL_HZ));
+    printf("\r\n  OE PWM %lu Hz, ARR %lu\n",
+               (unsigned long)BRIGHTNESS_PWM_HZ, (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));
 }
 
 
