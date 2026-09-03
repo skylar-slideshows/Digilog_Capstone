@@ -159,6 +159,20 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
 
 /**
  ----------------------------------------------------------------------------------
+  @brief i2c_write_callback : I2C bus, chip address, data pointer, number of bytes to write, callback -> bool
+  Write bytes to i2c chip (blocking), running a callback function after each byte is written
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x60 = MCP4728_0, mcp23017s are read only
+  @param data pointer to data to write
+  @param nbytes number of bytes to write
+  @param callback void function which gets called after each byte is written over i2c, accepting a byte index arg
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(int));
+
+
+/**
+ ----------------------------------------------------------------------------------
   @brief i2c_probe : I2C bus, chip address -> bool
   Returns whether a specific I2C chip is free or not
   @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
@@ -173,7 +187,7 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr);
   @brief i2c_init : Initialize the i2c busses
  ----------------------------------------------------------------------------------
 */
-void i2c_init(void);
+void i2c_init (void);
 
 
 /**
@@ -181,6 +195,6 @@ void i2c_init(void);
   @brief i2c_probeall : Developer mode only - probe all i2c busses with uart output
  ----------------------------------------------------------------------------------
 */
-void i2c_probeall(void);
+void i2c_probeall (void);
 
 #endif

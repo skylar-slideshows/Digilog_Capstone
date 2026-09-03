@@ -62,14 +62,15 @@ static uint32_t timeout_cycles;
   Polls the I2C status register until transfer suceeds or fails 
  ----------------------------------------------------------------------------------
 */
-static bool wait_flag(I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
+static bool wait_flag (I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
 {
     uint32_t time0 = DWT->CYCCNT;
-    for (;;) {
+    for (;;)
+    {
         uint32_t isr = bus->ISR;
-        if (isr & flag)                             return true;
+        if (isr & flag) return true;
         if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false; // flag will never reach with NACK
-        if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO))    return false;
+        if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO)) return false;
         if ((DWT->CYCCNT - time0) > timeout_cycles) return false;
     }
 }
@@ -81,10 +82,9 @@ static bool wait_flag(I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
   Clears flags on a bus
  ----------------------------------------------------------------------------------
 */
-static inline void clear_flags(I2C_TypeDef *bus)
+static inline void clear_flags (I2C_TypeDef *bus)
 {
-    bus->ICR = I2C_ICR_STOPCF | I2C_ICR_NACKCF |
-                    I2C_ICR_BERRCF | I2C_ICR_ARLOCF | I2C_ICR_OVRCF;
+    bus->ICR = I2C_ICR_STOPCF | I2C_ICR_NACKCF | I2C_ICR_BERRCF | I2C_ICR_ARLOCF | I2C_ICR_OVRCF;
 }
 
 
@@ -94,7 +94,7 @@ static inline void clear_flags(I2C_TypeDef *bus)
   Clears stale flags and confirms the bus is actually free (idle) before starting
  ----------------------------------------------------------------------------------
 */
-static bool bus_idle(I2C_TypeDef *bus)
+static bool bus_idle (I2C_TypeDef *bus)
 {
     clear_flags(bus);
     uint32_t t0 = DWT->CYCCNT;
@@ -109,17 +109,20 @@ static bool bus_idle(I2C_TypeDef *bus)
   Aborts transfer
  ----------------------------------------------------------------------------------
 */
-static void abort_transfer(I2C_TypeDef *bus)
+static void abort_transfer (I2C_TypeDef *bus)
 {
     bus->ISR = I2C_ISR_TXE; // flush TXDR
     clear_flags(bus);
 
-    if (bus->ISR & I2C_ISR_BUSY) {
+    if (bus->ISR & I2C_ISR_BUSY)
+    {
         bus->CR2 |= I2C_CR2_STOP;
         uint32_t t0 = DWT->CYCCNT;
-        while ((bus->ISR & I2C_ISR_BUSY) &&
-               (DWT->CYCCNT - t0) < timeout_cycles) { }
-        if (bus->ISR & I2C_ISR_BUSY) {
+        while ((bus->ISR & I2C_ISR_BUSY) && (DWT->CYCCNT - t0) < timeout_cycles)
+        {
+        }
+        if (bus->ISR & I2C_ISR_BUSY)
+        {
             LL_I2C_Disable(bus);
             LL_I2C_Enable(bus);
         }
@@ -137,12 +140,13 @@ static void abort_transfer(I2C_TypeDef *bus)
   @brief PUBLIC i2c_init : Initialize the i2c busses, call on I2C1 ... I2C4
  ----------------------------------------------------------------------------------
 */
-void i2c_init(void)
+void i2c_init (void)
 {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk)) {
+    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk))
+    {
         DWT->CYCCNT = 0;
-        DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
+        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
     }
     timeout_cycles = (uint64_t)(((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U);
     printf("    timeout_cycles=%lu (want 340000)", timeout_cycles);
@@ -158,23 +162,25 @@ void i2c_init(void)
 */
 bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 {
-    if(nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data) || nbytes == 0) return false;
-    if(!bus_idle(bus)) // idle timeout 1000us
+    if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data) || nbytes == 0) return false;
+    if (!bus_idle(bus)) // idle timeout 1000us
     {
         abort_transfer(bus);
         return false;
     } // bus is idle
 
     // head of the read block
-    LL_I2C_HandleTransfer(bus,
-                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
-                          LL_I2C_ADDRSLAVE_7BIT,
-                          nbytes,
-                          LL_I2C_MODE_AUTOEND,
-                          LL_I2C_GENERATE_START_READ);
+    LL_I2C_HandleTransfer(
+        bus,
+        (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+        LL_I2C_ADDRSLAVE_7BIT,
+        nbytes,
+        LL_I2C_MODE_AUTOEND,
+        LL_I2C_GENERATE_START_READ
+    );
 
     // read the content and save at *data
-    for(uint8_t i = 0; i < nbytes; i++)
+    for (uint8_t i = 0; i < nbytes; i++)
     {
         if (!wait_flag(bus, I2C_ISR_RXNE, true))
         {
@@ -185,13 +191,13 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     }
 
 
-    if(!wait_flag(bus, I2C_ISR_STOPF, false))
+    if (!wait_flag(bus, I2C_ISR_STOPF, false))
     {
         abort_transfer(bus);
         return false;
     }
 
-    if(bus->ISR & I2C_ISR_NACKF)
+    if (bus->ISR & I2C_ISR_NACKF)
     {
         abort_transfer(bus);
         return false;
@@ -211,23 +217,25 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 */
 bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes)
 {
-    if(nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
-    if(!bus_idle(bus)) // idle timeout 1000us
+    if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
+    if (!bus_idle(bus)) // idle timeout 1000us
     {
         abort_transfer(bus);
         return false;
     } // bus is idle
 
     // head of the message
-    LL_I2C_HandleTransfer(bus,
-                          (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
-                          LL_I2C_ADDRSLAVE_7BIT,
-                          nbytes,
-                          LL_I2C_MODE_AUTOEND,
-                          LL_I2C_GENERATE_START_WRITE);
+    LL_I2C_HandleTransfer(
+        bus,
+        (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+        LL_I2C_ADDRSLAVE_7BIT,
+        nbytes,
+        LL_I2C_MODE_AUTOEND,
+        LL_I2C_GENERATE_START_WRITE
+    );
 
     // send the content of the message
-    for(uint8_t i = 0; i < nbytes; i++)
+    for (uint8_t i = 0; i < nbytes; i++)
     {
         if (!wait_flag(bus, I2C_ISR_TXIS, true))
         {
@@ -237,13 +245,72 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
         bus->TXDR = data[i];
     }
 
-    if(!wait_flag(bus, I2C_ISR_STOPF, false))
+    if (!wait_flag(bus, I2C_ISR_STOPF, false))
     {
         abort_transfer(bus);
         return false;
     }
 
-    if(bus->ISR & I2C_ISR_NACKF)
+    if (bus->ISR & I2C_ISR_NACKF)
+    {
+        abort_transfer(bus);
+        return false;
+    }
+
+    clear_flags(bus);
+    return true;
+}
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC i2c_write_callback : I2C bus, chip address, data pointer, number of bytes to write, callback -> bool
+  Write bytes to i2c chip (blocking), running a callback function after each byte is written
+
+  bus: I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  addr: 0x60 = MCP4728_0, mcp23017s are read only
+  data: pointer to data to write
+  nbytes: number of bytes to write
+  callback: void function which gets called after each byte is written over i2c, accepting a byte index arg
+ ----------------------------------------------------------------------------------
+*/
+bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(int))
+{
+    if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
+    if (!bus_idle(bus)) // idle timeout 1000us
+    {
+        abort_transfer(bus);
+        return false;
+    } // bus is idle
+
+    // head of the message
+    LL_I2C_HandleTransfer(
+        bus,
+        (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
+        LL_I2C_ADDRSLAVE_7BIT,
+        nbytes,
+        LL_I2C_MODE_AUTOEND,
+        LL_I2C_GENERATE_START_WRITE
+    );
+
+    // send the content of the message
+    for (uint8_t i = 0; i < nbytes; i++)
+    {
+        if (!wait_flag(bus, I2C_ISR_TXIS, true))
+        {
+            abort_transfer(bus);
+            return false;
+        }
+        bus->TXDR = data[i];
+        callback(i);
+    }
+
+    if (!wait_flag(bus, I2C_ISR_STOPF, false))
+    {
+        abort_transfer(bus);
+        return false;
+    }
+
+    if (bus->ISR & I2C_ISR_NACKF)
     {
         abort_transfer(bus);
         return false;
@@ -273,27 +340,24 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr)
   (Developer mode) probes all the i2c busses with uart messages
  ----------------------------------------------------------------------------------
 */
-void i2c_probeall(void)
+void i2c_probeall (void)
 {
-
     uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
 
-    for(uint8_t b = 0; b < bus_ct; b++)
+    for (uint8_t b = 0; b < bus_ct; b++)
     {
-      
-      for(uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
-      {
-        bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
-        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
-      }
+        for (uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
+        {
+            bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
+            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+        }
 
-      for(uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
-      {
-        bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
-        printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
-      }
+        for (uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
+        {
+            bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
+            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+        }
 
-      printf("\r\n");
+        printf("\r\n");
     }
-
 }
