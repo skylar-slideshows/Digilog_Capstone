@@ -160,9 +160,9 @@ uint8_t mcp4728_multiWrite (
 )
 {
 #define MCP4728_MULTIWRITE_BYTES_PER_CHANNEL 3
-    uint8_t data_bytes =
-        channel_count * MCP4728_MULTIWRITE_BYTES_PER_CHANNEL; // 3 bytes per channel message for this command type
-    uint8_t *data_buffer = PLEASE_DONT_LEAK_MEMORY malloc(data_bytes);
+    // 3 bytes per channel message for this command type
+    uint8_t data_bytes = channel_count * MCP4728_MULTIWRITE_BYTES_PER_CHANNEL;
+    uint8_t PLEASE_DONT_LEAK_MEMORY data_buffer[16];
 
     for (uint8_t i = 0; i < channel_count; i++)
     {
@@ -188,8 +188,6 @@ uint8_t mcp4728_multiWrite (
     }
     uint8_t i2c_write_result = i2c_write(bus, addr, data_buffer, data_bytes);
 
-    PLEASE_DONT_LEAK_MEMORY free(data_buffer);
-
     return !i2c_write_result;
 }
 
@@ -211,7 +209,7 @@ uint8_t mcp4728_sequentialWrite (
 {
 #define MCP4728_SEQWRITE_BYTES_PER_CHANNEL 2
     uint8_t data_bytes = 1 + channel_count * MCP4728_SEQWRITE_BYTES_PER_CHANNEL;
-    uint8_t *data_buffer = PLEASE_DONT_LEAK_MEMORY malloc(data_bytes);
+    uint8_t PLEASE_DONT_LEAK_MEMORY data_buffer[16];
 
     // First byte
     data_buffer[0] = MCP4728_SEQ_WRITE | ((start_channel & 0x03) << 1) | 1;
@@ -237,8 +235,6 @@ uint8_t mcp4728_sequentialWrite (
         );
     }
     uint8_t i2c_write_result = i2c_write(bus, addr, data_buffer, data_bytes);
-
-    PLEASE_DONT_LEAK_MEMORY free(data_buffer);
 
     return !i2c_write_result;
 }
