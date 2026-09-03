@@ -261,66 +261,6 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
     return true;
 }
 
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC i2c_write_callback : I2C bus, chip address, data pointer, number of bytes to write, callback -> bool
-  Write bytes to i2c chip (blocking), running a callback function after each byte is written
-
-  bus: I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-  addr: 0x60 = MCP4728_0, mcp23017s are read only
-  data: pointer to data to write
-  nbytes: number of bytes to write
-  callback: void function which gets called after each byte is written over i2c, accepting a byte index arg
- ----------------------------------------------------------------------------------
-*/
-bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(uint8_t))
-{
-    if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
-    if (!bus_idle(bus)) // idle timeout 1000us
-    {
-        abort_transfer(bus);
-        return false;
-    } // bus is idle
-
-    // head of the message
-    LL_I2C_HandleTransfer(
-        bus,
-        (uint32_t)(addr << 1), // chip address (shift 1 to put 8 bit type into right place for 7 bit addr)
-        LL_I2C_ADDRSLAVE_7BIT,
-        nbytes,
-        LL_I2C_MODE_AUTOEND,
-        LL_I2C_GENERATE_START_WRITE
-    );
-    callback(0);
-
-    // send the content of the message
-    for (uint8_t i = 0; i < nbytes; i++)
-    {
-        if (!wait_flag(bus, I2C_ISR_TXIS, true))
-        {
-            abort_transfer(bus);
-            return false;
-        }
-        bus->TXDR = data[i];
-        callback(i+1);
-    }
-
-    if (!wait_flag(bus, I2C_ISR_STOPF, false))
-    {
-        abort_transfer(bus);
-        return false;
-    }
-
-    if (bus->ISR & I2C_ISR_NACKF)
-    {
-        abort_transfer(bus);
-        return false;
-    }
-
-    clear_flags(bus);
-    return true;
-}
-
 
 /**
  ----------------------------------------------------------------------------------
@@ -361,4 +301,36 @@ void i2c_probeall (void)
 
         printf("\r\n");
     }
+}
+
+
+void bb_claim (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port, uint32_t sda_pin)
+{
+    GPIO_InitTypeDef g = {0};
+    g.Mode = GPIO_MODE_OUTPUT_OD;
+    g.Pull = GPIO_NOPULL;
+    g.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    scl_port->BSRR = scl_pin;
+    sda_port->BSRR = sda_pin;
+
+    g.Pin = scl_pin;
+    HAL_GPIO_Init(scl_port, &g);
+    g.Pin = sda_pin;
+    HAL_GPIO_Init(sda_port, &g);
+}
+
+
+void bb_release (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port, uint32_t sda_pin, uint8_t af)
+{
+    GPIO_InitTypeDef g = {0};
+    g.Mode = GPIO_MODE_AF_OD;
+    g.Pull = GPIO_NOPULL;
+    g.Speed = GPIO_SPEED_FREQ_HIGH;
+    g.Alternate = af;
+
+    g.Pin = scl_pin;
+    HAL_GPIO_Init(scl_port, &g);
+    g.Pin = sda_pin;
+    HAL_GPIO_Init(sda_port, &g);
 }

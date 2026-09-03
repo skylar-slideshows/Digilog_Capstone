@@ -159,20 +159,6 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
 
 /**
  ----------------------------------------------------------------------------------
-  @brief i2c_write_callback : I2C bus, chip address, data pointer, number of bytes to write, callback -> bool
-  Write bytes to i2c chip (blocking), running a callback function after each byte is written
-  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-  @param addr 0x60 = MCP4728_0, mcp23017s are read only
-  @param data pointer to data to write
-  @param nbytes number of bytes to write
-  @param callback void function which gets called after each byte is written over i2c, accepting a byte index arg
- ----------------------------------------------------------------------------------
-*/
-bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(uint8_t));
-
-
-/**
- ----------------------------------------------------------------------------------
   @brief i2c_probe : I2C bus, chip address -> bool
   Returns whether a specific I2C chip is free or not
   @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
@@ -196,5 +182,30 @@ void i2c_init (void);
  ----------------------------------------------------------------------------------
 */
 void i2c_probeall (void);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief bb_claim : Reconfigure the given i2c bus pins for direct bit-banging to bypass the i2c driver
+
+  @param scl_port GPIO port that the i2c clock pin is on
+  @param scl_pin GPIO pin of the i2c clock pin
+  @param sda_port GPIO port that the i2c data pin is on
+  @param sda_pin GPIO pin of the i2c data pin
+ ----------------------------------------------------------------------------------
+*/
+void bb_claim (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port, uint32_t sda_pin);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief bb_release: Release i2c bus pins that have previously been claimed with bb_claim
+
+  @param scl_port GPIO port that the i2c clock pin is on
+  @param scl_pin GPIO pin of the i2c clock pin
+  @param sda_port GPIO port that the i2c data pin is on
+  @param sda_pin GPIO pin of the i2c data pin
+  @param af alternate function (TODO)
+ ----------------------------------------------------------------------------------
+*/
+void bb_release (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port, uint32_t sda_pin, uint8_t af);
 
 #endif
