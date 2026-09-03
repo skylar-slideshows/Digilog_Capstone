@@ -84,13 +84,12 @@
     #define TIMEOUT_US            2000   // 2ms waiting for transfer to complete
 
 
-    /*=============================== MCP4728 DAC INITIALIZATION ================================*/
+    /*=============================== GENERAL PURPOSE SHIFT REGISTERS ================================*/
 
-    #define DACADDR_DATA_PORT          GPIOA               // serial, sck on same port for timing
-    #define DACADDR_SER_PIN            12                  // DAC_INIT_Data = PA12
-    #define DACADDR_SRCLK_PIN          11                  // DAC_INIT_Clock = PA11
-    #define DACADDR_LATCH_PORT         GPIOA
-    #define DACADDR_RCLK_PIN           0                   // DAC_INIT_Data = PA0
+    #define SHIFTREG_DATA_PORT          GPIOA
+    #define SHIFTREG_SER_PIN            12                  // SHIFTREG_Data = PA12
+    #define SHIFTREG_SRCLK_PIN          11                  // SHIFTREG_Clock = PA11
+    #define SHIFTREG_RCLK_PIN           0                   // SHIFTREG_Data = PA0
 
 
     /*=============================== SPI 1 ================================*/

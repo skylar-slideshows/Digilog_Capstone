@@ -59,10 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Disp3_CS_Pin GPIO_PIN_14
-#define Disp3_CS_GPIO_Port GPIOC
-#define Disp4_CS_Pin GPIO_PIN_15
-#define Disp4_CS_GPIO_Port GPIOC
+#define SPI3_CS_ADC_Pin GPIO_PIN_13
+#define SPI3_CS_ADC_GPIO_Port GPIOC
 #define __OSC_IN_Pin GPIO_PIN_0
 #define __OSC_IN_GPIO_Port GPIOF
 #define __OSC_OUT_Pin GPIO_PIN_1
@@ -141,16 +139,12 @@ void Error_Handler(void);
 #define SPI3_MISO_GPIO_Port GPIOC
 #define SPI3_MOSI_Pin GPIO_PIN_12
 #define SPI3_MOSI_GPIO_Port GPIOC
-#define SPI3_CS1_Pin GPIO_PIN_2
-#define SPI3_CS1_GPIO_Port GPIOD
-#define SPI3_CS0_Pin GPIO_PIN_3
-#define SPI3_CS0_GPIO_Port GPIOB
+#define SPI3_CS_23S17_Pin GPIO_PIN_2
+#define SPI3_CS_23S17_GPIO_Port GPIOD
+#define SPI1_Clock_Pin GPIO_PIN_3
+#define SPI1_Clock_GPIO_Port GPIOB
 #define I2C3_Data_Pin GPIO_PIN_5
 #define I2C3_Data_GPIO_Port GPIOB
-#define Disp2_CS_Pin GPIO_PIN_6
-#define Disp2_CS_GPIO_Port GPIOB
-#define Disp1_CS_Pin GPIO_PIN_7
-#define Disp1_CS_GPIO_Port GPIOB
 #define I2C1_Data_Pin GPIO_PIN_9
 #define I2C1_Data_GPIO_Port GPIOB
 

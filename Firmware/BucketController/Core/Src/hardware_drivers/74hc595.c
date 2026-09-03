@@ -3,8 +3,8 @@
   * SHIFT REGISTER DRIVER - DIGILOG CONSOLE
   **********************************************************************************
   * @file 74hc595.c
-  * @brief Skylar's driver for the 74HC595 shift registers, to run communication with
-  *        the LED 74HCT595s and the address programmers for the DAC.
+  * @brief Skylar's driver for the 74HC595 shift registers, to run comms w/
+  *        shift registers that expand GP outputs and drive the LEDs
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-08-31
@@ -37,6 +37,9 @@
 #include "hardware_drivers/74hc595.h"
 
 
+// BSRR register: reset[15:0]set[15:0]. A 1 in the lower 16 bits will set the
+// corresponding pin to high. A 1 in the upper 16 bits will set the corresponding
+// pin to low.
 #define SER_SET   (1U << LED_SER_PIN)
 #define SER_RST   (1U << (LED_SER_PIN + 16))
 #define SRCLK_SET (1U << LED_SRCLK_PIN)
@@ -44,12 +47,12 @@
 #define RCLK_SET  (1U << LED_RCLK_PIN)
 #define RCLK_RST  (1U << (LED_RCLK_PIN + 16))
 
-#define DACADDR_SER_SET   (1U << DACADDR_SER_PIN)
-#define DACADDR_SER_RST   (1U << (DACADDR_SER_PIN + 16))
-#define DACADDR_SRCLK_SET (1U << DACADDR_SRCLK_PIN)
-#define DACADDR_SRCLK_RST (1U << (DACADDR_SRCLK_PIN + 16))
-#define DACADDR_RCLK_SET  (1U << DACADDR_RCLK_PIN)
-#define DACADDR_RCLK_RST  (1U << (DACADDR_RCLK_PIN + 16))
+#define SHIFTREG_SER_SET   (1U << SHIFTREG_SER_PIN)
+#define SHIFTREG_SER_RST   (1U << (SHIFTREG_SER_PIN + 16))
+#define SHIFTREG_SRCLK_SET (1U << SHIFTREG_SRCLK_PIN)
+#define SHIFTREG_SRCLK_RST (1U << (SHIFTREG_SRCLK_PIN + 16))
+#define SHIFTREG_RCLK_SET  (1U << SHIFTREG_RCLK_PIN)
+#define SHIFTREG_RCLK_RST  (1U << (SHIFTREG_RCLK_PIN + 16))
 
 static uint32_t half_cyc; // 177 cycles at 170MHz/480kHz
 
@@ -86,9 +89,9 @@ void shift_bit(uint32_t bit, bool led)
         LED_DATA_PORT->BSRR = SRCLK_SET;
         wait_half();
     } else {
-        DACADDR_DATA_PORT->BSRR = (bit ? DACADDR_SER_SET : DACADDR_SER_RST) | DACADDR_SRCLK_RST;
+        SHIFTREG_DATA_PORT->BSRR = (bit ? SHIFTREG_SER_SET : SHIFTREG_SER_RST) | SHIFTREG_SRCLK_RST;
         wait_half();
-        DACADDR_DATA_PORT->BSRR = DACADDR_SRCLK_SET;
+        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_SET;
         wait_half();
     }
 }
@@ -122,11 +125,11 @@ void latch_out(bool led)
         wait_half();
         LED_DATA_PORT->BSRR = RCLK_RST;
     } else {
-        DACADDR_DATA_PORT->BSRR = DACADDR_SRCLK_RST;
+        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_RST;
         wait_half();
-        DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_SET;
+        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_SET;
         wait_half();
-        DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_RST;
+        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_RST;
     }
 }
 
@@ -173,10 +176,10 @@ void dac_shiftreg_init(void)
     DWT->CYCCNT = 0; // cycle counter for PWM speed
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycle
 
-    MODE_OUT(DACADDR_DATA_PORT, DACADDR_SER_PIN); // initialize the pins needed - serial data
-    MODE_OUT(DACADDR_DATA_PORT, DACADDR_SRCLK_PIN); // serial clock
-    MODE_OUT(DACADDR_LATCH_PORT, DACADDR_RCLK_PIN); // latch pin
-    DACADDR_DATA_PORT->BSRR = DACADDR_SER_RST | DACADDR_SRCLK_RST;
-    DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_RST;
+    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_SER_PIN); // initialize the pins needed - serial data
+    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_SRCLK_PIN); // serial clock
+    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_RCLK_PIN); // latch pin
+    SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SER_RST | SHIFTREG_SRCLK_RST;
+    SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_RST;
     
 }
