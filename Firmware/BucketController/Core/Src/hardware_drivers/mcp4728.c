@@ -297,9 +297,9 @@ uint8_t mcp4728_init_single_address (
     }
 
     uint8_t data[3] = {
-        MCP4728_ADDR_WRITE | (old_addr << 2) | 0x1, //1
-        MCP4728_ADDR_WRITE | (new_addr << 1) | 0x2, //2
-        MCP4728_ADDR_WRITE | (new_addr << 1) | 0x3, //3
+        MCP4728_ADDR_WRITE | ((old_addr & 0x07) << 2) | 0x1, //1
+        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x2, //1
+        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x3, //1
     };
 
     uint8_t i2c_result = i2c_write_callback(bus, old_addr, data, sizeof(data), &mcp4728_output_byte_callback);
@@ -319,7 +319,7 @@ uint8_t mcp4728_init_address (
 )
 {
     uint8_t folded_result = 1;
-    for (uint8_t target_addr = 0x00; target_addr < 0x08; target_addr++)
+    for (uint8_t target_addr = 0x60; target_addr < 0x68; target_addr++)
     {
         folded_result &= mcp4728_init_single_address(bus, ldac_pin_idx, new_addr, target_addr);
     }
