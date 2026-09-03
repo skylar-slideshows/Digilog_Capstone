@@ -51,7 +51,7 @@
 #define DACADDR_RCLK_SET  (1U << DACADDR_RCLK_PIN)
 #define DACADDR_RCLK_RST  (1U << (DACADDR_RCLK_PIN + 16))
 
-#define HALF_CYC  ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ)) // 177 cycles at 170MHz/480kHz
+static uint32_t half_cyc; // 177 cycles at 170MHz/480kHz
 
 #define BOYMODER MODER
 #define MODE_OUT(port, pin) do { \
@@ -68,7 +68,7 @@
 static inline void wait_half(void)
 {
     uint32_t t0 = DWT->CYCCNT;
-    while ((DWT->CYCCNT - t0) < HALF_CYC) { }
+    while ((DWT->CYCCNT - t0) < half_cyc) { }
 }
 
 
@@ -124,9 +124,9 @@ void latch_out(bool led)
     } else {
         DACADDR_DATA_PORT->BSRR = DACADDR_SRCLK_RST;
         wait_half();
-        DACADDR_DATA_PORT->BSRR = DACADDR_RCLK_SET;
+        DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_SET;
         wait_half();
-        DACADDR_DATA_PORT->BSRR = DACADDR_RCLK_RST;
+        DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_RST;
     }
 }
 
@@ -138,6 +138,8 @@ void latch_out(bool led)
 */
 void led_shiftreg_init(void)
 {
+
+    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
     DWT->CYCCNT = 0; // cycle counter for PWM speed
@@ -165,6 +167,8 @@ void led_shiftreg_init(void)
 void dac_shiftreg_init(void)
 {
 
+    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
+
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
     DWT->CYCCNT = 0; // cycle counter for PWM speed
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycle
@@ -172,6 +176,7 @@ void dac_shiftreg_init(void)
     MODE_OUT(DACADDR_DATA_PORT, DACADDR_SER_PIN); // initialize the pins needed - serial data
     MODE_OUT(DACADDR_DATA_PORT, DACADDR_SRCLK_PIN); // serial clock
     MODE_OUT(DACADDR_LATCH_PORT, DACADDR_RCLK_PIN); // latch pin
-    DACADDR_DATA_PORT->BSRR = DACADDR_SER_RST | DACADDR_SRCLK_RST | DACADDR_RCLK_RST;
+    DACADDR_DATA_PORT->BSRR = DACADDR_SER_RST | DACADDR_SRCLK_RST;
+    DACADDR_LATCH_PORT->BSRR = DACADDR_RCLK_RST;
     
 }

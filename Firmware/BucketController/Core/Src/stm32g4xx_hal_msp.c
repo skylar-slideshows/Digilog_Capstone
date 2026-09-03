@@ -502,23 +502,23 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**SPI1 GPIO Configuration
-    PA5     ------> SPI1_SCK
     PA7     ------> SPI1_MOSI
+    PB3     ------> SPI1_SCK
     PB4     ------> SPI1_MISO
     */
-    GPIO_InitStruct.Pin = SPI1_Clock_IN_Pin|SPI1_MOSI_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = SPI1_MISO_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-    HAL_GPIO_Init(SPI1_MISO_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* USER CODE BEGIN SPI1_MspInit 1 */
 
@@ -593,13 +593,13 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
     __HAL_RCC_SPI1_CLK_DISABLE();
 
     /**SPI1 GPIO Configuration
-    PA5     ------> SPI1_SCK
     PA7     ------> SPI1_MOSI
+    PB3     ------> SPI1_SCK
     PB4     ------> SPI1_MISO
     */
-    HAL_GPIO_DeInit(GPIOA, SPI1_Clock_IN_Pin|SPI1_MOSI_Pin);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_7);
 
-    HAL_GPIO_DeInit(SPI1_MISO_GPIO_Port, SPI1_MISO_Pin);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3|GPIO_PIN_4);
 
     /* USER CODE BEGIN SPI1_MspDeInit 1 */
 
@@ -722,12 +722,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**TIM2 GPIO Configuration
-    PA0     ------> TIM2_CH1
     PA1     ------> TIM2_CH2
+    PA5     ------> TIM2_CH1
     PB10     ------> TIM2_CH3
     PA10     ------> TIM2_CH4
     */
-    GPIO_InitStruct.Pin = Fader1_MotA_Pin|Fader1_MotB_Pin;
+    GPIO_InitStruct.Pin = Fader1_MotB_Pin|Fader1_MotA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

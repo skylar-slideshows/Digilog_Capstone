@@ -994,7 +994,7 @@
 					)
 				)
 				(pin output line
-					(at 10.16 5.08 180)
+					(at 10.16 2.54 180)
 					(length 2.54)
 					(name "OUT1"
 						(effects
@@ -1031,7 +1031,7 @@
 					)
 				)
 				(pin output line
-					(at 10.16 2.54 180)
+					(at 10.16 5.08 180)
 					(length 2.54)
 					(name "OUT2"
 						(effects
@@ -1717,6 +1717,24 @@
 						)
 					)
 					(number "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -12.7 180)
+					(length 3.81)
+					(name "MP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "MP"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2677,6 +2695,12 @@
 		(uuid "2f40c9db-9eb0-4e65-abf4-1f0571af6ca1")
 	)
 	(junction
+		(at 93.98 63.5)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "326fa454-4449-4a28-b0b3-c36bbf230146")
+	)
+	(junction
 		(at 163.83 69.85)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2707,12 +2731,6 @@
 		(uuid "93ecfdb4-90c5-4f3f-b3db-068fd0958357")
 	)
 	(junction
-		(at 95.25 63.5)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a6e183d8-35ff-463e-a2e9-5bb9ceae29e6")
-	)
-	(junction
 		(at 162.56 39.37)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2739,16 +2757,6 @@
 			(type default)
 		)
 		(uuid "0db2370a-4101-4803-a022-74c34b205fc2")
-	)
-	(wire
-		(pts
-			(xy 95.25 60.96) (xy 92.71 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "144bc6d7-fbeb-4285-b6eb-41166fd6bae5")
 	)
 	(wire
 		(pts
@@ -2829,6 +2837,16 @@
 			(type default)
 		)
 		(uuid "4ddbd51c-f737-45f5-a87e-63c5d9e3f3f4")
+	)
+	(wire
+		(pts
+			(xy 92.71 60.96) (xy 96.52 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "53aa7270-7cc4-4c0c-93c3-d0665fa09bbf")
 	)
 	(wire
 		(pts
@@ -2932,6 +2950,16 @@
 	)
 	(wire
 		(pts
+			(xy 195.58 80.01) (xy 190.5 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "862ead01-5d79-4c7a-8685-11b4473b6e0d")
+	)
+	(wire
+		(pts
 			(xy 190.5 33.02) (xy 190.5 39.37)
 		)
 		(stroke
@@ -2952,13 +2980,13 @@
 	)
 	(wire
 		(pts
-			(xy 92.71 58.42) (xy 96.52 58.42)
+			(xy 190.5 80.01) (xy 190.5 81.28)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "8ab735c7-c07b-4d9a-82e1-1dd4aac5a3d1")
+		(uuid "8d705bd6-26d5-4ad2-a8c8-51305950bf73")
 	)
 	(wire
 		(pts
@@ -2969,6 +2997,16 @@
 			(type default)
 		)
 		(uuid "90959589-f59b-4f2f-8208-d6eecbb25386")
+	)
+	(wire
+		(pts
+			(xy 93.98 58.42) (xy 93.98 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95fc5039-8deb-41a7-9557-19ce8689dc44")
 	)
 	(wire
 		(pts
@@ -3012,6 +3050,16 @@
 	)
 	(wire
 		(pts
+			(xy 93.98 63.5) (xy 95.25 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ac5708b5-9f84-499d-a251-b75265a42074")
+	)
+	(wire
+		(pts
 			(xy 160.02 69.85) (xy 160.02 72.39)
 		)
 		(stroke
@@ -3029,6 +3077,16 @@
 			(type default)
 		)
 		(uuid "b2707857-878a-49ff-8ad4-790c762181c7")
+	)
+	(wire
+		(pts
+			(xy 92.71 58.42) (xy 93.98 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9d1b110-35c4-4a03-87dd-be8705541ebf")
 	)
 	(wire
 		(pts
@@ -3072,16 +3130,6 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 63.5) (xy 95.25 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7d1f951-ff54-4313-a300-b5df21eadca3")
-	)
-	(wire
-		(pts
 			(xy 95.25 63.5) (xy 95.25 64.77)
 		)
 		(stroke
@@ -3122,7 +3170,7 @@
 	)
 	(wire
 		(pts
-			(xy 92.71 63.5) (xy 95.25 63.5)
+			(xy 92.71 63.5) (xy 93.98 63.5)
 		)
 		(stroke
 			(width 0)
@@ -3724,6 +3772,9 @@
 		)
 		(pin "T"
 			(uuid "c797cef6-55ce-45ad-b336-f117e5c5246c")
+		)
+		(pin "MP"
+			(uuid "ff9a368a-b299-4f71-9341-665a603d6dc4")
 		)
 		(instances
 			(project "fader"
@@ -6904,7 +6955,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 96.52 58.42 0)
+		(at 96.52 60.96 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6914,7 +6965,7 @@
 		(dnp no)
 		(uuid "df09d365-c967-4f1e-821c-e7c2a1c67644")
 		(property "Reference" "#PWR02"
-			(at 96.52 62.23 0)
+			(at 96.52 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6925,7 +6976,7 @@
 			)
 		)
 		(property "Value" "+5"
-			(at 100.076 56.642 0)
+			(at 100.076 59.182 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6935,7 +6986,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 96.52 58.42 0)
+			(at 96.52 60.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6946,7 +6997,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 96.52 58.42 0)
+			(at 96.52 60.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6957,7 +7008,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 96.52 58.42 0)
+			(at 96.52 60.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7237,6 +7288,85 @@
 			(project "fader"
 				(path "/5b50b135-2bf5-4413-921b-3b816bbd19ba"
 					(reference "FB1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 190.5 81.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e8734eae-e83c-4e64-ad61-d302b7b3c32d")
+		(property "Reference" "#PWR026"
+			(at 190.5 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 190.5 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 190.5 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 190.5 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 190.5 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4ffc80fb-64f0-449e-bc9e-03958563bac7")
+		)
+		(instances
+			(project "fader"
+				(path "/5b50b135-2bf5-4413-921b-3b816bbd19ba"
+					(reference "#PWR026")
 					(unit 1)
 				)
 			)
