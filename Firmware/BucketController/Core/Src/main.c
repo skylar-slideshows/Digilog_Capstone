@@ -55,6 +55,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
@@ -97,6 +98,7 @@ static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
+static void MX_ADC2_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -166,6 +168,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   MX_I2C3_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
@@ -181,7 +184,6 @@ int main(void)
     printf("*******************************************************\r\n");
 
     i2c_probeall();
-
   }
 
   led_init();
@@ -236,8 +238,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-
 
     /* USER CODE BEGIN 3 */
   }
@@ -313,7 +313,7 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.GainCompensation = 0;
@@ -343,7 +343,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_12;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
@@ -356,6 +356,65 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Common config
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.GainCompensation = 0;
+  hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc2.Init.LowPowerAutoWait = DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc2.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_11;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
 
 }
 
@@ -936,55 +995,53 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, _DAC_INIT_Latch_Pin|MCP23S17_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, SHIFTREG_Latch_Pin|Disp3_CS_Pin|Disp4_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|FlashADC_CS_ADC_Pin
-                          |FlashADC_CS_Flash_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
+                          |SPI3_CS0_Pin|Disp2_CS_Pin|Disp1_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, _DAC_INIT_Clock_Pin|_DAC_INIT_Data_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : _DAC_INIT_Latch_Pin MCP23S17_CS_Pin */
-  GPIO_InitStruct.Pin = _DAC_INIT_Latch_Pin|MCP23S17_CS_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SPI3_CS1_GPIO_Port, SPI3_CS1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : SHIFTREG_Latch_Pin Disp3_CS_Pin Disp4_CS_Pin */
+  GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|Disp3_CS_Pin|Disp4_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : __MASTER__CS_in_Pin Fader1_Touch_Pin */
-  GPIO_InitStruct.Pin = __MASTER__CS_in_Pin|Fader1_Touch_Pin;
+  /*Configure GPIO pin : SPI1_CS_IN_Pin */
+  GPIO_InitStruct.Pin = SPI1_CS_IN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(SPI1_CS_IN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Fader3_Touch_Pin Fader4_Touch_Pin */
-  GPIO_InitStruct.Pin = Fader3_Touch_Pin|Fader4_Touch_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LED_Data_Pin LED_Clock_Pin LED_Latch_Pin FlashADC_CS_ADC_Pin
-                           FlashADC_CS_Flash_Pin */
-  GPIO_InitStruct.Pin = LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|FlashADC_CS_ADC_Pin
-                          |FlashADC_CS_Flash_Pin;
+  /*Configure GPIO pins : Disp_DC_Pin LED_Data_Pin LED_Clock_Pin LED_Latch_Pin
+                           SPI3_CS0_Pin Disp2_CS_Pin Disp1_CS_Pin */
+  GPIO_InitStruct.Pin = Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
+                          |SPI3_CS0_Pin|Disp2_CS_Pin|Disp1_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : _DAC_INIT_Clock_Pin _DAC_INIT_Data_Pin */
-  GPIO_InitStruct.Pin = _DAC_INIT_Clock_Pin|_DAC_INIT_Data_Pin;
+  /*Configure GPIO pins : SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
+  GPIO_InitStruct.Pin = SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : Fader2_Touch_Pin */
-  GPIO_InitStruct.Pin = Fader2_Touch_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : SPI3_CS1_Pin */
+  GPIO_InitStruct.Pin = SPI3_CS1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(Fader2_Touch_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SPI3_CS1_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
