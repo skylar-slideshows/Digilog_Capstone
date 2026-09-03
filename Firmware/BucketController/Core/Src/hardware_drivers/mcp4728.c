@@ -36,6 +36,7 @@
 #include "hardware_drivers/mcp4728.h"
 #include "hardware_drivers/74hc595.h"
 #include "hardware_drivers/i2c_driver.h"
+#include "main.h"
 #include <string.h>
 
 #define PLEASE_DONT_LEAK_MEMORY
@@ -285,6 +286,8 @@ uint8_t mcp4728_init_single_address (
     uint8_t old_addr      // old 3-bit address of the selected DAC
 )
 {
+
+
     // TODO: double check that CHANNELS matches the number of shift registers connected to the DACs
     // TODO also: validate that (0x01 << ldac_pin_idx) ^ 0xFF changes the correct pin on the shift register
     for(uint8_t i = 0; i < CHANNELS; i++){
@@ -302,14 +305,14 @@ uint8_t mcp4728_init_single_address (
         MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x3, //1
     };
 
-    uint8_t i2c_result = i2c_write_callback(bus, old_addr, data, sizeof(data), &mcp4728_output_byte_callback);
+    //uint8_t i2c_result = i2c_write_callback(bus, old_addr, data, sizeof(data), &mcp4728_output_byte_callback);
 
     for(uint8_t i = 0; i < CHANNELS; i++){
         shift_byte(0xFF);
     }
     latch_out(false);
 
-    return !i2c_result;
+    return 1;
 }
 
 uint8_t mcp4728_init_address (
@@ -325,4 +328,38 @@ uint8_t mcp4728_init_address (
     }
 
     return folded_result;
+}
+
+uint8_t mcp4728_init_all_addresses (void)
+{
+
+    uint8_t folded_result = 1;
+
+    bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
+    bb_claim(I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin);
+    bb_claim(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin);
+    bb_claim(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin);
+
+    // init all addresses one 
+
+    bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4); // alternate function id
+    bb_release(I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin, 4);
+    bb_release(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin, 8);
+    bb_release(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin, 8);
+
+    return folded_result;
+}
+
+void pin_set (
+    GPIO_TypeDef *gpio_port, // GPIOA, GPIOB, ...
+    uint8_t pin, // 0-15
+    bool high
+)
+{
+    if (high)
+    {
+        gpio_port->BSRR = (1U << pin);
+    } else { // set low
+        gpio_port->BSRR = ((1U << pin) << 16);
+    }
 }
