@@ -90,7 +90,7 @@
     #define DACADDR_SER_PIN            12                  // DAC_INIT_Data = PA12
     #define DACADDR_SRCLK_PIN          11                  // DAC_INIT_Clock = PA11
     #define DACADDR_LATCH_PORT         GPIOA
-    #define DACADDR_RCLK_PIN           7                  // DAC_INIT_Data = PC13
+    #define DACADDR_RCLK_PIN           0                   // DAC_INIT_Data = PA0
 
 
     /*=============================== SPI 1 ================================*/

@@ -59,8 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SHIFTREG_Latch_Pin GPIO_PIN_13
-#define SHIFTREG_Latch_GPIO_Port GPIOC
 #define Disp3_CS_Pin GPIO_PIN_14
 #define Disp3_CS_GPIO_Port GPIOC
 #define Disp4_CS_Pin GPIO_PIN_15
@@ -77,6 +75,8 @@ void Error_Handler(void);
 #define Disp_PWM_GPIO_Port GPIOC
 #define Comp1_ADC1_C9_Pin GPIO_PIN_3
 #define Comp1_ADC1_C9_GPIO_Port GPIOC
+#define SHIFTREG_Latch_Pin GPIO_PIN_0
+#define SHIFTREG_Latch_GPIO_Port GPIOA
 #define Fader1_MotB_Pin GPIO_PIN_1
 #define Fader1_MotB_GPIO_Port GPIOA
 #define __USART2_TX_Pin GPIO_PIN_2

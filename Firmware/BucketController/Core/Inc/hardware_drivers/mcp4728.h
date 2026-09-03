@@ -158,6 +158,13 @@ uint8_t mcp4728_vrefSelect (
     mcp4728_vref_selection_t vref_select_bits
 );
 
+uint8_t mcp4728_init_single_address(
+    I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
+    uint8_t new_addr,     // new 3-bit address of the selected DAC
+    uint8_t old_addr 
+);
+
 
 /**
  * @brief Selects the gain for the MCP4728.

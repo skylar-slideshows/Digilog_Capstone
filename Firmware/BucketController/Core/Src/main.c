@@ -97,6 +97,7 @@ static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_ADC2_Init(void);
+static void MX_SPI1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -166,6 +167,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C3_Init();
   MX_ADC2_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
@@ -955,23 +957,19 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SHIFTREG_Latch_Pin|Disp3_CS_Pin|Disp4_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Disp3_CS_Pin|Disp4_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
-                          |SPI3_CS0_Pin|Disp2_CS_Pin|Disp1_CS_Pin, GPIO_PIN_RESET);
+                          |Disp2_CS_Pin|Disp1_CS_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SPI3_CS1_GPIO_Port, SPI3_CS1_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : SHIFTREG_Latch_Pin Disp3_CS_Pin Disp4_CS_Pin */
-  GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|Disp3_CS_Pin|Disp4_CS_Pin;
+  /*Configure GPIO pins : Disp3_CS_Pin Disp4_CS_Pin */
+  GPIO_InitStruct.Pin = Disp3_CS_Pin|Disp4_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -983,8 +981,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SPI1_CS_IN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA7 SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_7|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
+  /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
+  GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1004,7 +1002,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI3_CS1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
