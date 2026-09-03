@@ -158,14 +158,6 @@ uint8_t mcp4728_vrefSelect (
     mcp4728_vref_selection_t vref_select_bits
 );
 
-uint8_t mcp4728_init_single_address(
-    I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-    uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
-    uint8_t new_addr,     // new 3-bit address of the selected DAC
-    uint8_t old_addr 
-);
-
-
 /**
  * @brief Selects the gain for the MCP4728.
  *
@@ -286,11 +278,27 @@ uint8_t mcp4728_singleWrite (
  *
  * @return uint8_t Error code (0 for success)
  */
+uint8_t mcp4728_init_single_address (
+    GPIO_TypeDef *dac_scl_port, //!< GPIO port of the i2c clock to which the chip is connected
+    uint8_t dac_scl_pin,        //!< GPIO pin of the i2c clock to which the chip is connected
+    GPIO_TypeDef *dac_sda_port, //!< GPIO port of the i2c data line to which the chip is connected
+    uint8_t dac_sda_pin,        //!< GPIO pin of the i2c data line to which the chip is connected
+    uint8_t ldac_pin_idx,       //!< index on the connected shift-register to which the LDAC pin of this chip is connected
+    uint8_t new_addr,           //!< new 3-bit address of the selected DAC
+    uint8_t old_addr            //!< old 3-bit address of the selected DAC
+);
+
+/**
+ * @brief TODO
+ *
+ * TODO
+ *
+ * @return uint8_t Error code (0 for success)
+ */
 uint8_t mcp4728_init_address (
     I2C_TypeDef *bus,     //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t ldac_pin_idx, //!< index on the connected shift-register to which the LDAC pin of this chip is connected
     uint8_t new_addr      //!< new 3-bit address of the selected DAC
 );
-
 
 #endif /* INC_MCP4728_H_ */

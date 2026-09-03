@@ -37,6 +37,7 @@
 #include "hardware_drivers/74hc595.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "main.h"
+#include "stm32g474xx.h"
 #include <string.h>
 
 #define PLEASE_DONT_LEAK_MEMORY
@@ -273,46 +274,86 @@ uint8_t mcp4728_singleWrite (
  * with its LDAC pin connected to the DAC shift register line
  * returns uint8_t Error code (0 for success)
  */
-void mcp4728_output_byte_callback (uint8_t idx)
+static void pin_set (
+    GPIO_TypeDef *gpio_port, // GPIOA, GPIOB, ...
+    uint8_t pin,             // 0-15
+    bool high
+)
 {
-    if (idx != 1) return;
-    latch_out(false);
+    if (high)
+    {
+        gpio_port->BSRR = (1U << pin);
+    }
+    else
+    { // set low
+        gpio_port->BSRR = ((1U << pin) << 16);
+    }
+}
+
+uint32_t half_cyc;
+// Wait half an I2C clock cycle's worth of time
+static inline void wait_half(void)
+{
+    uint32_t t0 = DWT->CYCCNT;
+    while ((DWT->CYCCNT - t0) < half_cyc) { }
 }
 
 uint8_t mcp4728_init_single_address (
-    I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    GPIO_TypeDef *dac_scl_port, // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t dac_scl_pin,
+    GPIO_TypeDef *dac_sda_port,
+    uint8_t dac_sda_pin,
     uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
     uint8_t new_addr,     // new 3-bit address of the selected DAC
     uint8_t old_addr      // old 3-bit address of the selected DAC
 )
 {
-
-
+    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
     // TODO: double check that CHANNELS matches the number of shift registers connected to the DACs
     // TODO also: validate that (0x01 << ldac_pin_idx) ^ 0xFF changes the correct pin on the shift register
-    for(uint8_t i = 0; i < CHANNELS; i++){
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
         shift_byte(0xFF);
     }
     latch_out(false);
 
-    for(uint8_t i = 0; i < CHANNELS; i++){
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
         shift_byte((0x01 << ldac_pin_idx) ^ 0xFF); // Prepare LDAC pin to be latched
     }
 
-    uint8_t data[3] = {
-        MCP4728_ADDR_WRITE | ((old_addr & 0x07) << 2) | 0x1, //1
-        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x2, //1
-        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x3, //1
+    uint8_t data[4] = {
+        old_addr << 1,                                       // 1
+        MCP4728_ADDR_WRITE | ((old_addr & 0x07) << 2) | 0x1, // 2
+        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x2, // 3
+        MCP4728_ADDR_WRITE | ((new_addr & 0x07) << 2) | 0x3, // 4
     };
 
-    //uint8_t i2c_result = i2c_write_callback(bus, old_addr, data, sizeof(data), &mcp4728_output_byte_callback);
+    // be warned of yucky timing stuff
 
-    for(uint8_t i = 0; i < CHANNELS; i++){
+    pin_set(dac_scl_port, dac_scl_pin, false);
+    wait_half();
+    for (uint8_t byte_idx = 0; byte_idx < sizeof(data); byte_idx++)
+    {
+        uint8_t byte = data[byte_idx];
+        for (uint8_t bit_idx = 0; bit_idx < 8; bit_idx++)
+        {
+            pin_set(dac_scl_port, dac_scl_pin, false);
+            pin_set(dac_sda_port, dac_sda_pin, (byte >> bit_idx) & 1);
+            wait_half();
+            pin_set(dac_scl_port, dac_scl_pin, true);
+            wait_half();
+        }
+        if (byte_idx == 1) latch_out(false);
+    }
+
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
         shift_byte(0xFF);
     }
     latch_out(false);
 
-    return 1;
+    return 0; // TODO consider returning error codes or a void
 }
 
 uint8_t mcp4728_init_address (
@@ -332,7 +373,6 @@ uint8_t mcp4728_init_address (
 
 uint8_t mcp4728_init_all_addresses (void)
 {
-
     uint8_t folded_result = 1;
 
     bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
@@ -340,7 +380,7 @@ uint8_t mcp4728_init_all_addresses (void)
     bb_claim(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin);
     bb_claim(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin);
 
-    // init all addresses one 
+    // init all addresses one
 
     bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4); // alternate function id
     bb_release(I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin, 4);
@@ -348,18 +388,4 @@ uint8_t mcp4728_init_all_addresses (void)
     bb_release(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin, 8);
 
     return folded_result;
-}
-
-void pin_set (
-    GPIO_TypeDef *gpio_port, // GPIOA, GPIOB, ...
-    uint8_t pin, // 0-15
-    bool high
-)
-{
-    if (high)
-    {
-        gpio_port->BSRR = (1U << pin);
-    } else { // set low
-        gpio_port->BSRR = ((1U << pin) << 16);
-    }
 }
