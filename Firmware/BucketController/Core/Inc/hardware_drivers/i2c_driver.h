@@ -168,7 +168,7 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
   @param callback void function which gets called after each byte is written over i2c, accepting a byte index arg
  ----------------------------------------------------------------------------------
 */
-bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(int));
+bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(uint8_t));
 
 
 /**

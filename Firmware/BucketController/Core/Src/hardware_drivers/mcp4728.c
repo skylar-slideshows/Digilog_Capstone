@@ -32,9 +32,10 @@
   **********************************************************************************
 */
 
+#include "CONFIG.h"
 #include "hardware_drivers/mcp4728.h"
+#include "hardware_drivers/74hc595.h"
 #include "hardware_drivers/i2c_driver.h"
-#include <stdlib.h>
 #include <string.h>
 
 #define PLEASE_DONT_LEAK_MEMORY
@@ -267,15 +268,61 @@ uint8_t mcp4728_singleWrite (
 }
 
 /*
- * TODO
- *
+ * Functions related to changing the address of an mcp4728
+ * with its LDAC pin connected to the DAC shift register line
  * returns uint8_t Error code (0 for success)
  */
+void mcp4728_output_byte_callback (uint8_t idx)
+{
+    if (idx != 1) return;
+    latch_out(false);
+}
+
+uint8_t mcp4728_init_single_address (
+    I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
+    uint8_t new_addr,     // new 3-bit address of the selected DAC
+    uint8_t old_addr      // old 3-bit address of the selected DAC
+)
+{
+    // TODO: double check that CHANNELS matches the number of shift registers connected to the DACs
+    // TODO also: validate that (0x01 << ldac_pin_idx) ^ 0xFF changes the correct pin on the shift register
+    for(uint8_t i = 0; i < CHANNELS; i++){
+        shift_byte(0xFF);
+    }
+    latch_out(false);
+
+    for(uint8_t i = 0; i < CHANNELS; i++){
+        shift_byte((0x01 << ldac_pin_idx) ^ 0xFF); // Prepare LDAC pin to be latched
+    }
+
+    uint8_t data[3] = {
+        MCP4728_ADDR_WRITE | (old_addr << 2) | 0x1, //1
+        MCP4728_ADDR_WRITE | (new_addr << 1) | 0x2, //2
+        MCP4728_ADDR_WRITE | (new_addr << 1) | 0x3, //3
+    };
+
+    uint8_t i2c_result = i2c_write_callback(bus, old_addr, data, sizeof(data), &mcp4728_output_byte_callback);
+
+    for(uint8_t i = 0; i < CHANNELS; i++){
+        shift_byte(0xFF);
+    }
+    latch_out(false);
+
+    return !i2c_result;
+}
+
 uint8_t mcp4728_init_address (
     I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
     uint8_t new_addr      // new 3-bit address of the selected DAC
 )
 {
-    // TODO
+    uint8_t folded_result = 1;
+    for (uint8_t target_addr = 0x00; target_addr < 0x08; target_addr++)
+    {
+        folded_result &= mcp4728_init_single_address(bus, ldac_pin_idx, new_addr, target_addr);
+    }
+
+    return folded_result;
 }

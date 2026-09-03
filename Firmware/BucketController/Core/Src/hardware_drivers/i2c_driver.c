@@ -273,7 +273,7 @@ bool i2c_write (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nby
   callback: void function which gets called after each byte is written over i2c, accepting a byte index arg
  ----------------------------------------------------------------------------------
 */
-bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(int))
+bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, uint8_t nbytes, void (*callback)(uint8_t))
 {
     if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data)) return false;
     if (!bus_idle(bus)) // idle timeout 1000us
@@ -291,6 +291,7 @@ bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, ui
         LL_I2C_MODE_AUTOEND,
         LL_I2C_GENERATE_START_WRITE
     );
+    callback(0);
 
     // send the content of the message
     for (uint8_t i = 0; i < nbytes; i++)
@@ -301,7 +302,7 @@ bool i2c_write_callback (I2C_TypeDef *bus, uint8_t addr, const uint8_t *data, ui
             return false;
         }
         bus->TXDR = data[i];
-        callback(i);
+        callback(i+1);
     }
 
     if (!wait_flag(bus, I2C_ISR_STOPF, false))
