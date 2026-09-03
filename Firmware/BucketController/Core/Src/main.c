@@ -62,7 +62,6 @@ I2C_HandleTypeDef hi2c2;
 I2C_HandleTypeDef hi2c3;
 I2C_HandleTypeDef hi2c4;
 
-SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 SPI_HandleTypeDef hspi3;
 
@@ -90,7 +89,6 @@ static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_I2C4_Init(void);
-static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_TIM2_Init(void);
@@ -160,7 +158,6 @@ int main(void)
   MX_I2C1_Init();
   MX_I2C2_Init();
   MX_I2C4_Init();
-  MX_SPI1_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
   MX_TIM2_Init();
@@ -176,6 +173,7 @@ int main(void)
 
   // i2c startup
   i2c_init();
+
   if(DEVELOPER_MODE)
   {
     setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
@@ -191,6 +189,10 @@ int main(void)
 
   dac_shiftreg_init();
   get_encoder_motion(enc0_info, enc0, &enc0);
+
+  printf("*******************************************************\r\n");
+
+
 
   /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
 
@@ -611,45 +613,6 @@ static void MX_I2C4_Init(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_SLAVE;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 7;
-  hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
-
-}
-
-/**
   * @brief SPI2 Initialization Function
   * @param None
   * @retval None
@@ -998,11 +961,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, SHIFTREG_Latch_Pin|Disp3_CS_Pin|Disp4_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
-                          |SPI3_CS0_Pin|Disp2_CS_Pin|Disp1_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
+                          |SPI3_CS0_Pin|Disp2_CS_Pin|Disp1_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI3_CS1_GPIO_Port, SPI3_CS1_Pin, GPIO_PIN_RESET);
@@ -1020,6 +983,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SPI1_CS_IN_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PA7 SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_7|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pins : Disp_DC_Pin LED_Data_Pin LED_Clock_Pin LED_Latch_Pin
                            SPI3_CS0_Pin Disp2_CS_Pin Disp1_CS_Pin */
   GPIO_InitStruct.Pin = Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
@@ -1028,13 +998,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
-  GPIO_InitStruct.Pin = SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI3_CS1_Pin */
   GPIO_InitStruct.Pin = SPI3_CS1_Pin;
@@ -1062,6 +1025,11 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+
+  
+
+
+
   led_brightness(10);
 
   knob_scale(0, 0, SCALE_LEFT);
@@ -1073,11 +1041,17 @@ void StartDefaultTask(void *argument)
 
   uint8_t knob = 0;
   uint8_t knob_sens_mult = 2;
+
   
 
   for (;;)
   {
-    encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
+
+    mcp4728_init_address(I2C1, 6, 0x61);
+
+    HAL_Delay(30);
+
+    /*encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
 
     if(enc0_turn == ENCODER_TURN_A) // LEFT
     {
@@ -1091,7 +1065,7 @@ void StartDefaultTask(void *argument)
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();
 
-    }
+    }*/
     
   }
 

@@ -77,8 +77,6 @@ void Error_Handler(void);
 #define Disp_PWM_GPIO_Port GPIOC
 #define Comp1_ADC1_C9_Pin GPIO_PIN_3
 #define Comp1_ADC1_C9_GPIO_Port GPIOC
-#define Fader1_MotA_Pin GPIO_PIN_0
-#define Fader1_MotA_GPIO_Port GPIOA
 #define Fader1_MotB_Pin GPIO_PIN_1
 #define Fader1_MotB_GPIO_Port GPIOA
 #define __USART2_TX_Pin GPIO_PIN_2
@@ -87,12 +85,10 @@ void Error_Handler(void);
 #define __USART2_RX_GPIO_Port GPIOA
 #define Fader3_MotB_Pin GPIO_PIN_4
 #define Fader3_MotB_GPIO_Port GPIOA
-#define SPI1_Clock_IN_Pin GPIO_PIN_5
-#define SPI1_Clock_IN_GPIO_Port GPIOA
+#define Fader1_MotA_Pin GPIO_PIN_5
+#define Fader1_MotA_GPIO_Port GPIOA
 #define Fader3_MotA_Pin GPIO_PIN_6
 #define Fader3_MotA_GPIO_Port GPIOA
-#define SPI1_MOSI_Pin GPIO_PIN_7
-#define SPI1_MOSI_GPIO_Port GPIOA
 #define Comp3_ADC2_C5_Pin GPIO_PIN_4
 #define Comp3_ADC2_C5_GPIO_Port GPIOC
 #define Comp4_ADC2_C11_Pin GPIO_PIN_5
@@ -149,8 +145,6 @@ void Error_Handler(void);
 #define SPI3_CS1_GPIO_Port GPIOD
 #define SPI3_CS0_Pin GPIO_PIN_3
 #define SPI3_CS0_GPIO_Port GPIOB
-#define SPI1_MISO_Pin GPIO_PIN_4
-#define SPI1_MISO_GPIO_Port GPIOB
 #define I2C3_Data_Pin GPIO_PIN_5
 #define I2C3_Data_GPIO_Port GPIOB
 #define Disp2_CS_Pin GPIO_PIN_6
