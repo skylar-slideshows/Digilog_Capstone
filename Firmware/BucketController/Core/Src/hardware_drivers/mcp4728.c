@@ -356,10 +356,5 @@ void pin_set (
     bool high
 )
 {
-    if (high)
-    {
-        gpio_port->BSRR = (1U << pin);
-    } else { // set low
-        gpio_port->BSRR = ((1U << pin) << 16);
-    }
+        gpio_port->BSRR = high ? (1U << pin) : ((1U << pin) << 16);
 }

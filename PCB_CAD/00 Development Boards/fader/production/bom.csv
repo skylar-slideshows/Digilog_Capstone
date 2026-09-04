@@ -1,17 +1,23 @@
 ﻿Designator,Footprint,Quantity,Value,LCSC Part #
-"C1, C2",0603,2,100n,C1590
-C10,0603,1,4.7n,C1621
-"C11, C5",0603,2,10n,C1589
-"C3, C4",CP_Elec_6.3x5.4,2,47u,C3344
-"C6, C7, C8",0805,3,10u,C1713
-C9,0603,1,2.2n,C1604
+"C1, C12, C2",C_Disc_D10.5mm_W5.0mm_P5.00mm,3,100n,
+C10,C_Disc_D10.5mm_W5.0mm_P5.00mm,1,4.7n,
+"C11, C5",C_Disc_D10.5mm_W5.0mm_P5.00mm,2,10n,
+C13,CP_EIA-3216-18_Kemet-A,1,100n,C7173
+"C14, C15",C_Disc_D10.5mm_W5.0mm_P5.00mm,2,1u,
+"C3, C4",CP_Radial_D6.3mm_P2.50mm,2,47u,
+"C6, C7, C8",CP_Radial_D10.0mm_P5.00mm,3,10u,
+C9,C_Disc_D10.5mm_W5.0mm_P5.00mm,1,2.2n,
 F1,TRIM_RSA0N11M9A07,1,Alps_RSA0N11M9,
-"FB1, FB2",Ferrite_0805_2012Metric,2,Ferrite_Bead,C1017
+"FB1, FB2",LairdTech_28C0236-0JW-10,2,Ferrite_Bead,
 J1,PinHeader_1x04_P2.54mm_Vertical,1,IO,
 J2,PinHeader_1x04_P2.54mm_Vertical,1,POWER,
-J3,BarrelJack_Horizontal,1,Jack-DC,
-R1,1206,1,100k,C17900
-R2,0805,1,10k,C17414
-U1,SOT-23-6,1,AT42QT1011-TSHR,C112956
-U2,Texas_HTSOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.95x4.9mm_Mask2.4x3.1mm_ThermalVias,1,DRV8871DDA,C75864
-U3,SOT-223-3_TabPin2,1,LM1117MP-3.3,C6186
+J3,PinHeader_1x04_P2.54mm_Vertical,1,SPI,
+J4,BarrelJack_Horizontal,1,Jack-DC,
+J5,PinHeader_2x04_P2.54mm_Vertical,1,ADC CHNL,
+"JP1, JP2, JP3, JP4, JP5, JP6",SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm,6,SolderJumper_2_Open,
+R1,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,1,100k,
+R2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,1,10k,
+"U1, U2",SOT-223-3_TabPin2,2,LM1117MP-3.3,C6186
+U3,SOT-23-6,1,AT42QT1011-TSHR,C112956
+U4,Texas_HTSOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.95x4.9mm_Mask2.4x3.1mm_ThermalVias,1,DRV8871DDA,C75864
+U5,VSSOP-10_3x3mm_P0.5mm,1,ADC124S021,C201562
