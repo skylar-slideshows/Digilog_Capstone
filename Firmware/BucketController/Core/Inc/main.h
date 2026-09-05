@@ -73,8 +73,8 @@ void Error_Handler(void);
 #define Disp_PWM_GPIO_Port GPIOC
 #define Comp1_ADC1_C9_Pin GPIO_PIN_3
 #define Comp1_ADC1_C9_GPIO_Port GPIOC
-#define SHIFTREG_Latch_Pin GPIO_PIN_0
-#define SHIFTREG_Latch_GPIO_Port GPIOA
+#define DACADDR_Latch_Pin GPIO_PIN_0
+#define DACADDR_Latch_GPIO_Port GPIOA
 #define Fader1_MotB_Pin GPIO_PIN_1
 #define Fader1_MotB_GPIO_Port GPIOA
 #define __USART2_TX_Pin GPIO_PIN_2
@@ -145,6 +145,10 @@ void Error_Handler(void);
 #define SPI1_Clock_GPIO_Port GPIOB
 #define I2C3_Data_Pin GPIO_PIN_5
 #define I2C3_Data_GPIO_Port GPIOB
+#define MCP23S17_INTB_Pin GPIO_PIN_6
+#define MCP23S17_INTB_GPIO_Port GPIOB
+#define SHIFTREG_Latch_Pin GPIO_PIN_7
+#define SHIFTREG_Latch_GPIO_Port GPIOB
 #define I2C1_Data_Pin GPIO_PIN_9
 #define I2C1_Data_GPIO_Port GPIOB
 

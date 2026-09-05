@@ -1004,10 +1004,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(SPI3_CS_ADC_GPIO_Port, SPI3_CS_ADC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DACADDR_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
+                          |SHIFTREG_Latch_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI3_CS_23S17_GPIO_Port, SPI3_CS_23S17_Pin, GPIO_PIN_RESET);
@@ -1025,15 +1026,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SPI1_CS_IN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
-  GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
+  /*Configure GPIO pins : DACADDR_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
+  GPIO_InitStruct.Pin = DACADDR_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Disp_DC_Pin LED_Data_Pin LED_Clock_Pin LED_Latch_Pin */
-  GPIO_InitStruct.Pin = Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin;
+  /*Configure GPIO pins : Disp_DC_Pin LED_Data_Pin LED_Clock_Pin LED_Latch_Pin
+                           SHIFTREG_Latch_Pin */
+  GPIO_InitStruct.Pin = Disp_DC_Pin|LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin
+                          |SHIFTREG_Latch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1045,6 +1048,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI3_CS_23S17_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MCP23S17_INTB_Pin */
+  GPIO_InitStruct.Pin = MCP23S17_INTB_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(MCP23S17_INTB_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

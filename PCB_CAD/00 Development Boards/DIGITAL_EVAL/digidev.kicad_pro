@@ -534,9 +534,9 @@
     "annotate_start_num": 0,
     "annotation": {
       "method": 0,
-      "sort_order": 0
+      "sort_order": 1
     },
-    "bom_export_filename": "${PROJECTNAME}.csv",
+    "bom_export_filename": "../bom_jlc.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -561,34 +561,34 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Value",
           "name": "Value",
           "show": true
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "DNP",
           "name": "${DNP}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -597,13 +597,49 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
+          "show": false
+        },
+        {
+          "group_by": true,
+          "label": "LCSC",
+          "name": "LCSC",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "PURC_LINK",
+          "name": "PURC_LINK",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Field5",
+          "name": "Field5",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description",
+          "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "#",
+          "name": "${ITEM_NUMBER}",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "Default Editing",
+      "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
     },
@@ -648,13 +684,21 @@
         "uuid": "c7a57d0a-9655-40ea-aac3-e2d8c40e8644"
       }
     ],
-    "used_designators": "Q1,J1,J29-35,J63-65,X1,L1,DZ2-3,P1,C2-24,C50-55,C59-60,C68-100,C102-111,FB1,U1-27,SW23,D17-20,#PWR6-74,#PWR128-129,#PWR132-134,#PWR143-145,#PWR147-152,#PWR154,#PWR157,#PWR159,#PWR161,#PWR163,#PWR165,#PWR167,#PWR169,#PWR171-173,#PWR177-178,#PWR194-195,#PWR197-198,#PWR209-228,#PWR230-241,#PWR243-285,R1,R100,R102-104,R108-109,R112-122",
+    "used_designators": "BOOT_MODE1,JP1,Q1,J1-20,J29-35,J52-65,X1,L1,DZ1-3,P1,C1-100,C102-111,FB1,U1-39,SW1,SW23,D1-6,D16-21,#PWR1-201,#PWR209-228,#PWR230-285,R1-19,R100-104,R108-110,R112-122",
     "variants": []
   },
   "sheets": [
     [
       "c7a57d0a-9655-40ea-aac3-e2d8c40e8644",
       "Root"
+    ],
+    [
+      "98104ef5-1006-46cc-a8c5-03a6bb1c894d",
+      "DACs"
+    ],
+    [
+      "3c9af4cc-398c-40d9-af6e-ebc89fd9eaeb",
+      "Shift_Reg_CV_Switch"
     ]
   ],
   "text_variables": {},
