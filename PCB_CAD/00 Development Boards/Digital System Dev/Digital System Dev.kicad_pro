@@ -536,7 +536,7 @@
       "method": 0,
       "sort_order": 0
     },
-    "bom_export_filename": "${PROJECTNAME}.csv",
+    "bom_export_filename": "../bom_jlc.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -561,7 +561,7 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
           "group_by": true,
@@ -570,22 +570,22 @@
           "show": true
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "DNP",
           "name": "${DNP}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": true
+          "show": false
         },
         {
           "group_by": true,
@@ -597,13 +597,55 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
+          "show": false
+        },
+        {
+          "group_by": true,
+          "label": "LCSC",
+          "name": "LCSC",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "PURC_LINK",
+          "name": "PURC_LINK",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Device",
+          "name": "Sim.Device",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Field5",
+          "name": "Field5",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description",
+          "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "#",
+          "name": "${ITEM_NUMBER}",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "Default Editing",
+      "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
     },
@@ -648,7 +690,7 @@
         "uuid": "bac14397-d362-4ce7-b0b5-2362ec4955a2"
       }
     ],
-    "used_designators": "BOOT_MODE1,X1,J2-10,J12-13,J15-20,J24-31,J101-108,C15-27,C34-39,C44-46,C48,C62-73,C101-124,FB1,U1-8,U28-39,U101-104,SW1,SW101-110,TP9-10,TP19-20,Q1,#PWR1,#PWR3-6,#PWR8-10,#PWR17-19,#PWR25,#PWR27-54,#PWR58-59,#PWR65-68,#PWR74-77,#PWR79-97,#PWR99-106,#PWR111-122,#PWR125,#PWR128,#PWR139-251,#PWR253-254,#PWR263-264,#PWR271-272,D4-5,D101-106,DZ1-2,R1-2,R7-14,R18-23,R25-27,R101-142",
+    "used_designators": "F1-2,BOOT_MODE1,L1-2,X1,J2-10,J12-13,J15-20,J24-31,J101-108,C8-73,C101-128,FB1,U1-8,U28-39,U101-104,SW1,SW101-110,TP9-11,TP19-20,Q1,#PWR1-21,#PWR25,#PWR27-70,#PWR74-107,#PWR111-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,DZ1-3,R1-28,R101-142",
     "variants": []
   },
   "sheets": [
