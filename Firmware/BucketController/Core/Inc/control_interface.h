@@ -51,30 +51,44 @@ typedef struct
     u_scalar_control_t de_ess_amt;   //!< TODO desc / De-Ess Amt range (dB-like; same units as threshold)
 } comp_control_t;
 
+
+/**
+ * @brief Full set of control values on a channel
+ */
 typedef struct
 {
-    channel_input_selection_t input_type_selection;
+    /* OTHER CHANNEL STUFF */
 
-    s_scalar_control_t input_gain;
+    channel_input_selection_t input_type_selection; //!< Mic/Line/Hi-Z input type
 
-    bool phantom_48v;
-    bool phase_flip;
-    bool high_pass_filter;
+    s_scalar_control_t input_gain;  //!< TODO desc / gain range (dB-like)
+    s_scalar_control_t output_gain; //!< TODO desc / gain range (dB-like)
+    s_scalar_control_t output_pan;  //!< TODO desc / pan range
+
+    bool phantom_48v;      //!< TODO
+    bool phase_flip;       //!< TODO
+    bool high_pass_filter; //!< TODO
+
+    bool muted; //!< Whether all output from this channel is muted
+
+    bool ins;       //!< TODO
+    bool pre_fader; //!< TODO
+    bool record;    //!< TODO
 
     /* SENDS STUFF */
 
-    send_channel_control_t send_controls[4];
+    send_channel_control_t send_controls[4]; //!< Controls for send channels 1-4
 
     /* EQ STUFF */
 
-    eq_band_control_t hf_control;
-    eq_band_control_t hmf_control;
-    eq_band_control_t lmf_control;
-    eq_band_control_t lf_control;
+    eq_band_control_t hf_control;  //!< EQ controls for the HF band
+    eq_band_control_t hmf_control; //!< EQ controls for the HMF band
+    eq_band_control_t lmf_control; //!< EQ controls for the LMF band
+    eq_band_control_t lf_control;  //!< EQ controls for the LF band
 
     /* COMP STUFF */
 
-    comp_control_t comp_control;
+    comp_control_t comp_control; //!< Compressor controls
 } channel_controls;
 
 #endif
