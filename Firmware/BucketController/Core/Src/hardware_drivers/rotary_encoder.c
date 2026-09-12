@@ -33,7 +33,6 @@
 */
 
 #include <stdbool.h>
-#include <stdio.h>
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/mcp23017.h"
 
@@ -41,7 +40,7 @@
 /**
  ----------------------------------------------------------------------------------
   @brief INTERNAL poll_encoder_state : encoder, encoder state -> bool
-  reads BOTH ports of the associated mcp23017 and gets the encoder state from the pins
+  reads cached state of the associated mcp23017 and gets the encoder state from the pins
   @param encoder 
   @param out
  ----------------------------------------------------------------------------------
@@ -52,7 +51,7 @@ static bool poll_encoder_state (
 )
 {
     uint8_t ports[2];   // [0] = GPIOA, [1] = GPIOB
-    if (!mcp23017_read(encoder->i2c_bus, encoder->i2c_addr, ports)) return false;
+    mcp23017_read_from_cache(encoder->i2c_bus, encoder->i2c_addr, ports);
 
     out->a = (ports[encoder->a_register - MCP_GPIOA] >> encoder->a_pin) & 1; // subtracts the base to
     out->b = (ports[encoder->b_register - MCP_GPIOA] >> encoder->b_pin) & 1; // MCP_GPIOA both not a typo

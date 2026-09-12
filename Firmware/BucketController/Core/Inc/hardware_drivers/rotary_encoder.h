@@ -88,7 +88,7 @@ typedef enum
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Get the direction of a rotary encoder's turn
+  @brief Get the direction of a rotary encoder's turn. Must poll/cache the associated mcp23017 first.
  ----------------------------------------------------------------------------------
 */
 encoder_turn_action_t get_encoder_motion (
