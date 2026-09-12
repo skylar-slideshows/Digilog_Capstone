@@ -8,6 +8,8 @@
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/led_driver.h"
 
+#define SEND_CHANNELS 4
+
 typedef uint32_t u_scalar_control_t;
 typedef int32_t s_scalar_control_t;
 
@@ -77,7 +79,7 @@ typedef struct
 
     /* SENDS STUFF */
 
-    send_channel_control_t send_controls[4]; //!< Controls for send channels 1-4
+    send_channel_control_t send_controls[SEND_CHANNELS]; //!< Controls for send channels 1-4
 
     /* EQ STUFF */
 
