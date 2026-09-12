@@ -290,13 +290,13 @@ void i2c_probeall (void)
         for (uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
         {
             bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
-            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b + 1, succ ? "GOOD" : "FAILED or not present");
         }
 
         for (uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
         {
             bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
-            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b, succ ? "GOOD" : "FAILED or not present");
+            printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b + 1, succ ? "GOOD" : "FAILED or not present");
         }
 
         printf("\r\n");

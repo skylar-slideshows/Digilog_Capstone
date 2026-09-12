@@ -122,7 +122,9 @@ int __io_putchar(int ch)
 }
 
 encoder_state_t enc0;
-encoder_info_t enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=0, .b_register=MCP_GPIOB, .b_pin=1 };
+encoder_info_t enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOA, .a_pin=0, .b_register=MCP_GPIOA, .b_pin=1 };
+encoder_state_t enc1;
+encoder_info_t enc1_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=1, .b_register=MCP_GPIOB, .b_pin=0 };
 
 /* USER CODE END 0 */
 
@@ -193,6 +195,7 @@ int main(void)
 
   dac_shiftreg_init();
   get_encoder_motion(enc0_info, enc0, &enc0);
+  get_encoder_motion(enc1_info, enc1, &enc1);
 
   printf("*******************************************************\r\n");
 
@@ -1082,25 +1085,24 @@ void StartDefaultTask(void *argument)
   led_brightness(10);
 
   knob_scale(0, 0, SCALE_LEFT);
+  knob_scale(0, 1, SCALE_LEFT);
   knob_disp(0, 0, 0);
-  knob_led(0, 0, 0);
+  knob_disp(0, 1, 0);
+  //knob_led(0, 0, 20);
+  knob_led(0, 1, 20);
   led_update();
 
   mcp23017_init(I2C1, 0x20);
 
   uint8_t knob = 0;
+  uint8_t knob1 = 0;
   uint8_t knob_sens_mult = 2;
-
-  
 
   for (;;)
   {
 
-    mcp4728_init_address(I2C1, 6, 0x61);
-
-    HAL_Delay(30);
-
-    /*encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
+    encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
+    encoder_turn_action_t enc1_turn = get_encoder_motion(enc1_info, enc1, &enc1);
 
     if(enc0_turn == ENCODER_TURN_A) // LEFT
     {
@@ -1114,7 +1116,21 @@ void StartDefaultTask(void *argument)
       knob_led(0, 0, knob / knob_sens_mult);
       led_update();
 
-    }*/
+    }
+
+    if(enc1_turn == ENCODER_TURN_A) // LEFT
+    {
+      if(knob1 > 0) { knob1--; }
+      knob_led(0, 1, knob1 / knob_sens_mult);
+      led_update();
+
+    } else if(enc1_turn == ENCODER_TURN_B) // RIGHT
+    {
+      if(knob1 < 32*knob_sens_mult) { knob1++; }
+      knob_led(0, 1, knob1 / knob_sens_mult);
+      led_update();
+
+    }
     
   }
 
