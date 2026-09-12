@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "CONFIG.h"
 #include "hardware_drivers/rotary_encoder.h"
@@ -172,11 +173,78 @@ typedef struct
 } channel_control_io_t;
 
 
+typedef struct
+{
+    encoder_turn_action_t gain_encoder_state;
+    encoder_turn_action_t q_encoder_state;
+    encoder_turn_action_t freq_encoder_state;
+} eq_band_interface_state_t;
+
+typedef struct
+{
+    encoder_state_t gain_encoder;
+    encoder_state_t pan_encoder; //!< Note that pan is not used for send channel 4
+} send_channel_interface_state_t;
+
+typedef struct
+{
+    encoder_state_t in_gain_encoder_state;
+    encoder_state_t out_gain_encoder_state;
+    encoder_state_t attack_time_encoder_state;
+    encoder_state_t release_time_encoder_state;
+    encoder_state_t threshold_encoder_state;
+    encoder_state_t ratio_encoder_state;
+    encoder_state_t de_ess_amt_encoder_state;
+} comp_interface_state_t;
+
+/**
+ * @brief struct containing a snapshot of input states on one channel
+ */
+typedef struct
+{
+    bool mic_input_button_state;
+    bool line_input_button_state;
+    bool hiz_input_button_state;
+
+    encoder_state_t input_gain_encoder_state;
+
+    bool phantom_48v_button_state;
+    bool phase_flip_button_state;
+    bool high_pass_filter_button_state;
+
+    bool send_button_state;
+    bool eq_button_state;
+    bool comp_button_state;
+
+    send_channel_interface_state_t send_channel_interface_states[SEND_CHANNELS];
+
+    eq_band_interface_state_t hf_interface_state;
+    eq_band_interface_state_t hmf_interface_state;
+    eq_band_interface_state_t lmf_interface_state;
+    eq_band_interface_state_t lf_interface_state;
+
+    comp_interface_state_t comp_interface_state;
+
+    bool solo_button_state;
+    bool mute_button_state;
+    bool sel_button_state;
+
+    bool ins_button_state;
+    bool pre_button_state;
+    bool rec_button_state;
+
+    // TODO: Hold duration counters for buttons
+} channel_control_io_state;
+
+
+/* ACTUAL CODE STARTS BELOW no more data structures PLEASE, i have a headache and this is way too many lines for one C file */
+
+
 /**
  * @brief Holds info on all control interface IO for all 4 channels in the bucket
  */
 channel_control_io_t channel_controls_io[CHANNELS];
-
+channel_control_io_state channel_states[CHANNELS];
 
 static void init_control_io (uint8_t channel)
 {
@@ -229,5 +297,133 @@ void init_control_interface (void)
     {
         init_control_io(channel);
         init_control_vals(channel);
+    }
+}
+
+
+/* Functions related to accepting some states and updating control values */
+
+// Use negative sensitivity for backwards turning
+static void update_u_value_from_encoder_motion (
+    encoder_state_t *state,
+    encoder_info_t *info,
+    u_scalar_control_t *out,
+    s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+)
+{
+    encoder_turn_action_t motion = get_encoder_motion(*info, *state, state);
+    if (motion == ENCODER_TURN_B)
+    {
+        sensitivity = -sensitivity;
+    }
+    else if (motion != ENCODER_TURN_A)
+    {
+        return;
+    }
+
+    if (sensitivity > 0 && U_SCALAR_CONTROL_MAX - *out < (uint32_t)sensitivity)
+    {
+        *out = U_SCALAR_CONTROL_MAX;
+    }
+    else if (sensitivity < 0 && (uint32_t)(-sensitivity) > *out)
+    {
+        *out = 0;
+    }
+    else
+    {
+        *out += sensitivity;
+    }
+}
+
+static void update_s_value_from_encoder_motion (
+    encoder_state_t *state,
+    encoder_info_t *info,
+    s_scalar_control_t *out,
+    s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+)
+{
+    encoder_turn_action_t motion = get_encoder_motion(*info, *state, state);
+    if (motion == ENCODER_TURN_B)
+    {
+        sensitivity = -sensitivity;
+    }
+    else if (motion != ENCODER_TURN_A)
+    {
+        return;
+    }
+
+    if (sensitivity > 0 && *out > S_SCALAR_CONTROL_MAX - sensitivity)
+    {
+        *out = S_SCALAR_CONTROL_MAX;
+    }
+    else if (sensitivity < 0 && *out < S_SCALAR_CONTROL_MIN - sensitivity)
+    {
+        *out = S_SCALAR_CONTROL_MIN;
+    }
+    else
+    {
+        *out += sensitivity;
+    }
+}
+
+void update_toggle_button_val_from_info (bool *btn_state, button_info_t *info, bool *val_out)
+{
+    uint8_t gpio_bits[2];
+    mcp23017_read_from_cache(&(info->bus), info->addr, gpio_bits);
+
+    bool new_button_state;
+    if (info->port == MCP_GPIOA)
+        new_button_state = (gpio_bits[0] >> info->pin) & 1;
+    else
+        new_button_state = (gpio_bits[1] >> info->pin) & 1;
+
+    if (new_button_state && !*btn_state)
+    {
+        *val_out = !*val_out;
+    }
+
+    *btn_state = new_button_state;
+}
+
+static void update_channel_encoder_values (uint8_t channel)
+{
+    channel_controls *vals = &(channel_control_vals[channel]);
+    channel_control_io_state *state = &(channel_states[channel]);
+
+    s_scalar_control_t default_sensitivity = S_SCALAR_CONTROL_MAX / 16;
+
+    update_s_value_from_encoder_motion(
+        &(state->input_gain_encoder_state),
+        &(channel_controls_io->input_gain_encoder),
+        &(vals->input_gain),
+        default_sensitivity
+    );
+
+    // TODO: Do this for the rest of the encoders on the channel
+}
+
+static void update_channel_button_values (uint8_t channel)
+{
+    channel_controls *vals = &(channel_control_vals[channel]);
+    channel_control_io_state *state = &(channel_states[channel]);
+
+    update_toggle_button_val_from_info(&(state->mute_button_state), &(channel_controls_io->mute_button), &(vals->muted));
+
+    // TODO: Do this for the rest of the toggle-buttons on the channel
+    // TODO: handle non-toggle (e.g radio) buttons
+}
+
+/**
+ * Updates control values based on current/previous (cached) input (e.g button/rotary-encoder) states
+ * Gpio expanders should have been polled to cache before running this
+ */
+void update_control_values (void)
+{
+    for (uint8_t channel = 0; channel < CHANNELS; channel++)
+    {
+        update_channel_button_values(channel);
+        update_channel_encoder_values(channel);
+
+        // TODO: non-button/encoder inputs maybe?
     }
 }

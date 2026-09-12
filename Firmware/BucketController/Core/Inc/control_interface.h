@@ -109,4 +109,9 @@ channel_controls channel_control_vals[CHANNELS];
  */
 void init_control_interface (void);
 
+/**
+ * @brief Updates control values based on current/previous (cached) input (e.g button/rotary-encoder) states
+ */
+void update_control_values (void);
+
 #endif
