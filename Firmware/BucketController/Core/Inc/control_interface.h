@@ -5,13 +5,17 @@
 #include <stdbool.h>
 
 #include "CONFIG.h"
-#include "hardware_drivers/rotary_encoder.h"
-#include "hardware_drivers/led_driver.h"
 
 #define SEND_CHANNELS 4
 
 typedef uint32_t u_scalar_control_t;
 typedef int32_t s_scalar_control_t;
+
+#define U_SCALAR_CONTROL_MAX UINT32_MAX
+#define U_SCALAR_CONTROL_MID U_SCALAR_CONTROL_MAX >> 1
+
+#define S_SCALAR_CONTROL_MAX INT32_MAX
+#define S_SCALAR_CONTROL_MIN INT32_MIN
 
 typedef enum
 {
@@ -92,5 +96,17 @@ typedef struct
 
     comp_control_t comp_control; //!< Compressor controls
 } channel_controls;
+
+
+/**
+ * @brief Holds all control values for all channels in the bucket
+ */
+channel_controls channel_control_vals[CHANNELS];
+
+
+/**
+ * @brief Sets default channel control values and hardware configurations. Call before using control values.
+ */
+void init_control_interface (void);
 
 #endif
