@@ -1000,28 +1000,24 @@ void StartDefaultTask(void *argument)
   char buf[80];
   uint8_t n = 0;
 
-  while (1)
-  {
-      uint8_t c;
-      if (HAL_UART_Receive(&huart2, &c, 1, HAL_MAX_DELAY) != HAL_OK) continue;
+  // while (1)
+  // {
+  //     uint8_t c;
+  //     if (HAL_UART_Receive(&huart2, &c, 1, HAL_MAX_DELAY) != HAL_OK) continue;
 
-      if (c == '\r') continue;
+  //     if (c == '\r') continue;
 
-      if (c == '\n' || n >= sizeof(buf) - 1)
-      {
-          buf[n] = '\0';
-          printf("received [%s]\r\n", buf);
-          n = 0;
-      }
-      else
-      {
-          buf[n++] = c;
-      }
-  }
-
-  
-
-
+  //     if (c == '\n' || n >= sizeof(buf) - 1)
+  //     {
+  //         buf[n] = '\0';
+  //         printf("received [%s]\r\n", buf);
+  //         n = 0;
+  //     }
+  //     else
+  //     {
+  //         buf[n++] = c;
+  //     }
+  // }
 
   led_brightness(10);
 
@@ -1034,6 +1030,16 @@ void StartDefaultTask(void *argument)
   led_update();
 
   mcp23017_init(I2C1, 0x20);
+
+  mcp4728_init_address(
+    GPIOA, // Clock port
+    15, // Clock pin
+    GPIOB, // Data port
+    9, // Data pin
+    GPIOB, // ldac port
+    6, // ldac pin
+    0x61 // New addr
+  );
 
   uint8_t knob = 0;
   uint8_t knob1 = 0;
