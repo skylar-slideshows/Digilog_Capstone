@@ -125,10 +125,20 @@ void Error_Handler(void);
 #define __SWCLK_GPIO_Port GPIOA
 #define I2C1_Clock_Pin GPIO_PIN_15
 #define I2C1_Clock_GPIO_Port GPIOA
+#define LDAC4_Pin GPIO_PIN_10
+#define LDAC4_GPIO_Port GPIOC
+#define LDAC3_Pin GPIO_PIN_11
+#define LDAC3_GPIO_Port GPIOC
+#define LDAC2_Pin GPIO_PIN_12
+#define LDAC2_GPIO_Port GPIOC
+#define LDAC1_Pin GPIO_PIN_2
+#define LDAC1_GPIO_Port GPIOD
 #define SPI1_Clock_Pin GPIO_PIN_3
 #define SPI1_Clock_GPIO_Port GPIOB
 #define I2C3_Data_Pin GPIO_PIN_5
 #define I2C3_Data_GPIO_Port GPIOB
+#define LDAC0_Pin GPIO_PIN_6
+#define LDAC0_GPIO_Port GPIOB
 #define I2C1_Data_Pin GPIO_PIN_9
 #define I2C1_Data_GPIO_Port GPIOB
 
