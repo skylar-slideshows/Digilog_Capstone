@@ -3,20 +3,10 @@
 
 #include "CONFIG.h"
 #include "hardware_drivers/rotary_encoder.h"
-#include "hardware_drivers/mcp23017.h"
+#include "hardware_drivers/button_driver.h"
 #include "stm32g474xx.h"
 #include "control_interface.h"
 
-/**
- * @brief Info on the location of a single button
- */
-typedef struct
-{
-    I2C_TypeDef bus;   //!< I2C bus of the gpio expander which the button is connected to
-    uint8_t addr;      //!< I2C address of the gpio expander
-    MCP23017_Reg port; //!< Register/Port on the MCP23017 that the button pin is on;
-    uint8_t pin;       //!< Pin which the button output is connected to
-} button_info_t;
 
 /**
  * @brief Info on the location of a single button LED
@@ -366,16 +356,9 @@ static void update_s_value_from_encoder_motion (
     }
 }
 
-void update_toggle_button_val_from_info (bool *btn_state, button_info_t *info, bool *val_out)
+static void update_toggle_button_val_from_info (bool *btn_state, button_info_t *info, bool *val_out)
 {
-    uint8_t gpio_bits[2];
-    mcp23017_read_from_cache(&(info->bus), info->addr, gpio_bits);
-
-    bool new_button_state;
-    if (info->port == MCP_GPIOA)
-        new_button_state = (gpio_bits[0] >> info->pin) & 1;
-    else
-        new_button_state = (gpio_bits[1] >> info->pin) & 1;
+    bool new_button_state = get_button_state(info);
 
     if (new_button_state && !*btn_state)
     {
@@ -396,7 +379,7 @@ static void update_channel_encoder_values (uint8_t channel)
         &(state->input_gain_encoder_state),
         &(channel_controls_io->input_gain_encoder),
         &(vals->input_gain),
-        default_sensitivity
+        get_button_state(&channel_controls_io->input_gain_encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
     );
 
     // TODO: Do this for the rest of the encoders on the channel

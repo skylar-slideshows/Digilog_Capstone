@@ -38,6 +38,7 @@
 #include <stdbool.h>
 #include "mcp23017.h"
 #include "stm32g474xx.h"
+#include "hardware_drivers/button_driver.h"
 
 
 /**
@@ -61,14 +62,14 @@ typedef struct
 */
 typedef struct
 {
-    I2C_TypeDef *i2c_bus;       //!< i2c bus which the associated GPIO expander is connected to
-    uint8_t i2c_addr;           //!< Address of the associated GPIO expander on i2c_bus
-    MCP23017_Reg a_register;    //!< MCP_GPIOA or MCP_GPIOB
-    uint8_t a_pin;              //!< Pin on MCP23017 which encoder output A is connected to
-    MCP23017_Reg b_register;    //!< MCP_GPIOA or MCP_GPIOB
-    uint8_t b_pin;              //!< Pin on MCP23017 which encoder output B is connected to
-    MCP23017_Reg push_register; //!< MCP_GPIOA or MCP_GPIOB
-    uint8_t push_pin;           //!< Pin on MCP23017 which the push-button output of the encoder is connected to
+    I2C_TypeDef *i2c_bus;    //!< i2c bus which the associated GPIO expander is connected to
+    uint8_t i2c_addr;        //!< Address of the associated GPIO expander on i2c_bus
+    MCP23017_Reg a_register; //!< MCP_GPIOA or MCP_GPIOB
+    uint8_t a_pin;           //!< Pin on MCP23017 which encoder output A is connected to
+    MCP23017_Reg b_register; //!< MCP_GPIOA or MCP_GPIOB
+    uint8_t b_pin;           //!< Pin on MCP23017 which encoder output B is connected to
+
+    button_info_t button_info;
 } encoder_info_t;
 
 
