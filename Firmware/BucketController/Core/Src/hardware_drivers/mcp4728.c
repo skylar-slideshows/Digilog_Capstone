@@ -292,10 +292,12 @@ static void pin_set (
 
 uint32_t half_cyc;
 // Wait half an I2C clock cycle's worth of time
-static inline void wait_half(void)
+static inline void wait_half (void)
 {
     uint32_t t0 = DWT->CYCCNT;
-    while ((DWT->CYCCNT - t0) < half_cyc) { }
+    while ((DWT->CYCCNT - t0) < half_cyc)
+    {
+    }
 }
 
 uint8_t mcp4728_init_single_address (
@@ -303,24 +305,16 @@ uint8_t mcp4728_init_single_address (
     uint8_t dac_scl_pin,
     GPIO_TypeDef *dac_sda_port,
     uint8_t dac_sda_pin,
-    uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
-    uint8_t new_addr,     // new 3-bit address of the selected DAC
-    uint8_t old_addr      // old 3-bit address of the selected DAC
+    GPIO_TypeDef *ldac_port, // GPIO port to which the DAC's ldac pin is connected
+    uint8_t ldac_pin,        // GPIO port to which the DAC's ldac pin is connected
+    uint8_t new_addr,        // new 3-bit address of the selected DAC
+    uint8_t old_addr         // old 3-bit address of the selected DAC
 )
 {
     half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
     // TODO: double check that CHANNELS matches the number of shift registers connected to the DACs
     // TODO also: validate that (0x01 << ldac_pin_idx) ^ 0xFF changes the correct pin on the shift register
-    for (uint8_t i = 0; i < CHANNELS; i++)
-    {
-        shift_byte(0xFF);
-    }
-    latch_out(false);
-
-    for (uint8_t i = 0; i < CHANNELS; i++)
-    {
-        shift_byte((0x01 << ldac_pin_idx) ^ 0xFF); // Prepare LDAC pin to be latched
-    }
+    pin_set(ldac_port, ldac_pin, true);
 
     uint8_t data[4] = {
         old_addr << 1,                                       // 1
@@ -344,28 +338,37 @@ uint8_t mcp4728_init_single_address (
             pin_set(dac_scl_port, dac_scl_pin, true);
             wait_half();
         }
-        if (byte_idx == 1) latch_out(false);
+        if (byte_idx == 1) pin_set(ldac_port, ldac_pin, false);
     }
 
-    for (uint8_t i = 0; i < CHANNELS; i++)
-    {
-        shift_byte(0xFF);
-    }
-    latch_out(false);
+    pin_set(ldac_port, ldac_pin, true);
 
     return 0; // TODO consider returning error codes or a void
 }
 
 uint8_t mcp4728_init_address (
-    I2C_TypeDef *bus,     // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-    uint8_t ldac_pin_idx, // index on the connected shift-register to which the LDAC pin of this chip is connected
-    uint8_t new_addr      // new 3-bit address of the selected DAC
+    GPIO_TypeDef *dac_scl_port, // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t dac_scl_pin,
+    GPIO_TypeDef *dac_sda_port,
+    uint8_t dac_sda_pin,
+    GPIO_TypeDef *ldac_port, //!< GPIO port to which the DAC's ldac pin is connected
+    uint8_t ldac_pin,        //!< GPIO port to which the DAC's ldac pin is connected
+    uint8_t new_addr         // new 3-bit address of the selected DAC
 )
 {
     uint8_t folded_result = 1;
     for (uint8_t target_addr = 0x60; target_addr < 0x68; target_addr++)
     {
-        //folded_result &= mcp4728_init_single_address(bus, ldac_pin_idx, new_addr, target_addr);
+        folded_result &= mcp4728_init_single_address(
+            dac_scl_port,
+            dac_scl_pin,
+            dac_sda_port,
+            dac_sda_pin,
+            ldac_port,
+            ldac_pin,
+            new_addr,
+            target_addr
+        );
     }
 
     return folded_result;
