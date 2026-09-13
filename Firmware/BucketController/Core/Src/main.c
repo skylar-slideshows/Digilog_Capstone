@@ -186,6 +186,12 @@ int main(void)
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
 
+    // test stuff with the ui remote control link
+    printf("\r\n$chnm 2 testingggggg\n");
+    printf("\r\n$sw 0 0 10\n");
+    printf("\r\n$ud 0 10 1377\n");
+    printf("\r\n$sw 0 4 1\n");
+
     i2c_probeall();
   }
 
@@ -967,6 +973,30 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+
+  printf("echo test ready  build %s %s\r\n", __DATE__, __TIME__);
+
+  char buf[80];
+  uint8_t n = 0;
+
+  while (1)
+  {
+      uint8_t c;
+      if (HAL_UART_Receive(&huart2, &c, 1, HAL_MAX_DELAY) != HAL_OK) continue;
+
+      if (c == '\r') continue;
+
+      if (c == '\n' || n >= sizeof(buf) - 1)
+      {
+          buf[n] = '\0';
+          printf("received [%s]\r\n", buf);
+          n = 0;
+      }
+      else
+      {
+          buf[n++] = c;
+      }
+  }
 
   
 
