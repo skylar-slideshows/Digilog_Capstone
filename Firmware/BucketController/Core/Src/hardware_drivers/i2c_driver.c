@@ -318,6 +318,26 @@ void bb_claim (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port,
     HAL_GPIO_Init(scl_port, &g);
     g.Pin = sda_pin;
     HAL_GPIO_Init(sda_port, &g);
+
+    /*GPIOA->MODER &= ~(3U << (15 * 2));
+    GPIOA->MODER |=  (1U << (15 * 2));
+
+    // 3. OTYPER: pin 6 -> bit 6 = 1 (open drain)
+    GPIOA->OTYPER |= (1U << 15);
+
+    GPIOA->PUPDR &= ~(3U << (15 * 2));
+    GPIOA->PUPDR |=  (1U << (15 * 2));
+
+    GPIOA->MODER &= ~(3U << (15 * 2));
+    GPIOA->MODER |=  (1U << (15 * 2));
+
+    // 3. OTYPER: pin 6 -> bit 6 = 1 (open drain)
+    GPIOA->OTYPER |= (1U << 15);
+
+    GPIOA->PUPDR &= ~(3U << (15 * 2));
+    GPIOA->PUPDR |=  (1U << (15 * 2));*/
+
+
 }
 
 

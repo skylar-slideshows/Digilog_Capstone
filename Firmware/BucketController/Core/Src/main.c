@@ -1033,13 +1033,13 @@ void StartDefaultTask(void *argument)
 
   bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
   mcp4728_init_address(
-    I2C1_Clock_GPIO_Port, // Clock port
-    (uint8_t)I2C1_Clock_Pin, // Clock pin
-    I2C1_Data_GPIO_Port, // Data port
-    (uint8_t)I2C1_Data_Pin, // Data pin
-    LDAC0_GPIO_Port, // ldac port
-    LDAC0_Pin, // ldac pin
-    0x61 // New addr
+    GPIOA, // Clock port
+    15, // Clock pin
+    GPIOB, // Data port
+    9, // Data pin
+    GPIOB, // ldac port
+    6, // ldac pin
+    0x62 // New addr
   );
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
