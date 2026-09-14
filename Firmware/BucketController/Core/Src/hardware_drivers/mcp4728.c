@@ -38,6 +38,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "main.h"
 #include "stm32g474xx.h"
+#include <stdbool.h>
 #include <string.h>
 
 #define PLEASE_DONT_LEAK_MEMORY
@@ -342,15 +343,13 @@ uint8_t mcp4728_init_single_address (
     pin_set(dac_sda_port, dac_sda_pin, false);
     wait_half();
     wait_half();
-    wait_half();
-    wait_half();
 
     pin_set(dac_scl_port, dac_scl_pin, false);
     wait_half();
     for (uint8_t byte_idx = 0; byte_idx < sizeof(data); byte_idx++)
     {
         uint8_t byte = data[byte_idx];
-        for (uint8_t bit_idx = 7; bit_idx <= 0; bit_idx--)
+        for (int8_t bit_idx = 7; bit_idx >= 0; bit_idx--)
         {
             pin_set(dac_scl_port, dac_scl_pin, false);
             pin_set(dac_sda_port, dac_sda_pin, (byte >> bit_idx) & 1);
@@ -365,6 +364,15 @@ uint8_t mcp4728_init_single_address (
             pin_set(dac_scl_port, dac_scl_pin, true);
             wait_half();
     }
+    pin_set(dac_scl_port, dac_scl_pin, false);
+    wait_half();
+    pin_set(dac_sda_port, dac_sda_pin, false);
+    wait_half();
+    pin_set(dac_scl_port, dac_scl_pin, true);
+    wait_half();
+    pin_set(dac_sda_port, dac_sda_pin, true);
+    wait_half();
+    wait_half();
 
     pin_set(ldac_port, ldac_pin, true);
 
@@ -384,7 +392,7 @@ uint8_t mcp4728_init_address (
     uint8_t folded_result = 1;
     for (uint8_t target_addr = 0x60; target_addr < 0x68; target_addr++)
     {
-        //if(target_addr == new_addr) {continue;}
+        if(target_addr == new_addr) {continue;}
         folded_result &= mcp4728_init_single_address(
             dac_scl_port,
             dac_scl_pin,
