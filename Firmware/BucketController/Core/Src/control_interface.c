@@ -8,6 +8,9 @@
 #include "control_interface.h"
 
 
+/*=============================== INDIVIDUAL HARDWARE DATA STRUCTURES ================================*/
+
+
 /**
  * @brief Info on the location of a single button LED
  */
@@ -25,6 +28,24 @@ typedef struct
     uint8_t knob_num;
 } led_ring_info_t;
 
+/**
+ * @brief Info on the rotary encoder and led ring of one knob
+ */
+typedef struct
+{
+    encoder_info_t encoder;
+    led_ring_info_t led_ring;
+} knob_info_t;
+
+/**
+ * @brief Info on the button and led of a lit button
+ */
+typedef struct
+{
+    button_info_t button;
+    button_led_info_t led;
+} lit_button_info_t;
+
 //! PLACEHOLDER for when the fader driver is created
 typedef struct
 {
@@ -38,19 +59,17 @@ typedef struct
 } fader_led_bar_info_t;
 
 
+/*=============================== HARDWARE SETS FOR SECTIONS OF A CHANNEL ================================*/
+
+
 /**
  * @brief Info on physical interfaces related to a single EQ band on a single channel
  */
 typedef struct
 {
-    encoder_info_t gain_encoder;
-    led_ring_info_t gain_led_ring;
-
-    encoder_info_t q_encoder;
-    led_ring_info_t q_led_ring;
-
-    encoder_info_t freq_encoder;
-    led_ring_info_t freq_led_ring;
+    knob_info_t gain_knob;
+    knob_info_t q_knob;
+    knob_info_t freq_knob;
 } eq_band_interface_t;
 
 
@@ -59,77 +78,36 @@ typedef struct
  */
 typedef struct
 {
-    encoder_info_t gain_encoder;
-    led_ring_info_t gain_led_ring;
-
-    encoder_info_t pan_encoder;   //!< Note that pan is not used for send channel 4
-    led_ring_info_t pan_led_ring; //!< Note that pan is not used for send channel 4
+    knob_info_t gain_knob;
+    knob_info_t pan_knob; //!< Note that pan is not used for send channel 4
 } send_channel_interface_t;
 
 typedef struct
 {
-    encoder_info_t in_gain_encoder;
-    led_ring_info_t in_gain_led_ring;
-
-    encoder_info_t out_gain_encoder;
-    led_ring_info_t out_gain_led_ring;
-
-
-    encoder_info_t attack_time_encoder;
-    led_ring_info_t attack_time_led_ring;
-
-    encoder_info_t release_time_encoder;
-    led_ring_info_t release_time_led_ring;
-
-    encoder_info_t threshold_encoder;
-    led_ring_info_t threshold_led_ring;
-
-    encoder_info_t ratio_encoder;
-    led_ring_info_t ratio_led_ring;
-
-    encoder_info_t de_ess_amt_encoder;
-    led_ring_info_t de_ess_amt_led_ring;
+    knob_info_t in_gain_knob;
+    knob_info_t out_gain_knob;
+    knob_info_t attack_time_knob;
+    knob_info_t release_time_knob;
+    knob_info_t threshold_knob;
+    knob_info_t ratio_knob;
+    knob_info_t de_ess_amt_knob;
 } comp_interface_t;
 
 
 typedef struct
 {
-    button_info_t mic_input_button;
-    button_led_info_t mic_input_led;
-
-    button_info_t line_input_button;
-    button_led_info_t line_input_led;
-
-    button_info_t hiz_input_button;
-    button_led_info_t hiz_input_led;
-
-
-    encoder_info_t input_gain_encoder;
-    led_ring_info_t input_gain_led_ring;
-
-
-    button_info_t phantom_48v_button;
-    button_led_info_t phantom_48v_led;
-
-    button_info_t phase_flip_button;
-    button_led_info_t phase_flip_led;
-
-    button_info_t high_pass_filter_button;
-    button_led_info_t high_pass_filter_led;
-
-
-    button_info_t send_button;
-    button_led_info_t send_led;
-
-    button_info_t eq_button;
-    button_led_info_t eq_led;
-
-    button_info_t comp_button;
-    button_led_info_t comp_led;
-
+    lit_button_info_t mic_input_button;
+    lit_button_info_t line_input_button;
+    lit_button_info_t hiz_input_button;
+    knob_info_t input_gain_knob;
+    lit_button_info_t phantom_48v_button;
+    lit_button_info_t phase_flip_button;
+    lit_button_info_t high_pass_filter_button;
+    lit_button_info_t send_button;
+    lit_button_info_t eq_button;
+    lit_button_info_t comp_button;
 
     send_channel_interface_t send_channel_interfaces[SEND_CHANNELS];
-
 
     eq_band_interface_t hf_interface;
     eq_band_interface_t hmf_interface;
@@ -138,29 +116,20 @@ typedef struct
 
     comp_interface_t comp_interface;
 
+    lit_button_info_t solo_button;
+    lit_button_info_t mute_button;
+    lit_button_info_t sel_button;
 
-    button_info_t solo_button;
-    button_led_info_t solo_led;
-
-    button_info_t mute_button;
-    button_led_info_t mute_led;
-
-    button_info_t sel_button;
-    button_led_info_t sel_led;
-
-
-    button_info_t ins_button;
-    button_led_info_t ins_led;
-
-    button_info_t pre_button;
-    button_led_info_t pre_led;
-
-    button_info_t rec_button;
-    button_led_info_t rec_led;
+    lit_button_info_t ins_button;
+    lit_button_info_t pre_button;
+    lit_button_info_t rec_button;
 
     fader_info_t fader;
     fader_led_bar_info_t fader_led_bar;
 } channel_control_io_t;
+
+
+/*=============================== HARDWARE STATE SETS FOR SECTIONS OF A CHANNEL ================================*/
 
 
 typedef struct
@@ -227,7 +196,7 @@ typedef struct
 } channel_control_io_state;
 
 
-/* ACTUAL CODE STARTS BELOW no more data structures PLEASE, i have a headache and this is way too many lines for one C file */
+/*=============================== LOGIC CONNECTING HARDWARE TO CONTROL VALUES ================================*/
 
 
 /**
@@ -377,9 +346,9 @@ static void update_channel_encoder_values (uint8_t channel)
 
     update_s_value_from_encoder_motion(
         &(state->input_gain_encoder_state),
-        &(channel_controls_io->input_gain_encoder),
+        &(channel_controls_io->input_gain_knob.encoder),
         &(vals->input_gain),
-        get_button_state(&channel_controls_io->input_gain_encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
+        get_button_state(&channel_controls_io->input_gain_knob.encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
     );
 
     // TODO: Do this for the rest of the encoders on the channel
@@ -390,7 +359,7 @@ static void update_channel_button_values (uint8_t channel)
     channel_controls *vals = &(channel_control_vals[channel]);
     channel_control_io_state *state = &(channel_states[channel]);
 
-    update_toggle_button_val_from_info(&(state->mute_button_state), &(channel_controls_io->mute_button), &(vals->muted));
+    update_toggle_button_val_from_info(&(state->mute_button_state), &(channel_controls_io->mute_button.button), &(vals->muted));
 
     // TODO: Do this for the rest of the toggle-buttons on the channel
     // TODO: handle non-toggle (e.g radio) buttons
@@ -410,3 +379,5 @@ void update_control_values (void)
         // TODO: non-button/encoder inputs maybe?
     }
 }
+
+/*=============================== LOGIC CONNECTING CONTROL VALUES TO LEDS (TODO) ================================*/
