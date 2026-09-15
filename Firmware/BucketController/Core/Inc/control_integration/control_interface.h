@@ -8,14 +8,14 @@
 
 #define SEND_CHANNELS 4
 
-typedef uint32_t u_scalar_control_t;
-typedef int32_t s_scalar_control_t;
+typedef uint16_t u_scalar_control_t;
+typedef int16_t s_scalar_control_t;
 
-#define U_SCALAR_CONTROL_MAX UINT32_MAX
+#define U_SCALAR_CONTROL_MAX UINT16_MAX
 #define U_SCALAR_CONTROL_MID U_SCALAR_CONTROL_MAX >> 1
 
-#define S_SCALAR_CONTROL_MAX INT32_MAX
-#define S_SCALAR_CONTROL_MIN INT32_MIN
+#define S_SCALAR_CONTROL_MAX INT16_MAX
+#define S_SCALAR_CONTROL_MIN INT16_MIN
 
 typedef enum
 {

@@ -86,12 +86,16 @@ static inline void knob_info_led(knob_info_t knob, uint8_t value){
 }
 
 static inline uint8_t uscalar_to_8bit(u_scalar_control_t in){
-    return (uint8_t)(in >> (sizeof(u_scalar_control_t) * 8 - 8));
+    return in / (U_SCALAR_CONTROL_MAX / 33);
+}
+
+static inline int8_t sscalar_to_8bit(s_scalar_control_t in){
+    return in / (U_SCALAR_CONTROL_MAX / 33);
 }
 
 void update_channel_knob_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
-    s_scalar_control_t default_sensitivity = S_SCALAR_CONTROL_MAX / 16;
+    s_scalar_control_t default_sensitivity = S_SCALAR_CONTROL_MAX / 64;
 
     update_s_value_from_encoder_motion(
         &(state->input_gain_encoder_state),
@@ -112,8 +116,8 @@ void update_channel_knob_values (channel_controls *vals, channel_control_io_stat
 void update_channel_knob_outputs (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
     // TODO: Update LED rings
-    knob_info_led(io->input_gain_knob, uscalar_to_8bit(vals->input_gain));
-    knob_info_led(io->hf_interface.gain_knob, uscalar_to_8bit(vals->hf_control.gain));
+    knob_info_led(io->input_gain_knob, sscalar_to_8bit(vals->input_gain));
+    knob_info_led(io->hf_interface.gain_knob, sscalar_to_8bit(vals->hf_control.gain));
 }
 
 void init_knob_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
@@ -130,7 +134,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
                                                    .button_info = input_gain_button};
     get_encoder_motion(io->input_gain_knob.encoder, state->input_gain_encoder_state, &(state->input_gain_encoder_state));
     io->input_gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 0};
-    knob_info_scale(io->input_gain_knob, SCALE_LEFT);
+    knob_info_scale(io->input_gain_knob, SCALE_CENTER);
     knob_info_disp(io->input_gain_knob, 0);
 
     button_info_t hf_gain_button = {.bus = I2C1, .addr = 0x60, .port = MCP_GPIOA, .pin = 0}; // dummy
@@ -147,7 +151,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
         &(state->hf_interface_state.gain_encoder_state)
     );
     io->hf_interface.gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 1};
-    knob_info_scale(io->hf_interface.gain_knob, SCALE_LEFT);
+    knob_info_scale(io->hf_interface.gain_knob, SCALE_CENTER);
     knob_info_disp(io->hf_interface.gain_knob, 0);
 
     // TODO: Fill channel_controls_io to match the hardware, and set initial states
