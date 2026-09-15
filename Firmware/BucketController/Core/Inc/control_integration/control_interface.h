@@ -101,8 +101,7 @@ typedef struct
 /**
  * @brief Holds all control values for all channels in the bucket
  */
-channel_controls channel_control_vals[CHANNELS];
-
+extern channel_controls channel_control_vals[CHANNELS];
 
 /**
  * @brief Sets default channel control values and hardware configurations. Call before using control values.

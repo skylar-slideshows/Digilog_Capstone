@@ -108,7 +108,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/rotary_encoder.c
     Core/Src/hardware_drivers/button_driver.c
     Core/Src/control_voltage.c
-    Core/Src/control_interface.c
+    Core/Src/control_integration/control_interface.c
+    Core/Src/control_integration/button_control.c
+    Core/Src/control_integration/rotary_encoder_control.c
     Core/Src/FreeRTOS_apps/remote_cmd_handler.c
 )
 
