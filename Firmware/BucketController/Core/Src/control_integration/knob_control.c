@@ -86,7 +86,7 @@ static inline void knob_info_led(knob_info_t knob, uint8_t value){
 }
 
 static inline uint8_t uscalar_to_8bit(u_scalar_control_t in){
-    return (uint8_t)(in << (sizeof(u_scalar_control_t) * 8 - 8));
+    return (uint8_t)(in >> (sizeof(u_scalar_control_t) * 8 - 8));
 }
 
 void update_channel_knob_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
@@ -98,6 +98,12 @@ void update_channel_knob_values (channel_controls *vals, channel_control_io_stat
         &(io->input_gain_knob.encoder),
         &(vals->input_gain),
         get_button_state(&io->input_gain_knob.encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
+    );
+    update_s_value_from_encoder_motion(
+        &(state->hf_interface_state.gain_encoder_state),
+        &(io->hf_interface.gain_knob.encoder),
+        &(vals->hf_control.gain),
+        get_button_state(&io->hf_interface.gain_knob.encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
     );
 
     // TODO: Do this for the rest of the encoders on the channel
@@ -140,7 +146,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
         state->hf_interface_state.gain_encoder_state,
         &(state->hf_interface_state.gain_encoder_state)
     );
-    io->hf_interface.gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 0};
+    io->hf_interface.gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 1};
     knob_info_scale(io->hf_interface.gain_knob, SCALE_LEFT);
     knob_info_disp(io->hf_interface.gain_knob, 0);
 

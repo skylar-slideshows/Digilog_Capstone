@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "CONFIG.h"
+#include "hardware_drivers/led_driver.h"
 
 #include "control_integration/control_interface.h"
 
@@ -107,7 +108,7 @@ void update_control_outputs (void)
     {
         update_channel_knob_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
         update_channel_button_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
-
+        led_update();
         // TODO: non-button/encoder inputs maybe?
     }
 }
