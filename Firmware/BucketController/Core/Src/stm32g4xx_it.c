@@ -22,6 +22,11 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+// Skylar
+#include "FreeRTOS_apps/remote_cmd_handler.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -174,5 +179,6 @@ void TIM7_DAC_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
 
 /* USER CODE END 1 */

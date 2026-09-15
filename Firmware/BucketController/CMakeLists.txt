@@ -109,6 +109,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/button_driver.c
     Core/Src/control_voltage.c
     Core/Src/control_interface.c
+    Core/Src/FreeRTOS_apps/remote_cmd_handler.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE

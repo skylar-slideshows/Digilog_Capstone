@@ -35,6 +35,7 @@
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
 #include "stm32g474xx.h"
+#include "FreeRTOS_apps/remote_cmd_handler.h"
 
 /* USER CODE END Includes */
 
@@ -186,12 +187,6 @@ int main(void)
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
 
-    // test stuff with the ui remote control link
-    printf("\r\n$chnm 2 testingggggg\n");
-    printf("\r\n$sw 0 0 10\n");
-    printf("\r\n$ud 0 10 1377\n");
-    printf("\r\n$sw 0 4 1\n");
-
     i2c_probeall();
   }
 
@@ -202,8 +197,9 @@ int main(void)
   get_encoder_motion(enc0_info, enc0, &enc0);
   get_encoder_motion(enc1_info, enc1, &enc1);
 
-  printf("*******************************************************\r\n");
+  uart_cmd_init(); // init uart comms with remote. start waiting for commands
 
+  printf("\r\n*******************************************************\n");\
 
 
   /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
@@ -995,13 +991,14 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 
-  printf("echo test ready  build %s %s\r\n", __DATE__, __TIME__);
+  /*printf("echo test ready  build %s %s\r\n", __DATE__, __TIME__);
 
   char buf[80];
   uint8_t n = 0;
 
   while (1)
   {
+    printf("egg");
       uint8_t c;
       if (HAL_UART_Receive(&huart2, &c, 1, HAL_MAX_DELAY) != HAL_OK) continue;
 
@@ -1017,7 +1014,7 @@ void StartDefaultTask(void *argument)
       {
           buf[n++] = c;
       }
-  }
+  }*/
 
   led_brightness(10);
 
