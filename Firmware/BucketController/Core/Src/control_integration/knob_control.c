@@ -73,8 +73,12 @@ static void update_s_value_from_encoder_motion (
 }
 
 // helpers for less code
-static inline void knob_info_disp(knob_info_t knob, uint8_t mode){
+static inline void knob_info_disp(knob_info_t knob, knob_disp_t mode){
     knob_disp(knob.led_ring.channel, knob.led_ring.knob_num, mode);
+}
+
+static inline void knob_info_scale(knob_info_t knob, knob_scale_t mode){
+    knob_scale(knob.led_ring.channel, knob.led_ring.knob_num, mode);
 }
 
 static inline void knob_info_led(knob_info_t knob, uint8_t value){
@@ -120,6 +124,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
                                                    .button_info = input_gain_button};
     get_encoder_motion(io->input_gain_knob.encoder, state->input_gain_encoder_state, &(state->input_gain_encoder_state));
     io->input_gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 0};
+    knob_info_scale(io->input_gain_knob, SCALE_LEFT);
     knob_info_disp(io->input_gain_knob, 0);
 
     button_info_t hf_gain_button = {.bus = I2C1, .addr = 0x60, .port = MCP_GPIOA, .pin = 0}; // dummy
@@ -136,6 +141,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
         &(state->hf_interface_state.gain_encoder_state)
     );
     io->hf_interface.gain_knob.led_ring = (led_ring_info_t){.channel = 0, .knob_num = 0};
+    knob_info_scale(io->hf_interface.gain_knob, SCALE_LEFT);
     knob_info_disp(io->hf_interface.gain_knob, 0);
 
     // TODO: Fill channel_controls_io to match the hardware, and set initial states

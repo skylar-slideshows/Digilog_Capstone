@@ -28,6 +28,7 @@
 // Skylar
 #include "CONFIG.h"
 #include "cmsis_os2.h"
+#include "control_integration/control_interface.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728.h"
@@ -1040,44 +1041,12 @@ void StartDefaultTask(void *argument)
   );
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
-  uint8_t knob = 0;
-  uint8_t knob1 = 0;
-  uint8_t knob_sens_mult = 2;
-
+  init_control_interface();
   for (;;)
   {
-
-    encoder_turn_action_t enc0_turn = get_encoder_motion(enc0_info, enc0, &enc0);
-    encoder_turn_action_t enc1_turn = get_encoder_motion(enc1_info, enc1, &enc1);
-
-    if(enc0_turn == ENCODER_TURN_A) // LEFT
-    {
-      if(knob > 0) { knob--; }
-      knob_led(0, 0, knob / knob_sens_mult);
-      led_update();
-
-    } else if(enc0_turn == ENCODER_TURN_B) // RIGHT
-    {
-      if(knob < 32*knob_sens_mult) { knob++; }
-      knob_led(0, 0, knob / knob_sens_mult);
-      led_update();
-
-    }
-
-    if(enc1_turn == ENCODER_TURN_A) // LEFT
-    {
-      if(knob1 > 0) { knob1--; }
-      knob_led(0, 1, knob1 / knob_sens_mult);
-      led_update();
-
-    } else if(enc1_turn == ENCODER_TURN_B) // RIGHT
-    {
-      if(knob1 < 32*knob_sens_mult) { knob1++; }
-      knob_led(0, 1, knob1 / knob_sens_mult);
-      led_update();
-
-    }
-    
+    mcp23017_poll_to_cache(I2C1, 0x20);
+    update_control_values();
+    update_control_outputs();
   }
 
   /* USER CODE END 5 */
