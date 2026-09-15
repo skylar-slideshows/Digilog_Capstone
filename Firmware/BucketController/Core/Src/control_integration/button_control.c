@@ -15,6 +15,14 @@ static void update_toggle_button_val_from_info (bool *btn_state, button_info_t *
     *btn_state = new_button_state;
 }
 
+void init_button_controls(uint8_t channel, channel_control_io_state *state, channel_control_io_t *io){
+    // TODO: Fill channel_controls_io to match the hardware, and set initial states
+}
+
+void update_channel_button_outputs(channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io){
+    
+}
+
 void update_channel_button_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
     update_toggle_button_val_from_info(&(state->mute_button_state), &(io->mute_button.button), &(vals->muted));

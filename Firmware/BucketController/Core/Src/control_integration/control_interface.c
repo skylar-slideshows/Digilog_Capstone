@@ -7,7 +7,7 @@
 #include "button_control.h"
 #include "hardware_sets.h"
 #include "hardware_state_sets.h"
-#include "rotary_encoder_control.h"
+#include "knob_control.h"
 
 
 /*=============================== LOGIC CONNECTING HARDWARE TO CONTROL VALUES ================================*/
@@ -26,7 +26,10 @@ channel_control_io_state channel_states[CHANNELS];
 
 static void init_control_io (uint8_t channel)
 {
-    // TODO: Fill channel_controls_io to match the hardware
+    init_button_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
+    init_knob_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
+
+    // TODO: Fill channel_controls_io to match the hardware otherwise; (faders?)
 }
 
 static void init_control_vals (uint8_t channel)
@@ -86,11 +89,25 @@ void update_control_values (void)
 {
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
-        update_channel_encoder_values(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[4]));
-        update_channel_button_values(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[4]));
+        update_channel_knob_values(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
+        update_channel_button_values(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
 
         // TODO: non-button/encoder inputs maybe?
     }
 }
 
 /*=============================== LOGIC CONNECTING CONTROL VALUES TO LEDS (TODO) ================================*/
+
+/**
+ * Updates LEDs / other visual outputs
+ */
+void update_control_outputs (void)
+{
+    for (uint8_t channel = 0; channel < CHANNELS; channel++)
+    {
+        update_channel_knob_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
+        update_channel_button_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
+
+        // TODO: non-button/encoder inputs maybe?
+    }
+}

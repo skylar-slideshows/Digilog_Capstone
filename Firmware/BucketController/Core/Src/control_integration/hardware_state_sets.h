@@ -13,9 +13,9 @@
 
 typedef struct
 {
-    encoder_turn_action_t gain_encoder_state;
-    encoder_turn_action_t q_encoder_state;
-    encoder_turn_action_t freq_encoder_state;
+    encoder_state_t gain_encoder_state;
+    encoder_state_t q_encoder_state;
+    encoder_state_t freq_encoder_state;
 } eq_band_interface_state_t;
 
 typedef struct

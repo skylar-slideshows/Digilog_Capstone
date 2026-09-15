@@ -113,4 +113,9 @@ void init_control_interface (void);
  */
 void update_control_values (void);
 
+/**
+ * @brief Updates LEDs / other visual outputs from stored control values
+ */
+void update_control_outputs (void);
+
 #endif
