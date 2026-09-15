@@ -1042,11 +1042,17 @@ void StartDefaultTask(void *argument)
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
   init_control_interface();
+  uint8_t counter = 0;
   for (;;)
   {
     mcp23017_poll_to_cache(I2C1, 0x20);
     update_control_values();
-    update_control_outputs();
+    update_control_leds();
+
+    if(counter == 0){
+      led_update();
+    }
+    counter = (counter + 1) % 16;
   }
 
   /* USER CODE END 5 */

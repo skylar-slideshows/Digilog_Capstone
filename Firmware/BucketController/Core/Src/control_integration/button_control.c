@@ -1,3 +1,4 @@
+#include "button_control.h"
 #include "control_integration/control_interface.h"
 #include "hardware_drivers/button_driver.h"
 #include "hardware_sets.h"
@@ -15,13 +16,12 @@ static void update_toggle_button_val_from_info (bool *btn_state, button_info_t *
     *btn_state = new_button_state;
 }
 
-void init_button_controls(uint8_t channel, channel_control_io_state *state, channel_control_io_t *io){
+void init_button_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
+{
     // TODO: Fill channel_controls_io to match the hardware, and set initial states
 }
 
-void update_channel_button_outputs(channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io){
-    
-}
+void update_channel_button_leds (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io) {}
 
 void update_channel_button_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {

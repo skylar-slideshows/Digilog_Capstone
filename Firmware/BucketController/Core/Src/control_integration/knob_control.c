@@ -73,25 +73,24 @@ static void update_s_value_from_encoder_motion (
 }
 
 // helpers for less code
-static inline void knob_info_disp(knob_info_t knob, knob_disp_t mode){
+static inline void knob_info_disp (knob_info_t knob, knob_disp_t mode)
+{
     knob_disp(knob.led_ring.channel, knob.led_ring.knob_num, mode);
 }
 
-static inline void knob_info_scale(knob_info_t knob, knob_scale_t mode){
+static inline void knob_info_scale (knob_info_t knob, knob_scale_t mode)
+{
     knob_scale(knob.led_ring.channel, knob.led_ring.knob_num, mode);
 }
 
-static inline void knob_info_led(knob_info_t knob, uint8_t value){
+static inline void knob_info_led (knob_info_t knob, uint8_t value)
+{
     knob_led(knob.led_ring.channel, knob.led_ring.knob_num, value);
 }
 
-static inline uint8_t uscalar_to_8bit(u_scalar_control_t in){
-    return in / (U_SCALAR_CONTROL_MAX / 33);
-}
+static inline uint8_t uscalar_to_8bit (u_scalar_control_t in) { return in / (U_SCALAR_CONTROL_MAX / 33); }
 
-static inline int8_t sscalar_to_8bit(s_scalar_control_t in){
-    return in / (U_SCALAR_CONTROL_MAX / 33);
-}
+static inline int8_t sscalar_to_8bit (s_scalar_control_t in) { return in / (U_SCALAR_CONTROL_MAX / 33); }
 
 void update_channel_knob_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
@@ -113,7 +112,7 @@ void update_channel_knob_values (channel_controls *vals, channel_control_io_stat
     // TODO: Do this for the rest of the encoders on the channel
 }
 
-void update_channel_knob_outputs (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
+void update_channel_knob_leds (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
     // TODO: Update LED rings
     knob_info_led(io->input_gain_knob, sscalar_to_8bit(vals->input_gain));

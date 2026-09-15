@@ -12,6 +12,6 @@
 
 void init_button_controls(uint8_t channel, channel_control_io_state *state, channel_control_io_t *io);
 void update_channel_button_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
-void update_channel_button_outputs (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
+void update_channel_button_leds (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
 
 #endif
