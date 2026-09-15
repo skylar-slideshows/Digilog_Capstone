@@ -1,1 +1,0 @@
-../../Resources/dearpygui/_dearpygui.pyi
