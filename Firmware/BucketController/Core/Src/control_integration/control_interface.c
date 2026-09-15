@@ -102,13 +102,17 @@ void update_control_values (void)
 /**
  * Updates LEDs / other visual outputs
  */
+static uint8_t led_counter = 0; // Used to update LEDs every 16th call
 void update_control_outputs (void)
 {
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
         update_channel_knob_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
         update_channel_button_outputs(&(channel_control_vals[channel]), &(channel_states[channel]), &(channel_controls_io[channel]));
-        led_update();
         // TODO: non-button/encoder inputs maybe?
     }
+    if(led_counter == 0){
+        led_update();
+    }
+    led_counter = (led_counter + 1) % 16;
 }
