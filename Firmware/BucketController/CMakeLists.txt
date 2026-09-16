@@ -107,6 +107,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/mcp4728.c
     Core/Src/hardware_drivers/rotary_encoder.c
     Core/Src/hardware_drivers/button_driver.c
+    Core/Src/hardware_drivers/mcp4728_cache.c
     Core/Src/control_voltage.c
     Core/Src/control_integration/control_interface.c
     Core/Src/control_integration/button_control.c
