@@ -50,12 +50,6 @@ typedef struct
 typedef struct
 {
     // TODO / PLACEHOLDER
-} fader_info_t;
-
-//! PLACEHOLDER for when the fader driver is created
-typedef struct
-{
-    // TODO / PLACEHOLDER
 } fader_led_bar_info_t;
 
 #endif
