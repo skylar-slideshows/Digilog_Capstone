@@ -39,9 +39,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 0.4,
-          "width": 0.41
+          "drill": 0.8,
+          "height": 1.27,
+          "width": 1.27
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -60,7 +60,7 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.0,
+          "min_clearance": 0.5,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -69,20 +69,14 @@
           "thermal_relief_spoke_width": 0.5
         }
       },
-      "diff_pair_dimensions": [
-        {
-          "gap": 0.0,
-          "via_gap": 0.0,
-          "width": 0.0
-        }
-      ],
+      "diff_pair_dimensions": [],
       "drc_exclusions": [],
       "meta": {
         "version": 2
       },
       "rule_severities": {
         "annular_width": "error",
-        "clearance": "warning",
+        "clearance": "error",
         "connection_width": "warning",
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",
@@ -100,7 +94,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_to_hole": "warning",
-        "holes_co_located": "ignore",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -133,12 +127,12 @@
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
-        "track_not_centered_on_via": "warning",
+        "track_not_centered_on_via": "ignore",
         "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "warning",
+        "tuning_profile_track_geometries": "ignore",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -146,7 +140,7 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.18,
+        "min_clearance": 0.0,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.5,
         "min_groove_width": 0.0,
@@ -160,9 +154,9 @@
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
         "min_track_width": 0.2,
-        "min_via_annular_width": 0.0999,
+        "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
-        "solder_mask_to_copper_clearance": 0.005,
+        "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -209,16 +203,7 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [
-        0.0,
-        0.2,
-        0.3,
-        0.4,
-        0.5,
-        0.8,
-        1.0,
-        1.5
-      ],
+      "track_widths": [],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -245,16 +230,7 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [
-        {
-          "diameter": 0.0,
-          "drill": 0.0
-        },
-        {
-          "diameter": 0.5,
-          "drill": 0.3
-        }
-      ],
+      "via_dimensions": [],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -264,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -512,14 +488,14 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "led_ring_rev1.kicad_pro",
+    "filename": "bucket_controls.kicad_pro",
     "version": 3
   },
   "net_settings": {
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.18,
+        "clearance": 0.2,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -549,16 +525,16 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "led_ring_auto.dsn",
+      "specctra_dsn": "",
       "vrml": ""
     },
-    "page_layout_descr_file": ""
+    "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks"
   },
   "schematic": {
-    "annotate_start_num": 0,
+    "annotate_start_num": 300,
     "annotation": {
       "method": 0,
-      "sort_order": 0
+      "sort_order": 1
     },
     "bom_export_filename": "../bom_jlc.csv",
     "bom_fmt_presets": [],
@@ -640,12 +616,6 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Pins",
-          "name": "Sim.Pins",
-          "show": false
         }
       ],
       "filter_string": "",
@@ -653,7 +623,7 @@
       "include_excluded_from_bom": true,
       "name": "",
       "sort_asc": true,
-      "sort_field": "Footprint"
+      "sort_field": "Reference"
     },
     "bus_aliases": {},
     "connection_grid_size": 50.0,
@@ -684,25 +654,49 @@
     "meta": {
       "version": 1
     },
-    "page_layout_descr_file": "",
+    "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks",
     "plot_directory": "",
     "reuse_designators": true,
     "subpart_first_id": 65,
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "led_ring_rev1.kicad_sch",
-        "name": "led_ring_rev1",
-        "uuid": "bcb72a3c-cbab-4c31-aca5-d80495ce127e"
+        "filename": "bucket_controls.kicad_sch",
+        "name": "Root",
+        "uuid": "96563cb2-2d6f-462f-b797-f4c345bb605c"
       }
     ],
-    "used_designators": "R1-32,#PWR1-2,D1-2,D9-32,V2-32,U5,J3",
+    "used_designators": "U2-8,U10-20,U301,SW1-40,SW101-120,SW201-220,SW301-310,R1-360,#PWR1-70,#PWR101-270,#PWR301-426,C1-160,C201-260,C301-330,J2-80,J101-120,J201-220,J301-320",
     "variants": []
   },
   "sheets": [
     [
-      "bcb72a3c-cbab-4c31-aca5-d80495ce127e",
-      "led_ring_rev1"
+      "96563cb2-2d6f-462f-b797-f4c345bb605c",
+      "Root"
+    ],
+    [
+      "900155a5-5a06-4a15-8d44-60bc37a616ad",
+      "Encoders Chnl 1"
+    ],
+    [
+      "36990cec-5119-4cc4-8d59-ac3b6ad89bfb",
+      "Encoders Chnl 2"
+    ],
+    [
+      "6e5d4456-5c3e-4421-88c6-63590df96f13",
+      "Encoders Chnl 3"
+    ],
+    [
+      "e62b4cad-8379-4f3e-bea6-a692742bf59b",
+      "Encoders Chnl 4"
+    ],
+    [
+      "a5b09cb1-84f0-40cf-9c1c-6185157695f1",
+      "LEDs"
+    ],
+    [
+      "f6043f52-b986-4e8f-af26-08817822fe2e",
+      "Buttons Chnl 1"
     ]
   ],
   "text_variables": {},

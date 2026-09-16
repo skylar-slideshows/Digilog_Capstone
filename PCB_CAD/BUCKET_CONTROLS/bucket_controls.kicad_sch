@@ -1,0 +1,2785 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "96563cb2-2d6f-462f-b797-f4c345bb605c")
+	(paper "A3")
+	(title_block
+		(title "Channel Bucket UI Controls Board")
+		(date "2026-09-15")
+		(rev "0")
+		(company "EECE CAPSTONE")
+		(comment 1 "Top Layer Schematic")
+		(comment 3 "S.E.D.")
+	)
+	(lib_symbols
+		(symbol "Interface_Expansion:MCP23018x-x-SS"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -9.398 24.638 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MCP23018x-x-SS"
+				(at 11.176 24.638 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+				(at 5.08 -25.4 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+				(at 5.08 -27.94 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+				(at 0 -30.48 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "Microchip port-expander GPIO MCP23018-E/SSVAO MCP23018T-E/SSVAO"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SSOP*5.3x8.2mm?P0.65mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "MCP23018x-x-SS_0_1"
+				(rectangle
+					(start -10.16 22.86)
+					(end 10.16 -22.86)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "MCP23018x-x-SS_1_1"
+				(pin power_in line
+					(at 0 -25.4 90)
+					(length 2.54)
+					(name "V_{SS}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "GPB0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -5.08 180)
+					(length 2.54)
+					(name "GPB1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -7.62 180)
+					(length 2.54)
+					(name "GPB2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -10.16 180)
+					(length 2.54)
+					(name "GPB3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -12.7 180)
+					(length 2.54)
+					(name "GPB4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -15.24 180)
+					(length 2.54)
+					(name "GPB5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -17.78 180)
+					(length 2.54)
+					(name "GPB6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -20.32 180)
+					(length 2.54)
+					(name "GPB7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 25.4 270)
+					(length 2.54)
+					(name "V_{DD}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 20.32 0)
+					(length 2.54)
+					(name "SCL"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -12.7 17.78 0)
+					(length 2.54)
+					(name "SDA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 12.7 0)
+					(length 2.54)
+					(name "ADDR"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 -2.54 0)
+					(length 2.54)
+					(name "~{RESET}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -12.7 2.54 0)
+					(length 2.54)
+					(name "INTB"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "15"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -12.7 5.08 0)
+					(length 2.54)
+					(name "INTA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "16"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 20.32 180)
+					(length 2.54)
+					(name "GPA0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "17"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 17.78 180)
+					(length 2.54)
+					(name "GPA1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "18"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 15.24 180)
+					(length 2.54)
+					(name "GPA2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "19"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 12.7 180)
+					(length 2.54)
+					(name "GPA3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "20"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 10.16 180)
+					(length 2.54)
+					(name "GPA4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "21"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 7.62 180)
+					(length 2.54)
+					(name "GPA5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "22"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 5.08 180)
+					(length 2.54)
+					(name "GPA6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "23"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 2.54 180)
+					(length 2.54)
+					(name "GPA7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "24"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 153.67 240.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "016839a3-eb18-4b05-b732-fba05ef84d6a")
+		(property "Reference" "U20"
+			(at 155.8133 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 155.8133 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 158.75 265.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 158.75 267.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 153.67 270.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 153.67 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "9113f92c-f5c7-4450-9753-f9e80d660c63")
+		)
+		(pin "21"
+			(uuid "c7dcde74-4175-4240-9c42-e3b242917a1a")
+		)
+		(pin "24"
+			(uuid "fd3d0536-2a5b-4ec3-a777-7f2b87a7b7d8")
+		)
+		(pin "23"
+			(uuid "54a29d6a-5361-4ccd-8f98-d986d56f4945")
+		)
+		(pin "12"
+			(uuid "fa8943e8-4976-4682-bbba-a594055fe678")
+		)
+		(pin "11"
+			(uuid "b5b56463-bf65-43ea-92d6-ad695596774b")
+		)
+		(pin "10"
+			(uuid "49f23ca4-7131-4092-b0dc-036609bbd5f8")
+		)
+		(pin "9"
+			(uuid "00a9dec5-787b-4107-94f5-cdeee3a27299")
+		)
+		(pin "8"
+			(uuid "90d8620f-ec29-41fc-a235-e2f1189a89d3")
+		)
+		(pin "7"
+			(uuid "fef0f2b5-919c-4831-974b-89ce9d63ec53")
+		)
+		(pin "6"
+			(uuid "d19f14f6-ccf0-4316-a90e-b21f1cc8f967")
+		)
+		(pin "5"
+			(uuid "ce147689-0572-4988-b37e-10a45276614d")
+		)
+		(pin "4"
+			(uuid "36e8f33f-6f86-457f-91af-35e0212e6ebc")
+		)
+		(pin "3"
+			(uuid "a4f6cdf5-6131-4951-af05-8ab85d148b51")
+		)
+		(pin "2"
+			(uuid "e95d4e3b-18af-49e0-931a-00b0d73cec31")
+		)
+		(pin "1"
+			(uuid "488d277a-1804-4fe8-8fe1-3b985f1d310b")
+		)
+		(pin "17"
+			(uuid "1c1a4c81-ec33-4205-9d0e-01d632582ccd")
+		)
+		(pin "16"
+			(uuid "747d4505-b629-4d53-afe9-6559eb542e17")
+		)
+		(pin "15"
+			(uuid "b64e462a-da7a-40e6-b608-71d2096e7c6d")
+		)
+		(pin "14"
+			(uuid "0f64a080-a714-4100-b295-c3b613a2928f")
+		)
+		(pin "13"
+			(uuid "41c86b09-9e0a-41b7-9a09-7ab44d229a79")
+		)
+		(pin "18"
+			(uuid "80f60c54-4e21-4e00-bb17-5b317649b359")
+		)
+		(pin "19"
+			(uuid "65d81cfd-9697-42a6-b1e3-bb1004fc0777")
+		)
+		(pin "20"
+			(uuid "eb49204f-94f1-42f8-b53c-a85fcb39772b")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 49.53 240.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1a07bee9-fb10-4293-8d9f-7a62d03cc3b8")
+		(property "Reference" "U16"
+			(at 51.6733 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 51.6733 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 54.61 265.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 54.61 267.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 49.53 270.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 49.53 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "26a4cfd6-843b-4f57-88dd-c2b25290b1ea")
+		)
+		(pin "21"
+			(uuid "29299e60-ff8c-4768-8788-6227255dd8a2")
+		)
+		(pin "24"
+			(uuid "f5f0cf33-fefc-4d8d-9bd0-f6b06b689332")
+		)
+		(pin "23"
+			(uuid "20597386-c370-469d-b7ec-0d13d2391445")
+		)
+		(pin "12"
+			(uuid "08677b04-88ac-4863-b89d-6f5495658137")
+		)
+		(pin "11"
+			(uuid "39c9a358-b206-45ca-9c05-a301e818953c")
+		)
+		(pin "10"
+			(uuid "4bf9a815-ff5b-4199-9e3a-2430789afd11")
+		)
+		(pin "9"
+			(uuid "3105655e-23f4-4879-b93c-6f5be97f9e38")
+		)
+		(pin "8"
+			(uuid "838b68d7-6f57-4441-9e06-743191b99eba")
+		)
+		(pin "7"
+			(uuid "f3df6346-4ecd-4d75-891a-fd388ef0fc3f")
+		)
+		(pin "6"
+			(uuid "2d19f8fe-91ee-40a6-9434-aa33ce32d87e")
+		)
+		(pin "5"
+			(uuid "1c046858-a08c-43fc-966b-8876f68f9d03")
+		)
+		(pin "4"
+			(uuid "80f1598b-f379-449a-8be1-362665f1eb50")
+		)
+		(pin "3"
+			(uuid "932e07a8-e33c-47a2-9600-481221cf4b37")
+		)
+		(pin "2"
+			(uuid "16177188-5106-406d-9924-2874c94b50c9")
+		)
+		(pin "1"
+			(uuid "cb37b05f-61a8-4953-8516-43c7caf3f6a1")
+		)
+		(pin "17"
+			(uuid "01acf1ba-331b-429e-8dfa-09f4ea31574b")
+		)
+		(pin "16"
+			(uuid "8c9135e6-e838-4e7d-a333-c4bb03ceb0c9")
+		)
+		(pin "15"
+			(uuid "915b2ec9-9999-4925-88c8-d019655bc80e")
+		)
+		(pin "14"
+			(uuid "327bf27d-13ea-41d8-a438-074ca7a758af")
+		)
+		(pin "13"
+			(uuid "ba909fde-81f9-49e6-a30d-85757b613af5")
+		)
+		(pin "18"
+			(uuid "0bc71508-90c3-4125-b8fd-bff3749269d2")
+		)
+		(pin "19"
+			(uuid "3bdc9cba-1351-4500-92ae-e861437c9ffa")
+		)
+		(pin "20"
+			(uuid "40183631-299f-4354-bb94-01fe1cc0e30c")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 153.67 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2a1149f7-2045-40b5-83e4-4add665c6cf5")
+		(property "Reference" "U19"
+			(at 155.8133 147.32 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 155.8133 149.86 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 158.75 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 158.75 203.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 153.67 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 153.67 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "8d75919d-6c57-4e8e-b9fd-b1ada980b445")
+		)
+		(pin "21"
+			(uuid "67ef1999-1348-49d4-9b09-218129c5d23e")
+		)
+		(pin "24"
+			(uuid "d6bac2f8-f59c-4f9b-9c4b-b656d3cdf4cf")
+		)
+		(pin "23"
+			(uuid "5e3702cb-01d8-403e-9634-c9ea276f42b7")
+		)
+		(pin "12"
+			(uuid "a24bb8ae-ac30-4a4d-83d4-30af2b770f0d")
+		)
+		(pin "11"
+			(uuid "808eef53-9eda-463e-bca7-d03ae3606950")
+		)
+		(pin "10"
+			(uuid "320a2153-125e-45d8-ae51-d1981fa560f4")
+		)
+		(pin "9"
+			(uuid "4e271029-bcda-4cf3-853d-cfba67379fa0")
+		)
+		(pin "8"
+			(uuid "64257906-672e-4e61-bbd4-8f40adcc23df")
+		)
+		(pin "7"
+			(uuid "26678a7e-0cd4-4f83-9208-27853def34c0")
+		)
+		(pin "6"
+			(uuid "c626207a-eb40-4d38-acea-9fa98ce0b32f")
+		)
+		(pin "5"
+			(uuid "72412dcb-3684-44ef-9f19-4f0d7ea88926")
+		)
+		(pin "4"
+			(uuid "e0e40d47-52a4-4f7f-9b0b-de08ae327cd4")
+		)
+		(pin "3"
+			(uuid "cbb6d689-99c6-4659-82be-ee495213b67b")
+		)
+		(pin "2"
+			(uuid "a328625f-47b7-45b6-8982-fedf5153d114")
+		)
+		(pin "1"
+			(uuid "dda91eef-c166-4748-8fd7-5b62d96303a2")
+		)
+		(pin "17"
+			(uuid "c669aa79-cbaf-40e9-b087-e07d871dcc70")
+		)
+		(pin "16"
+			(uuid "a7dce38f-7962-42cd-87d0-b31b446c1247")
+		)
+		(pin "15"
+			(uuid "982aa187-fa71-4f45-807b-ef2e2d127b16")
+		)
+		(pin "14"
+			(uuid "ab9c0aae-900c-43cb-9455-4346db7f75d6")
+		)
+		(pin "13"
+			(uuid "115a96e0-532a-44d2-b90e-0f85abc662c6")
+		)
+		(pin "18"
+			(uuid "1064b14f-6b43-4b83-8737-35e86ec9024c")
+		)
+		(pin "19"
+			(uuid "c8dd0d23-0705-4dcd-9127-6f7bcf8244d5")
+		)
+		(pin "20"
+			(uuid "54d967de-d61b-401a-accc-c97e5ed25018")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 48.26 116.84 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "38fbf390-a37f-434d-90a4-1ed4dad235ec")
+		(property "Reference" "U12"
+			(at 50.4033 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 50.4033 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 53.34 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 53.34 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 48.26 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "a3a638d2-7b64-4611-bae4-c2c388a91fbc")
+		)
+		(pin "21"
+			(uuid "69cad21c-ab28-4bdd-8e70-695e3181a00b")
+		)
+		(pin "24"
+			(uuid "ac376272-b64b-4616-96df-0e2b373f0e52")
+		)
+		(pin "23"
+			(uuid "c656b478-6e3e-45de-8e57-8ea440fdf626")
+		)
+		(pin "12"
+			(uuid "0844c01b-91ed-4b13-96bf-f6e84cec2be6")
+		)
+		(pin "11"
+			(uuid "7fde0ab5-2d3e-4800-abd4-35ce1a6c2b64")
+		)
+		(pin "10"
+			(uuid "a2d55437-627b-444d-92db-623b5f96ccc4")
+		)
+		(pin "9"
+			(uuid "bebc9566-0cfd-4231-96bc-a00db282113c")
+		)
+		(pin "8"
+			(uuid "dc7d6d43-ab5a-45e3-8e0b-2398d56820d6")
+		)
+		(pin "7"
+			(uuid "3bffd8fe-0d68-4341-a3ea-3d7f8955e8e5")
+		)
+		(pin "6"
+			(uuid "50d47d53-71ee-4925-855c-62dd3e9982c0")
+		)
+		(pin "5"
+			(uuid "533e6883-10ae-46b6-8af9-5e5c96f5e451")
+		)
+		(pin "4"
+			(uuid "61613ef7-501d-4452-ab8a-daebd0037fb9")
+		)
+		(pin "3"
+			(uuid "8069b265-d2f7-4765-9c66-8f2e016b775a")
+		)
+		(pin "2"
+			(uuid "595a0260-d89e-4f1b-919c-467a728ab783")
+		)
+		(pin "1"
+			(uuid "428c9fc6-83b2-465c-aba6-ec425dbb9293")
+		)
+		(pin "17"
+			(uuid "2fb4e2e7-d58c-424e-9eae-143a9d17ea23")
+		)
+		(pin "16"
+			(uuid "91e64d50-624f-43ca-a37a-e033ecb6aca4")
+		)
+		(pin "15"
+			(uuid "a7b2a52e-aa88-48a4-825f-686999ee4cce")
+		)
+		(pin "14"
+			(uuid "60f58d44-6703-4359-aeac-f576599ef608")
+		)
+		(pin "13"
+			(uuid "3bc4bf88-68a2-496f-8a4d-04787b36d086")
+		)
+		(pin "18"
+			(uuid "f7535799-df25-41ed-a8a3-fcc20262b7bd")
+		)
+		(pin "19"
+			(uuid "5c28211a-cee8-4f95-a4e1-c6d93a865840")
+		)
+		(pin "20"
+			(uuid "75d9ef09-1826-4861-ab17-394b7bfffdc3")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 101.6 240.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "64174961-16e2-4e29-ae0e-97dd893068bd")
+		(property "Reference" "U18"
+			(at 103.7433 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 103.7433 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 106.68 265.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 106.68 267.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 101.6 270.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 101.6 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "90854dca-ec08-47e3-ac47-3cd7053cb9a0")
+		)
+		(pin "21"
+			(uuid "28508f7f-1a98-46e4-bb78-9125941ff7d6")
+		)
+		(pin "24"
+			(uuid "5102c833-f0d3-49ba-91c1-efe32842141c")
+		)
+		(pin "23"
+			(uuid "a9e9c1fd-b9b3-4e09-8dfc-d4463a53008e")
+		)
+		(pin "12"
+			(uuid "addf4624-c929-4000-a02b-777dc37e9e56")
+		)
+		(pin "11"
+			(uuid "a8acc5b5-1873-4db6-b588-1a3eaaffea66")
+		)
+		(pin "10"
+			(uuid "b8fd1d78-56b3-45db-91f2-67aa23cdd658")
+		)
+		(pin "9"
+			(uuid "037035a6-affe-40e6-8fd3-7b79a2b1e7e2")
+		)
+		(pin "8"
+			(uuid "5078cdc2-de8c-4eb7-acf7-5bd7820be3c2")
+		)
+		(pin "7"
+			(uuid "bffb1973-5dbd-4086-91c7-f1fa88bc1824")
+		)
+		(pin "6"
+			(uuid "0f3a0bbd-fce7-4141-82ed-63ec6dd0c317")
+		)
+		(pin "5"
+			(uuid "26e5b52f-7543-4091-a822-8c5709fa9367")
+		)
+		(pin "4"
+			(uuid "33027351-077b-4146-a960-3f1c4f1d32ab")
+		)
+		(pin "3"
+			(uuid "776d28d1-cdd6-4904-915d-e8bb657337e9")
+		)
+		(pin "2"
+			(uuid "69b817d2-fb3d-4d4b-8775-d27fe12ff1a6")
+		)
+		(pin "1"
+			(uuid "2879aa19-a6e7-470a-b4c9-f0bab5aa73ba")
+		)
+		(pin "17"
+			(uuid "224163b0-b5d6-4b2a-9e23-ed637214b272")
+		)
+		(pin "16"
+			(uuid "41daf3d7-d53b-4805-9721-306a79c2ba20")
+		)
+		(pin "15"
+			(uuid "34dc8755-0a0b-4dcc-b003-3e4f40fe920f")
+		)
+		(pin "14"
+			(uuid "ecb232c4-4ca5-4cb7-a619-dd90b7afe078")
+		)
+		(pin "13"
+			(uuid "28fc34d5-8d40-4453-8f90-c71c824f2b33")
+		)
+		(pin "18"
+			(uuid "5ab9c97e-c9af-43a8-b171-6a0f54b5de43")
+		)
+		(pin "19"
+			(uuid "df2d634c-e5d3-4c74-a353-50a85356e074")
+		)
+		(pin "20"
+			(uuid "6347a109-4603-4e80-82b0-51e64c1adb18")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 152.4 116.84 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "65046afd-fdb3-4bd2-9a9a-3f465775ef38")
+		(property "Reference" "U14"
+			(at 154.5433 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 154.5433 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 157.48 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 157.48 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 152.4 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 152.4 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "9d87c190-c7f8-4be4-9165-39384bb986ea")
+		)
+		(pin "21"
+			(uuid "a9c60ee0-417f-481a-86ce-13118fa2db39")
+		)
+		(pin "24"
+			(uuid "595181f3-d5d8-4ee3-b618-9b1ddf51cc42")
+		)
+		(pin "23"
+			(uuid "b521a89d-6d23-47f1-a5f5-f8dca0040f53")
+		)
+		(pin "12"
+			(uuid "5925be08-7363-4a5d-b3ff-b4a81a6f30fc")
+		)
+		(pin "11"
+			(uuid "2f966071-6ad5-4ca1-9411-bfac78305282")
+		)
+		(pin "10"
+			(uuid "46ca8413-b818-445d-ad49-6682f2a3ff9c")
+		)
+		(pin "9"
+			(uuid "b615e8aa-4e6b-4930-97ed-a9c4112df33c")
+		)
+		(pin "8"
+			(uuid "9b74474b-9f76-4d87-acb6-013b5922babc")
+		)
+		(pin "7"
+			(uuid "caa7ee02-057a-49e6-b42c-cc974fc41fff")
+		)
+		(pin "6"
+			(uuid "7afd9949-96d2-41b1-a526-73d1a5566fc1")
+		)
+		(pin "5"
+			(uuid "e27ed1ce-f896-4b76-90f9-1f8bf946275b")
+		)
+		(pin "4"
+			(uuid "9ca1a514-b9dc-4887-b02d-1266f1a23ce9")
+		)
+		(pin "3"
+			(uuid "b0027946-4d4a-42c7-ac76-f23e0e0b5522")
+		)
+		(pin "2"
+			(uuid "0efe2b80-711d-46f6-927a-4016b0de3333")
+		)
+		(pin "1"
+			(uuid "4250392f-2a87-457b-b7a2-c2ca63b9bcb3")
+		)
+		(pin "17"
+			(uuid "b17db7b3-d0e5-4c69-9f14-64086064dccc")
+		)
+		(pin "16"
+			(uuid "1960609d-a11a-4531-87d7-796f9f037a0b")
+		)
+		(pin "15"
+			(uuid "41dd3f40-02c1-4034-aac0-fa06f8885ed1")
+		)
+		(pin "14"
+			(uuid "1edf8232-6dc3-4c44-8a95-aac18482c987")
+		)
+		(pin "13"
+			(uuid "60391497-04b2-44f2-9ab8-c097ad77a4a5")
+		)
+		(pin "18"
+			(uuid "aa0aca05-3d3e-415b-a3f3-d348997dba56")
+		)
+		(pin "19"
+			(uuid "06052b4a-5da2-406e-9a23-5d82bca1538c")
+		)
+		(pin "20"
+			(uuid "e952573a-8d85-4627-b7e2-81ab33c90307")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 49.53 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "73959379-4e40-4159-8869-28fc11dfc0d9")
+		(property "Reference" "U15"
+			(at 51.6733 147.32 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 51.6733 149.86 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 54.61 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 54.61 203.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 49.53 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 49.53 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "50f26bf8-9ef2-414e-9532-e95eb10d8776")
+		)
+		(pin "21"
+			(uuid "51b0bda2-26af-4552-9984-26cf66970782")
+		)
+		(pin "24"
+			(uuid "3a2e0635-78f6-4aa9-a2c9-80ae59c8a5a1")
+		)
+		(pin "23"
+			(uuid "c96509ab-0026-43b5-b826-0ba60725a8d7")
+		)
+		(pin "12"
+			(uuid "4e5fd551-aeba-4c6b-9347-09dd040b4e63")
+		)
+		(pin "11"
+			(uuid "ad463ecd-8fd2-47df-a1ee-d9d1fd6b0e6d")
+		)
+		(pin "10"
+			(uuid "a574a000-dd89-40bb-855c-8d5f487a552b")
+		)
+		(pin "9"
+			(uuid "56641f0b-58e0-4a2b-b9fc-76fdc2546b86")
+		)
+		(pin "8"
+			(uuid "54cbdb27-6d1c-4c79-a6b5-08f9026959ac")
+		)
+		(pin "7"
+			(uuid "e0761e95-22a5-4977-8ea6-27a145c13865")
+		)
+		(pin "6"
+			(uuid "d26bf239-e0de-46fb-8af5-c12f13788289")
+		)
+		(pin "5"
+			(uuid "ca6c56eb-2ff2-4bfb-9741-bca88c6d061d")
+		)
+		(pin "4"
+			(uuid "cb7d7c6c-d696-465f-833e-49cb282764e1")
+		)
+		(pin "3"
+			(uuid "8744a2cf-37e3-4570-9d30-8c18c16c8381")
+		)
+		(pin "2"
+			(uuid "97bbb8c2-c73f-490c-a70a-0884a9a4af30")
+		)
+		(pin "1"
+			(uuid "a93d3ac7-7fd3-448b-89e7-8198b00d5184")
+		)
+		(pin "17"
+			(uuid "65c93d15-5d0b-46f6-b3cf-70c82165183d")
+		)
+		(pin "16"
+			(uuid "ef051e18-b328-4bee-8449-e6ffae9b5f0c")
+		)
+		(pin "15"
+			(uuid "4f0b0f8d-9ef8-4d7f-8b03-3fa6283b62f6")
+		)
+		(pin "14"
+			(uuid "e3e51734-ab47-46c7-9e09-3cc99def3ff4")
+		)
+		(pin "13"
+			(uuid "d61f89f7-a107-4ebc-8597-c9dce426fa34")
+		)
+		(pin "18"
+			(uuid "0dadc935-f9f5-47de-bf0c-30f242bd6974")
+		)
+		(pin "19"
+			(uuid "654376b4-982d-4b19-a784-38ac272675a9")
+		)
+		(pin "20"
+			(uuid "55b472ef-d750-4edb-844a-efcb2d0491b1")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 100.33 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9b9769c6-a13a-47f4-9b8f-89f6b17fcd51")
+		(property "Reference" "U10"
+			(at 102.4733 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 102.4733 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 105.41 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 105.41 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 100.33 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 100.33 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "67087840-7e75-48ab-8595-efbf9bed201f")
+		)
+		(pin "21"
+			(uuid "6120fb69-cb59-46fc-899a-b23200f34d28")
+		)
+		(pin "24"
+			(uuid "33e512d3-68c6-46c3-b0c1-60c676c55f76")
+		)
+		(pin "23"
+			(uuid "10aef1cb-fcae-42ae-a58a-9840fd67c399")
+		)
+		(pin "12"
+			(uuid "df2607d1-0964-4931-bbce-2f1802e37006")
+		)
+		(pin "11"
+			(uuid "8560e74a-6b79-4587-baa5-b7ee997bb343")
+		)
+		(pin "10"
+			(uuid "09bd947b-63e6-4014-a4dd-4e8fa6892163")
+		)
+		(pin "9"
+			(uuid "42dab27a-7f0a-43a6-bfac-176224e3754d")
+		)
+		(pin "8"
+			(uuid "5acb400d-3f2d-425e-91cf-d33f9ebf3172")
+		)
+		(pin "7"
+			(uuid "254d4f16-b05d-4a9a-a3a1-b234c339f90b")
+		)
+		(pin "6"
+			(uuid "094501fa-daa6-4290-a00e-d0693a2cb667")
+		)
+		(pin "5"
+			(uuid "d15685ed-56ab-4259-8a1f-3f950722d05f")
+		)
+		(pin "4"
+			(uuid "108002fb-2fd2-4e6e-987e-207afdedf0f0")
+		)
+		(pin "3"
+			(uuid "9052d878-0de5-4098-b75d-c017ab190c06")
+		)
+		(pin "2"
+			(uuid "085cd0f4-8864-41a8-8663-8ee413770fe2")
+		)
+		(pin "1"
+			(uuid "7ea7d28e-24d8-4c90-bf08-a71b2d5cba77")
+		)
+		(pin "17"
+			(uuid "31959ead-8a67-4daa-9626-02e5e003a643")
+		)
+		(pin "16"
+			(uuid "538728ff-e79e-40de-8e75-e0dbf9d6f58f")
+		)
+		(pin "15"
+			(uuid "898a180d-bd04-4105-aff1-9e064e6b6e4f")
+		)
+		(pin "14"
+			(uuid "de65f1be-035e-4065-8b21-0b5df2438a1a")
+		)
+		(pin "13"
+			(uuid "c770249b-5a1b-4def-93d8-2c9e917eea7e")
+		)
+		(pin "18"
+			(uuid "b7ee77aa-a350-4a2b-9a34-48e8c2c8fac4")
+		)
+		(pin "19"
+			(uuid "27fc37f9-1321-4787-9cd3-892ad1594431")
+		)
+		(pin "20"
+			(uuid "c5d6c66c-6ea0-4a79-a0e1-e294ccbb2ed5")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 152.4 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a00000d7-0fd7-4947-8050-334e53d2e0fa")
+		(property "Reference" "U11"
+			(at 154.5433 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 154.5433 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 157.48 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 157.48 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 152.4 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 152.4 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "ec945a5a-202c-4ea4-9297-0e4906de254b")
+		)
+		(pin "21"
+			(uuid "7b208785-bd92-4b12-b0dd-95e511ee2a0c")
+		)
+		(pin "24"
+			(uuid "022d2c07-c5a4-432f-b210-2ffef96cc7f8")
+		)
+		(pin "23"
+			(uuid "e20cb173-6184-4485-8451-d041a9a36550")
+		)
+		(pin "12"
+			(uuid "19dcf738-0826-4983-8104-031403ec9798")
+		)
+		(pin "11"
+			(uuid "5ff3035f-deb2-46d5-9195-b8aa0b6e8bfb")
+		)
+		(pin "10"
+			(uuid "2f08bd29-0d35-47eb-a5c5-05a18dfaffb0")
+		)
+		(pin "9"
+			(uuid "cd532268-03dc-4c77-8992-a88310a6329e")
+		)
+		(pin "8"
+			(uuid "3db03b22-231f-4e23-8093-1568340f55be")
+		)
+		(pin "7"
+			(uuid "d4436a4a-edf1-4bf2-964d-b53e5c12ab57")
+		)
+		(pin "6"
+			(uuid "3306637a-1465-488a-8235-e2cd7f7614e4")
+		)
+		(pin "5"
+			(uuid "89027c2c-0ee9-44b9-a387-f919e107684c")
+		)
+		(pin "4"
+			(uuid "1360b257-5f98-469e-b416-2c9a272293bb")
+		)
+		(pin "3"
+			(uuid "d878fb55-c128-42b3-a5c8-da63420924dc")
+		)
+		(pin "2"
+			(uuid "b1db5a31-71b1-48c0-9dcc-2beee1645bd0")
+		)
+		(pin "1"
+			(uuid "8f2a93fe-ebff-406a-a726-30ff8f0fbddb")
+		)
+		(pin "17"
+			(uuid "c5edd35a-277c-48de-af98-55a977000015")
+		)
+		(pin "16"
+			(uuid "87d9a2e0-869e-4fb8-ba00-3338bfbc2fcd")
+		)
+		(pin "15"
+			(uuid "3cce5d99-73c5-4c2d-beb7-ba8c54eafa04")
+		)
+		(pin "14"
+			(uuid "5f8b2565-94b2-4e18-a87e-c8ee73e06202")
+		)
+		(pin "13"
+			(uuid "03a95c50-5683-4dd3-b162-5738f0c8176a")
+		)
+		(pin "18"
+			(uuid "e9bc73fc-6ddc-42fd-b3d1-5363603cb063")
+		)
+		(pin "19"
+			(uuid "23ec785f-c39b-4c14-be26-922a6ae9eec4")
+		)
+		(pin "20"
+			(uuid "da98fa64-a7fd-4b72-a74f-83c7a516efc1")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 100.33 116.84 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ace21778-ca4b-4c32-8b0c-95964850b2d8")
+		(property "Reference" "U13"
+			(at 102.4733 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 102.4733 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 105.41 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 105.41 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 100.33 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 100.33 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "28235699-3ff9-437f-aaa4-f453ba471725")
+		)
+		(pin "21"
+			(uuid "90c54dff-6c99-43cc-82f6-982e7089f523")
+		)
+		(pin "24"
+			(uuid "74186c94-c0c1-442f-9a2f-a04489e43712")
+		)
+		(pin "23"
+			(uuid "b3eaf4c0-6888-4e56-8cbc-5978576670f6")
+		)
+		(pin "12"
+			(uuid "8000bd29-c99c-40c5-9010-cedd2de0dd7e")
+		)
+		(pin "11"
+			(uuid "ee4501aa-d7f7-452e-a1dc-fdbeff18944d")
+		)
+		(pin "10"
+			(uuid "46f7b16f-e90d-4e6e-95a0-5f04744e0249")
+		)
+		(pin "9"
+			(uuid "94999072-ae66-4f7f-8d1b-3bd5df66bb68")
+		)
+		(pin "8"
+			(uuid "2b281be5-ac8b-43dc-a4c2-ce70e44a7ed2")
+		)
+		(pin "7"
+			(uuid "b0a45a3b-22b9-4850-bdeb-8ffd929cab3d")
+		)
+		(pin "6"
+			(uuid "e5751abc-291c-44c4-8e35-4226f5abbca6")
+		)
+		(pin "5"
+			(uuid "08723a5d-230d-494e-8f7e-888b382f5397")
+		)
+		(pin "4"
+			(uuid "b91d1384-b0f6-474a-84ae-15ef8c59b8c3")
+		)
+		(pin "3"
+			(uuid "1cbffc6d-2e6f-43b0-b94a-ca8abb0f9f96")
+		)
+		(pin "2"
+			(uuid "5ad336c6-7542-4aae-ab43-c90091e1cb9e")
+		)
+		(pin "1"
+			(uuid "1ae1d32f-a743-4bac-bcc2-eca056315038")
+		)
+		(pin "17"
+			(uuid "21dcc629-89bd-4ccb-a356-db5cbf2f1da5")
+		)
+		(pin "16"
+			(uuid "986f1494-e3e1-4f87-9fa6-f8e2b5640903")
+		)
+		(pin "15"
+			(uuid "83d44b75-58e2-48e5-845c-3fe3a0ce2552")
+		)
+		(pin "14"
+			(uuid "463eb79d-022a-4d31-8126-1fc4c3b8bbcd")
+		)
+		(pin "13"
+			(uuid "c36c663f-acf8-4319-93cc-e5ecf7ad4122")
+		)
+		(pin "18"
+			(uuid "5c978b79-4977-4827-933c-334a06d1921c")
+		)
+		(pin "19"
+			(uuid "3f292928-0e05-40bc-af84-10c9e85734f8")
+		)
+		(pin "20"
+			(uuid "a0d2b04e-572b-4b44-a4e8-ce08de96824b")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 101.6 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e78ad9cf-2887-4a62-84e3-9de0fae27933")
+		(property "Reference" "U17"
+			(at 103.7433 147.32 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 103.7433 149.86 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 106.68 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 106.68 203.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 101.6 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 101.6 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "cd5880f6-5128-4915-89cb-a24d9ad913ac")
+		)
+		(pin "21"
+			(uuid "b431509f-f845-451f-a782-0d6200ea65c3")
+		)
+		(pin "24"
+			(uuid "b4958949-2903-46ec-90c9-198ed7ece7b9")
+		)
+		(pin "23"
+			(uuid "82022f01-387e-4c04-b7e1-73a9697d0c0b")
+		)
+		(pin "12"
+			(uuid "0efe229a-7327-46c1-9ea9-00b49f4f3b97")
+		)
+		(pin "11"
+			(uuid "49c1b548-e555-4ede-8c24-d15f0f8daa4c")
+		)
+		(pin "10"
+			(uuid "1d030aab-67c9-42b5-84c2-c57e744fc6a4")
+		)
+		(pin "9"
+			(uuid "ac13a2ac-34ce-446d-9d12-c87211079d34")
+		)
+		(pin "8"
+			(uuid "ace56054-be8a-4dd5-a0ce-1a0f9a7260d1")
+		)
+		(pin "7"
+			(uuid "f6abfb8e-a299-4d8c-8276-0195cd010c5c")
+		)
+		(pin "6"
+			(uuid "993962bd-5140-44fd-935b-e005d540aa5d")
+		)
+		(pin "5"
+			(uuid "dd933b7e-66ee-47c0-a5b0-769b5c2daf08")
+		)
+		(pin "4"
+			(uuid "887b4feb-761f-4615-8afb-80daf0a1a52f")
+		)
+		(pin "3"
+			(uuid "d68b199f-bcff-49dd-a80b-059ce5cf4772")
+		)
+		(pin "2"
+			(uuid "e038182a-303c-44d0-afdd-681a113cac79")
+		)
+		(pin "1"
+			(uuid "ba5d70f9-67b6-42c1-b398-6431352efb28")
+		)
+		(pin "17"
+			(uuid "ddccaaa2-df75-4e40-ba95-e05f0fc302d2")
+		)
+		(pin "16"
+			(uuid "f90b94ad-3022-4742-87b9-8f755cd4d758")
+		)
+		(pin "15"
+			(uuid "03f4d1ee-f73f-41fc-851d-c0a20bdff996")
+		)
+		(pin "14"
+			(uuid "040a6200-bbef-4347-9839-f56c7fa92e86")
+		)
+		(pin "13"
+			(uuid "12c737a0-d512-48df-b081-b338f03e15af")
+		)
+		(pin "18"
+			(uuid "5a18d6ea-56a2-4a9d-b71a-a4c1506fece4")
+		)
+		(pin "19"
+			(uuid "452cdcba-ab34-48b4-a9d4-db6651a57b96")
+		)
+		(pin "20"
+			(uuid "18b479d3-0c4b-41af-a0f7-7fd666ecbb19")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:MCP23018x-x-SS")
+		(at 48.26 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f9463b0b-f54c-4706-b1a5-168bf863d73c")
+		(property "Reference" "U9"
+			(at 50.4033 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP23018x-x-SS"
+			(at 50.4033 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SSOP-24_5.3x8.2mm_P0.65mm"
+			(at 53.34 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf"
+			(at 53.34 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" "16-bit I/O expander, I2C interface, open-drain outpus (with configurable pull-up resistors), 2 interrupt outputs, SSOP-24"
+			(at 48.26 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C558584"
+			(at 48.26 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "22"
+			(uuid "7d55877b-117c-47c4-b94f-8d4ecb0e6441")
+		)
+		(pin "21"
+			(uuid "c705612d-5d01-4117-9097-c47df08e3237")
+		)
+		(pin "24"
+			(uuid "fd58b7a1-a8d2-4619-8143-07c22ab56dc7")
+		)
+		(pin "23"
+			(uuid "e84175ca-1422-4738-8a72-10316e7a8344")
+		)
+		(pin "12"
+			(uuid "2bcdf3c8-8110-4170-8924-be93c9c488b8")
+		)
+		(pin "11"
+			(uuid "2e3e605b-204d-41e6-8729-3b3925009221")
+		)
+		(pin "10"
+			(uuid "e86f81bc-6eda-47b0-b608-8f2cc560f088")
+		)
+		(pin "9"
+			(uuid "e0a03b3a-9785-49fe-8dca-999d6d361a40")
+		)
+		(pin "8"
+			(uuid "b721e046-fb2c-4bcb-b9ed-9ff57fff9d2d")
+		)
+		(pin "7"
+			(uuid "d5482a23-3be7-4eac-9c07-844d255e12f4")
+		)
+		(pin "6"
+			(uuid "9be67244-3522-4ca6-9f2a-97c92c93c11e")
+		)
+		(pin "5"
+			(uuid "61f47bef-babc-490f-b50a-39a9098c3d88")
+		)
+		(pin "4"
+			(uuid "a093bec3-786b-4c76-af16-439602303a3f")
+		)
+		(pin "3"
+			(uuid "94ab9a6c-38a3-42fe-a186-c021c7912e89")
+		)
+		(pin "2"
+			(uuid "0416c4a0-442c-4b2b-a884-38e0431b5a89")
+		)
+		(pin "1"
+			(uuid "47f1d7c8-5986-4d02-ad30-034adcc33fc2")
+		)
+		(pin "17"
+			(uuid "7781e8f6-b4c0-436f-b70f-89ed70ed72c3")
+		)
+		(pin "16"
+			(uuid "2c59438c-8701-45c6-b35d-dd3909d06d1d")
+		)
+		(pin "15"
+			(uuid "d4b321f9-661b-49e5-ae0b-eaff9fd42297")
+		)
+		(pin "14"
+			(uuid "b7233b36-f92c-4409-8347-b86e80cf00bc")
+		)
+		(pin "13"
+			(uuid "bf87fef2-7229-4f3a-92c5-2bece865fa13")
+		)
+		(pin "18"
+			(uuid "89cba1de-d01b-4e53-835b-244d6d799a57")
+		)
+		(pin "19"
+			(uuid "e69a6120-0306-4034-b593-a5f0075748ba")
+		)
+		(pin "20"
+			(uuid "caeb5ef1-ed2b-452e-9e8f-ee4c8a2856cd")
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(reference "U9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 292.1 20.32)
+		(size 25.4 118.11)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "36990cec-5119-4cc4-8d59-ac3b6ad89bfb")
+		(property "Sheetname" "Encoders Chnl 2"
+			(at 292.1 19.6084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "encoders_debounce_1.kicad_sch"
+			(at 292.1 139.0146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 330.2 20.32)
+		(size 25.4 118.11)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "6e5d4456-5c3e-4421-88c6-63590df96f13")
+		(property "Sheetname" "Encoders Chnl 3"
+			(at 330.2 19.6084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "encoders_debounce_2.kicad_sch"
+			(at 330.2 139.0146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 254 20.32)
+		(size 25.4 118.11)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "900155a5-5a06-4a15-8d44-60bc37a616ad")
+		(property "Sheetname" "Encoders Chnl 1"
+			(at 254 19.6084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "encoders_debounce.kicad_sch"
+			(at 254 139.0146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 254 210.82)
+		(size 139.7 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a5b09cb1-84f0-40cf-9c1c-6185157695f1")
+		(property "Sheetname" "LEDs"
+			(at 254 210.1084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "LEDs.kicad_sch"
+			(at 254 236.8046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 368.3 20.32)
+		(size 25.4 118.11)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "e62b4cad-8379-4f3e-bea6-a692742bf59b")
+		(property "Sheetname" "Encoders Chnl 4"
+			(at 368.3 19.6084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "encoders_debounce_3.kicad_sch"
+			(at 368.3 139.0146 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 254 147.32)
+		(size 25.4 57.15)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "f6043f52-b986-4e8f-af26-08817822fe2e")
+		(property "Sheetname" "Buttons Chnl 1"
+			(at 254 146.6084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "btns0.kicad_sch"
+			(at 254 205.0546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bucket_controls"
+				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+	(embedded_files
+		(file
+			(name "default_sheet.kicad_wks")
+			(type worksheet)
+			(data |KLUv/WBDDAUYANYgZiDwGjdAiNhXhEkQtFUYSU2apGCmL9l0goFLY2FxGKOpCl8AWABcALXk3fxV
+				XApzDj2mMItCFrvsa0PYK3UyqIIZldFblD9WVa8FMxpl15Y95VXNAwAgYELlevLoEutgOMz2Uzug
+				CWscZg/XW0MDQCDbpJTz/fuG9oRragAInEiqzsf7LGkQHpdzALghiEZKaBoLs0+hCZNYezL1Sb+d
+				BjLWCn/XdvaqqbbjenH4ZbC9HSN9IejpCmabu4pyfy4qxF5jnW8tlcLP3eP39+fWf/domH3YDvHg
+				sjP28gnDOhd3j5tsl9J9xpcvTpKYuASN4CIOxmdBL9vONs3jfPePPpvGzS/ncl5cpHN0HzD09Lsf
+				4s+erwnFcXFkOItLoMWtJ4LrEguMMQvXfOvXLJDNJ9ToWyZYT9tl0/cEgez/cl6v+avDYS4Xx8Gl
+				R6rROJ/OgpxoEpYFnW/4KGncNLrgIAquoXjDZpKoYM26nikrbD9lp+AeFEtF0ujaa3FO6fI3qWGu
+				+OnxDd8v2U04iYSicAkKjS5R6TiuEYCYoAE5yJTNSJIklWEOUIRMTVXxbDECBK0d61sifbINU0pC
+				cgbbv8VH4HQTncAsWgbELYTiKzMxasRto88RlNTtHIYSJkos5qJW7s0ZR38ZmLMUQRLQG9CjBdR6
+				v96OXgqcKYn8JOHSGrDxUFc+CtAfzJLStbNlA82dkUaD1fFSwBZopIfIBpvlyRqOWNIucyJ+1W8+
+				FlZb7ViCRDjSwMnPGSXkSfqiJoxzi3K5knQz2dWJEIhhhD0kyY0iEEToEriVEgYYBGC/Tlie1uh3
+				xNk2A7msZ1WTlPYEK5FMA1Ba+SRx0yQyraBcB/+sLGhCGy2Ljg8AGeGBaSbM+gG8MHEWaf8T2+lR
+				KNZzVP6c0hH95Fk8sJ4FvfLrtpgqsqPBpHxw5WRtDGyM4zlKjGcYRaPPd/cyb/6weLleVUy4GnXR
+				ksiIbmvfrbBYZMMA4A+rd31Hx36ln9g1Al94X/zjRZOYjQ9cBQ==|
+			)
+			(checksum "3D790943F8DE9621CB81BD663D8A02EA")
+		)
+	)
+)
