@@ -3,12 +3,16 @@
 
 #include <stdint.h>
 
-#define DEFAULT_FADER_STATE (fader_state_t)({.movement_mode = FADER_UNPOWERED, .position = UINT16_MAX / 2})
+#define DEFAULT_FADER_STATE (fader_state_t){.movement_mode = FADER_UNPOWERED, .position = UINT16_MAX / 2}
 
-//! Hardware connection info of the fader
+/**
+ * @brief Hardware connection info of the fader
+ */
 typedef struct
 {
-    // TODO / PLACEHOLDER
+    // TODO touch sensor pins / gpio expander? stuff
+    // TODO Motor forward/backward pins/whatever is necessary for PWM
+    // TODO ADC input stuff
 } fader_info_t;
 
 typedef enum

@@ -113,6 +113,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/control_integration/control_interface.c
     Core/Src/control_integration/button_control.c
     Core/Src/control_integration/knob_control.c
+    Core/Src/control_integration/fader_control.c
     Core/Src/FreeRTOS_apps/remote_cmd_handler.c
 )
 

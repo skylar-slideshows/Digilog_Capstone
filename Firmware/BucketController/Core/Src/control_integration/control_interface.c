@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "CONFIG.h"
+#include "fader_control.h"
 #include "hardware_drivers/led_driver.h"
 
 #include "control_integration/control_interface.h"
@@ -93,12 +94,17 @@ void update_control_values (void)
         update_channel_knob_values(
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
-            &(channel_controls_io[channel])
+            &(channel_controls_io[channel]) //
         );
         update_channel_button_values(
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
-            &(channel_controls_io[channel])
+            &(channel_controls_io[channel]) //
+        );
+        update_channel_fader_values(
+            &(channel_control_vals[channel]),
+            &(channel_states[channel]),
+            &(channel_controls_io[channel]) //
         );
 
         // TODO: non-button/encoder inputs maybe?
@@ -117,12 +123,16 @@ void update_control_leds (void)
         update_channel_knob_leds(
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
-            &(channel_controls_io[channel])
+            &(channel_controls_io[channel]) //
         );
         update_channel_button_leds(
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
-            &(channel_controls_io[channel])
+            &(channel_controls_io[channel]) //
+        );
+        update_channel_fader_hardware(
+            &(channel_states[channel]),
+            &(channel_controls_io[channel]) //
         );
         // TODO: non-button/encoder inputs maybe?
     }

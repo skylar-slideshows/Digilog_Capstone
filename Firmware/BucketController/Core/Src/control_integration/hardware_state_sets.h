@@ -2,6 +2,7 @@
 #define HARDWARE_STATE_SETS_H
 
 #include "hardware_drivers/rotary_encoder.h"
+#include "hardware_drivers/fader_driver.h"
 #include "control_integration/control_interface.h"
 
 /**
@@ -70,6 +71,8 @@ typedef struct
     bool ins_button_state;
     bool pre_button_state;
     bool rec_button_state;
+
+    fader_state_t fader_state;
 
     // TODO: Hold duration counters for buttons
 } channel_control_io_state;

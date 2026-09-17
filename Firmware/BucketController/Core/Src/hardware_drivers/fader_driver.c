@@ -14,6 +14,10 @@ static bool is_fader_touched (fader_info_t *info)
     // TODO
 }
 
+static void update_motor_power (int32_t power){
+    // TODO
+}
+
 static inline int32_t clamp_mult (int32_t a, int32_t b)
 {
     int32_t x = a * b;
@@ -32,6 +36,11 @@ static inline int32_t clamp_mult (int32_t a, int32_t b)
     return x;
 }
 
+/**
+ * @brief Feedback control based on motor target and position
+ * Feedback control to move the motor towards a target position;
+ * currently just uses proportional deviation with no derivative or integral
+ */
 static int32_t get_motor_power (fader_info_t *info, fader_state_t *state)
 {
     const int32_t where_it_is = get_physical_fader_position(info);
@@ -52,8 +61,7 @@ void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *
     else
     {
         new_state_i.movement_mode = FADER_MOVE_OR_HOLD_TARGET;
-        get_motor_power(info, &new_state_i);
-        // TODO: Write to motor hardware
+        update_motor_power(get_motor_power(info, &new_state_i));
     }
 
     *new_state = new_state_i;
