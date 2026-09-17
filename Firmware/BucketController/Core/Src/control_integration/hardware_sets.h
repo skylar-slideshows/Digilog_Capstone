@@ -5,6 +5,7 @@
 #include "control_integration/control_interface.h"
 
 #include "hardware_structs.h" // Only to be included for control_interface related code
+#include "hardware_drivers/fader_driver.h"
 
 
 /*=============================== HARDWARE SETS FOR SECTIONS OF A CHANNEL ================================*/
