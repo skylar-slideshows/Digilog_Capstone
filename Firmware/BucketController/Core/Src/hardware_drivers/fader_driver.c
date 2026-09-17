@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "hardware_drivers/fader_driver.h"
+#include "stm32g4xx_hal_adc_ex.h"
 
 #define FADER_POWER_COEFFICIENT 4
 
@@ -65,4 +66,9 @@ void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *
     }
 
     *new_state = new_state_i;
+}
+
+void init_fader(fader_info_t *info){
+    //HAL_ADCEx_Calibration_Start(info->adc, ADC_SINGLE_ENDED);
+    // TODO
 }

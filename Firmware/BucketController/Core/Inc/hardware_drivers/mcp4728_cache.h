@@ -44,7 +44,7 @@
 /**
  * @brief Writes a single output value to the mcp4728 cache
  */
-void mcp4728_cache_write (
+void mcp4728_cache_write_single (
     I2C_TypeDef *bus,          //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t addr,              //!< 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
     uint8_t output_channel,    //!< Output channel; 0 -> A, 1 -> B, 2 -> C, 3 -> D

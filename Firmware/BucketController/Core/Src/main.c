@@ -32,6 +32,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728.h"
+#include "hardware_drivers/mcp4728_cache.h"
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
@@ -1054,6 +1055,9 @@ void StartDefaultTask(void *argument)
     }
     counter = (counter + 1) % 16;
   }
+  mcp4728_cache_write_single(I2C1, 0x62, 0, 2048);
+  mcp4728_cache_flush_fastWrite(I2C1, 0x62);
+
 
   /* USER CODE END 5 */
 }

@@ -2,6 +2,8 @@
 #define FADER_DRIVER_H
 
 #include <stdint.h>
+#include "stm32g474xx.h"
+#include "stm32g4xx_ll_adc.h"
 
 #define DEFAULT_FADER_STATE (fader_state_t){.movement_mode = FADER_UNPOWERED, .position = UINT16_MAX / 2}
 
@@ -10,9 +12,16 @@
  */
 typedef struct
 {
-    // TODO touch sensor pins / gpio expander? stuff
-    // TODO Motor forward/backward pins/whatever is necessary for PWM
-    // TODO ADC input stuff
+    GPIO_TypeDef *touch_sensor_port;
+    uint8_t touch_sensor_pin;
+
+    GPIO_TypeDef *motor_a_port;
+    uint8_t motor_a_pin;
+    GPIO_TypeDef *motor_b_port;
+    uint8_t motor_b_pin;
+
+    ADC_HandleTypeDef *adc;
+    uint32_t adc_channel;
 } fader_info_t;
 
 typedef enum
@@ -37,5 +46,10 @@ void update_fader (
     fader_state_t *old_state, //!< Pointer to the old fader state containing its last polled values
     fader_state_t *new_state  //!< Pointer in which to store the new fader state
 );
+
+/**
+ * @brief initialize hardware as necessary for the given fader
+ */
+void init_fader(fader_info_t *info);
 
 #endif
