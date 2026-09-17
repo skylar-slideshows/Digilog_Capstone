@@ -60,7 +60,7 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.5,
+          "min_clearance": 0.3,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -156,7 +156,7 @@
         "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
-        "solder_mask_to_copper_clearance": 0.0,
+        "solder_mask_to_copper_clearance": 0.005,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -561,31 +561,31 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Value",
           "name": "Value",
           "show": true
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "DNP",
           "name": "${DNP}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": true
+          "show": false
         },
         {
           "group_by": true,
@@ -597,10 +597,10 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "LCSC",
           "name": "LCSC",
           "show": true
@@ -615,6 +615,18 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Device",
+          "name": "Sim.Device",
           "show": false
         }
       ],
@@ -666,7 +678,7 @@
         "uuid": "96563cb2-2d6f-462f-b797-f4c345bb605c"
       }
     ],
-    "used_designators": "U2-8,U10-20,U301,SW1-40,SW101-120,SW201-220,SW301-310,R1-360,#PWR1-70,#PWR101-270,#PWR301-426,C1-160,C201-260,C301-330,J2-80,J101-120,J201-220,J301-320",
+    "used_designators": "F2-4,F301,U2-28,U301-304,SW1-58,SW101-122,SW201-222,SW301-322,R1-416,C1-160,C201-260,C301-342,D1-80,D101-120,D201-220,D301-320,#PWR1-619,J2-80,J101-120,J201-220,J301-320",
     "variants": []
   },
   "sheets": [
@@ -691,12 +703,48 @@
       "Encoders Chnl 4"
     ],
     [
+      "f6043f52-b986-4e8f-af26-08817822fe2e",
+      "Buttons Chnl 1"
+    ],
+    [
+      "0b590eac-fda6-4d00-8dae-5d8c3c08be50",
+      "Buttons Chnl 2"
+    ],
+    [
+      "7a31022a-409d-4280-b3c9-36854d5f9038",
+      "Buttons Chnl 3"
+    ],
+    [
+      "70bd51a6-cdc7-4065-8074-4fed443c6dca",
+      "Buttons Chnl 4"
+    ],
+    [
+      "466f16bb-a47a-4698-aad9-11b2245d3fb9",
+      "GPIO Chnl 1"
+    ],
+    [
+      "0c3b0fd7-41a5-4e6b-abd2-19b48961811b",
+      "GPIO Chnl 2"
+    ],
+    [
+      "bd1fcc11-9591-42b9-9a76-533713e09303",
+      "GPIO Chnl 3"
+    ],
+    [
+      "9345182b-3339-4ab8-884f-ed114155880e",
+      "GPIO Chnl 4"
+    ],
+    [
+      "ef4fa970-d2ae-433a-bef2-2fa5116950f1",
+      "Faders"
+    ],
+    [
       "a5b09cb1-84f0-40cf-9c1c-6185157695f1",
       "LEDs"
     ],
     [
-      "f6043f52-b986-4e8f-af26-08817822fe2e",
-      "Buttons Chnl 1"
+      "067d1a4b-f5f5-4939-a1e7-585ab3f06f81",
+      "Board Connections"
     ]
   ],
   "text_variables": {},
