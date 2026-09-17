@@ -13,14 +13,13 @@ Bucket Controller
 - [rotary_encoder.h](@ref rotary_encoder.h) - Functions to find the status and motion of the EC11 rotary encoders
 - [control_voltage.h](@ref control_voltage.h) - Control voltage generation engine header
 - [console_state_bucket.h](@ref console_state_bucket.h) - Header file for console parameter data saving and reporting code (for the bucket controller)
-- LCD DISPLAY DRIVER (need)
 - [main.c](@ref Firmware/BucketController/Core/Src/main.c) - Main C file
 - [main.h](@ref Firmware/BucketController/Core/Inc/main.h) - Main header
 
 
 Master Controller
-- [main.c](@ref Firmware/MasterController/Core/Src/main.c) - Main C file
-- [main.h](@ref Firmware/MasterController/Core/Inc/main.h) - Main header
+
+*(Not yet documented here: the master controller firmware is still a CubeMX shell, and its sources are not in this build's `INPUT`. The LCD display driver is likewise not written yet — see [Architecture](@ref architecture) section 1.1 for the full list of subsystems with no source behind them. — note added by Claude, not author-written.)*
 
 <br><br><br>
 <img src="diagram2.png" width="58%"><br><br><br>
