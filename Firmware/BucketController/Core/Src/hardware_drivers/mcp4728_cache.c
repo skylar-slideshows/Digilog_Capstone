@@ -33,7 +33,9 @@
 */
 
 #include <stdint.h>
+#include <stdatomic.h>
 
+#include "hardware_drivers/mcp4728_cache.h"
 #include "hardware_drivers/mcp4728.h"
 #include "stm32g474xx.h"
 
@@ -46,21 +48,52 @@ static inline uint8_t i2c_to_int (I2C_TypeDef *bus)
     return 4; // indicate failure
 }
 
-mcp4728_output_value_t mcp4728_value_cache[4]  // 4 I2C channels
-                                          [8]  // 8 possible addresses per channel
-                                          [4]; // 4 12-bit outputs cached per chip
+typedef atomic_uint_fast64_t mcp4728_atomic_channel_output_value_t;    // 64 bit value represents 4 DAC channels
+volatile mcp4728_atomic_channel_output_value_t mcp4728_value_cache[4]  // 4 I2C channels
+                                                                  [8]; // 8 possible addresses per channel
+typedef union
+{
+    uint64_t whole;
+    uint16_t word[4];
+} memory_abusive_64bit_word;
 
 /*
  * Writes an output value to the mcp4728 cache
  */
-void mcp4728_cache_write (
+void mcp4728_cache_write_single (
     I2C_TypeDef *bus,          // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t addr,              // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
     uint8_t output_channel,    // Output channel; 0 -> A, 1 -> B, 2 -> C, 3 -> D
     mcp4728_output_value_t val // 12-bit output value
 )
 {
-    mcp4728_value_cache[i2c_to_int(bus)][addr & 0x08][output_channel] = val;
+    memory_abusive_64bit_word newval;
+    newval.whole = atomic_load_explicit(&(mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07]), memory_order_relaxed);
+
+    newval.word[output_channel] = val;
+
+    atomic_store_explicit(&(mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07]), newval.whole, memory_order_relaxed);
+}
+
+/*
+ * Writes an output value to the mcp4728 cache
+ */
+void mcp4728_cache_write_multi (
+    I2C_TypeDef *bus,             // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t addr,                 // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
+    uint8_t *output_channels,     // Output channel; 0 -> A, 1 -> B, 2 -> C, 3 -> D
+    mcp4728_output_value_t *vals, // 12-bit output value
+    uint8_t output_channel_count  // length of lists
+)
+{
+    memory_abusive_64bit_word newval;
+    newval.whole = atomic_load_explicit(&(mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07]), memory_order_relaxed);
+
+    for(uint8_t i = 0; i < output_channel_count; i++){
+        newval.word[output_channels[i]] = vals[i];
+    }
+
+    atomic_store_explicit(&(mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07]), newval.whole, memory_order_relaxed);
 }
 
 /*
@@ -78,6 +111,8 @@ uint8_t mcp4728_cache_flush_fastWrite (
     uint8_t addr      // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
 )
 {
-    mcp4728_output_value_t *outs = mcp4728_value_cache[i2c_to_int(bus)][addr & 0x08];
-    return mcp4728_fastWrite(bus, addr, outs[0], outs[1], outs[2], outs[3]);
+    memory_abusive_64bit_word cached;
+    cached.whole = atomic_load_explicit(&(mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07]), memory_order_relaxed);
+
+    return mcp4728_fastWrite(bus, addr, cached.word[0], cached.word[1], cached.word[2], cached.word[3]);
 }

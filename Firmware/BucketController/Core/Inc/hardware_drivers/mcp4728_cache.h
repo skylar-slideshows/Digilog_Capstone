@@ -42,13 +42,24 @@
 #include "stm32g474xx.h"
 
 /**
- * @brief Writes an output value to the mcp4728 cache
+ * @brief Writes a single output value to the mcp4728 cache
  */
 void mcp4728_cache_write (
     I2C_TypeDef *bus,          //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t addr,              //!< 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
     uint8_t output_channel,    //!< Output channel; 0 -> A, 1 -> B, 2 -> C, 3 -> D
     mcp4728_output_value_t val //!< 12-bit output value
+);
+
+/**
+ * @brief Writes a set of output values to the mcp4728 cache
+ */
+void mcp4728_cache_write_multi (
+    I2C_TypeDef *bus,             //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t addr,                 //!< 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
+    uint8_t *output_channels,     //!< list of Output channel; 0 -> A, 1 -> B, 2 -> C, 3 -> D
+    mcp4728_output_value_t *vals, //!< list of 12-bit output values
+    uint8_t output_channel_count  //!< length of lists
 );
 
 /**
