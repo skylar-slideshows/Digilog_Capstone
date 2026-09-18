@@ -1047,7 +1047,7 @@ void StartDefaultTask(void *argument)
       led_update();
     }
     counter = (counter + 1) % 16;
-    mcp4728_cache_write_single(I2C1, 0x62, 0, 2048);
+    mcp4728_cache_write(I2C1, 0x62, 0, 2048);
     mcp4728_cache_flush_fastWrite(I2C1, 0x62);
   }
 

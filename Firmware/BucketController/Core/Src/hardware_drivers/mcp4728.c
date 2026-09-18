@@ -102,13 +102,13 @@ uint8_t mcp4728_writePwrDownSelect (
  *
  * returns uint8_t Error code (0 for success)
  */
-uint8_t mcp4728_generalCall (
-    I2C_TypeDef *bus,                 // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-    mcp4728_general_command_t command // General call command to send
-)
-{
-    // TODO
-}
+// uint8_t mcp4728_generalCall (
+//     I2C_TypeDef *bus,                 // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+//     mcp4728_general_command_t command // General call command to send
+// )
+// {
+//     // TODO
+// }
 
 /*
  * This function performs a fast write operation on the MCP4728 device, updating

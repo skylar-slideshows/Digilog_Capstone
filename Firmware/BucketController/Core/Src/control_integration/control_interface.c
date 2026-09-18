@@ -10,6 +10,7 @@
 #include "hardware_sets.h"
 #include "hardware_state_sets.h"
 #include "knob_control.h"
+#include "portmacro.h"
 
 
 /*=============================== LOGIC CONNECTING HARDWARE TO CONTROL VALUES ================================*/
@@ -19,6 +20,7 @@
  * defined in control_interface.h
  */
 channel_controls channel_control_vals[CHANNELS];
+SemaphoreHandle_t channel_control_mutexes[CHANNELS];
 
 /**
  * @brief Holds info on all control interface IO for all 4 channels in the bucket
@@ -30,12 +32,13 @@ static void init_control_io (uint8_t channel)
 {
     init_button_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
     init_knob_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
-
-    // TODO: Fill channel_controls_io to match the hardware otherwise; (faders?)
+    init_fader_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
 }
 
 static void init_control_vals (uint8_t channel)
 {
+    xSemaphoreTake(channel_control_mutexes[channel], portMAX_DELAY);
+
     channel_controls *vals = &(channel_control_vals[channel]);
 
     vals->input_type_selection = LINE_INPUT;
@@ -72,12 +75,16 @@ static void init_control_vals (uint8_t channel)
     vals->comp_control.threshold = 0;
     vals->comp_control.de_ess_amt = 0;
     vals->comp_control.ratio = 0;
+
+    xSemaphoreGive(channel_control_mutexes[channel]);
 }
 
 void init_control_interface (void)
 {
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
+        channel_control_mutexes[channel] = xSemaphoreCreateMutex();
+
         init_control_io(channel);
         init_control_vals(channel);
     }
@@ -92,16 +99,19 @@ void update_control_values (void)
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
         update_channel_knob_values(
+            &(channel_control_mutexes[channel]),
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
             &(channel_controls_io[channel]) //
         );
         update_channel_button_values(
+            &(channel_control_mutexes[channel]),
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
             &(channel_controls_io[channel]) //
         );
         update_channel_fader_values(
+            &(channel_control_mutexes[channel]),
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
             &(channel_controls_io[channel]) //
@@ -121,11 +131,13 @@ void update_control_leds (void)
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
         update_channel_knob_leds(
+            &(channel_control_mutexes[channel]),
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
             &(channel_controls_io[channel]) //
         );
         update_channel_button_leds(
+            &(channel_control_mutexes[channel]),
             &(channel_control_vals[channel]),
             &(channel_states[channel]),
             &(channel_controls_io[channel]) //

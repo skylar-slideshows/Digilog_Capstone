@@ -11,6 +11,6 @@
 
 void init_fader_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io);
 void update_channel_fader_hardware (channel_control_io_state *state, channel_control_io_t *io);
-void update_channel_fader_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
+void update_channel_fader_values (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
 
 #endif
