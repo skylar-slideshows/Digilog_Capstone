@@ -269,6 +269,7 @@ void uart_cmd_init (void)
     USART2->CR1 |= USART_CR1_RXNEIE_RXFNEIE;
 
     printf("\r\nUART Command Handler Initialized\n");
+    
 }
 
 

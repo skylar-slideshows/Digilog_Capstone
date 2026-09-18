@@ -31,3 +31,46 @@
   *  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   **********************************************************************************
 */
+
+#include "FreeRTOS_apps/led_handler.h"
+#include "hardware_drivers/led_driver.h"
+#include "main.h"
+#include "stm32g474xx.h"
+#include <stdio.h>
+
+void init_led_handler(void)
+{
+    led_init();
+
+    TIM5->CR1 = TIM_CR1_URS // bit 2: UG/slave-mode resets don't raise UIF
+          |     TIM_CR1_ARPE;
+
+    TIM5->EGR = TIM_EGR_UG;         // this sets UIF even with URS=1
+
+// 5. Clear stale flag BEFORE enabling the interrupt
+    TIM5->SR = ~TIM_SR_UIF;         // write 0 to clear; rc_w0 register
+    // enable peripheral side interrupt
+    TIM5->DIER |= TIM_DIER_UIE;
+
+    
+
+    HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0); // kinda just picked 8 arbitrarily
+    HAL_NVIC_EnableIRQ(TIM5_IRQn);
+
+    // starts the cycle counter
+    TIM5->CR1 |= TIM_CR1_CEN;
+
+    printf("\r\nLED Rendering Handler Initialized\n");
+
+}
+
+
+void TIM5_IRQhandler(void)
+{
+    if (TIM5->SR & TIM_SR_UIF)
+    {
+        TIM5->SR = ~TIM_SR_UIF; // clear flag, must be first
+
+
+    }
+}
