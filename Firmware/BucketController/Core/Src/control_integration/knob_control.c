@@ -75,17 +75,17 @@ static void update_s_value_from_encoder_motion (
 // helpers for less code
 static inline void knob_info_disp (knob_info_t knob, knob_disp_t mode)
 {
-    knob_disp(knob.led_ring.channel, knob.led_ring.knob_num, mode);
+    //knob_disp(knob.led_ring.channel, knob.led_ring.knob_num, mode);
 }
 
 static inline void knob_info_scale (knob_info_t knob, knob_scale_t mode)
 {
-    knob_scale(knob.led_ring.channel, knob.led_ring.knob_num, mode);
+    //knob_scale(knob.led_ring.channel, knob.led_ring.knob_num, mode);
 }
 
 static inline void knob_info_led (knob_info_t knob, uint8_t value)
 {
-    knob_led(knob.led_ring.channel, knob.led_ring.knob_num, value);
+    //knob_led(knob.led_ring.channel, knob.led_ring.knob_num, value);
 }
 
 static inline uint8_t uscalar_to_8bit (u_scalar_control_t in) { return in / (U_SCALAR_CONTROL_MAX / 33); }

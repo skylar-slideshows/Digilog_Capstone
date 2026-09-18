@@ -2,26 +2,21 @@
   **********************************************************************************
   * LED DISPLAYS DRIVER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file led_driver.h
-  * @brief Skylar's driver for the LED displays on the console, including knobs and buttons.
-  *        CONFIGURATION in top of .c file.
-  *
-  * Low level driver for showing stuff on the LEDs.
-  * Includes all basic writing functions and center/from-left writing for knob
-  * rings and both (bar/point) display style modes. There are 40, 32 LED knob rings
-  * for a bucket controller, and (up to) 64 more bits for 16 button LEDs per
-  * channel (Total 1344 LEDs per bucket). Part: 74HCT595.
+  * @file hardware_drivers/led_driver.h
+  * @brief Shift register based LED display driver, using LED devices with arbitrary width.
+  * This driver contains all fn's for rendering values and animations into bits
+  * and serializes them for output.
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
-  * @date 2026-08-20
-  * @version 1.0
+  * @date 2026-09-18
+  * @version 2.1
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
-  *  of this software and associated documentation files (the “Software”), to deal
+  *  of this software and associated documentation files (the "Software"), to deal
   *  in the Software without restriction, including without limitation the rights
   *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
   *  of the Software, and to permit persons to whom the Software is furnished to do so,
@@ -29,7 +24,7 @@
   *
   *  The above copyright notice and this permission notice shall be included in all
   *  copies or substantial portions of the Software.
-  *  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
   *  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
   *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
@@ -41,285 +36,399 @@
 #ifndef LED_DRIVER_H
 #define LED_DRIVER_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "CONFIG.h"
+
+
+/*=============================== CHAIN SIZE ================================*/
+// Both of these may be overridden in CONFIG.h. LED_CHAIN_BITS must be >= the
+// sum of all registered device widths; led_chain_finalize() checks it.
+
+#ifndef LED_CHAIN_BITS
+#define LED_CHAIN_BITS (CHANNELS * (KNOBS_PER_CHAN * LEDS_PER_KNOB + BUTTONS_PER_CHAN))
+#endif
+
+#ifndef LED_MAX_DEVICES
+#define LED_MAX_DEVICES (CHANNELS * (KNOBS_PER_CHAN + BUTTONS_PER_CHAN) + 8)
+#endif
+
+#define LED_FRAME_BYTES ((LED_CHAIN_BITS + 7) / 8)
+
+
+/*=============================== DISPLAY MODES ================================*/
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Knob type
+  @brief Display mode (cosmetic): 0 = bar / line of lights, or 1 = single point indicator
  ----------------------------------------------------------------------------------
 */
-typedef struct
+typedef enum
 {
-    int8_t  val;
-    uint8_t disp: 1;
-    uint8_t scale: 1;
-} knob_t;
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief Display mode (cosmetic): 0 = bar / line of lights, 1 = point indicator
- ----------------------------------------------------------------------------------
-*/
-typedef enum {
-    DISP_BAR = 0,
+    DISP_BAR   = 0,
     DISP_POINT = 1
 } knob_disp_t;
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Knob scale modes: 0 = standard left to right, 1 = Dist. from center (pan knob, gain/atten)
+  @brief Scale mode: is a knob ring displaying an unsigned (from left = 0) or 1 = signed / from center value?
  ----------------------------------------------------------------------------------
 */
-typedef enum {
-    SCALE_LEFT = 0, // 0-32 bar grows from the left
-    SCALE_CENTER = 1  // -15 - +16, bar grows from the middle LED (0)
+typedef enum
+{
+    SCALE_LEFT   = 0,
+    SCALE_CENTER = 1
 } knob_scale_t;
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief GPIO, OE PWM setup, turn off all LEDs
+  @brief What kind of control this device belongs to. Used only for lookup and for
+  aiming animations at a subset of devices; the renderer does the actual drawing.
  ----------------------------------------------------------------------------------
 */
-void led_init(void);
+typedef enum
+{
+    LED_ROLE_NONE = 0,
+    LED_ROLE_RING,   //!< knob ring
+    LED_ROLE_BUTTON, //!< button backlight
+    LED_ROLE_BAR,    //!< fader / meter bar
+    LED_ROLE_OTHER
+} led_role_t;
+
+
+/*=============================== SPANS ================================*/
+// a span is an led_device's set of LEDs in the frame buffer
+
+typedef struct
+{
+    uint16_t offset;      // bit index of this device's first LED
+    uint16_t width;       // number of LEDs belonging to this device
+    uint8_t  reverse: 1;
+    uint8_t  invert: 1;   // 1 = common anode, 0 = common cathode
+} led_span_t;
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Turns off all LEDs in a span
+ ----------------------------------------------------------------------------------
+*/
+void led_span_clear (led_span_t sp);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Set any specific LED inside a span to a value.
+ ----------------------------------------------------------------------------------
+*/
+void led_span_set (led_span_t sp, uint16_t i, bool on);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Turn on LEDs [Lo...Hi] inclusive of endpoints. Stays in the span though.
+  (Won't bleed over to other devices in the chain if indexes are bad)
+ ----------------------------------------------------------------------------------
+*/
+void led_span_fill (led_span_t sp, uint16_t lo, uint16_t hi);
+
+
+/*=============================== DEVICES ================================*/
+
+typedef struct led_device led_device_t;
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Turns a device's stored value into bits, drawing through dev->span. Must
+  write every LED in the span (i.e. clear what it does not light), and must not
+  touch anything outside it.
+ ----------------------------------------------------------------------------------
+*/
+typedef void (*led_render_fn) (const led_device_t *dev);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Push frame to hardware IF changed
+  @brief One physical display element on the cascade.
+  Fields are public for renderers to read; write them through the API only.
  ----------------------------------------------------------------------------------
 */
-void led_update(void);
+struct led_device
+{
+    led_render_fn render; // which value -> bits function does this device use? (render for knob, render_boolean for buttons)
+    led_span_t    span;   // where this device is on the chain (range of LEDs belonging to it)
+    uint16_t      center; // what LED is its center LED?
+    uint16_t      value;  // raw control value; signed if scale == SCALE_CENTER
+
+    uint8_t role;    // led_role_t, for lookup / animation targeting
+    uint8_t group;   // console channel 0-3 (or whatever grouping you like)
+    uint8_t ordinal; // index within (group, role), e.g. knob 0-9
+
+    uint8_t disp : 1;  // knob_disp_t
+    uint8_t scale : 1; // knob_scale_t
+    uint8_t dirty : 1; // needs re-render before next push
+    uint8_t held : 1;  // raw override active, renderer suspended
+
+    uint8_t anim_phase; // scratch for animations
+};
+
+
+// Flags for led_device_cfg_t.flags
+#define LED_F_POINT   0x01u // start in DISP_POINT
+#define LED_F_CENTER  0x02u // start in SCALE_CENTER
+#define LED_F_REVERSE 0x04u // LED 0 is at the far end of this device's bits
+#define LED_F_INVERT  0x08u // active-low hardware
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Push frame to hardware UNCONDITIONALLY
+  @brief Static description of a device, for the board layout table.
  ----------------------------------------------------------------------------------
 */
-void led_refresh(void);
+typedef struct
+{
+    uint16_t      width;   // bits consumed on the cascade (32 ring, 1 button, ...)
+    led_render_fn render;  // NULL selects led_render_meter
+    uint8_t       role;    // led_role_t
+    uint8_t       group;   // channel
+    uint8_t       ordinal; // index within group+role
+    uint8_t       flags;   // LED_F_*
+    uint16_t      centre;  // 0 selects (width - 1) / 2
+} led_device_cfg_t;
+
+
+/*=============================== BUILT-IN RENDERERS ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Renderer (control value to display -> LED serial bits to display) for knobs (Width > 1)
+ ----------------------------------------------------------------------------------
+*/
+void led_render_meter (const led_device_t *dev);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Renderer (control value to display -> LED serial bits to display) for buttons (Width = 1)
+ ----------------------------------------------------------------------------------
+*/
+void led_render_bool (const led_device_t *dev);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Sets unpopulated devices or any device to all off.
+ ----------------------------------------------------------------------------------
+*/
+void led_render_blank (const led_device_t *dev);
+
+
+/*=============================== CHAIN BUILD ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Initializes everything
+ ----------------------------------------------------------------------------------
+*/
+void led_init (void);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Append one device to the cascade (list of devices). Call order IS cascade order.
+  @param cfg description of the device (copied, may be a compound literal)
+  @return handle to the device, or NULL if the chain is full
+ ----------------------------------------------------------------------------------
+*/
+led_device_t *led_add (const led_device_cfg_t *cfg);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Clear all LED states (in the data, not with OE pin), turning them all off
+  @brief Close the chain: pad any leftover bits up to a byte boundary with a blank
+  device and validate against LED_CHAIN_BITS. Call once after all led_add calls.
+  @return false if the registered devices do not fit the configured chain
  ----------------------------------------------------------------------------------
 */
-void led_clear(void);
+bool led_chain_finalize (void);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Set brightness of all LEDs through OE pin PWM duty cycle (0 to 255)
-  @param brightness Brightness 0 - 255 integer.
+  @brief How many devices have been registered?
  ----------------------------------------------------------------------------------
 */
-void led_brightness(uint8_t brightness);
+uint16_t led_device_count (void);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Get device at registration index
+ ----------------------------------------------------------------------------------
+*/
+led_device_t *led_device_at (uint16_t index);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Gives the current brightness setting 0 - 255
+  @brief Read-only view of the frame buffer as last rendered, LED_FRAME_BYTES long.
  ----------------------------------------------------------------------------------
 */
-uint8_t led_get_brightness(void);
+const uint8_t *led_frame_peek (void);
+
+
+/*=============================== VALUES ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Set an unsigned control value. 0 = empty, 65535 = full.
+ ----------------------------------------------------------------------------------
+*/
+void led_set (led_device_t *dev, uint16_t value);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Set a signed control value for a SCALE_CENTER device. 0 = center.
+ ----------------------------------------------------------------------------------
+*/
+void led_set_signed (led_device_t *dev, int16_t value);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Set an on/off device (buttons).
+ ----------------------------------------------------------------------------------
+*/
+void led_set_bool (led_device_t *dev, bool on);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Change a knob display's value, specify which knob by coords (chnl and knob number)
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @param value int between 0-32 for left/standard mode and -15 to 16 for center/pan mode (0 = center)
+  @brief Get the current raw value displayed by a device
  ----------------------------------------------------------------------------------
 */
-void knob_led(uint8_t channel, uint8_t knob, int8_t value);
+uint16_t led_get (led_device_t *dev);
+
+
+/*=============================== MODES ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Sets display mode (0 = bar, fill range of LEDs; 1 = point)
+ ----------------------------------------------------------------------------------
+*/
+void led_set_disp (led_device_t *dev, knob_disp_t mode);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Changes a knob display by delta LEDs from its current value, clamped to its scale.
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @param delta int change by this value
+  @brief Sets scale mode (0 = unsigned from left knobs, 1 = signed from center)
  ----------------------------------------------------------------------------------
 */
-void knob_step(uint8_t channel, uint8_t knob, int8_t delta);
+void led_set_scale (led_device_t *dev, knob_scale_t mode);
+
+
+/*=============================== RAW ACCESS ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief Light an arbitrary pattern, bit 0 of bits = LED 0. Suspends the renderer
+  for this device (value is kept) until led_release.
+ ----------------------------------------------------------------------------------
+*/
+void led_raw (led_device_t *dev, uint32_t bits);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Sets whether a knob draws as a filled bar or a single point.
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @param mode display mode (0 = bar, 1 = point, see knob_disp_t)
+  @brief Hand the device back to its renderer and redraw it from its stored value.
  ----------------------------------------------------------------------------------
 */
-void knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode);
+void led_release (led_device_t *dev);
+
+
+/*=============================== OUTPUT ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief COMMONLY CALLED!! Full update cycle: renders all updated values into bits for LED
+  display, serializes them and shifts them out to the shift registers, and latches them.
+ ----------------------------------------------------------------------------------
+*/
+void led_update (void);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Sets a knob to the left (0..32) or centre (-15..16) scale, converting
-         its stored value so the ring does not jump.
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @param mode scale mode (0 = from left, 1 = center/pan, see knob_scale_t)
+  @brief Turn off all LEDs by setting their values to 0 (danger!)
  ----------------------------------------------------------------------------------
 */
-void knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode);
+void led_clear (void);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Returns a knob's current value, in the units of its own scale.
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @return returns the value of the knob display (-15 to 16 or 0 to 32 depending on scale mode)
+  @brief Set brightness of knob leds (0-255)
  ----------------------------------------------------------------------------------
 */
-int8_t knob_get(uint8_t channel, uint8_t knob);
+void led_brightness (uint8_t brightness);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Returns a knob's current display mode (bar or point).
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @return returns a knob display mode 0 or 1 (see knob_disp_t)
+  @brief What is current brightness
  ----------------------------------------------------------------------------------
 */
-knob_disp_t knob_get_disp(uint8_t channel, uint8_t knob);
+uint8_t led_get_brightness (void);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Returns a knob's current scale mode (left or center).
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @return returns a knob scale mode 0 or 1 (see knob_scale_t)
+  @brief Dev mode thing
  ----------------------------------------------------------------------------------
 */
-knob_scale_t knob_get_scale(uint8_t channel, uint8_t knob);
+void led_print_config (void);
 
 
-/**
- ----------------------------------------------------------------------------------
-  @brief Lights an arbitrary ring pattern, bit31 = LED 0 (left), bypassing the
-         knob's stored value and modes.
-  @param channel channel number 0-3
-  @param knob knob inside that channel number 0-9
-  @param bits 32 bits corresponding to LEDs left to right, 1 = on
- ----------------------------------------------------------------------------------
-*/
-void knob_raw(uint8_t channel, uint8_t knob, uint32_t bits);
+/*=============================== ANIMATIONS ================================*/
+// These are frame refreshers: call repeatedly, one call = one step. They write
+// through led_raw / the OE duty and never disturb stored values.
 
-
-#define knob_inc(channel, knob) knob_step((channel), (knob), +1)
-#define knob_dec(channel, knob) knob_step((channel), (knob), -1)
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief Set a specific button display LED to on or off by coordinate
-  @param channel channel number 0-3
-  @param button channel's button number 0-15
-  @param on set that button LED on or off? true = on
- ----------------------------------------------------------------------------------
-*/
-void button_led(uint8_t channel, uint8_t button, bool on);
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief Returns if specified button LED is on or off
-  @param channel channel number 0-3
-  @param button channel's button number 0-15
-  @return boolean value of that button's LED display on/off
- ----------------------------------------------------------------------------------
-*/
-bool button_get(uint8_t channel, uint8_t button);
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief Sets 16 button LED states (entire channel) at once in the frame buffer
-  @param channel channel number 0-3
-  @param mask 16-bits representing that channel's 16 button displays, 1 = on
- ----------------------------------------------------------------------------------
-*/
-void button_mask(uint8_t channel, uint16_t mask);
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief type to store animation
- ----------------------------------------------------------------------------------
-*/
-typedef enum {
-    ANIM_NONE = 0, ANIM_LOAD, ANIM_SWEEP, ANIM_BREATHE_KEEP, ANIM_BREATHE_ALL
+typedef enum
+{
+    ANIM_NONE = 0,
+    ANIM_LOAD,
+    ANIM_SWEEP,
+    ANIM_BREATHE_KEEP,
+    ANIM_BREATHE_ALL
 } anim_t;
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief anim_stop : Redraws every knob from its stored value, restores the saved brightness and
-  resets all animation phases
+  @brief anim stop : Run this after animation to return to regular LED operation
  ----------------------------------------------------------------------------------
 */
-void anim_stop(void);
+void anim_stop (void);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief anim_claim : stop what was running and claim display
-  @param a anim_t "animation type" type, changes what it does a bit
+  @brief anim_loading : Spinning loading animation - call repeatedly
  ----------------------------------------------------------------------------------
 */
-void anim_claim(anim_t a);
+void anim_loading (int8_t ordinal);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief anim_loading : Knob 0-9 or -1 for all (int8) -> Void
-  Spinning loading wheel, call repeatedly, one call = one advancement.
-  When loading done just stop and call anim_stop.
-  @param knob knob number 0-9 (all channels that knob will do loading), use -1 to do every knob
+  @brief anim_sweep : Animate up and down sweep of LEDs - call repeatedly
  ----------------------------------------------------------------------------------
 */
-void anim_loading(int8_t knob);
-
-/**
- ----------------------------------------------------------------------------------
-  @brief anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -> Void
-  One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in
-  center mode the animation matches the mode.
-  @param channel channel 0-3
-  @param knob knob 0-9
- ----------------------------------------------------------------------------------
-*/
-void anim_sweep(uint8_t channel, uint8_t knob);
+void anim_sweep (led_device_t *dev);
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief anim_breathe : Brightness breathing animation
-  @param mode mode 0 = just the LEDs that
-  are currently on in normal state will do it, mode 1 = every single LED does it
+  @brief anim_breathe : Brightness up and down animation - call repeatedly
  ----------------------------------------------------------------------------------
 */
-void anim_breathe(uint8_t mode);
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief [DEBUG MODE] Prints the configuration params to console
- ----------------------------------------------------------------------------------
-*/
-void led_print_config(void);
+void anim_breathe (uint8_t mode);
 
 #endif

@@ -1019,13 +1019,6 @@ void StartDefaultTask(void *argument)
   }*/
 
   led_brightness(10);
-
-  knob_scale(0, 0, SCALE_LEFT);
-  knob_scale(0, 1, SCALE_LEFT);
-  knob_disp(0, 0, 0);
-  knob_disp(0, 1, 0);
-  //knob_led(0, 0, 20);
-  knob_led(0, 1, 20);
   led_update();
 
   mcp23017_init(I2C1, 0x20);
