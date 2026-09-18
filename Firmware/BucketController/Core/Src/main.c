@@ -1106,20 +1106,18 @@ void StartDefaultTask(void *argument)
   );
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
-  init_control_interface();
+  init_control_interface(1);
   uint8_t counter = 0;
   for (;;)
   {
     mcp23017_poll_to_cache(I2C1, 0x20);
-    update_control_values();
-    update_control_leds();
+    update_control_values(1);
+    update_control_leds(1);
 
     if(counter == 0){
       led_update();
     }
     counter = (counter + 1) % 16;
-    mcp4728_cache_write(I2C1, 0x62, 0, 2048);
-    mcp4728_cache_flush_fastWrite(I2C1, 0x62);
   }
 
 

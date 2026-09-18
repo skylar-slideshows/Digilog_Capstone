@@ -114,16 +114,16 @@ extern SemaphoreHandle_t channel_control_mutexes[CHANNELS];
 /**
  * @brief Sets default channel control values and hardware configurations. Call before using control values.
  */
-void init_control_interface (void);
+void init_control_interface (uint8_t channel);
 
 /**
  * @brief Updates control values based on current/previous (cached) input (e.g button/rotary-encoder) states
  */
-void update_control_values (void);
+void update_control_values (uint8_t channel);
 
 /**
  * @brief Updates LEDs / other visual outputs from stored control values
  */
-void update_control_leds (void);
+void update_control_leds (uint8_t channel);
 
 #endif
