@@ -32,21 +32,14 @@
   **********************************************************************************
 */
 
-#include <stdbool.h>
-#include <stdatomic.h>
-
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/i2c_driver.h"
+#include <stdbool.h>
 #include "stm32g474xx.h"
 
-atomic_uint_fast16_t mcp23017_value_cache[4]  // 4 I2C channels
-                                         [8]; // 8 possible addresses per channel
-
-typedef union
-{
-    uint16_t whole;
-    uint8_t bytes[2];
-} u16_array_word;
+uint8_t mcp23017_value_cache[4]  // 4 I2C channels
+                            [8]  // 8 possible addresses per channel
+                            [2]; // 2 bytes cached per chip
 
 /**
  ----------------------------------------------------------------------------------
@@ -90,14 +83,8 @@ static uint8_t i2c_to_int (I2C_TypeDef *bus)
 */
 bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
 {
-    u16_array_word dest;
-    const bool read_success = mcp23017_read(bus, addr, dest.bytes);
-
-    if (read_success) // only copy on success
-    {
-        atomic_store_explicit(&(mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07]), dest.whole, memory_order_relaxed);
-    }
-    return read_success;
+    uint8_t *out_dest = mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07];
+    return mcp23017_read(bus, addr, out_dest);
 }
 
 /**
@@ -108,11 +95,9 @@ bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
 */
 void mcp23017_read_from_cache (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
 {
-    u16_array_word dest = {
-        .whole = atomic_load_explicit(&(mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07]), memory_order_relaxed)
-    };
-    out[0] = dest.bytes[0];
-    out[1] = dest.bytes[1];
+    uint8_t *from = mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07];
+    out[0] = from[0];
+    out[1] = from[1];
 }
 
 
