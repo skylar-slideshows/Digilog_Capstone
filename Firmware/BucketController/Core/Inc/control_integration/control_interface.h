@@ -67,7 +67,7 @@ typedef struct
 
     channel_input_selection_t input_type_selection; //!< Mic/Line/Hi-Z input type
 
-    s_scalar_control_t input_gain;  //!< TODO desc / gain range (dB-like)
+    u_scalar_control_t input_gain;  //!< TODO desc / gain range (dB-like)
     s_scalar_control_t output_gain; //!< TODO desc / gain range (dB-like)
     s_scalar_control_t output_pan;  //!< TODO desc / pan range
 

@@ -2,25 +2,21 @@
   **********************************************************************************
   * LED DISPLAYS DRIVER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file led_driver.c
-  * @brief Skylar's driver for the LED displays on the console, including knobs and buttons.
-  *
-  * Low level driver for showing stuff on the LEDs.
-  * Includes all basic writing functions and center/from-left writing for knob
-  * rings and both (bar/point) display style modes. There are 40, 32 LED knob rings
-  * for a bucket controller, and (up to) 64 more bits for 16 button LEDs per
-  * channel (Total 1344 LEDs per bucket). Part: 74HCT595.
+  * @file hardware_drivers/led_driver.c
+  * @brief Shift register based LED display driver, using LED devices with arbitrary width.
+  * This driver contains all fn's for rendering values and animations into bits
+  * and serializes them for output.
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
-  * @date 2026-08-20
-  * @version 1.0
+  * @date 2026-09-18
+  * @version 2.1
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
   *
   *  MIT License:
   *  Permission is hereby granted, free of charge, to any person obtaining a copy
-  *  of this software and associated documentation files (the “Software”), to deal
+  *  of this software and associated documentation files (the "Software"), to deal
   *  in the Software without restriction, including without limitation the rights
   *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
   *  of the Software, and to permit persons to whom the Software is furnished to do so,
@@ -28,7 +24,7 @@
   *
   *  The above copyright notice and this permission notice shall be included in all
   *  copies or substantial portions of the Software.
-  *  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
   *  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
   *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
@@ -37,61 +33,388 @@
   **********************************************************************************
 */
 
+#include <stddef.h>
+#include <stdbool.h>
+
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
 #include "stm32g4xx.h"
 #include "CONFIG.h"
+
+#if DEVELOPER_MODE
 #include <stdio.h>
-#include <stdbool.h>
-
-
-/*=============================== DEFINE CALCS ================================*/
-// dont touch ; change in config.h
-
-// Sizes
-#define KNOB_BYTES  (LEDS_PER_KNOB / 8)
-#define BTN_BYTES   (BUTTONS_PER_CHAN / 8)
-#define CHAN_BYTES  (KNOBS_PER_CHAN * KNOB_BYTES + BTN_BYTES)
-#define FRAME_BYTES (CHANNELS * CHAN_BYTES)
-#define TOTAL_LEDS  (CHANNELS * (LEDS_PER_KNOB * KNOBS_PER_CHAN + BUTTONS_PER_CHAN))
-#define NUM_KNOBS   (CHANNELS * KNOBS_PER_CHAN)
-
-// Knob center
-#define CENTER_MIN   (-(int8_t)CENTER_LED)
-#define CENTER_MAX   ((int8_t)(LEDS_PER_KNOB - 1 - CENTER_LED))
-
-// Manners
-#define PLEASE
-#define PRETTY_PLEASE
+#define LED_LOG(...) printf(__VA_ARGS__)
+#else
+#define LED_LOG(...) ((void)0)
+#endif
 
 
 /*=============================== STATE ================================*/
-/* All data stored by the driver is here */
+// ALL data stored by driver is here
 
-static uint8_t  frame[FRAME_BYTES];
-static knob_t   knobs[NUM_KNOBS];
-static uint8_t  bright = 255;
-static volatile bool dirty = true;
+static uint8_t      frame[LED_FRAME_BYTES];   // one bit per LED, in cascade order, ready to shift out
+static led_device_t devices[LED_MAX_DEVICES]; // every display element on the chain, in cascade order
+static uint16_t     device_count = 0;         // how many of the above are in use
+static uint16_t     used_bits    = 0;         // sum of their widths, so the next led_add knows its offset
+static bool         chain_closed = false;     // led_chain_finalize has run, no more devices accepted
+
+static uint8_t       bright = 255;
+static volatile bool frame_dirty = true; // true if the frame buffer is not what is currently latched
+
+static void oe_duty (uint8_t brightness);
 
 
-/*=============================== FRAME BUFFER ================================*/
-/* Knob states / values -> sets of led bits ready to send out */
+/*=============================== BIT / SPAN PRIMITIVES ================================*/
 
-#define KNOB_OFS(channel_idx, knob_idx) ((channel_idx) * CHAN_BYTES + (knob_idx) * KNOB_BYTES)
-#define BTN_OFS(channel_idx)((channel_idx) * CHAN_BYTES + KNOBS_PER_CHAN * KNOB_BYTES)
+// set or clear one bit of a buffer, counting from the MSB of byte 0
+static inline void buf_bit (uint8_t *buf, uint16_t b, bool on)
+{
+    const uint8_t mask = (uint8_t)(0x80u >> (b & 7u));
+    if (on) buf[b >> 3] |= mask;
+    else    buf[b >> 3] &= (uint8_t)~mask;
+}
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC frame_out : Sends an entire frame of LED bits out, end sent first
+  @brief led_span_set : set LED i of a device, 0..width-1 in LED order.
+  This is where wiring quirks are absorbed: reverse flips the order so a ring
+  soldered backwards still counts from its own LED 0, and invert handles hardware
+  that sinks current, where a lit LED means a low output.
  ----------------------------------------------------------------------------------
 */
-void frame_out(void)
+void led_span_set (led_span_t sp, uint16_t i, bool on)
 {
-    uint16_t n = FRAME_BYTES;
+    if (i >= sp.width) return;
+    const uint16_t b = (uint16_t)(sp.offset + (sp.reverse ? (sp.width - 1u - i) : i));
+    buf_bit(frame, b, sp.invert ? !on : on);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_span_clear : turn off every LED belonging to a device
+ ----------------------------------------------------------------------------------
+*/
+void led_span_clear (led_span_t sp)
+{
+    for (uint16_t i = 0; i < sp.width; i++) led_span_set(sp, i, false);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_span_fill : turn on a run of LEDs, lo..hi inclusive
+ ----------------------------------------------------------------------------------
+*/
+void led_span_fill (led_span_t sp, uint16_t lo, uint16_t hi)
+{
+    if (lo >= sp.width) return;
+    if (hi >= sp.width) hi = (uint16_t)(sp.width - 1u);
+    for (uint16_t i = lo; i <= hi; i++) led_span_set(sp, i, true);
+}
+
+
+/*=============================== RENDERERS ================================*/
+
+// scale a control value into an LED count: value out of full -> 0..span, rounded to nearest
+static uint16_t frac (uint32_t value, uint32_t full, uint16_t span)
+{
+    if (span == 0u) return 0u;
+    if (value >= full) return span;
+    return (uint16_t)(((value * span) + (full / 2u)) / full);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_render_meter : default renderer, for anything with more than one
+  LED. turns the core control value into a set of bits to display the value on LEDs.
+  Puts these bits in the frame buffer to appear at the LEDs corresponding to that control
+ ----------------------------------------------------------------------------------
+*/
+void led_render_meter (const led_device_t *dev)
+{
+    const led_span_t sp = dev->span;
+
+    led_span_clear(sp);
+    if (sp.width == 0u) return;
+
+    if ((knob_scale_t)dev->scale == SCALE_LEFT)
+    {
+        // value is unsigned: the bar grows from left LED
+        const uint16_t n = frac(dev->value, UINT16_MAX, sp.width);
+        if (n == 0u) return;
+        if ((knob_disp_t)dev->disp == DISP_POINT) led_span_set(sp, (uint16_t)(n - 1u), true);
+        else                                      led_span_fill(sp, 0u, (uint16_t)(n - 1u));
+    }
+    else
+    {
+        // value is signed: the bar grows outwards from the center LED, which is unity
+        const int32_t  v = (int32_t)(int16_t)dev->value;
+        const uint16_t c = (dev->center < sp.width) ? dev->center : (uint16_t)(sp.width - 1u);
+
+        if (v >= 0)
+        {
+            const uint16_t n = frac((uint32_t)v, 32767u, (uint16_t)(sp.width - 1u - c));
+            if ((knob_disp_t)dev->disp == DISP_POINT) led_span_set(sp, (uint16_t)(c + n), true);
+            else                                      led_span_fill(sp, c, (uint16_t)(c + n));
+        }
+        else
+        {
+            const uint16_t n = frac((uint32_t)(-v), 32768u, c);
+            if ((knob_disp_t)dev->disp == DISP_POINT) led_span_set(sp, (uint16_t)(c - n), true);
+            else                                      led_span_fill(sp, (uint16_t)(c - n), c);
+        }
+    }
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_render_bool : renders buttons (width 1)
+ ----------------------------------------------------------------------------------
+*/
+void led_render_bool (const led_device_t *dev)
+{
+    if (dev->value) led_span_fill(dev->span, 0u, (uint16_t)(dev->span.width - 1u));
+    else            led_span_clear(dev->span);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_render_blank : sets all off, for unpopulated outputs and chain padding
+ ----------------------------------------------------------------------------------
+*/
+void led_render_blank (const led_device_t *dev)
+{
+    led_span_clear(dev->span);
+}
+
+
+/*=============================== CHAIN BUILD ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_add : append one device to the chain. Call order is cascade order, so
+  a device's index in the list is where it sits on the board, and its bit offset is
+  just the running total of everything registered before it.
+ ----------------------------------------------------------------------------------
+*/
+led_device_t *led_add (const led_device_cfg_t *cfg)
+{
+    if (cfg == NULL || cfg->width == 0u) return NULL;
+
+    if (chain_closed)
+    {
+        LED_LOG("LED ERR: led_add after finalize\n");
+        return NULL;
+    }
+    if (device_count >= LED_MAX_DEVICES)
+    {
+        LED_LOG("LED ERR: device table full (%u), raise LED_MAX_DEVICES\n", (unsigned)LED_MAX_DEVICES);
+        return NULL;
+    }
+    if ((uint32_t)used_bits + cfg->width > (uint32_t)LED_CHAIN_BITS)
+    {
+        LED_LOG("LED ERR: chain overflow at device %u (%u + %u > %u bits)\n",
+                (unsigned)device_count, (unsigned)used_bits,
+                (unsigned)cfg->width, (unsigned)LED_CHAIN_BITS);
+        return NULL;
+    }
+
+    led_device_t *dev = &devices[device_count++];
+
+    dev->span.offset  = used_bits;
+    dev->span.width   = cfg->width;
+    dev->span.reverse = (cfg->flags & LED_F_REVERSE) ? 1u : 0u;
+    dev->span.invert  = (cfg->flags & LED_F_INVERT)  ? 1u : 0u;
+
+    dev->center  = (cfg->centre != 0u) ? cfg->centre : (uint16_t)((cfg->width - 1u) / 2u);
+    dev->value   = 0u;
+    dev->render  = (cfg->render != NULL) ? cfg->render : led_render_meter;
+    dev->role    = cfg->role;
+    dev->group   = cfg->group;
+    dev->ordinal = cfg->ordinal;
+    dev->disp    = (cfg->flags & LED_F_POINT)  ? 1u : 0u;
+    dev->scale   = (cfg->flags & LED_F_CENTER) ? 1u : 0u;
+    dev->dirty   = 1u;
+    dev->held    = 0u;
+    dev->anim_phase = 0u;
+
+    used_bits = (uint16_t)(used_bits + cfg->width);
+    return dev;
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_chain_finalize : fill everything to full bytes (empty pins on 74HCT595s)
+  All nonpopulated bits are set to 0 before being pushed out (instead of floating / garbage)
+ ----------------------------------------------------------------------------------
+*/
+bool led_chain_finalize (void)
+{
+    const uint16_t pad = (uint16_t)((8u - (used_bits & 7u)) & 7u);
+
+    if (pad != 0u)
+    {
+        const led_device_cfg_t filler = {
+            .width  = pad,
+            .render = led_render_blank,
+            .role   = LED_ROLE_NONE,
+        };
+        if (led_add(&filler) == NULL) return false;
+    }
+
+    chain_closed = true;
+
+    if (used_bits > LED_CHAIN_BITS)
+    {
+        LED_LOG("LED ERR: layout needs %u bits, LED_CHAIN_BITS is %u\n",
+                (unsigned)used_bits, (unsigned)LED_CHAIN_BITS);
+        return false;
+    }
+    if (used_bits < LED_CHAIN_BITS)
+    {
+        LED_LOG("LED WARN: layout uses %u of %u chain bits, %u registers idle\n",
+                (unsigned)used_bits, (unsigned)LED_CHAIN_BITS,
+                (unsigned)((LED_CHAIN_BITS - used_bits) / 8u));
+    }
+    return true;
+}
+
+
+/*=============================== VALUES ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mark : frame in frame buffer now dirty
+ ----------------------------------------------------------------------------------
+*/
+static inline void mark (led_device_t *dev)
+{
+    dev->dirty  = 1u;
+    frame_dirty = true;
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_set : Set LED display device's value! important!!
+ ----------------------------------------------------------------------------------
+*/
+void led_set (led_device_t *dev, uint16_t value)
+{
+    if (dev == NULL || dev->value == value) return;
+    dev->value = value;
+    mark(dev);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_set_signed : Set signed LED display device's value! important!!
+ ----------------------------------------------------------------------------------
+*/
+void led_set_signed (led_device_t *dev, int16_t value) { led_set(dev, (uint16_t)value); }
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_set_bool : Set a button LED display device's value! important!!
+ ----------------------------------------------------------------------------------
+*/
+void led_set_bool (led_device_t *dev, bool on) { led_set(dev, on ? UINT16_MAX : 0u); }
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_get : get the displayed value from any LED device
+ ----------------------------------------------------------------------------------
+*/
+uint16_t led_get (led_device_t *dev) { return (dev != NULL) ? dev->value : 0u; }
+
+
+/*=============================== MODES ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_set_disp : Set display mode. 0 = bar fill, 1 = point
+ ----------------------------------------------------------------------------------
+*/
+void led_set_disp (led_device_t *dev, knob_disp_t mode)
+{
+    if (dev == NULL || dev->disp == (uint8_t)(mode & 1u)) return;
+    dev->disp = (uint8_t)(mode & 1u);
+    mark(dev);
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_set_scale : Set scale mode. 0 = from left, 1 = signed / from center
+ ----------------------------------------------------------------------------------
+*/
+void led_set_scale (led_device_t *dev, knob_scale_t mode)
+{
+    if (dev == NULL || dev->scale == (uint8_t)(mode & 1u)) return;
+    dev->scale = (uint8_t)(mode & 1u);
+    mark(dev);
+}
+
+
+/*=============================== RAW ACCESS ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_raw : draw an arbitrary pattern and suspend the renderer for this
+  device, so the stored control value survives untouched underneath. Animations use
+  this; led_release hands the device back and redraws it from its value.
+ ----------------------------------------------------------------------------------
+*/
+void led_raw (led_device_t *dev, uint32_t bits)
+{
+    if (dev == NULL) return;
+
+    const led_span_t sp = dev->span;
+    for (uint16_t i = 0; i < sp.width; i++)
+    {
+        led_span_set(sp, i, (i < 32u) ? (((bits >> i) & 1u) != 0u) : false);
+    }
+    dev->held   = 1u;
+    dev->dirty  = 0u;
+    frame_dirty = true;
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_release : release an led_device from raw renderer / return to regular renderer
+ ----------------------------------------------------------------------------------
+*/
+void led_release (led_device_t *dev)
+{
+    if (dev == NULL || !dev->held) return;
+    dev->held = 0u;
+    mark(dev);
+}
+
+
+/*=============================== OUTPUT ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief frame_out : shift the whole frame out (serial data), then latch.
+ ----------------------------------------------------------------------------------
+*/
+static void frame_out (void)
+{
+    uint16_t n = LED_FRAME_BYTES;
     while (n--)
     {
-        uint8_t b = frame[n];
+        const uint8_t b = frame[n];
         for (int8_t i = 0; i < 8; i++) shift_bit((uint32_t)((b >> i) & 1U), 1);
     }
     latch_out(1);
@@ -100,350 +423,67 @@ void frame_out(void)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief INTERNAL render_val : Channel 0-3 (uint8), Knob 0-9 (uint8), value (0-32 or -15 to 16),
-  knob_scale_t, knob_disp_t -> 32 bits in the frame
-  Directly render: turns a knob's value into the set of bits that show that value
+  @brief render_dirty : redraw only the devices who's values have changed
  ----------------------------------------------------------------------------------
 */
-static void render_val(uint8_t channel_idx, uint8_t knob_idx, int8_t val, uint8_t scale, uint8_t disp)
+static void render_dirty (void)
 {
-    uint8_t *p = &frame[KNOB_OFS(channel_idx, knob_idx)]; // pointer to the 32 bits, offset in the frame buffer to appear at this knob
-    uint8_t lo, hi, i; // indicates where lit strip (or single) leds start and stop and an index for later sorry for short names
-
-    p[0] = p[1] = p[2] = p[3] = 0x00; // replace whole ring so clear em
-
-    if (scale == SCALE_LEFT)
+    for (uint16_t i = 0; i < device_count; i++)
     {
-        if (val <= 0) return;
-        hi = (uint8_t)(val - 1);
-        lo = (disp == DISP_POINT) ? hi : 0;
-    } else {
-        uint8_t t = (uint8_t)((int8_t)CENTER_LED + val);
-        if (disp == DISP_POINT) { lo = hi = t; }
-        else if (t < CENTER_LED) { lo = t; hi = CENTER_LED; } // point is in left half, knob turned left from center, light t to center
-        else { lo = CENTER_LED; hi = t; } // right half or center
+        led_device_t *d = &devices[i];
+        if (!d->dirty || d->held) continue;
+        d->render(d);
+        d->dirty = 0u;
     }
-    for (i = lo; i <= hi; i++) p[i >> 3] |= (uint8_t)(0x80U >> (i & 7)); // turn the lo and hi endpoints + span into bits
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief INTERNAL knob_render : Channel 0-3 (uint8), Knob 0-9 (uint8) -> Void
-  Unpack the params inside a knob at a coord and use render_val.
+  @brief led_update : important!! render values, push the data out, and latch it
  ----------------------------------------------------------------------------------
 */
-static void knob_render(uint8_t channel_idx, uint8_t knob_idx)
+void led_update (void)
 {
-    knob_t *knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
-    render_val(channel_idx, knob_idx, knob_p->val, knob_p->scale, knob_p->disp);
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief INTERNAL ck_knob : Channel 0-3 (uint8), Knob 0-9 (uint8),
-                    Channel 0-3 (ptr uint8), Knob 0-9 (ptr uint8) -> Bool.
-  Range checks external knob/channel coords and copies them out
- ----------------------------------------------------------------------------------
-*/
-static bool ck_knob(uint8_t channel, uint8_t knob, uint8_t *channel_idx, uint8_t *knob_idx)
-{
-    if (channel >= CHANNELS || knob >= KNOBS_PER_CHAN) {
-        printf("LED ERR: bad knob coord ch%u k%u (max ch%u k%u)\n",
-            channel, knob, CHANNELS - 1, KNOBS_PER_CHAN - 1);
-        return false;
-    }
-    *channel_idx = channel;
-    *knob_idx = knob;
-    return true;
-}
-
-
-/*=============================== KNOBS HIGHER LEVEL FN'S ================================*/
-/* Public functions to set knob states */
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_led : Channel 0-3 (uint8), Knob 0-9 (uint8), Value 0 to 32 or -15 to 16
-  Change a knob's display value, specify which knob by coords (chnl and knob number)
- ----------------------------------------------------------------------------------
-*/
-void knob_led(uint8_t channel, uint8_t knob, int8_t value)
-{
-    uint8_t channel_idx, knob_idx;
-    knob_t *knob_p;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return; // given coords bad
-    knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
-
-    int8_t lo = (knob_p->scale == SCALE_LEFT) ? 0 : CENTER_MIN; // lower value limit is 0 for left mode and -15 for center mode
-    int8_t hi = (knob_p->scale == SCALE_LEFT) ? LEDS_PER_KNOB : CENTER_MAX;
-
-    if (value < lo || value > hi)
-    {
-        /*if(DEVELOPER_MODE) printf("LED ERR: ch%u k%u value %d outside [%d,%d], clamped\n",
-            channel, knob, value, lo, hi);*/
-        value = (value < lo) ? lo : hi;
-    }
-
-    knob_p->val = value;
-    knob_render(channel_idx, knob_idx);
-    dirty = true;
-    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u = %d (%s/%s)\n", channel, knob, value,
-        knob_p->scale ? "CENTER" : "LEFT", knob_p->disp ? "POINT" : "BAR");*/
-}
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_step : Channel 0-3 (uint8), Knob 0-9 (uint8), int Delta -> Void
-  Incerment/decrement a knob's display value.
- ----------------------------------------------------------------------------------
-*/
-void knob_step(uint8_t channel, uint8_t knob, int8_t delta)
-{
-    uint8_t channel_idx, knob_idx;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
-    if(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta > 32)
-    {
-        knob_led(channel, knob, (int8_t)(knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val + delta));
-    }
-    return;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_disp : Set display mode of knob
- ----------------------------------------------------------------------------------
-*/
-void knob_disp(uint8_t channel, uint8_t knob, knob_disp_t mode)
-{
-    uint8_t channel_idx, knob_idx;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
-    knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].disp = (uint8_t)(mode & 1u);
-    knob_render(channel_idx, knob_idx);
-    dirty = true;
-    //if(DEVELOPER_MODE) printf("LED: ch%u k%u display = %s\n", channel, knob, mode ? "POINT" : "BAR");
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_scale : set scale mode of knob (left to right or center/pan)
- ----------------------------------------------------------------------------------
-*/
-void knob_scale(uint8_t channel, uint8_t knob, knob_scale_t mode)
-{
-    uint8_t channel_idx, knob_idx;
-    knob_t *knob_p;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
-    knob_p = &knobs[channel_idx * KNOBS_PER_CHAN + knob_idx];
-    if ((knob_scale_t)knob_p->scale != mode) {
-        int16_t v = (mode == SCALE_CENTER) ? ((knob_p->val == 0) ? 0 : knob_p->val - (LED_SCALE_OFFSET))
-                                        : (knob_p->val + LED_SCALE_OFFSET);
-        if (mode == SCALE_CENTER) {
-            if (v < CENTER_MIN) v = CENTER_MIN;
-            if (v > CENTER_MAX) v = CENTER_MAX;
-        } else {
-            if (v < 0) v = 0;
-            if (v > LEDS_PER_KNOB) v = LEDS_PER_KNOB;
-        }
-        knob_p->val   = (int8_t)v;
-        knob_p->scale = (uint8_t)(mode & 1u);
-        knob_render(channel_idx, knob_idx);
-        dirty = true;
-    }
-    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u scale = %s, value now %d\n",
-        channel, knob, mode ? "CENTER" : "LEFT", knob_p->val);*/
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_raw : Put arbitrary 32 bits to a knob in frame buffer
- ----------------------------------------------------------------------------------
-*/
-void knob_raw(uint8_t channel, uint8_t knob, uint32_t bits)
-{
-    uint8_t *p;
-    p = &frame[KNOB_OFS(channel, knob)];
-    p[0] = (uint8_t)(bits >> 24);
-    p[1] = (uint8_t)(bits >> 16); PLEASE PLEASE PLEASE
-    p[2] = (uint8_t)(bits >> 8);
-    p[3] = (uint8_t)(bits);
-    dirty = true;
-    /*if(DEVELOPER_MODE) printf("LED: ch%u k%u raw = 0x%08lX (state not updated)\n",
-        channel, knob, (unsigned long)bits);*/
-}
-
-
-/*=============================== BUTTONS ================================*/
-/* Public functions related to setting button LED state */
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC button_led : channel 0-3, button on that channel 0-15, bool off/on -> Void
-  Set a specific button display LED by coordinate
- ----------------------------------------------------------------------------------
-*/
-void button_led(uint8_t channel, uint8_t button, bool on)
-{
-    uint16_t o;
-    uint8_t  i;
-    if (channel >= CHANNELS || button >= BUTTONS_PER_CHAN)
-    {
-        if(DEVELOPER_MODE) printf("LED ERR: bad button coord ch%u b%u (max ch%u b%u)\n",
-            channel, button, CHANNELS - 1, BUTTONS_PER_CHAN);
-        return;
-    }
-
-    i = button;
-    o = (uint16_t)(BTN_OFS(channel) + (i >> 3));
-    if (on) frame[o] |=  (uint8_t)(0x80u >> (i & 7));
-    else    frame[o] &= (uint8_t)~(0x80u >> (i & 7));
-    dirty = true;
-    if(DEVELOPER_MODE) printf("LED: ch%u btn%u = %u\n", channel, button, (unsigned)on);
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC button_mask : channel 0-3, 16 bit mask -> Void
-  Sets a whole channel's button LEDs at once
- ----------------------------------------------------------------------------------
-*/
-void button_mask(uint8_t channel, uint16_t mask)
-{
-    uint8_t b;
-    if (channel >= CHANNELS) {
-        if(DEVELOPER_MODE) printf("LED ERR: button_mask bad channel %u (max %u)\n", channel, CHANNELS - 1);
-        return;
-    }
-    for (b = 0; b < BUTTONS_PER_CHAN; b++)
-        button_led(channel, b, (mask >> b) & 1U);
-}
-
-
-/*=============================== ACCESSERS / REPORTERS ================================*/
-/* Public fn's that return the saved state of something from query */
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_get : returns the value of specified knob
- ----------------------------------------------------------------------------------
-*/
-int8_t knob_get(uint8_t channel, uint8_t knob)
-{
-    uint8_t channel_idx, knob_idx;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return 0; PLEASE PRETTY_PLEASE
-    return knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].val;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_get_disp : returns the display mode (knob_scale_t type) of a specified knob
- ----------------------------------------------------------------------------------
-*/
-knob_disp_t knob_get_disp(uint8_t channel, uint8_t knob)
-{
-    uint8_t channel_idx, knob_idx;
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return DISP_BAR;
-    return (knob_disp_t)knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].disp;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC knob_get_scale : returns the scale mode (knob_scale_t type) of a specified knob
- ----------------------------------------------------------------------------------
-*/
-knob_scale_t knob_get_scale(uint8_t channel, uint8_t knob)
-{
-    uint8_t channel_idx, knob_idx; PRETTY_PLEASE
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return SCALE_LEFT;
-    return (knob_scale_t)knobs[channel_idx * KNOBS_PER_CHAN + knob_idx].scale;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC button_get : channel 0-3, button on that channel 0-15 -> bool (off/on)
-  Returns whether the specified button LED is off or on.
- ----------------------------------------------------------------------------------
-*/
-bool button_get(uint8_t channel, uint8_t button)
-{
-    uint8_t i;
-    if (channel >= CHANNELS || button >= BUTTONS_PER_CHAN) {
-        if(DEVELOPER_MODE) printf("LED ERR: button_get bad coord ch%u b%u (max ch%u b%u)\n",
-            channel, button, CHANNELS - 1, BUTTONS_PER_CHAN - 1);
-        return false;
-    }
-    i = button;
-    return (frame[BTN_OFS(channel) + (i >> 3)] & (0x80U >> (i & 7))) != 0;
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC led_get_brightness : Returns the current brightness setting 0-255
- ----------------------------------------------------------------------------------
-*/
-uint8_t led_get_brightness(void) { return bright; }
-
-
-/*=============================== OUTPUT / BRIGHTNESS ================================*/
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC led_update : latch outputs, push the streamed frame buffer to register outputs
-  pushing changes to LEDs only if frame has been changed "dirty"
- ----------------------------------------------------------------------------------
-*/
-void led_update(void)
-{
-    if (!dirty) return;
-    dirty = false; PLEASE
+    if (!frame_dirty) return;
+    render_dirty();
+    frame_dirty = false;
     frame_out();
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC led_refresh : latch outputs, no matter what
+  @brief led_clear : turn off all LEDs
  ----------------------------------------------------------------------------------
 */
-void led_refresh(void) { frame_out(); }
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC led_clear : Set all led states to off and latch
- ----------------------------------------------------------------------------------
-*/
-void led_clear(void)
+void led_clear (void)
 {
-    uint16_t i;
-    for (i = 0; i < FRAME_BYTES; i++) frame[i] = 0x00;
-    for (i = 0; i < NUM_KNOBS; i++)   knobs[i].val = (knobs[i].scale == SCALE_CENTER)
-                                                   ? CENTER_MIN : 0;
+    for (uint16_t i = 0; i < LED_FRAME_BYTES; i++) frame[i] = 0x00;
+
+    for (uint16_t i = 0; i < device_count; i++)
+    {
+        devices[i].value = 0u; // 0 is empty on SCALE_LEFT and centred on SCALE_CENTER
+        devices[i].held  = 0u;
+        devices[i].dirty = 1u;
+    }
+
+    render_dirty(); // active-low devices need their bits driven high to be dark
+    frame_dirty = false;
     frame_out();
-    dirty = false; PLEASE
-    //if(DEVELOPER_MODE) printf("LED: cleared, %u bytes\n", FRAME_BYTES);
 }
 
 
+/*=============================== BRIGHTNESS ================================*/
+
 /**
  ----------------------------------------------------------------------------------
-  @brief INTERNAL oe_duty : Calc PWM duty cycle from brightness int 0-255.
-  OE pin is active low so smaller duty cycle gives brighter output. CCR2 contains the num
-  of CPU cycles (out of 7,083 CPU cycles per PWM cycle) to keep the PWM high each cycle.
-  (255 - brightness) * (7083 / 255) = number of CPU cycles for length of high part of PWM cycle
-  OE is active low so higher brightness needs less high time on PWM.
+  @brief oe_duty : brightness 0-255 -> PWM duty cycle. CCR2 holds the number of
+  CPU cycles per PWM cycle to keep the OE pin high, and OE high blanks the display,
+  so a higher CCR2 is dimmer.
  ----------------------------------------------------------------------------------
 */
-static void oe_duty(uint8_t brightness)
+static void oe_duty (uint8_t brightness)
 {
     LED_OE_TIM->CCR2 = ((uint32_t)(255U - brightness) * (LED_OE_TIM->ARR + 1U)) / 255U;
 }
@@ -451,144 +491,130 @@ static void oe_duty(uint8_t brightness)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC led_brightness : Set the brightness of all LEDs externally.
+  @brief led_brightness : sets the knob ring LED brightness (0-255)
  ----------------------------------------------------------------------------------
 */
-void led_brightness(uint8_t brightness)
+void led_brightness (uint8_t brightness)
 {
     bright = brightness;
-    oe_duty(brightness); PRETTY_PLEASE
-    //if(DEVELOPER_MODE) printf("LED: brightness = %u\n", brightness);
+    oe_duty(brightness);
 }
 
 
-/*=============================== INIT / SETUP ================================*/
-
-#define BOYMODER MODER
-
+/*=============================== INIT ================================*/
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC led_init : Call once during setup, initializes LED serial pins, PWM timer
+  @brief led_init : initializes this driver and all LED relateed pins and chip hardware fn's
  ----------------------------------------------------------------------------------
 */
-void led_init(void)
+void led_init (void)
 {
+    device_count = 0;
+    used_bits    = 0;
+    chain_closed = false;
 
     led_shiftreg_init();
-    led_clear(); // clear previous state of LEDs - all off
 
-    // timer prescale = 0, so use full CPU clock 170MHz when counting cycles for PWM timing
+    for (uint16_t i = 0; i < LED_FRAME_BYTES; i++) frame[i] = 0x00;
+    frame_out(); // everything off before the PWM comes up
+
+    /* Brightness is OE pin PWM on timer 1 channel 2. */
+
+    // prescale 0, so the counter runs at the full 170MHz CPU clock
     LED_OE_TIM->PSC = 0;
 
-    // auto reload register (reset count) every 170MHz / 24kHz = 7,083 CPU cycles per PWM cycle.
+    // auto reload: 170MHz / 24kHz = 7,083 CPU cycles per PWM cycle
     LED_OE_TIM->ARR = ((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ) - 1U;
 
-    // capture compare mode register - configuration: (all timer 1 channel 2 config locations)
-    // 110 at bit[14:12] -> PWM mode 1 (high when count < CCR2 controlling duty cycle),
-    // and 1 at bit[11] -> enable preload register which
-    // holds any change in the signal until the next PWM cycle, preventing PWM waveform corruption
+    // capture/compare mode: 110 at bit[14:12] is PWM mode 1 (high while count < CCR2),
+    // and bit[11] enables the preload register, which holds a mid-cycle change until
+    // the next cycle instead of corrupting the current waveform
     LED_OE_TIM->CCMR1 = (6U << 12) | (1U << 11);
 
-    // capture/compare enable register - configuration: 1 at bit[4] -> route
-    // the compare (CYCCNT < 7,083?) output to pin OC2
+    // capture/compare enable: route the compare output to pin OC2
     LED_OE_TIM->CCER = (1U << 4);
-    
-    // capture/compare register holds the blanking duration to control duty cycle
-    // (how many CPU cycles [0 to 7,083] to hold PWM high for each cycle?) (OE is active high -> 1 = LEDs off so high CCR2 = dimmer)
-    // setting CCR2 to the max value of 7,083 cycles (ARR value + 1) initializes 0 brightness setting (PWM always high)
+
+    // start blanked (PWM always high = 0 brightness) until led_brightness runs
     LED_OE_TIM->CCR2 = LED_OE_TIM->ARR + 1U;
-    
-    // control register bit[7] = 1 (keeping other settings' bits using OR) enables ARPE (auto-reload preload enable)
-    // if we change brightness while running, to a lower CPU cycles per PWM cycle, but we were already past that number,
-    // it would wait with full bright for the counter to get to 0xFFFF and wrap around before the new PWM applied -> a bright flash
+
+    // ARPE, so a brightness change mid-cycle cannot produce a bright flash
     LED_OE_TIM->CR1 |= (1U << 7);
-    
-    // event generation register - force an update event (resets counter to 0, updates the value in CCR2 from 0 (full bright))
+
+    // force an update event so the new ARR and CCR2 take effect, then clear the flag it sets
     LED_OE_TIM->EGR = 1U;
+    LED_OE_TIM->SR  = 0;
 
-    // clear timer status flags (since update interrupt flag is another thing that EGR = 1 causes)
-    LED_OE_TIM->SR = 0;
-
-    // break and dead time register - bit[15] = 1 sets main output enable on. master switch for the PWM pin. or saves other bits
+    // main output enable, the master switch for the PWM pin
     LED_OE_TIM->BDTR |= (1U << 15);
 
-    // counter register 1. starts the counter
+    // start the counter
     LED_OE_TIM->CR1 |= 1U;
 
-    // hand over the OE pin to timer 1, channel 2 (timer on alternate function register, not gpio)
+    // hand the OE pin over to the timer (alternate function, not plain GPIO)
     LED_OE_PORT->AFR[LED_OE_PIN >> 3] =
         (LED_OE_PORT->AFR[LED_OE_PIN >> 3] & ~(0xFU << ((LED_OE_PIN & 7) * 4)))
-    |   (LED_OE_TIM_AF << ((LED_OE_PIN & 7) * 4));
-    LED_OE_PORT->BOYMODER = (LED_OE_PORT->BOYMODER & ~(3U << (LED_OE_PIN * 2))) | (2U << (LED_OE_PIN * 2));
+      | (LED_OE_TIM_AF << ((LED_OE_PIN & 7) * 4));
+    LED_OE_PORT->MODER = (LED_OE_PORT->MODER & ~(3U << (LED_OE_PIN * 2))) | (2U << (LED_OE_PIN * 2));
 
-    led_brightness(bright); // set chosen starting brightness
-    //if (DEVELOPER_MODE) { printf("LED: init done\n"); led_print_config(); }
+    led_brightness(bright);
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC led_print_config : Debug mode only, print the current configuration params defined at top.
+  @brief led_print_config : dev mode stuff
  ----------------------------------------------------------------------------------
 */
-void led_print_config(void)
+#if DEVELOPER_MODE
+void led_print_config (void)
 {
-    printf("\r\nLED driver: %u ch x (%u knobs x %u + %u btn) = %u LEDs, %u bytes",
-               CHANNELS, KNOBS_PER_CHAN, LEDS_PER_KNOB, BUTTONS_PER_CHAN,
-               TOTAL_LEDS, FRAME_BYTES);
+    static const char *role_name[] = {"-", "ring", "btn", "bar", "misc"};
+
+    printf("\r\nLED chain: %u devices, %u of %u bits, %u bytes",
+           (unsigned)device_count, (unsigned)used_bits,
+           (unsigned)LED_CHAIN_BITS, (unsigned)LED_FRAME_BYTES);
     printf("\r\n  SER=P%c%u SRCLK=P%c%u RCLK=P%c%u OE=P%c%u",
-               'B', LED_SER_PIN, 'B', LED_SRCLK_PIN, 'B', LED_RCLK_PIN, 'C', LED_OE_PIN);
+           'B', LED_SER_PIN, 'B', LED_SRCLK_PIN, 'B', LED_RCLK_PIN, 'C', LED_OE_PIN);
     printf("\r\n  bit clock %lu Hz, frame %lu us",
-               (unsigned long)SHIFT_REG_SERIAL_HZ,
-               (unsigned long)(FRAME_BYTES * 8UL * 1000000UL / SHIFT_REG_SERIAL_HZ));
-    printf("\r\n  OE PWM %lu Hz, ARR %lu\n",
-               (unsigned long)BRIGHTNESS_PWM_HZ, (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));
+           (unsigned long)SHIFT_REG_SERIAL_HZ,
+           (unsigned long)(LED_FRAME_BYTES * 8UL * 1000000UL / SHIFT_REG_SERIAL_HZ));
+    printf("\r\n  OE PWM %lu Hz, ARR %lu",
+           (unsigned long)BRIGHTNESS_PWM_HZ,
+           (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));
+
+    for (uint16_t i = 0; i < device_count; i++)
+    {
+        const led_device_t *d = &devices[i];
+        printf("\r\n  [%3u] bit %4u +%-3u %-4s ch%u #%-2u %s %s%s%s",
+               (unsigned)i, (unsigned)d->span.offset, (unsigned)d->span.width,
+               role_name[(d->role < 5u) ? d->role : 4u],
+               (unsigned)d->group, (unsigned)d->ordinal,
+               d->scale ? "centre" : "left  ",
+               d->disp ? "point" : "bar",
+               d->span.reverse ? " rev" : "",
+               d->span.invert ? " inv" : "");
+    }
+    printf("\n");
 }
+#else
+void led_print_config (void) { }
+#endif
 
 
 /*=============================== ANIMATIONS ================================*/
-/* Useful animation functions, they never touch the saved state/settings c: */
-/* NEED TO CALL THESE REPEATEDLY, THEY ARE JUST FRAME REFRESHERS */
+// Frame refreshers: call repeatedly, and one call is one step. These do not change the actual stored value
 
 static anim_t   anim_active = ANIM_NONE;
 static uint32_t anim_bits   = LED_ANIM_LOAD_PATTERN;
 static uint16_t anim_bphase = 0;
-static uint8_t  anim_phase[NUM_KNOBS];
-
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC anim_stop : Redraws every knob from its stored value, restores the saved brightness and
-  resets all animation phases
+  @brief anim_claim : Run this before starting any animation
  ----------------------------------------------------------------------------------
 */
-void anim_stop(void)
-{
-    uint8_t channel, knob_idx;
-
-    anim_active = ANIM_NONE;
-    anim_bits   = LED_ANIM_LOAD_PATTERN;
-    anim_bphase = 0;
-
-    for (channel = 0; channel < CHANNELS; channel++)
-        for (knob_idx = 0; knob_idx < KNOBS_PER_CHAN; knob_idx++) {
-            anim_phase[channel * KNOBS_PER_CHAN + knob_idx] = 0;
-            knob_render(channel, knob_idx);
-        }
-
-    oe_duty(bright);
-    dirty = true;
-    led_update();
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief PUBLIC anim_claim : stop what was running and claim display
- ----------------------------------------------------------------------------------
-*/
-void anim_claim(anim_t a)
+static void anim_claim (anim_t a)
 {
     if (anim_active != a) anim_stop();
     anim_active = a;
@@ -597,92 +623,107 @@ void anim_claim(anim_t a)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC anim_loading : Knob 0-9 or -1 for all (int8) -> Void
-  Spinning loading wheel, call repeatedly, one call = one advancement.
-  When loading done just stop and call anim_stop.
+  @brief anim_stop : Run this after animation to return to regular LED operation
  ----------------------------------------------------------------------------------
 */
-void anim_loading(int8_t knob)
+void anim_stop (void)
 {
-    uint8_t channel, knob_idx;
+    anim_active = ANIM_NONE;
+    anim_bits   = LED_ANIM_LOAD_PATTERN;
+    anim_bphase = 0;
 
-    anim_claim(ANIM_LOAD);
-    anim_bits = (anim_bits >> 1) | (anim_bits << 31);
+    for (uint16_t i = 0; i < device_count; i++)
+    {
+        devices[i].anim_phase = 0u;
+        led_release(&devices[i]); // redraws from the stored value
+    }
 
-    for (channel = 0; channel < CHANNELS; channel++)
-        for (knob_idx = 0; knob_idx < KNOBS_PER_CHAN; knob_idx++)
-            knob_raw(channel, knob_idx, (knob < 0 || knob_idx == (uint8_t)knob) ? anim_bits : 0U);
-
-    dirty = true;
+    oe_duty(bright);
+    frame_dirty = true;
     led_update();
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC anim_sweep : Channel 0-3 (uint8), Knob 0-9 (uint8) -> Void
-  One step of a back-and-forth sweep, for knobs in left to right mode, and knobs in
-  center mode the animation matches the mode.
+  @brief anim_loading : Renders frames for the loading animation
  ----------------------------------------------------------------------------------
 */
-void anim_sweep(uint8_t channel, uint8_t knob)
+void anim_loading (int8_t ordinal)
 {
-    uint8_t channel_idx, knob_idx, idx, ph;
-    knob_t *knob_p;
-    int8_t v;
+    anim_claim(ANIM_LOAD);
+    anim_bits = (anim_bits >> 1) | (anim_bits << 31); // rotate the pattern one step
 
-    if (!ck_knob(channel, knob, &channel_idx, &knob_idx)) return;
+    for (uint16_t i = 0; i < device_count; i++)
+    {
+        led_device_t *d = &devices[i];
+        if (d->role != (uint8_t)LED_ROLE_RING) continue;
+        led_raw(d, (ordinal < 0 || d->ordinal == (uint8_t)ordinal) ? anim_bits : 0U);
+    }
+
+    led_update();
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief anim_sweep : Renders frames for the sweep animation
+ ----------------------------------------------------------------------------------
+*/
+void anim_sweep (led_device_t *dev)
+{
+    if (dev == NULL || dev->span.width == 0u) return;
     anim_claim(ANIM_SWEEP);
 
-    idx = (uint8_t)(channel_idx * KNOBS_PER_CHAN + knob_idx);
-    knob_p = &knobs[idx];
-    ph = anim_phase[idx];
+    const uint16_t w      = dev->span.width;
+    const uint16_t period = (uint16_t)(2u * w);
+    uint16_t       ph     = dev->anim_phase;
 
-    if (knob_p->scale == SCALE_LEFT) {
-        if (ph >= 64) ph = 0;
-        v = (int8_t)((ph <= 32) ? ph : (64 - ph));
-    } else {
-        if (ph >= 62) ph = 0;
-        if (ph <= 16) v = (int8_t)ph;
-        else if (ph <= 47) v = (int8_t)(16 - (ph - 16));
-        else v = (int8_t)(-15 + (ph - 47));
+    if (ph >= period) ph = 0u;
+    const uint16_t lit = (ph <= w) ? ph : (uint16_t)(period - ph);
+
+    uint32_t bits = 0u;
+    if ((knob_scale_t)dev->scale == SCALE_LEFT)
+    {
+        for (uint16_t i = 0; i < lit && i < 32u; i++) bits |= (1UL << i);
+    }
+    else // center-scale rings sweep outwards from the middle, matching their display mode
+    {
+        const uint16_t c    = (dev->center < w) ? dev->center : (uint16_t)(w - 1u);
+        const uint16_t half = (uint16_t)(lit / 2u);
+        const uint16_t lo   = (c > half) ? (uint16_t)(c - half) : 0u;
+        const uint16_t hi   = ((c + half) < w) ? (uint16_t)(c + half) : (uint16_t)(w - 1u);
+        for (uint16_t i = lo; i <= hi && i < 32u; i++) bits |= (1UL << i);
     }
 
-    anim_phase[idx] = (uint8_t)(ph + 1);
-    render_val(channel_idx, knob_idx, v, knob_p->scale, knob_p->disp);
-    dirty = true;
+    dev->anim_phase = (uint8_t)(ph + 1u);
+    led_raw(dev, bits);
     led_update();
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC anim_breathe : Brightness breathing animation (mode 0 = just the LEDs that
-  are currently on in normal state will do it, mode 1 = every single LED does it)
+  @brief anim_breathe : Renders frames for the breathing animation
  ----------------------------------------------------------------------------------
 */
-void anim_breathe(uint8_t mode)
+void anim_breathe (uint8_t mode)
 {
-    uint16_t p, x;
-    uint32_t g;
-    uint8_t  lvl;
-
     anim_claim(mode ? ANIM_BREATHE_ALL : ANIM_BREATHE_KEEP);
 
-    if (mode) { // all on (not with saved values just direct out)
-        uint16_t i;
-        for (i = 0; i < FRAME_BYTES; i++) frame[i] = 0xFF;
-        dirty = true;
+    if (mode) // every LED on, values unchanged underneath
+    {
+        for (uint16_t i = 0; i < device_count; i++) led_raw(&devices[i], 0xFFFFFFFFUL);
     }
 
-    p = anim_bphase % (LED_ANIM_BREATHE_STEPS * 2U);
-    x = (p < LED_ANIM_BREATHE_STEPS) ? p : (LED_ANIM_BREATHE_STEPS * 2U - p);
-    g = (uint32_t)x * x; // makes it more even looking fading
-    lvl = (uint8_t)(LED_ANIM_BREATHE_MIN +
-          (uint32_t)(LED_ANIM_BREATHE_MAX - LED_ANIM_BREATHE_MIN) * g
-          / (LED_ANIM_BREATHE_STEPS * LED_ANIM_BREATHE_STEPS));
+    const uint16_t p = (uint16_t)(anim_bphase % (LED_ANIM_BREATHE_STEPS * 2U));
+    const uint16_t x = (p < LED_ANIM_BREATHE_STEPS) ? p : (uint16_t)(LED_ANIM_BREATHE_STEPS * 2U - p);
+    const uint32_t g = (uint32_t)x * x; // squared ramp reads as more even fading to the eye lol
+    const uint8_t  lvl = (uint8_t)(LED_ANIM_BREATHE_MIN +
+                         (uint32_t)(LED_ANIM_BREATHE_MAX - LED_ANIM_BREATHE_MIN) * g
+                         / (LED_ANIM_BREATHE_STEPS * LED_ANIM_BREATHE_STEPS));
 
-    oe_duty(lvl); // not led_brightness does not overwrite real constant setting
+    oe_duty(lvl); // not led_brightness, this must not overwrite the real setting
     anim_bphase++;
     led_update();
 }
