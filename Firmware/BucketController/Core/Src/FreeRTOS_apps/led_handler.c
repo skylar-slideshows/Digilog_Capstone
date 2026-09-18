@@ -47,12 +47,9 @@ void init_led_handler(void)
 
     TIM5->EGR = TIM_EGR_UG;         // this sets UIF even with URS=1
 
-// 5. Clear stale flag BEFORE enabling the interrupt
     TIM5->SR = ~TIM_SR_UIF;         // write 0 to clear; rc_w0 register
     // enable peripheral side interrupt
-    TIM5->DIER |= TIM_DIER_UIE;
-
-    
+    TIM5->DIER |= TIM_DIER_UIE;    
 
     HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0); // kinda just picked 8 arbitrarily
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
