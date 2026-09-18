@@ -79,46 +79,40 @@ static void init_control_vals (uint8_t channel)
     xSemaphoreGive(channel_control_mutexes[channel]);
 }
 
-void init_control_interface (void)
+void init_control_interface (uint8_t channel)
 {
-    for (uint8_t channel = 0; channel < CHANNELS; channel++)
-    {
-        channel_control_mutexes[channel] = xSemaphoreCreateMutex();
+    channel_control_mutexes[channel] = xSemaphoreCreateMutex();
 
-        init_control_io(channel);
-        init_control_vals(channel);
-    }
+    init_control_io(channel);
+    init_control_vals(channel);
 }
 
 /**
  * Updates control values based on current/previous (cached) input (e.g button/rotary-encoder) states
  * Gpio expanders should have been polled to cache before running this
  */
-void update_control_values (void)
+void update_control_values (uint8_t channel)
 {
-    for (uint8_t channel = 0; channel < CHANNELS; channel++)
-    {
-        update_channel_knob_values(
-            &(channel_control_mutexes[channel]),
-            &(channel_control_vals[channel]),
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
-        update_channel_button_values(
-            &(channel_control_mutexes[channel]),
-            &(channel_control_vals[channel]),
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
-        update_channel_fader_values(
-            &(channel_control_mutexes[channel]),
-            &(channel_control_vals[channel]),
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
+    update_channel_knob_values(
+        &(channel_control_mutexes[channel]),
+        &(channel_control_vals[channel]),
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
+    update_channel_button_values(
+        &(channel_control_mutexes[channel]),
+        &(channel_control_vals[channel]),
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
+    update_channel_fader_values(
+        &(channel_control_mutexes[channel]),
+        &(channel_control_vals[channel]),
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
 
-        // TODO: non-button/encoder inputs maybe?
-    }
+    // TODO: non-button/encoder inputs maybe?
 }
 
 /*=============================== LOGIC CONNECTING CONTROL VALUES TO LEDS (TODO) ================================*/
@@ -126,26 +120,23 @@ void update_control_values (void)
 /**
  * Updates LEDs / other visual outputs
  */
-void update_control_leds (void)
+void update_control_leds (uint8_t channel)
 {
-    for (uint8_t channel = 0; channel < CHANNELS; channel++)
-    {
-        update_channel_knob_leds(
-            &(channel_control_mutexes[channel]),
-            &(channel_control_vals[channel]),
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
-        update_channel_button_leds(
-            &(channel_control_mutexes[channel]),
-            &(channel_control_vals[channel]),
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
-        update_channel_fader_hardware(
-            &(channel_states[channel]),
-            &(channel_controls_io[channel]) //
-        );
-        // TODO: non-button/encoder inputs maybe?
-    }
+    update_channel_knob_leds(
+        &(channel_control_mutexes[channel]),
+        &(channel_control_vals[channel]),
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
+    update_channel_button_leds(
+        &(channel_control_mutexes[channel]),
+        &(channel_control_vals[channel]),
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
+    update_channel_fader_hardware(
+        &(channel_states[channel]),
+        &(channel_controls_io[channel]) //
+    );
+    // TODO: non-button/encoder inputs maybe?
 }
