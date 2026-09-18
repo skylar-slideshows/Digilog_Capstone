@@ -6,11 +6,13 @@
 #include "hardware_sets.h"
 #include "hardware_state_sets.h"
 #include "hardware_structs.h"
+#include "portmacro.h"
 
 /* Functions related to accepting some states and updating control values */
 
 // Use negative sensitivity for backwards turning
 static void update_u_value_from_encoder_motion (
+    SemaphoreHandle_t *out_mutex,
     encoder_state_t *state,
     encoder_info_t *info,
     u_scalar_control_t *out,
@@ -27,11 +29,12 @@ static void update_u_value_from_encoder_motion (
         return;
     }
 
-    if (sensitivity > 0 && U_SCALAR_CONTROL_MAX - *out < (uint32_t)sensitivity)
+    xSemaphoreTake(*out_mutex, portMAX_DELAY);
+    if (sensitivity > 0 && U_SCALAR_CONTROL_MAX - *out < (u_scalar_control_t)sensitivity)
     {
         *out = U_SCALAR_CONTROL_MAX;
     }
-    else if (sensitivity < 0 && (uint32_t)(-sensitivity) > *out)
+    else if (sensitivity < 0 && (u_scalar_control_t)(-sensitivity) > *out)
     {
         *out = 0;
     }
@@ -39,9 +42,11 @@ static void update_u_value_from_encoder_motion (
     {
         *out += sensitivity;
     }
+    xSemaphoreGive(*out_mutex);
 }
 
 static void update_s_value_from_encoder_motion (
+    SemaphoreHandle_t *out_mutex,
     encoder_state_t *state,
     encoder_info_t *info,
     s_scalar_control_t *out,
@@ -57,7 +62,8 @@ static void update_s_value_from_encoder_motion (
     {
         return;
     }
-
+    
+    xSemaphoreTake(*out_mutex, portMAX_DELAY);
     if (sensitivity > 0 && *out > S_SCALAR_CONTROL_MAX - sensitivity)
     {
         *out = S_SCALAR_CONTROL_MAX;
@@ -70,6 +76,7 @@ static void update_s_value_from_encoder_motion (
     {
         *out += sensitivity;
     }
+    xSemaphoreGive(*out_mutex);
 }
 
 // helpers for less code
@@ -92,17 +99,19 @@ static inline uint8_t uscalar_to_8bit (u_scalar_control_t in) { return in / (U_S
 
 static inline int8_t sscalar_to_8bit (s_scalar_control_t in) { return in / (U_SCALAR_CONTROL_MAX / 33); }
 
-void update_channel_knob_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
+void update_channel_knob_values (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
     s_scalar_control_t default_sensitivity = S_SCALAR_CONTROL_MAX / 32;
 
     update_u_value_from_encoder_motion(
+        vals_mutex,
         &(state->input_gain_encoder_state),
         &(io->input_gain_knob.encoder),
         &(vals->input_gain),
         get_button_state(&io->input_gain_knob.encoder.button_info) ? default_sensitivity / 2 : default_sensitivity
     );
     update_s_value_from_encoder_motion(
+        vals_mutex,
         &(state->hf_interface_state.gain_encoder_state),
         &(io->hf_interface.gain_knob.encoder),
         &(vals->hf_control.gain),
@@ -112,7 +121,7 @@ void update_channel_knob_values (channel_controls *vals, channel_control_io_stat
     // TODO: Do this for the rest of the encoders on the channel
 }
 
-void update_channel_knob_leds (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
+void update_channel_knob_leds (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
     // TODO: Update LED rings
     knob_info_led(io->input_gain_knob, uscalar_to_8bit(vals->input_gain));

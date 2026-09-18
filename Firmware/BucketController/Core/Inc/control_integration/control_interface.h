@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 #include "CONFIG.h"
 
 #define SEND_CHANNELS 4
@@ -102,6 +105,11 @@ typedef struct
  * @brief Holds all control values for all channels in the bucket
  */
 extern channel_controls channel_control_vals[CHANNELS];
+
+/**
+ * @brief Mutexes matching channel_control_vals for each channel
+ */
+extern SemaphoreHandle_t channel_control_mutexes[CHANNELS];
 
 /**
  * @brief Sets default channel control values and hardware configurations. Call before using control values.

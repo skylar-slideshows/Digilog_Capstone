@@ -10,8 +10,18 @@
 #include "hardware_sets.h"
 #include "hardware_state_sets.h"
 
-void init_button_controls(uint8_t channel, channel_control_io_state *state, channel_control_io_t *io);
-void update_channel_button_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
-void update_channel_button_leds (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io);
+void init_button_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io);
+void update_channel_button_values (
+    SemaphoreHandle_t *vals_mutex,
+    channel_controls *vals,
+    channel_control_io_state *state,
+    channel_control_io_t *io
+);
+void update_channel_button_leds (
+    SemaphoreHandle_t *vals_mutex,
+    channel_controls *vals,
+    channel_control_io_state *state,
+    channel_control_io_t *io
+);
 
 #endif

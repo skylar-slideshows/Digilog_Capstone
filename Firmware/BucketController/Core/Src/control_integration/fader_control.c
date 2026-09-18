@@ -3,11 +3,16 @@
 #include "hardware_drivers/fader_driver.h"
 #include "hardware_state_sets.h"
 #include "hardware_sets.h"
+#include "portmacro.h"
 #include <stdint.h>
 
 static inline s_scalar_control_t uint16_to_s_scalar (uint16_t in)
 {
     return (s_scalar_control_t)(in ^ 0x8000); // XOR MSB
+}
+static inline uint16_t s_scalar_to_uint16 (s_scalar_control_t in)
+{
+    return (uint16_t)(in ^ 0x8000); //XOR MSB
 }
 
 void update_channel_fader_hardware (channel_control_io_state *state, channel_control_io_t *io)
@@ -15,9 +20,19 @@ void update_channel_fader_hardware (channel_control_io_state *state, channel_con
     update_fader(&(io->fader), &(state->fader_state), &(state->fader_state));
 }
 
-void update_channel_fader_values (channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
+void update_channel_fader_values (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
-    vals->output_gain = uint16_to_s_scalar(state->fader_state.position);
+    // TODO: Try to find a way to be more conservative about taking the mutex (only take it if values have changed?)
+    xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+    if (state->fader_state.movement_mode == FADER_UNPOWERED)
+    {
+        vals->output_gain = uint16_to_s_scalar(state->fader_state.position);
+    }
+    else
+    {
+        state->fader_state.position = s_scalar_to_uint16(vals->output_gain);
+    }
+    xSemaphoreGive(*vals_mutex);
 }
 
 void init_fader_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
