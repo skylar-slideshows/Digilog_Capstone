@@ -77,6 +77,6 @@ void led_shiftreg_init(void);
   @brief PUBLIC dac_shiftreg_init : Set up pins for the shift registers for MCP4728 address programming (serial, clock, latch)
  ----------------------------------------------------------------------------------
 */
-void dac_shiftreg_init(void);
+void shiftreg_init(void);
 
 #endif

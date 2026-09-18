@@ -184,9 +184,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
+
   i2c_init(); // i2c startup
-  init_led_handler();
-  uart_cmd_init(); // uart2 startup for comms w/ remote app
 
   if(DEVELOPER_MODE)
   {
@@ -197,12 +196,13 @@ int main(void)
 
     i2c_probeall();
   }
+  
+  shiftreg_init();
 
+  led_shiftreg_init();
+  init_led_handler(); // start LED frame renderer
   led_print_config();
-
-  dac_shiftreg_init();
-  get_encoder_motion(enc0_info, enc0, &enc0);
-  get_encoder_motion(enc1_info, enc1, &enc1);
+  uart_cmd_init(); // uart2 startup for comms w/ remote app
 
 
   printf("\r\n*******************************************************\n");\
