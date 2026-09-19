@@ -74,7 +74,6 @@ typedef struct
     lit_button_info_t rec_button;
 
     fader_info_t fader;
-    fader_led_bar_info_t fader_led_bar;
 } channel_control_io_t;
 
 #endif

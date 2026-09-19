@@ -196,14 +196,13 @@ int main(void)
 
     i2c_probeall();
   }
-  
+
   shiftreg_init();
 
   led_shiftreg_init();
   init_led_handler(); // start LED frame renderer
   led_print_config();
   uart_cmd_init(); // uart2 startup for comms w/ remote app
-
 
   printf("\r\n*******************************************************\n");\
 

@@ -38,30 +38,37 @@
 #include "stm32g474xx.h"
 #include <stdio.h>
 
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief init_led_handler : setup timer 5 for ~30Hz frame interrupt and set IRQ handler for FreeRTOS
+ ----------------------------------------------------------------------------------
+*/
 void init_led_handler(void)
 {
     led_init();
 
     TIM5->CR1 = TIM_CR1_URS // bit 2: UG/slave-mode resets don't raise UIF
           |     TIM_CR1_ARPE;
-
-    TIM5->EGR = TIM_EGR_UG;         // this sets UIF even with URS=1
-
-    TIM5->SR = ~TIM_SR_UIF;         // write 0 to clear; rc_w0 register
-    // enable peripheral side interrupt
-    TIM5->DIER |= TIM_DIER_UIE;    
+    TIM5->EGR = TIM_EGR_UG; // this sets UIF even with URS=1
+    TIM5->SR = ~TIM_SR_UIF; // write 0 to clear; rc_w0 register
+    TIM5->DIER |= TIM_DIER_UIE; // enable peripheral side interrupt
 
     HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0); // kinda just picked 8 arbitrarily
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
-    // starts the cycle counter
-    TIM5->CR1 |= TIM_CR1_CEN;
+    TIM5->CR1 |= TIM_CR1_CEN; // starts the cycle counter
 
     printf("\r\nLED Rendering Handler Initialized\n");
 
 }
 
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief TIM5_IRQhandler : CALLED WHEN A FRAME NEEDS TO BE SENT!
+ ----------------------------------------------------------------------------------
+*/
 void TIM5_IRQhandler(void)
 {
     if (TIM5->SR & TIM_SR_UIF)

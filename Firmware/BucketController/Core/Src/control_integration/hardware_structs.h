@@ -10,6 +10,7 @@
 
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/button_driver.h"
+#include "hardware_drivers/led_driver.h"
 
 /**
  * @brief Info on the location of a single button LED
@@ -19,14 +20,6 @@ typedef struct
     // TODO
 } button_led_info_t;
 
-/**
- * @brief Info on the location of a single LED ring
- */
-typedef struct
-{
-    uint8_t channel;
-    uint8_t knob_num;
-} led_ring_info_t;
 
 /**
  * @brief Info on the rotary encoder and led ring of one knob
@@ -34,7 +27,7 @@ typedef struct
 typedef struct
 {
     encoder_info_t encoder;
-    led_ring_info_t led_ring;
+    led_device_t led_ring;
 } knob_info_t;
 
 /**
@@ -45,11 +38,5 @@ typedef struct
     button_info_t button;
     button_led_info_t led;
 } lit_button_info_t;
-
-//! PLACEHOLDER for when the fader driver is created
-typedef struct
-{
-    // TODO / PLACEHOLDER
-} fader_led_bar_info_t;
 
 #endif
