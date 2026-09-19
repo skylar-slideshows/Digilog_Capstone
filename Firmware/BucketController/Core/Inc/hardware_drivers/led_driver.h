@@ -155,21 +155,21 @@ led_device_t *led_device_at (uint16_t index);
   @brief Set an unsigned control value. 0 = empty, 65535 = full.
  ----------------------------------------------------------------------------------
 */
-void led_set (led_device_t *device, uint16_t value);
+void led_set (uint8_t device_idx, uint16_t value);
 
 /**
  ----------------------------------------------------------------------------------
   @brief Set a signed control value for a SCALE_CENTER device. 0 = center.
  ----------------------------------------------------------------------------------
 */
-void led_set_signed (led_device_t *device, int16_t value);
+void led_set_signed (uint8_t device_idx, int16_t value);
 
 /**
  ----------------------------------------------------------------------------------
   @brief Set an on/off device (buttons).
  ----------------------------------------------------------------------------------
 */
-void led_set_bool (led_device_t *device, bool on);
+void led_set_bool (uint8_t device_idx, bool on);
 
 
 /**

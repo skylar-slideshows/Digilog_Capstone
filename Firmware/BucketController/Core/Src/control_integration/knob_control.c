@@ -115,7 +115,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
     // TODO: per-channel config stuff (probably just choosing i2c bus based on channel arg)
 
     // INPUT GAIN KNOB CHANNEL 1
-    button_info_t input_gain_button = {.bus = I2C1, .addr = 0x60, .port = MCP_GPIOA, .pin = 0}; // dummy
+    button_info_t input_gain_button = {.bus = I2C1, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy
     io->input_gain_knob.encoder = (encoder_info_t){.i2c_bus = I2C1,
                                                    .i2c_addr = 0x20,
                                                    .a_register = MCP_GPIOB,
@@ -126,7 +126,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
     get_encoder_motion(io->input_gain_knob.encoder, state->input_gain_encoder_state, &(state->input_gain_encoder_state));
 
     // HF GAIN KNOB CHANNEL 1
-    button_info_t hf_gain_button = {.bus = I2C1, .addr = 0x60, .port = MCP_GPIOA, .pin = 0}; // dummy
+    button_info_t hf_gain_button = {.bus = I2C1, .addr = 0x20, .port = MCP_GPIOB, .pin = 5}; // dummy
     io->hf_interface.gain_knob.encoder = (encoder_info_t){.i2c_bus = I2C1,
                                                           .i2c_addr = 0x20,
                                                           .a_register = MCP_GPIOB,

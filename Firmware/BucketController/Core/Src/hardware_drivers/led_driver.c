@@ -38,7 +38,6 @@
 
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
-#include "stm32g4xx.h"
 #include "CONFIG.h"
 
 #if DEVELOPER_MODE
@@ -256,8 +255,9 @@ void led_add (uint8_t width, knob_scale_t scale)
   @brief led_set : Set LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set (led_device_t *device, uint16_t value)
+void led_set (uint8_t device_idx, uint16_t value)
 {
+    led_device_t *device = &devices[device_idx];
     if (device == NULL || device->value == value) return;
     device->value = value;
     device->dirty = true;
@@ -270,10 +270,9 @@ void led_set (led_device_t *device, uint16_t value)
   @brief led_set_signed : Set signed LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set_signed (led_device_t *device, int16_t value)
+void led_set_signed (uint8_t device_idx, int16_t value)
 {
-    led_set(device, (uint16_t)value);
-    device->dirty = true;
+    led_set(device_idx, (uint16_t)value);
 }
 
 
@@ -282,10 +281,9 @@ void led_set_signed (led_device_t *device, int16_t value)
   @brief led_set_bool : Set a button LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set_bool (led_device_t *device, bool on)
+void led_set_bool (uint8_t device_idx, bool on)
 {
-    led_set(device, on ? UINT16_MAX : 0U);
-    device->dirty = true;
+    led_set(device_idx, on ? UINT16_MAX : 0U);
 }
 
 

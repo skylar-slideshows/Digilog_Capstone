@@ -41,7 +41,7 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief init_led_handler : setup timer 5 for ~30Hz frame interrupt and set IRQ handler for FreeRTOS
+  @brief init_led_handler : setup timer 5 for ~30Hz  interrupt and set IRQ handler for FreeRTOS
  ----------------------------------------------------------------------------------
 */
 void init_led_handler(void)
@@ -74,7 +74,6 @@ void TIM5_IRQhandler(void)
     if (TIM5->SR & TIM_SR_UIF)
     {
         TIM5->SR = ~TIM_SR_UIF; // clear flag, must be first
-
-
+        led_update();
     }
 }

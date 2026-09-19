@@ -186,6 +186,7 @@ int main(void)
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
 
   i2c_init(); // i2c startup
+  uart_cmd_init(); // uart2 startup for comms w/ remote app
 
   if(DEVELOPER_MODE)
   {
@@ -198,13 +199,11 @@ int main(void)
   }
 
   shiftreg_init();
-
-  led_shiftreg_init();
   init_led_handler(); // start LED frame renderer
   led_print_config();
-  uart_cmd_init(); // uart2 startup for comms w/ remote app
 
-  printf("\r\n*******************************************************\n");\
+  printf("\r\n*******************************************************\n");
+
 
 
   /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
@@ -933,9 +932,9 @@ static void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 4;
+  htim5.Init.Prescaler = 64;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 4;
+  htim5.Init.Period = 65535;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
@@ -975,7 +974,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 921600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -1086,15 +1085,17 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 
-  
 
-  led_brightness(10);
+  led_brightness(255);
   led_update();
 
   mcp23017_init(I2C1, 0x20);
 
+
   bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
-  mcp4728_init_address(
+  
+  
+  /*mcp4728_init_address(
     GPIOA, // Clock port
     15, // Clock pin
     GPIOB, // Data port
@@ -1102,21 +1103,21 @@ void StartDefaultTask(void *argument)
     GPIOB, // ldac port
     6, // ldac pin
     0x62 // New addr
-  );
+  );*/
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
   init_control_interface(1);
-  uint8_t counter = 0;
   for (;;)
   {
     mcp23017_poll_to_cache(I2C1, 0x20);
     update_control_values(1);
     update_control_leds(1);
 
-    if(counter == 0){
-      led_update();
-    }
-    counter = (counter + 1) % 16;
+    led_set(0, 1);
+    led_set(1,0);
+    led_set(2,1);
+    led_update();
+    
   }
 
 
