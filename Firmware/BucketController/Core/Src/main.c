@@ -200,6 +200,7 @@ int main(void)
 
   shiftreg_init();
   init_led_handler(); // start LED frame renderer
+
   led_print_config();
 
   printf("\r\n*******************************************************\n");
@@ -1086,15 +1087,9 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN 5 */
 
 
-  led_brightness(255);
-  led_update();
-
+  led_brightness(10);
   mcp23017_init(I2C1, 0x20);
-
-
-  bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
-  
-  
+  bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
   /*mcp4728_init_address(
     GPIOA, // Clock port
     15, // Clock pin
@@ -1107,17 +1102,20 @@ void StartDefaultTask(void *argument)
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
   init_control_interface(1);
+
+  uint32_t last_anim = osKernelGetTickCount();
+
   for (;;)
   {
     mcp23017_poll_to_cache(I2C1, 0x20);
     update_control_values(1);
     update_control_leds(1);
 
-    led_set(0, 1);
-    led_set(1,0);
-    led_set(2,1);
-    led_update();
-    
+    if (osKernelGetTickCount() - last_anim >= 50u)   // 20 steps/sec
+    {
+      last_anim += 50u;
+      anim_loading();
+    }
   }
 
 
@@ -1142,6 +1140,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+
+  // skylar
+  else if (htim->Instance == TIM5)
+  {
+    led_update();
+  }
 
   /* USER CODE END Callback 1 */
 }

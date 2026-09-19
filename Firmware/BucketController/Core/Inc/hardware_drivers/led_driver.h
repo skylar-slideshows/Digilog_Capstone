@@ -45,7 +45,7 @@
 
 /*=============================== CHAIN SIZE ================================*/
 // Both of these may be overridden in CONFIG.h. LED_CHAIN_BITS must be >= the
-// sum of all registered device widths; led_chain_finalize() checks it.
+// sum of all registered device widths
 
 #ifndef LED_CHAIN_BITS
 #define LED_CHAIN_BITS (CHANNELS * (KNOBS_PER_CHAN * LEDS_PER_KNOB + BUTTONS_PER_CHAN))
@@ -96,9 +96,11 @@ typedef struct
     knob_disp_t disp_mode; // display mode (filled or point)
 
     uint8_t width; // number of leds belonging to the device 
-    uint8_t offset; // bit index of led 0
+    uint16_t offset; // bit index of led 0
     uint8_t center; // what LED is its center LED?
-    bool    dirty : true; // does the value not match the latched/displayed LEDs?
+    bool    dirty; // does the value not match the latched/displayed LEDs?
+    bool    raw;   // renderer suspended; led_raw owns these bits
+    
 } led_device_t;
 
 
@@ -134,18 +136,10 @@ void led_add (uint8_t width, knob_scale_t scale);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief How many devices have been registered?
- ----------------------------------------------------------------------------------
-*/
-uint16_t led_device_count (void);
-
-
-/**
- ----------------------------------------------------------------------------------
   @brief Get device at registration index
  ----------------------------------------------------------------------------------
 */
-led_device_t *led_device_at (uint16_t index);
+led_device_t *led_device_at (uint8_t idx);
 
 
 /*=============================== VALUES ================================*/
@@ -157,12 +151,14 @@ led_device_t *led_device_at (uint16_t index);
 */
 void led_set (uint8_t device_idx, uint16_t value);
 
+
 /**
  ----------------------------------------------------------------------------------
   @brief Set a signed control value for a SCALE_CENTER device. 0 = center.
  ----------------------------------------------------------------------------------
 */
 void led_set_signed (uint8_t device_idx, int16_t value);
+
 
 /**
  ----------------------------------------------------------------------------------

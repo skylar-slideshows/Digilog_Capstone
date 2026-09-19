@@ -54,6 +54,7 @@ led_device_init_t init_devices[] = {
     {.width = 1, .scale = SCALE_CENTER}, // test button 0
     {.width = 1, .scale = SCALE_CENTER}, // test button 1
     {.width = 1, .scale = SCALE_CENTER}, // test button 2
+    {.width = 5, .scale = SCALE_CENTER}, // null device filling remainder of shift reg
     {.width = 32, .scale = SCALE_LEFT},  // test knob 0
     {.width = 32, .scale = SCALE_CENTER} // test knob 1
 
@@ -238,10 +239,12 @@ void led_add (uint8_t width, knob_scale_t scale)
 
     device->offset    = used_bits;
     device->width     = width;
-    device->center    = 17;
+    device->center    = 16;
     device->value     = 0U; // initial value to display is 0
     device->disp_mode = 0; // default display mode is bar right now
     device->scale     = scale;
+    device->raw       = false;
+    device->dirty     = true;
 
     used_bits = (uint16_t)(used_bits + width);
 }
@@ -341,8 +344,23 @@ void led_raw (led_device_t *device, uint32_t bits)
     {
         led_specific_set(device, i, (bits >> i) & 1U);
     }
-    device->dirty = true;
+    device->raw   = true;
+    device->dirty = false; // bits are already in the frame, nothing to render
     frame_dirty = true;
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_release : hand the device back to its renderer and redraw from value
+ ----------------------------------------------------------------------------------
+*/
+void led_release (led_device_t *device)
+{
+    if (device == NULL) return;
+    device->raw   = false;
+    device->dirty = true;
+    frame_dirty   = true;
 }
 
 
@@ -359,7 +377,7 @@ static void render_dirty (void)
     for (uint16_t i = 0; i < device_count; i++)
     {
         led_device_t *d = &devices[i];
-        if (!d->dirty) continue; // skips devices whos values have not changed
+        if (!d->dirty || d->raw) continue; // skips devices whos values have not changed and raw writes
 
         if (d->width == 1) // device is a button led / boolean led
         {
@@ -386,7 +404,6 @@ static void frame_out (void)
         for (int8_t i = 0; i < 8; i++) shift_bit((uint32_t)((b >> i) & 1U), 1);
     }
     latch_out(1);
-    frame_dirty = 0;
 }
 
 
@@ -399,8 +416,8 @@ void led_update (void)
 {
     if (!frame_dirty) return;
     render_dirty();
-    frame_dirty = false;
     frame_out();
+    frame_dirty = false;
 }
 
 
@@ -414,6 +431,12 @@ void led_clear (void)
     for (uint16_t i = 0; i < LED_FRAME_BYTES; i++) frame[i] = 0x00;
     frame_dirty = false;
     frame_out();
+}
+
+
+led_device_t *led_device_at(uint8_t idx)
+{
+    return &devices[idx];
 }
 
 
@@ -442,6 +465,8 @@ void led_brightness (uint8_t brightness)
     bright = brightness;
     oe_duty(brightness);
 }
+
+uint8_t  led_get_brightness (void) { return bright; }
 
 
 /*=============================== INIT ================================*/
@@ -582,7 +607,6 @@ void anim_stop (void)
 
     oe_duty(bright);
     frame_dirty = true;
-    led_update();
 }
 
 
@@ -601,8 +625,6 @@ void anim_loading (void)
         led_device_t *d = &devices[i];
         led_raw(d, anim_bits);
     }
-
-    led_update();
 }
 
 
@@ -636,7 +658,6 @@ void anim_sweep (led_device_t *device, uint16_t phase)
     }
 
     led_raw(device, bits);
-    led_update();
 }
 
 
@@ -663,5 +684,4 @@ void anim_breathe (uint8_t mode)
 
     oe_duty(lvl); // not led_brightness, this must not overwrite the real setting
     anim_bphase++;
-    led_update();
 }

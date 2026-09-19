@@ -38,6 +38,8 @@
 #include "stm32g474xx.h"
 #include <stdio.h>
 
+extern TIM_HandleTypeDef htim5;   // defined in main.c
+
 
 /**
  ----------------------------------------------------------------------------------
@@ -48,32 +50,10 @@ void init_led_handler(void)
 {
     led_init();
 
-    TIM5->CR1 = TIM_CR1_URS // bit 2: UG/slave-mode resets don't raise UIF
-          |     TIM_CR1_ARPE;
-    TIM5->EGR = TIM_EGR_UG; // this sets UIF even with URS=1
-    TIM5->SR = ~TIM_SR_UIF; // write 0 to clear; rc_w0 register
-    TIM5->DIER |= TIM_DIER_UIE; // enable peripheral side interrupt
-
-    HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0); // kinda just picked 8 arbitrarily
+    __HAL_TIM_URS_ENABLE(&htim5);           // optional; not in the GUI
+    HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0);
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
-
-    TIM5->CR1 |= TIM_CR1_CEN; // starts the cycle counter
+    HAL_TIM_Base_Start_IT(&htim5);          // sets UIE + CEN
 
     printf("\r\nLED Rendering Handler Initialized\n");
-
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief TIM5_IRQhandler : CALLED WHEN A FRAME NEEDS TO BE SENT!
- ----------------------------------------------------------------------------------
-*/
-void TIM5_IRQhandler(void)
-{
-    if (TIM5->SR & TIM_SR_UIF)
-    {
-        TIM5->SR = ~TIM_SR_UIF; // clear flag, must be first
-        led_update();
-    }
 }

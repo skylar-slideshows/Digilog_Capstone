@@ -130,6 +130,7 @@
     #define LEDS_PER_KNOB          32
     #define CENTER_LED             16
     #define LED_SCALE_OFFSET       17
+    #define LED_CHAIN_BITS         72 // 9x 74HC595 populated on the test board
 
     // animations
     #define LED_ANIM_LOAD_PATTERN  0xE0E0E0E0U
@@ -212,8 +213,9 @@
 
     // LEDS geometry
     #define LEDS_PER_KNOB          32
-    #define CENTER_LED             15
-    #define LED_SCALE_OFFSET       16
+    #define CENTER_LED             16
+    #define LED_SCALE_OFFSET       17
+    #define LED_CHAIN_BITS       1344
 
     // animations
     #define LED_ANIM_LOAD_PATTERN  0xE0E0E0E0U
