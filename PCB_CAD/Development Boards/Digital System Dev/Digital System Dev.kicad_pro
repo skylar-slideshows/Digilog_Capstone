@@ -69,7 +69,13 @@
           "thermal_relief_spoke_width": 0.5
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -153,7 +159,7 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.2,
+        "min_track_width": 0.1,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.005,
@@ -203,7 +209,12 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0,
+        0.2,
+        0.3,
+        0.4
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -230,7 +241,12 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -506,7 +522,7 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
+        "track_width": 0.1,
         "tuning_profile": "",
         "via_diameter": 0.6,
         "via_drill": 0.3,
@@ -525,7 +541,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "",
+      "specctra_dsn": "../../../../Digital System Dev.dsn",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -534,7 +550,7 @@
     "annotate_start_num": 0,
     "annotation": {
       "method": 0,
-      "sort_order": 0
+      "sort_order": 1
     },
     "bom_export_filename": "../bom_jlc.csv",
     "bom_fmt_presets": [],
@@ -640,6 +656,18 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "KLC_S5.1",
+          "name": "KLC_S5.1",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "KLC_S3.3",
+          "name": "KLC_S3.3",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -690,7 +718,7 @@
         "uuid": "bac14397-d362-4ce7-b0b5-2362ec4955a2"
       }
     ],
-    "used_designators": "TP9-11,TP19-20,F1-2,BOOT_MODE1,X1,L1-2,J2-10,J12-13,J15-20,J24-31,J101-108,C8-73,C101-128,FB1,SW1,SW101-110,U1-8,U28-39,U101-104,Q1,#PWR1-21,#PWR25,#PWR27-70,#PWR74-107,#PWR111-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,DZ1-3,R1-28,R101-142",
+    "used_designators": "TP9-12,TP19-20,F1-2,BOOT_MODE1,X1,L1-2,J2-10,J12-13,J15-20,J24-31,J101-108,C8-181,FB1,SW1,SW101-110,U1-23,U28-39,U101-104,Q1,#PWR1-71,#PWR74-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,H1-4,R1-28,R101-142,DZ1-3",
     "variants": []
   },
   "sheets": [
@@ -703,8 +731,8 @@
       "cv_sw"
     ],
     [
-      "51c7c7fb-1366-427a-8be5-248217d8c1e9",
-      "ctrls_leds"
+      "bbfb9c22-3959-4da6-b463-467e6fdf3a09",
+      "DACs"
     ],
     [
       "d0706879-2b65-4dbf-9b6d-f2ef321ff29d",
