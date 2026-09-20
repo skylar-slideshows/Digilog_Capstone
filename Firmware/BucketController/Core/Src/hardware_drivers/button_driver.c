@@ -2,7 +2,7 @@
 
 #include "hardware_drivers/button_driver.h"
 
-bool get_button_state (button_info_t *info)
+bool get_button_held (button_info_t *info)
 {
     uint8_t gpio_bits[2];
     mcp23017_read_from_cache(info->bus, info->addr, gpio_bits);

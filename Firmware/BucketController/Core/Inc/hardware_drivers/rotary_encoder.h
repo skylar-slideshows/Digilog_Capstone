@@ -50,6 +50,8 @@ typedef struct
 {
     bool a; //!< High/Low state of the encoder's A pin
     bool b; //!< High/Low state of the encoder's B pin
+
+    button_state_t button_state; //!< State related to the attached button
 } encoder_state_t;
 
 
