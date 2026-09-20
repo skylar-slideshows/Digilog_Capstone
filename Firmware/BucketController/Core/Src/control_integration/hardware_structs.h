@@ -27,7 +27,7 @@ typedef struct
 typedef struct
 {
     encoder_info_t encoder;
-    led_device_t led_ring;
+    led_device_t *led_ring;
 } knob_info_t;
 
 /**

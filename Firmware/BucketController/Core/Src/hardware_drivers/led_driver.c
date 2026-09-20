@@ -89,7 +89,7 @@ static volatile bool loading    = false;
 static uint8_t       load_div   = 0;
 
 #ifndef LED_ANIM_LOAD_DIV
-#define LED_ANIM_LOAD_DIV 2U // 40 FPS / 2 = 20 updates per sec loading anim
+#define LED_ANIM_LOAD_DIV 3U // 40 FPS / 3 = 16.7 updates per sec loading anim
 #endif
 
 
@@ -291,13 +291,12 @@ void led_add (uint8_t width, knob_scale_t scale)
   @brief led_set : Set LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set (uint8_t device_idx, uint16_t value)
+void led_set (led_device_t *device, uint16_t value)
 {
-    led_device_t *device = &devices[device_idx];
     if (device == NULL || device->value == value) return;
     device->value = value;
     device->dirty = true;
-    frame_dirty = true;
+    frame_dirty   = true;
 }
 
 
@@ -306,9 +305,9 @@ void led_set (uint8_t device_idx, uint16_t value)
   @brief led_set_signed : Set signed LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set_signed (uint8_t device_idx, int16_t value)
+void led_set_signed (led_device_t *device, int16_t value)
 {
-    led_set(device_idx, (uint16_t)value);
+    led_set(device, (uint16_t)value);
 }
 
 
@@ -317,9 +316,9 @@ void led_set_signed (uint8_t device_idx, int16_t value)
   @brief led_set_bool : Set a button LED display device's value! important!!
  ----------------------------------------------------------------------------------
 */
-void led_set_bool (uint8_t device_idx, bool on)
+void led_set_bool (led_device_t *device, bool on)
 {
-    led_set(device_idx, on ? UINT16_MAX : 0U);
+    led_set(device, on ? UINT16_MAX : 0U);
 }
 
 
@@ -482,8 +481,9 @@ void led_clear (void)
 }
 
 
-led_device_t *led_device_at(uint8_t idx)
+led_device_t *led_device_at (uint8_t idx)
 {
+    if (idx >= device_count) return NULL; // bounds checks now lol
     return &devices[idx];
 }
 
@@ -594,9 +594,6 @@ void led_print_config (void)
     printf("\r\nLED chain: %u devices, %u of %u bits, %u bytes",
            (unsigned)device_count, (unsigned)used_bits,
            (unsigned)LED_CHAIN_BITS, (unsigned)LED_FRAME_BYTES);
-    printf("\r\n  bit clock %lu Hz, frame %lu us",
-           (unsigned long)SHIFT_REG_SERIAL_HZ,
-           (unsigned long)(LED_FRAME_BYTES * 8UL * 1000000UL / SHIFT_REG_SERIAL_HZ));
     printf("\r\n  OE PWM %lu Hz, ARR %lu",
            (unsigned long)BRIGHTNESS_PWM_HZ,
            (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));

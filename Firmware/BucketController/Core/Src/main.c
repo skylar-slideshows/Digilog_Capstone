@@ -1138,16 +1138,12 @@ void StartDefaultTask(void *argument)
 
   for (;;)
   {
-    //led_raw(led_device_at(4), 0xFFFFFFFFUL);
-    led_loading(true);
-    osDelay(2000);
-    led_loading(false);
-    osDelay(2000);
-  
-    //mcp23017_poll_to_cache(I2C1, 0x20);
-    //update_control_values(1);
-    //update_control_leds(1);
+    mcp23017_poll_to_cache(I2C1, 0x20);
+    update_control_values(1);
+    update_control_leds(1);
+    osDelay(5);
   }
+  
 
 
   /* USER CODE END 5 */

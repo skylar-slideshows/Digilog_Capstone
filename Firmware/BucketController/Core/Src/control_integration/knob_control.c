@@ -108,6 +108,18 @@ void update_channel_knob_values (SemaphoreHandle_t *vals_mutex, channel_controls
 void update_channel_knob_leds (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_state *state, channel_control_io_t *io)
 {
 
+    // begin skylar [edit 2/2]
+    xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+    const u_scalar_control_t input_gain = vals->input_gain;
+    const s_scalar_control_t hf_gain    = vals->hf_control.gain;
+    xSemaphoreGive(*vals_mutex);
+
+    // we will need one for each led ring plus logic to display the knob's alternate parameter if it is one with push = other param
+    led_set(io->input_gain_knob.led_ring, input_gain);
+    led_set_signed(io->hf_interface.gain_knob.led_ring, hf_gain);
+
+    // end skylar [edit 2/2]
+
 }
 
 void init_knob_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
@@ -140,4 +152,12 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
         &(state->hf_interface_state.gain_encoder_state));
 
     // TODO: Fill channel_controls_io to match the hardware, and set initial states
+
+    //begin skylar [edit 1/2]
+
+    // this is how to link the button info objects with the led devices
+    io->input_gain_knob.led_ring        = led_device_at(4);
+    io->hf_interface.gain_knob.led_ring = led_device_at(5);
+    
+    //end skylar [edit 1/2]
 }
