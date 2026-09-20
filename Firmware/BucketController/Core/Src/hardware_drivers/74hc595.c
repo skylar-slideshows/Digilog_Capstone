@@ -8,7 +8,7 @@
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-08-31
-  * @version 1.0
+  * @version 1.1
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
@@ -40,10 +40,6 @@
 // BSRR register: reset[15:0]set[15:0]. A 1 in the lower 16 bits will set the
 // corresponding pin to high. A 1 in the upper 16 bits will set the corresponding
 // pin to low.
-#define SER_SET   (1U << LED_SER_PIN)
-#define SER_RST   (1U << (LED_SER_PIN + 16))
-#define SRCLK_SET (1U << LED_SRCLK_PIN)
-#define SRCLK_RST (1U << (LED_SRCLK_PIN + 16))
 #define RCLK_SET  (1U << LED_RCLK_PIN)
 #define RCLK_RST  (1U << (LED_RCLK_PIN + 16))
 
@@ -80,20 +76,12 @@ static inline void wait_half(void)
   @brief PUBLIC shift_bit : uint32 -> Shifts a single bit out.
  ----------------------------------------------------------------------------------
 */
-void shift_bit(uint32_t bit, bool led)
+void shift_bit(uint32_t bit)
 {
-    if(led)
-    {
-        LED_DATA_PORT->BSRR = (bit ? SER_SET : SER_RST) | SRCLK_RST;
-        wait_half();
-        LED_DATA_PORT->BSRR = SRCLK_SET;
-        wait_half();
-    } else {
-        SHIFTREG_DATA_PORT->BSRR = (bit ? SHIFTREG_SER_SET : SHIFTREG_SER_RST) | SHIFTREG_SRCLK_RST;
+    SHIFTREG_DATA_PORT->BSRR = (bit ? SHIFTREG_SER_SET : SHIFTREG_SER_RST) | SHIFTREG_SRCLK_RST;
         wait_half();
         SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_SET;
         wait_half();
-    }
 }
 
 
@@ -106,7 +94,7 @@ void shift_bit(uint32_t bit, bool led)
 void shift_byte(uint8_t byte)
 {
     for(uint8_t i = 0; i < 8; i++)
-    { shift_bit((byte >> i) & 1, 0); }
+    { shift_bit((byte >> i) & 1); }
 }
 
 
@@ -119,10 +107,8 @@ void latch_out(bool led)
 {
     if(led)
     {
-        LED_DATA_PORT->BSRR = SRCLK_RST;
-        wait_half();
         LED_DATA_PORT->BSRR = RCLK_SET;
-        wait_half();
+        __NOP(); __NOP(); // very short delay lol
         LED_DATA_PORT->BSRR = RCLK_RST;
     } else {
         SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_RST;
@@ -154,10 +140,9 @@ void led_shiftreg_init(void)
     LED_OE_PORT->BSRR = (1U << LED_OE_PIN); // set OE high (OE active low so hide all LEDs first)
     MODE_OUT(LED_OE_PORT, LED_OE_PIN);
 
-    MODE_OUT(LED_DATA_PORT, LED_SER_PIN); // initialize the pins needed - serial data
-    MODE_OUT(LED_DATA_PORT, LED_SRCLK_PIN); // serial clock
+    MODE_OUT(LED_DATA_PORT, LED_RCLK_PIN);
+    LED_DATA_PORT->BSRR = RCLK_RST;
     MODE_OUT(LED_DATA_PORT, LED_RCLK_PIN); // latch pin
-    LED_DATA_PORT->BSRR = SER_RST | SRCLK_RST | RCLK_RST;
     
 }
 

@@ -39,6 +39,7 @@
 #include "stm32g474xx.h"
 #include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "FreeRTOS_apps/led_handler.h"
+#include "stm32g4xx_hal.h"
 
 /* USER CODE END Includes */
 
@@ -67,9 +68,9 @@ I2C_HandleTypeDef hi2c2;
 I2C_HandleTypeDef hi2c3;
 I2C_HandleTypeDef hi2c4;
 
-OPAMP_HandleTypeDef hopamp3;
-
 SPI_HandleTypeDef hspi1;
+SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi2_tx;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -93,6 +94,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_I2C4_Init(void);
@@ -104,9 +106,9 @@ static void MX_I2C3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_DAC3_Init(void);
-static void MX_OPAMP3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_SPI2_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -167,6 +169,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
   MX_I2C4_Init();
@@ -178,9 +181,9 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC2_Init();
   MX_DAC3_Init();
-  MX_OPAMP3_Init();
   MX_TIM4_Init();
   MX_TIM5_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
@@ -605,38 +608,6 @@ static void MX_I2C4_Init(void)
 }
 
 /**
-  * @brief OPAMP3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_OPAMP3_Init(void)
-{
-
-  /* USER CODE BEGIN OPAMP3_Init 0 */
-
-  /* USER CODE END OPAMP3_Init 0 */
-
-  /* USER CODE BEGIN OPAMP3_Init 1 */
-
-  /* USER CODE END OPAMP3_Init 1 */
-  hopamp3.Instance = OPAMP3;
-  hopamp3.Init.PowerMode = OPAMP_POWERMODE_NORMALSPEED;
-  hopamp3.Init.Mode = OPAMP_FOLLOWER_MODE;
-  hopamp3.Init.NonInvertingInput = OPAMP_NONINVERTINGINPUT_IO1;
-  hopamp3.Init.InternalOutput = ENABLE;
-  hopamp3.Init.TimerControlledMuxmode = OPAMP_TIMERCONTROLLEDMUXMODE_DISABLE;
-  hopamp3.Init.UserTrimming = OPAMP_TRIMMING_FACTORY;
-  if (HAL_OPAMP_Init(&hopamp3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN OPAMP3_Init 2 */
-
-  /* USER CODE END OPAMP3_Init 2 */
-
-}
-
-/**
   * @brief SPI1 Initialization Function
   * @param None
   * @retval None
@@ -672,6 +643,46 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 7;
+  hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+  hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
 
 }
 
@@ -1008,6 +1019,23 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMAMUX1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -1020,23 +1048,33 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|LED_Data_Pin|LDAC4_Pin|LDAC3_Pin
+                          |LDAC2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|LDAC0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LED_Latch_Pin|LDAC0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LDAC1_GPIO_Port, LDAC1_Pin, GPIO_PIN_RESET);
+  /*Configure GPIO pins : PC13 LED_Data_Pin LDAC4_Pin LDAC3_Pin
+                           LDAC2_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_13|LED_Data_Pin|LDAC4_Pin|LDAC3_Pin
+                          |LDAC2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
   GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
@@ -1045,26 +1083,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED_Data_Pin LED_Clock_Pin LED_Latch_Pin LDAC0_Pin */
-  GPIO_InitStruct.Pin = LED_Data_Pin|LED_Clock_Pin|LED_Latch_Pin|LDAC0_Pin;
+  /*Configure GPIO pins : LED_Latch_Pin LDAC0_Pin */
+  GPIO_InitStruct.Pin = LED_Latch_Pin|LDAC0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LDAC4_Pin LDAC3_Pin LDAC2_Pin */
-  GPIO_InitStruct.Pin = LDAC4_Pin|LDAC3_Pin|LDAC2_Pin;
+  /*Configure GPIO pin : PD2 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LDAC1_Pin */
-  GPIO_InitStruct.Pin = LDAC1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LDAC1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -1107,15 +1138,15 @@ void StartDefaultTask(void *argument)
 
   for (;;)
   {
-    mcp23017_poll_to_cache(I2C1, 0x20);
-    update_control_values(1);
-    update_control_leds(1);
-
-    if (osKernelGetTickCount() - last_anim >= 50u)   // 20 steps/sec
-    {
-      last_anim += 50u;
-      anim_loading();
-    }
+    //led_raw(led_device_at(4), 0xFFFFFFFFUL);
+    led_loading(true);
+    osDelay(2000);
+    led_loading(false);
+    osDelay(2000);
+  
+    //mcp23017_poll_to_cache(I2C1, 0x20);
+    //update_control_values(1);
+    //update_control_leds(1);
   }
 
 
@@ -1141,10 +1172,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   /* USER CODE BEGIN Callback 1 */
 
-  // skylar
+  // skylar (adding the ISR for LED handler)
   else if (htim->Instance == TIM5)
   {
-    led_update();
+    led_handler_notify_from_isr();
   }
 
   /* USER CODE END Callback 1 */

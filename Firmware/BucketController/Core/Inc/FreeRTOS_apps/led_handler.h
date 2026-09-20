@@ -44,4 +44,12 @@
 */
 void init_led_handler(void);
 
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC led_handler_notify_from_isr : TIM5 callback
+ ----------------------------------------------------------------------------------
+*/
+void led_handler_notify_from_isr (void);
+
 #endif

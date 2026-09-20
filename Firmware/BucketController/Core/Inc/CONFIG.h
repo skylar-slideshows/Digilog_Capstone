@@ -114,8 +114,6 @@
 
     // Pins
     #define LED_DATA_PORT          GPIOB               // serial, sck, latch all on same port for timing
-    #define LED_SER_PIN            11                  // LED_Data = PB11
-    #define LED_SRCLK_PIN          12                  // LED_Clock = PB12
     #define LED_RCLK_PIN           14                  // LED_Latch = PB14
     #define LED_DATA_PORT_EN       RCC_AHB2ENR_GPIOBEN // enable gpio clock for port above
 
@@ -199,8 +197,6 @@
 
     // Pins
     #define LED_DATA_PORT          GPIOB               // serial, sck, latch all on same port for timing
-    #define LED_SER_PIN            11                  // LED_Data = PB11
-    #define LED_SRCLK_PIN          12                  // LED_Clock = PB12
     #define LED_RCLK_PIN           14                  // LED_Latch = PB14
     #define LED_DATA_PORT_EN       RCC_AHB2ENR_GPIOBEN // enable gpio clock for port above
 

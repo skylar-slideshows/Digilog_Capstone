@@ -9,7 +9,7 @@
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-09-18
-  * @version 2.1
+  * @version 2.2
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
@@ -35,10 +35,12 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
 #include "CONFIG.h"
+#include "main.h"
 
 #if DEVELOPER_MODE
 #include <stdio.h>
@@ -74,15 +76,46 @@ static volatile bool frame_dirty = true; // true if the frame buffer is not what
 
 static void oe_duty (uint8_t brightness);
 
+extern SPI_HandleTypeDef hspi2;
+
+static uint8_t       txbuf[LED_FRAME_BYTES];
+static volatile bool tx_busy = false;
+
+static anim_t   anim_active = ANIM_NONE;
+static uint32_t anim_bits   = LED_ANIM_LOAD_PATTERN;
+static uint16_t anim_bphase = 0;
+
+static volatile bool loading    = false;
+static uint8_t       load_div   = 0;
+
+#ifndef LED_ANIM_LOAD_DIV
+#define LED_ANIM_LOAD_DIV 2U // 40 FPS / 2 = 20 updates per sec loading anim
+#endif
+
+
+/*=============================== USE SPI2 DMA ================================*/
+
+extern SPI_HandleTypeDef hspi2;
+
+void HAL_SPI_TxCpltCallback (SPI_HandleTypeDef *hspi)
+{
+    if (hspi->Instance == SPI2) // prevents interference if using DMA for SPI1 (master) and SPI2 same time
+    {
+        latch_out(true);
+        tx_busy = false;
+    }
+}
+
 
 /*=============================== BIT / SPAN PRIMITIVES ================================*/
 
 // set or clear one bit of a buffer, counting from the MSB of byte 0
 static inline void buf_bit (uint8_t *buf, uint16_t b, bool on)
 {
-    const uint8_t mask = (uint8_t)(0x80u >> (b & 7u));
-    if (on) buf[b >> 3] |= mask;
-    else    buf[b >> 3] &= (uint8_t)~mask;
+    const uint16_t byte = (uint16_t)(LED_FRAME_BYTES - 1u - (b >> 3));
+    const uint8_t  mask = (uint8_t)(1u << (b & 7u));
+    if (on) buf[byte] |=  mask;
+    else    buf[byte] &= (uint8_t)~mask;
 }
 
 
@@ -392,18 +425,21 @@ static void render_dirty (void)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief frame_out : shift the whole frame out (serial data), then latch.
+  @brief frame_out : shift the whole frame out (serial data), then latch. USING DMA for fast (SPI2's DMA).
  ----------------------------------------------------------------------------------
 */
 static void frame_out (void)
 {
-    uint16_t n = LED_FRAME_BYTES;
-    while (n--)
+    if (tx_busy) { frame_dirty = true; return; } // retry next tick
+
+    memcpy(txbuf, frame, LED_FRAME_BYTES);
+    tx_busy = true;
+
+    if (HAL_SPI_Transmit_DMA(&hspi2, txbuf, LED_FRAME_BYTES) != HAL_OK)
     {
-        const uint8_t b = frame[n];
-        for (int8_t i = 0; i < 8; i++) shift_bit((uint32_t)((b >> i) & 1U), 1);
+        tx_busy = false;
+        frame_dirty = true;
     }
-    latch_out(1);
 }
 
 
@@ -414,10 +450,21 @@ static void frame_out (void)
 */
 void led_update (void)
 {
-    if (!frame_dirty) return;
+    if (loading && ++load_div >= LED_ANIM_LOAD_DIV)
+    {
+        load_div = 0;
+        anim_loading();
+    }
+
+    uint32_t prim = __get_PRIMASK();
+    __disable_irq();
+    bool work = frame_dirty;
+    frame_dirty = false;
+    __set_PRIMASK(prim);
+
+    if (!work) return;
     render_dirty();
     frame_out();
-    frame_dirty = false;
 }
 
 
@@ -431,6 +478,7 @@ void led_clear (void)
     for (uint16_t i = 0; i < LED_FRAME_BYTES; i++) frame[i] = 0x00;
     frame_dirty = false;
     frame_out();
+    while (tx_busy) { }
 }
 
 
@@ -546,8 +594,6 @@ void led_print_config (void)
     printf("\r\nLED chain: %u devices, %u of %u bits, %u bytes",
            (unsigned)device_count, (unsigned)used_bits,
            (unsigned)LED_CHAIN_BITS, (unsigned)LED_FRAME_BYTES);
-    printf("\r\n  SER=P%c%u SRCLK=P%c%u RCLK=P%c%u OE=P%c%u",
-           'B', LED_SER_PIN, 'B', LED_SRCLK_PIN, 'B', LED_RCLK_PIN, 'C', LED_OE_PIN);
     printf("\r\n  bit clock %lu Hz, frame %lu us",
            (unsigned long)SHIFT_REG_SERIAL_HZ,
            (unsigned long)(LED_FRAME_BYTES * 8UL * 1000000UL / SHIFT_REG_SERIAL_HZ));
@@ -572,10 +618,6 @@ void led_print_config (void) { }
 
 /*=============================== ANIMATIONS ================================*/
 // Frame refreshers: call repeatedly, and one call is one step. These do not change the actual stored value
-
-static anim_t   anim_active = ANIM_NONE;
-static uint32_t anim_bits   = LED_ANIM_LOAD_PATTERN;
-static uint16_t anim_bphase = 0;
 
 /**
  ----------------------------------------------------------------------------------
@@ -625,6 +667,22 @@ void anim_loading (void)
         led_device_t *d = &devices[i];
         led_raw(d, anim_bits);
     }
+}
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_loading : RUNS LOADING ANIMATION from global loading flag
+ ----------------------------------------------------------------------------------
+*/
+void led_loading (bool on)
+{
+    if (on == loading) return;
+    loading  = on;
+    load_div = 0;
+
+    if (!on) anim_stop(); // releases all devices, rtn to normal op
+    frame_dirty = true;
 }
 
 

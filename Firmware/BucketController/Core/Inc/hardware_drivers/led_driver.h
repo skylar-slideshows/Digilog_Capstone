@@ -9,7 +9,7 @@
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-09-18
-  * @version 2.1
+  * @version 2.2
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
@@ -335,5 +335,13 @@ void anim_sweep (led_device_t *device, uint16_t phase);
  ----------------------------------------------------------------------------------
 */
 void anim_breathe (uint8_t mode);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_loading : turn on and off loading animation!
+ ----------------------------------------------------------------------------------
+*/
+void led_loading (bool on);
 
 #endif

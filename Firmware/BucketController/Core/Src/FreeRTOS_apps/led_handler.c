@@ -8,7 +8,7 @@
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-09-18
-  * @version 1.0
+  * @version 1.2
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
@@ -34,26 +34,44 @@
 
 #include "FreeRTOS_apps/led_handler.h"
 #include "hardware_drivers/led_driver.h"
+#include "cmsis_os2.h"
 #include "main.h"
-#include "stm32g474xx.h"
 #include <stdio.h>
 
-extern TIM_HandleTypeDef htim5;   // defined in main.c
+extern TIM_HandleTypeDef htim5;
 
+#define LED_FLAG_TICK 0x01U
 
-/**
- ----------------------------------------------------------------------------------
-  @brief init_led_handler : setup timer 5 for ~30Hz  interrupt and set IRQ handler for FreeRTOS
- ----------------------------------------------------------------------------------
-*/
-void init_led_handler(void)
+static osThreadId_t led_task_handle;
+
+static void led_task (void *arg)
+{
+    (void)arg;
+    HAL_TIM_Base_Start_IT(&htim5);   // start here: scheduler is running now
+
+    for (;;)
+    {
+        osThreadFlagsWait(LED_FLAG_TICK, osFlagsWaitAny, osWaitForever);
+        led_update();
+    }
+}
+
+void led_handler_notify_from_isr (void)
+{
+    if (led_task_handle != NULL) osThreadFlagsSet(led_task_handle, LED_FLAG_TICK);
+}
+
+void init_led_handler (void)
 {
     led_init();
 
-    __HAL_TIM_URS_ENABLE(&htim5);           // optional; not in the GUI
+    static const osThreadAttr_t attr = {
+        .name = "led", .priority = osPriorityBelowNormal, .stack_size = 512
+    };
+    led_task_handle = osThreadNew(led_task, NULL, &attr);
+
     HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0);
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
-    HAL_TIM_Base_Start_IT(&htim5);          // sets UIE + CEN
 
     printf("\r\nLED Rendering Handler Initialized\n");
 }

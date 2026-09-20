@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_Data_Pin GPIO_PIN_14
+#define LED_Data_GPIO_Port GPIOC
 #define __OSC_IN_Pin GPIO_PIN_0
 #define __OSC_IN_GPIO_Port GPIOF
 #define __OSC_OUT_Pin GPIO_PIN_1
@@ -87,34 +89,30 @@ void Error_Handler(void);
 #define Fader3_MotA_GPIO_Port GPIOA
 #define Fader1_ADC_Pos_Pin GPIO_PIN_4
 #define Fader1_ADC_Pos_GPIO_Port GPIOC
-#define Comp1_ADC_Sens_Pin GPIO_PIN_5
-#define Comp1_ADC_Sens_GPIO_Port GPIOC
 #define Fader4_MotA_Pin GPIO_PIN_0
 #define Fader4_MotA_GPIO_Port GPIOB
+#define Fader4_MotB_Pin GPIO_PIN_1
+#define Fader4_MotB_GPIO_Port GPIOB
 #define Fader2_MotA_Pin GPIO_PIN_10
 #define Fader2_MotA_GPIO_Port GPIOB
-#define LED_Data_Pin GPIO_PIN_11
-#define LED_Data_GPIO_Port GPIOB
-#define LED_Clock_Pin GPIO_PIN_12
+#define Fader2_MotB_Pin GPIO_PIN_11
+#define Fader2_MotB_GPIO_Port GPIOB
+#define LED_Clock_Pin GPIO_PIN_13
 #define LED_Clock_GPIO_Port GPIOB
-#define Comp1_CV_DAC_Pin GPIO_PIN_13
-#define Comp1_CV_DAC_GPIO_Port GPIOB
 #define LED_Latch_Pin GPIO_PIN_14
 #define LED_Latch_GPIO_Port GPIOB
+#define LED_DataB15_Pin GPIO_PIN_15
+#define LED_DataB15_GPIO_Port GPIOB
 #define I2C4_Clock_Pin GPIO_PIN_6
 #define I2C4_Clock_GPIO_Port GPIOC
 #define I2C4_Data_Pin GPIO_PIN_7
 #define I2C4_Data_GPIO_Port GPIOC
 #define I2C3_Clock_Pin GPIO_PIN_8
 #define I2C3_Clock_GPIO_Port GPIOC
-#define Fader4_MotB_Pin GPIO_PIN_9
-#define Fader4_MotB_GPIO_Port GPIOC
 #define I2C2_Data_Pin GPIO_PIN_8
 #define I2C2_Data_GPIO_Port GPIOA
 #define I2C2_Clock_Pin GPIO_PIN_9
 #define I2C2_Clock_GPIO_Port GPIOA
-#define Fader2_MotB_Pin GPIO_PIN_10
-#define Fader2_MotB_GPIO_Port GPIOA
 #define SHIFTREG_Clock_Pin GPIO_PIN_11
 #define SHIFTREG_Clock_GPIO_Port GPIOA
 #define SHIFTREG_Data_Pin GPIO_PIN_12
@@ -131,8 +129,6 @@ void Error_Handler(void);
 #define LDAC3_GPIO_Port GPIOC
 #define LDAC2_Pin GPIO_PIN_12
 #define LDAC2_GPIO_Port GPIOC
-#define LDAC1_Pin GPIO_PIN_2
-#define LDAC1_GPIO_Port GPIOD
 #define SPI1_Clock_Pin GPIO_PIN_3
 #define SPI1_Clock_GPIO_Port GPIOB
 #define I2C3_Data_Pin GPIO_PIN_5

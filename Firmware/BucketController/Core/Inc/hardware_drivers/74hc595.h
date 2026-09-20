@@ -8,7 +8,7 @@
   *
   * @author Skylar Denno (denno.o@northeastern.edu)
   * @date 2026-08-31
-  * @version 1.0
+  * @version 1.1
   *
   * @attention
   *  Copyright (C) 2026 Skylar Denno
@@ -44,7 +44,7 @@
   @brief PUBLIC shift_bit : uint32 -> Shifts a single bit out.
  ----------------------------------------------------------------------------------
 */
-void shift_bit(uint32_t bit, bool led);
+void shift_bit(uint32_t bit);
 
 
 /**
