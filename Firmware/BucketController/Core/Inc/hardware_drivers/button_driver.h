@@ -15,9 +15,15 @@ typedef struct
     uint8_t pin;       //!< Pin which the button output is connected to
 } button_info_t;
 
+typedef struct
+{
+    bool held;
+    uint16_t press_countdown; //!< Countdown timer; set high whenever button is pressed
+} button_state_t;
+
 /**
  * @brief Get the current hold state of a button based on cached MCP23017 values
  */
-bool get_button_state (button_info_t *info);
+bool get_button_held (button_info_t *info);
 
 #endif

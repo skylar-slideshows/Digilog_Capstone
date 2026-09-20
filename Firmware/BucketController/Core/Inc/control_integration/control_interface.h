@@ -11,6 +11,11 @@
 
 #define SEND_CHANNELS 4
 
+/**
+ * Number of update cycles (at 1.5kHz) during which a second press will count as a double click
+ */
+#define DOUBLE_PRESS_TIME 750
+
 typedef uint16_t u_scalar_control_t;
 typedef int16_t s_scalar_control_t;
 

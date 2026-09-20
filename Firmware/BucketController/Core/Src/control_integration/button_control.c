@@ -5,19 +5,33 @@
 #include "hardware_state_sets.h"
 #include "portmacro.h"
 
-static void
-update_toggle_button_val_from_info (SemaphoreHandle_t *out_mutex, bool *btn_state, button_info_t *info, bool *val_out)
+static void update_toggle_button_val_from_info (
+    SemaphoreHandle_t *out_mutex,
+    button_state_t *btn_state,
+    button_info_t *info,
+    bool *val_out //
+)
 {
-    bool new_button_state = get_button_state(info);
+    bool new_button_state = get_button_held(info);
 
-    if (new_button_state && !*btn_state)
+    if (new_button_state && !(btn_state->held))
     {
         xSemaphoreTake(*out_mutex, portMAX_DELAY);
         *val_out = !*val_out;
         xSemaphoreGive(*out_mutex);
+        btn_state->press_countdown = DOUBLE_PRESS_TIME;
     }
 
-    *btn_state = new_button_state;
+    btn_state->held = new_button_state;
+}
+
+static inline void update_button_timer (button_state_t *btn_state)
+{
+    if (btn_state->press_countdown == 0)
+    {
+        return;
+    }
+    btn_state->press_countdown--;
 }
 
 void init_button_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
@@ -41,6 +55,7 @@ void update_channel_button_values (
     channel_control_io_t *io
 )
 {
+    update_button_timer(&(state->mute_button_state));
     update_toggle_button_val_from_info(vals_mutex, &(state->mute_button_state), &(io->mute_button.button), &(vals->muted));
 
     // TODO: Do this for the rest of the toggle-buttons on the channel
