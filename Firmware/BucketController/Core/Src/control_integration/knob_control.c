@@ -18,7 +18,7 @@ static void s_update_knob_button (
     s_scalar_control_t *out //
 )
 {
-    const bool held = get_button_held(&(info->button_info));
+    const bool held = !get_button_held(&(info->button_info));
     const bool pressed = held & !(state->button_state.held);
 
     state->button_state.held = held;
