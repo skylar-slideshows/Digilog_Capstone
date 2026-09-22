@@ -37,6 +37,7 @@
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/74hc595.h"
 #include "portmacro.h"
+#include "projdefs.h"
 #include "stm32g474xx.h"
 #include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "FreeRTOS_apps/led_handler.h"
@@ -1313,26 +1314,31 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   // I2C Scheduler
   else if (htim->Instance == TIM4){
-    BaseType_t higherPriorityTaskWoken = pdFALSE;
+    BaseType_t higherPriorityTaskWoken[4] = {pdFALSE};
 
     vTaskNotifyGiveFromISR(
         CH1I2CSchedulerHandle,
-        &higherPriorityTaskWoken
+        &higherPriorityTaskWoken[0]
     );
     vTaskNotifyGiveFromISR(
         CH2I2CSchedulerHandle,
-        &higherPriorityTaskWoken
+        &higherPriorityTaskWoken[1]
     );
     vTaskNotifyGiveFromISR(
         CH3I2CSchedulerHandle,
-        &higherPriorityTaskWoken
+        &higherPriorityTaskWoken[2]
     );
     vTaskNotifyGiveFromISR(
         CH4I2CSchedulerHandle,
-        &higherPriorityTaskWoken
+        &higherPriorityTaskWoken[3]
     );
 
-    portYIELD_FROM_ISR(higherPriorityTaskWoken);
+    for(uint8_t i = 0; i < 4; i++){
+      if(higherPriorityTaskWoken[i] == pdTRUE){
+        portYIELD_FROM_ISR(higherPriorityTaskWoken[i]);
+        break;
+      }
+    }
   }
 
   // skylar (adding the ISR for LED handler)
