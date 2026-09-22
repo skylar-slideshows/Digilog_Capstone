@@ -1,11 +1,14 @@
 #ifndef I2C_SCHEDULER_H
 #define I2C_SCHEDULER_H
 
-#include <stdint.h>
+/**
+ * @brief Initialize I2C Scheduler timer and tasks
+ */
+void init_i2c_scheduler (void);
 
 /**
- * @brief Start a single frame of the I2C communication for the given bucket channel
+ * @brief Trigger one frame of the I2C scheduler on all channels
  */
-void start_i2c_frame (uint8_t channel);
+void i2c_scheduler_trigger_frame (void);
 
 #endif

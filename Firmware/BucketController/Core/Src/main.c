@@ -47,7 +47,6 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
-typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
@@ -91,54 +90,6 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 128 * 4
 };
-/* Definitions for CH1I2CScheduler */
-osThreadId_t CH1I2CSchedulerHandle;
-uint32_t CH1I2CSchedulerBuffer[ 128 ];
-osStaticThreadDef_t CH1I2CSchedulerControlBlock;
-const osThreadAttr_t CH1I2CScheduler_attributes = {
-  .name = "CH1I2CScheduler",
-  .stack_mem = &CH1I2CSchedulerBuffer[0],
-  .stack_size = sizeof(CH1I2CSchedulerBuffer),
-  .cb_mem = &CH1I2CSchedulerControlBlock,
-  .cb_size = sizeof(CH1I2CSchedulerControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
-};
-/* Definitions for CH2I2CScheduler */
-osThreadId_t CH2I2CSchedulerHandle;
-uint32_t CH2I2CSchedulerBuffer[ 128 ];
-osStaticThreadDef_t CH2I2CSchedulerControlBlock;
-const osThreadAttr_t CH2I2CScheduler_attributes = {
-  .name = "CH2I2CScheduler",
-  .stack_mem = &CH2I2CSchedulerBuffer[0],
-  .stack_size = sizeof(CH2I2CSchedulerBuffer),
-  .cb_mem = &CH2I2CSchedulerControlBlock,
-  .cb_size = sizeof(CH2I2CSchedulerControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
-};
-/* Definitions for CH3I2CScheduler */
-osThreadId_t CH3I2CSchedulerHandle;
-uint32_t CH3I2CSchedulerBuffer[ 128 ];
-osStaticThreadDef_t CH3I2CSchedulerControlBlock;
-const osThreadAttr_t CH3I2CScheduler_attributes = {
-  .name = "CH3I2CScheduler",
-  .stack_mem = &CH3I2CSchedulerBuffer[0],
-  .stack_size = sizeof(CH3I2CSchedulerBuffer),
-  .cb_mem = &CH3I2CSchedulerControlBlock,
-  .cb_size = sizeof(CH3I2CSchedulerControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
-};
-/* Definitions for CH4I2CScheduler */
-osThreadId_t CH4I2CSchedulerHandle;
-uint32_t CH4I2CSchedulerBuffer[ 128 ];
-osStaticThreadDef_t CH4I2CSchedulerControlBlock;
-const osThreadAttr_t CH4I2CScheduler_attributes = {
-  .name = "CH4I2CScheduler",
-  .stack_mem = &CH4I2CSchedulerBuffer[0],
-  .stack_size = sizeof(CH4I2CSchedulerBuffer),
-  .cb_mem = &CH4I2CSchedulerControlBlock,
-  .cb_size = sizeof(CH4I2CSchedulerControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
-};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -162,10 +113,6 @@ static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_SPI2_Init(void);
 void StartDefaultTask(void *argument);
-void StartCH1I2CScheduler(void *argument);
-void StartCH2I2CScheduler(void *argument);
-void StartCH3I2CScheduler(void *argument);
-void StartCH4I2CScheduler(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -257,6 +204,7 @@ int main(void)
     i2c_probeall();
   }
 
+  init_i2c_scheduler();
   shiftreg_init();
   init_led_handler(); // start LED frame renderer
 
@@ -293,18 +241,6 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-
-  /* creation of CH1I2CScheduler */
-  CH1I2CSchedulerHandle = osThreadNew(StartCH1I2CScheduler, NULL, &CH1I2CScheduler_attributes);
-
-  /* creation of CH2I2CScheduler */
-  CH2I2CSchedulerHandle = osThreadNew(StartCH2I2CScheduler, NULL, &CH2I2CScheduler_attributes);
-
-  /* creation of CH3I2CScheduler */
-  CH3I2CSchedulerHandle = osThreadNew(StartCH3I2CScheduler, NULL, &CH3I2CScheduler_attributes);
-
-  /* creation of CH4I2CScheduler */
-  CH4I2CSchedulerHandle = osThreadNew(StartCH4I2CScheduler, NULL, &CH4I2CScheduler_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1217,82 +1153,6 @@ void StartDefaultTask(void *argument)
   /* USER CODE END 5 */
 }
 
-/* USER CODE BEGIN Header_StartCH1I2CScheduler */
-/**
-* @brief Function implementing the CH1I2CScheduler thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartCH1I2CScheduler */
-void StartCH1I2CScheduler(void *argument)
-{
-  /* USER CODE BEGIN StartCH1I2CScheduler */
-  /* Infinite loop */
-  for(;;)
-  {
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    start_i2c_frame(0);
-  }
-  /* USER CODE END StartCH1I2CScheduler */
-}
-
-/* USER CODE BEGIN Header_StartCH2I2CScheduler */
-/**
-* @brief Function implementing the CH2I2CScheduler thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartCH2I2CScheduler */
-void StartCH2I2CScheduler(void *argument)
-{
-  /* USER CODE BEGIN StartCH2I2CScheduler */
-  /* Infinite loop */
-  for(;;)
-  {
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    start_i2c_frame(1);
-  }
-  /* USER CODE END StartCH2I2CScheduler */
-}
-
-/* USER CODE BEGIN Header_StartCH3I2CScheduler */
-/**
-* @brief Function implementing the CH3I2CScheduler thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartCH3I2CScheduler */
-void StartCH3I2CScheduler(void *argument)
-{
-  /* USER CODE BEGIN StartCH3I2CScheduler */
-  /* Infinite loop */
-  for(;;)
-  {
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    start_i2c_frame(2);
-  }
-  /* USER CODE END StartCH3I2CScheduler */
-}
-
-/* USER CODE BEGIN Header_StartCH4I2CScheduler */
-/**
-* @brief Function implementing the CH4I2CScheduler thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartCH4I2CScheduler */
-void StartCH4I2CScheduler(void *argument)
-{
-  /* USER CODE BEGIN StartCH4I2CScheduler */
-  /* Infinite loop */
-  for(;;)
-  {
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    start_i2c_frame(3);
-  }
-  /* USER CODE END StartCH4I2CScheduler */
-}
-
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM7 interrupt took place, inside
@@ -1314,31 +1174,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   // I2C Scheduler
   else if (htim->Instance == TIM4){
-    BaseType_t higherPriorityTaskWoken[4] = {pdFALSE};
-
-    vTaskNotifyGiveFromISR(
-        CH1I2CSchedulerHandle,
-        &higherPriorityTaskWoken[0]
-    );
-    vTaskNotifyGiveFromISR(
-        CH2I2CSchedulerHandle,
-        &higherPriorityTaskWoken[1]
-    );
-    vTaskNotifyGiveFromISR(
-        CH3I2CSchedulerHandle,
-        &higherPriorityTaskWoken[2]
-    );
-    vTaskNotifyGiveFromISR(
-        CH4I2CSchedulerHandle,
-        &higherPriorityTaskWoken[3]
-    );
-
-    for(uint8_t i = 0; i < 4; i++){
-      if(higherPriorityTaskWoken[i] == pdTRUE){
-        portYIELD_FROM_ISR(higherPriorityTaskWoken[i]);
-        break;
-      }
-    }
   }
 
   // skylar (adding the ISR for LED handler)
