@@ -2,7 +2,7 @@
   **********************************************************************************
   * LED HANDLER - DIGILOG CONSOLE
   **********************************************************************************
-  * @file Free_RTOS_apps/led_handler.c
+  * @file led_handler.h
   * @brief Runs constant 30fps render and update loop for the display LEDs on the board
   * to constantly reflect / display the current control values as they are changed.
   *
