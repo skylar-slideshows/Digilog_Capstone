@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include "CONFIG.h"
 #include "fader_control.h"
-#include "hardware_drivers/led_driver.h"
 
 #include "control_integration/control_interface.h"
 
@@ -79,12 +78,15 @@ static void init_control_vals (uint8_t channel)
     xSemaphoreGive(channel_control_mutexes[channel]);
 }
 
-void init_control_interface (uint8_t channel)
+void init_control_interface (void)
 {
-    channel_control_mutexes[channel] = xSemaphoreCreateMutex();
+    for (uint8_t channel = 0; channel < CHANNELS; channel++)
+    {
+        channel_control_mutexes[channel] = xSemaphoreCreateMutex();
 
-    init_control_io(channel);
-    init_control_vals(channel);
+        init_control_io(channel);
+        init_control_vals(channel);
+    }
 }
 
 /**

@@ -204,9 +204,8 @@ int main(void)
     i2c_probeall();
   }
 
-  init_i2c_scheduler();
+  init_control_interface();
   shiftreg_init();
-  init_led_handler(); // start LED frame renderer
 
   led_print_config();
 
@@ -243,7 +242,10 @@ int main(void)
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+
+  init_i2c_scheduler();
+  init_led_handler(); // start LED frame renderer
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -903,9 +905,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 10302;
+  htim4.Init.Prescaler = 50;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 11;
+  htim4.Init.Period = 10301;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -1121,7 +1123,6 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 
-
   led_brightness(10);
   mcp23017_init(I2C1, 0x20);
   bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
@@ -1136,15 +1137,9 @@ void StartDefaultTask(void *argument)
   );*/
   bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
-  init_control_interface(1);
-
-  uint32_t last_anim = osKernelGetTickCount();
 
   for (;;)
   {
-    mcp23017_poll_to_cache(I2C1, 0x20);
-    update_control_values(1);
-    update_control_leds(1);
     osDelay(5);
   }
   
@@ -1174,6 +1169,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   // I2C Scheduler
   else if (htim->Instance == TIM4){
+    i2c_scheduler_trigger_frame();
   }
 
   // skylar (adding the ISR for LED handler)

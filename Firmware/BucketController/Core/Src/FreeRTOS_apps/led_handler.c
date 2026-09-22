@@ -33,6 +33,7 @@
 */
 
 #include "FreeRTOS_apps/led_handler.h"
+#include "FreeRTOS.h"
 #include "hardware_drivers/led_driver.h"
 #include "cmsis_os2.h"
 #include "main.h"
@@ -47,7 +48,7 @@ static osThreadId_t led_task_handle;
 static void led_task (void *arg)
 {
     (void)arg;
-    HAL_TIM_Base_Start_IT(&htim5);   // start here: scheduler is running now
+    HAL_TIM_Base_Start_IT(&htim5); // start here: scheduler is running now
 
     for (;;)
     {
@@ -61,12 +62,20 @@ void led_handler_notify_from_isr (void)
     if (led_task_handle != NULL) osThreadFlagsSet(led_task_handle, LED_FLAG_TICK);
 }
 
+static uint32_t LEDHandlerBuffer[1024];
+static StaticTask_t LEDHandlerControlBlocks;
+
 void init_led_handler (void)
 {
     led_init();
 
     static const osThreadAttr_t attr = {
-        .name = "led", .priority = osPriorityBelowNormal, .stack_size = 512
+        .name = "led",
+        .stack_mem = LEDHandlerBuffer,
+        .stack_size = sizeof(LEDHandlerBuffer),
+        .cb_mem = &LEDHandlerControlBlocks,
+        .cb_size = sizeof(LEDHandlerControlBlocks),
+        .priority = osPriorityBelowNormal,
     };
     led_task_handle = osThreadNew(led_task, NULL, &attr);
 

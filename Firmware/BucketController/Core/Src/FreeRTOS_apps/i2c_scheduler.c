@@ -9,6 +9,7 @@
 #include "portmacro.h"
 #include "projdefs.h"
 #include "stm32g474xx.h"
+// #include <stdio.h>
 #include <string.h>
 
 #define MCP23017_1_ADDR 0x20
@@ -59,6 +60,7 @@ static void write_mcp4728s (uint8_t channel)
 
 static void start_i2c_frame (uint8_t channel)
 {
+    // printf("chan %d\n", channel);
     read_mcp23017s(channel);
 
     update_control_values(channel);
@@ -85,6 +87,8 @@ static uint8_t i2c_sched_task_args[4];
 static uint32_t I2CSchedulerBuffers[4][128];
 static StaticTask_t I2CSchedulerControlBlocks[4];
 
+extern TIM_HandleTypeDef htim4; // from main.c
+
 void init_i2c_scheduler (void)
 {
     const char *names[4] = {
@@ -102,14 +106,15 @@ void init_i2c_scheduler (void)
             .stack_size = sizeof(I2CSchedulerBuffers[i]),
             .cb_mem = &(I2CSchedulerControlBlocks[i]),
             .cb_size = sizeof(I2CSchedulerControlBlocks[i]),
-            .priority = osPriorityBelowNormal,
+            .priority = osPriorityRealtime,
         };
         i2c_sched_task_args[i] = i;
         i2c_scheduler_task_handles[i] = osThreadNew(i2c_scheduler_task, &(i2c_sched_task_args[i]), &attr);
     }
 
-    HAL_NVIC_SetPriority(TIM4_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(TIM4_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
+    HAL_TIM_Base_Start_IT(&htim4);
 }
 
 void i2c_scheduler_trigger_frame (void)
