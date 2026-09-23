@@ -9,6 +9,7 @@
 #include "portmacro.h"
 #include "projdefs.h"
 #include "stm32g474xx.h"
+#include "stm32g4xx_hal.h"
 // #include <stdio.h>
 #include <string.h>
 
