@@ -67,8 +67,6 @@ static StaticTask_t LEDHandlerControlBlocks;
 
 void init_led_handler (void)
 {
-    led_init();
-
     static const osThreadAttr_t attr = {
         .name = "led",
         .stack_mem = LEDHandlerBuffer,

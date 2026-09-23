@@ -205,6 +205,7 @@ int main(void)
   }
 
   init_control_interface();
+  led_init();
   shiftreg_init();
 
   led_print_config();
@@ -243,8 +244,8 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
 
-  init_i2c_scheduler();
   init_led_handler(); // start LED frame renderer
+  init_i2c_scheduler();
 
   /* USER CODE END RTOS_THREADS */
 
@@ -1125,7 +1126,8 @@ void StartDefaultTask(void *argument)
 
   led_brightness(10);
   mcp23017_init(I2C1, 0x20);
-  bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
+  mcp4728_init_settings(I2C1, 0x61);
+  // bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
   /*mcp4728_init_address(
     GPIOA, // Clock port
     15, // Clock pin
@@ -1135,7 +1137,7 @@ void StartDefaultTask(void *argument)
     6, // ldac pin
     0x62 // New addr
   );*/
-  bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
+  // bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
 
   for (;;)

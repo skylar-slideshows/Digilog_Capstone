@@ -426,3 +426,12 @@ uint8_t mcp4728_init_all_addresses (void)
 
     return folded_result;
 }
+
+uint8_t mcp4728_init_settings (
+    I2C_TypeDef *bus, //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t addr      //!< 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
+){
+    const uint8_t vref_res = mcp4728_vrefSelect(bus, addr, MCP4728_ALL_VREF_INTERNAL);
+    const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_1X);
+    return vref_res | gain_res;
+}
