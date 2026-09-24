@@ -79,7 +79,7 @@ static void oe_duty (uint8_t brightness);
 extern SPI_HandleTypeDef hspi2;
 
 static uint8_t       txbuf[LED_FRAME_BYTES];
-static volatile bool tx_busy = false;
+// static volatile bool tx_busy = false;
 
 static anim_t   anim_active = ANIM_NONE;
 static uint32_t anim_bits   = LED_ANIM_LOAD_PATTERN;
@@ -102,7 +102,7 @@ void HAL_SPI_TxCpltCallback (SPI_HandleTypeDef *hspi)
     if (hspi->Instance == SPI2) // prevents interference if using DMA for SPI1 (master) and SPI2 same time
     {
         latch_out(true);
-        tx_busy = false;
+        // tx_busy = false;
     }
 }
 
@@ -429,14 +429,14 @@ static void render_dirty (void)
 */
 static void frame_out (void)
 {
-    if (tx_busy) { frame_dirty = true; return; } // retry next tick
+    // if (tx_busy) { frame_dirty = true; return; } // retry next tick
 
     memcpy(txbuf, frame, LED_FRAME_BYTES);
-    tx_busy = true;
+    // tx_busy = true;
 
     if (HAL_SPI_Transmit_DMA(&hspi2, txbuf, LED_FRAME_BYTES) != HAL_OK)
     {
-        tx_busy = false;
+        // tx_busy = false;
         frame_dirty = true;
     }
 }
@@ -477,7 +477,7 @@ void led_clear (void)
     for (uint16_t i = 0; i < LED_FRAME_BYTES; i++) frame[i] = 0x00;
     frame_dirty = false;
     frame_out();
-    while (tx_busy) { }
+    // while (tx_busy) {}
 }
 
 

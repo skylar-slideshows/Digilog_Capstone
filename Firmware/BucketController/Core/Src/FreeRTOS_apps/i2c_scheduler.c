@@ -61,7 +61,9 @@ static void write_mcp4728s (uint8_t channel)
 
 static void start_i2c_frame (uint8_t channel)
 {
-    // printf("chan %d\n", channel);
+    // if(channel == 3){
+    //     printf("chan %d\n", channel);
+    // }
     read_mcp23017s(channel);
 
     update_control_values(channel);
@@ -85,7 +87,7 @@ static void i2c_scheduler_task (void *arg)
 static osThreadId_t i2c_scheduler_task_handles[4];
 static uint8_t i2c_sched_task_args[4];
 
-static uint32_t I2CSchedulerBuffers[4][128];
+static uint32_t I2CSchedulerBuffers[4][512];
 static StaticTask_t I2CSchedulerControlBlocks[4];
 
 extern TIM_HandleTypeDef htim4; // from main.c

@@ -45,11 +45,8 @@ extern TIM_HandleTypeDef htim5;
 
 static osThreadId_t led_task_handle;
 
-static void led_task (void *arg)
+static void led_task (void *_)
 {
-    (void)arg;
-    HAL_TIM_Base_Start_IT(&htim5); // start here: scheduler is running now
-
     for (;;)
     {
         osThreadFlagsWait(LED_FLAG_TICK, osFlagsWaitAny, osWaitForever);
@@ -79,6 +76,7 @@ void init_led_handler (void)
 
     HAL_NVIC_SetPriority(TIM5_IRQn, 8, 0);
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
+    HAL_TIM_Base_Start_IT(&htim5); // start here: scheduler is running now
 
     printf("\r\nLED Rendering Handler Initialized\n");
 }
