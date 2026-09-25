@@ -1,0 +1,3299 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "797110d3-a6c7-4b6e-9851-1dc410d53932")
+	(paper "A4")
+	(title_block
+		(title "DIGITAL SYSTEMS DEV BOARD")
+		(date "2026-09-09")
+		(rev "0")
+		(company "EECE CAPSTONE")
+		(comment 3 "S.E.D.")
+	)
+	(lib_symbols
+		(symbol "Analog_DAC:MCP4728"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -12.7 6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "MCP4728"
+				(at 12.7 6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+				(at 0 -15.24 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+				(at 0 6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "dac i2c"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "*SOP*3x3mm*P0.5mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "MCP4728_0_1"
+				(rectangle
+					(start -12.7 5.08)
+					(end 12.7 -7.62)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "MCP4728_1_1"
+				(pin power_in line
+					(at 0 7.62 270)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -15.24 2.54 0)
+					(length 2.54)
+					(name "SCL"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 0 0)
+					(length 2.54)
+					(name "SDA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -15.24 -2.54 0)
+					(length 2.54)
+					(name "~{LDAC}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -15.24 -5.08 0)
+					(length 2.54)
+					(name "RDY/~{BSY}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 2.54 180)
+					(length 2.54)
+					(name "VOUTA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 0 180)
+					(length 2.54)
+					(name "VOUTB"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 -2.54 180)
+					(length 2.54)
+					(name "VOUTC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 -5.08 180)
+					(length 2.54)
+					(name "VOUTD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -10.16 90)
+					(length 2.54)
+					(name "VSS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 179.07 34.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "09f1f8a1-e781-491e-8efb-9336a58c46a4")
+		(property "Reference" "U5"
+			(at 181.2133 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 181.2133 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 179.07 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 179.07 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 179.07 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 179.07 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 179.07 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 179.07 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 179.07 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "f0f833c2-9b92-4563-b4dd-138e3dc5bbdf")
+		)
+		(pin "4"
+			(uuid "24cdb7e8-0dba-430b-956d-1092647f182e")
+		)
+		(pin "5"
+			(uuid "0dcdbba8-cbc6-4a6d-ac9a-a9dbfb9cc3bd")
+		)
+		(pin "6"
+			(uuid "d116a8bc-6c27-4955-a2ce-e9dd54f8785d")
+		)
+		(pin "7"
+			(uuid "bf8c2268-5c09-474e-adf7-208047a77366")
+		)
+		(pin "8"
+			(uuid "969f44f4-4fee-4429-ba2f-c3cc8b02c7af")
+		)
+		(pin "9"
+			(uuid "cbf8e09f-54c1-4f37-928d-e0810831dc94")
+		)
+		(pin "1"
+			(uuid "c989b982-25a1-4397-b6d9-160df77949f7")
+		)
+		(pin "2"
+			(uuid "73e0dccf-4b83-49a6-b7a3-c9399118d8ea")
+		)
+		(pin "3"
+			(uuid "4b74c8cb-0ccd-41e5-a769-662065820543")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 226.06 34.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "0a8ae383-19c0-4c57-8a6b-53e1356cd072")
+		(property "Reference" "U6"
+			(at 228.2033 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 228.2033 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 226.06 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 226.06 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 226.06 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 226.06 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 226.06 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 226.06 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 226.06 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "13d45c69-9918-45c3-9db4-b47ce60ca7e2")
+		)
+		(pin "4"
+			(uuid "b254a41f-c9bd-4b54-9342-fc7fee5476b4")
+		)
+		(pin "5"
+			(uuid "150295b1-32a1-4a4a-8329-3fd632ad56dc")
+		)
+		(pin "6"
+			(uuid "2ffcd1c6-67c7-46a2-9390-eb5525d68966")
+		)
+		(pin "7"
+			(uuid "8847a151-7e11-4dc8-ba78-ec36102496af")
+		)
+		(pin "8"
+			(uuid "dcf4255f-1622-43bf-8016-3dfd9e3a9765")
+		)
+		(pin "9"
+			(uuid "9f3ec16b-19e1-4c9d-8e7f-b1f726498c52")
+		)
+		(pin "1"
+			(uuid "365a2471-47b1-4daf-95c6-73e11ccf69e5")
+		)
+		(pin "2"
+			(uuid "c297bff1-6fcb-4bd8-b404-c408619abf74")
+		)
+		(pin "3"
+			(uuid "4ac3c136-8d26-471f-9332-596e0363bd83")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 87.63 34.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "309fef9b-1c28-49b2-8b38-559fee1359b4")
+		(property "Reference" "U3"
+			(at 89.7733 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 89.7733 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 87.63 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 87.63 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 87.63 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 87.63 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 87.63 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 87.63 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 87.63 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "b5fc80ec-1a1c-46ce-b8dc-46f93864d5bf")
+		)
+		(pin "4"
+			(uuid "36150566-117b-4250-bbce-ea28035a9248")
+		)
+		(pin "5"
+			(uuid "d03497ea-6c2a-4119-9e53-b1dfd8697543")
+		)
+		(pin "6"
+			(uuid "a636ab89-80c5-4652-9025-d0fef2310781")
+		)
+		(pin "7"
+			(uuid "915b601c-3597-4cda-a714-c63d3898226a")
+		)
+		(pin "8"
+			(uuid "2b84bd7e-7a45-45a0-a320-bba200d57003")
+		)
+		(pin "9"
+			(uuid "9287a555-b9f1-4b43-877e-48c98097d0aa")
+		)
+		(pin "1"
+			(uuid "98dc9c5e-e6dd-4596-bdbb-4180bcaf42cf")
+		)
+		(pin "2"
+			(uuid "c288fc53-c425-4180-99f0-8318b8e54613")
+		)
+		(pin "3"
+			(uuid "59bb2410-2236-42a0-a3f0-ef77d5d0cdb7")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 87.63 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "3f1e2726-4a7c-40fc-9dcb-419f6d3e0cf8")
+		(property "Reference" "U8"
+			(at 89.7733 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 89.7733 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 87.63 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 87.63 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 87.63 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 87.63 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 87.63 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 87.63 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 87.63 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "1d52608c-ccb2-4d77-904e-eda1de014e18")
+		)
+		(pin "4"
+			(uuid "27c290dd-634e-4590-9ba0-c883f8ce91f1")
+		)
+		(pin "5"
+			(uuid "e29454ac-46d7-49e5-8cf3-6aea59021e15")
+		)
+		(pin "6"
+			(uuid "e3d7d786-bdb0-437b-bee8-b46820ed110e")
+		)
+		(pin "7"
+			(uuid "07bd8b13-32c7-47db-a217-2f2a659def16")
+		)
+		(pin "8"
+			(uuid "92b90687-0382-42b4-ae2c-339651ddb660")
+		)
+		(pin "9"
+			(uuid "bf7fa2d6-dd86-4df2-8d02-8f5113b907c7")
+		)
+		(pin "1"
+			(uuid "5dc83d99-d8d2-4bcd-a288-2b735f57f0a2")
+		)
+		(pin "2"
+			(uuid "3675d99d-8eb6-498a-b978-11b3cc351c49")
+		)
+		(pin "3"
+			(uuid "d8c80d14-9b73-4e0d-825c-52a8cd2ba857")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 133.35 120.65 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "5070a156-9b0e-4b57-845b-914c216d7aa5")
+		(property "Reference" "U19"
+			(at 135.4933 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 135.4933 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 133.35 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 133.35 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 133.35 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 133.35 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 133.35 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 133.35 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 133.35 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "10edc8c2-e272-4773-b0ed-1922a347705b")
+		)
+		(pin "4"
+			(uuid "e8e28c9c-4fe0-4f8f-9aa0-a2da91207f5d")
+		)
+		(pin "5"
+			(uuid "964b7618-ce1f-4d18-b14c-77de297a9219")
+		)
+		(pin "6"
+			(uuid "e15f3ec0-aa4f-47d8-9fa2-142c14fe4216")
+		)
+		(pin "7"
+			(uuid "1bf04a00-ade2-4049-b39d-4423cc0270f5")
+		)
+		(pin "8"
+			(uuid "9d18ffa2-9125-4189-93c0-80783d5c653e")
+		)
+		(pin "9"
+			(uuid "409d4a17-48c5-4cee-8e61-50f8fd1755b9")
+		)
+		(pin "1"
+			(uuid "a4122c18-53b2-45c9-889d-50c7e1baa879")
+		)
+		(pin "2"
+			(uuid "adf9cc71-99af-4804-9956-45b4d26461e9")
+		)
+		(pin "3"
+			(uuid "ef50406b-db61-4dc7-b835-8a1658e05c0c")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 179.07 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "750198ff-81ac-4246-84bb-281b7390c2a4")
+		(property "Reference" "U15"
+			(at 181.2133 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 181.2133 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 179.07 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 179.07 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 179.07 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 179.07 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 179.07 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 179.07 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 179.07 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "c52b1ac1-ccae-46fd-8444-b7fefdfd0813")
+		)
+		(pin "4"
+			(uuid "44c38cb4-d968-44b6-84bc-fc638b6f2a32")
+		)
+		(pin "5"
+			(uuid "3cdf6d33-1492-453c-bd72-58144d5f907c")
+		)
+		(pin "6"
+			(uuid "925ff56b-b624-4a92-a3c2-43dab6525f7a")
+		)
+		(pin "7"
+			(uuid "b6b1a8ed-244d-4cb2-b95d-88b92da1f3d4")
+		)
+		(pin "8"
+			(uuid "5103dff7-595a-4f5a-be3e-474941130db9")
+		)
+		(pin "9"
+			(uuid "894ba3de-60c3-45ba-b704-95e7bf745aa2")
+		)
+		(pin "1"
+			(uuid "43a176d4-04e7-43ed-8e65-2416ccd533a0")
+		)
+		(pin "2"
+			(uuid "0f55da51-5580-42ea-a2f9-16cd0d3061f2")
+		)
+		(pin "3"
+			(uuid "35752e7a-4905-4bf6-bae7-f1ef2a408287")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 39.37 34.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "8b45eb61-32eb-433d-a97e-67f384ac349d")
+		(property "Reference" "U2"
+			(at 41.5133 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 41.5133 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 39.37 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 39.37 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 39.37 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 39.37 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 39.37 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 39.37 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 39.37 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "312b67e9-1d4d-4e90-b776-ea41e07ab5c4")
+		)
+		(pin "4"
+			(uuid "8a03172f-98cd-4d68-984a-d2195f710114")
+		)
+		(pin "5"
+			(uuid "ad44829e-57e0-41a4-bbdc-65bf2a837020")
+		)
+		(pin "6"
+			(uuid "2ca2940d-d546-4bfb-98d7-147787ce9ab3")
+		)
+		(pin "7"
+			(uuid "3d3856fe-489c-481b-9e9c-e4ac5998587d")
+		)
+		(pin "8"
+			(uuid "b319f061-01ba-4ecf-8dcb-59339f5c6dc6")
+		)
+		(pin "9"
+			(uuid "2406a0a9-2f79-4c47-9cc5-7f6dc46c1033")
+		)
+		(pin "1"
+			(uuid "04001bd2-6317-40ce-aad7-9fcee99d60ad")
+		)
+		(pin "2"
+			(uuid "dd42b0ff-dc11-4232-9220-d2c5951ca250")
+		)
+		(pin "3"
+			(uuid "50d1d7d7-9d8f-40f1-b288-9ba5dc65e9e8")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 39.37 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "943f8cbd-4502-4c01-a227-d7e38977a244")
+		(property "Reference" "U12"
+			(at 41.5133 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 41.5133 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 39.37 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 39.37 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 39.37 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 39.37 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 39.37 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 39.37 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 39.37 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "e1199eba-e0a6-484c-acea-76ab1973a63b")
+		)
+		(pin "4"
+			(uuid "aeef92cb-5200-4536-ae6f-d53530aa4941")
+		)
+		(pin "5"
+			(uuid "b934305c-9bd9-472d-8bc5-f0dc4e5f64f6")
+		)
+		(pin "6"
+			(uuid "302545bc-fdaa-47ae-9cfe-2f23ea0d080f")
+		)
+		(pin "7"
+			(uuid "ce6eec9a-d1de-4209-80aa-b482de2ca95e")
+		)
+		(pin "8"
+			(uuid "24a1c74b-9cc1-4cfd-80a9-d2c574e5a9e5")
+		)
+		(pin "9"
+			(uuid "b4ffbaaf-e060-4ea4-adf5-2dd902e5ca95")
+		)
+		(pin "1"
+			(uuid "1cd3800d-12f5-462a-bef5-6083c4eb2894")
+		)
+		(pin "2"
+			(uuid "e07cf1e3-8c35-454f-9263-8249043df6ea")
+		)
+		(pin "3"
+			(uuid "9ff338e2-b15f-45e9-9699-c8d3404facd5")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 133.35 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "9a8f48ba-285c-446c-91f8-f1140899c968")
+		(property "Reference" "U14"
+			(at 135.4933 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 135.4933 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 133.35 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 133.35 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 133.35 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 133.35 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 133.35 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 133.35 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 133.35 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "93d27b15-fbd0-444d-98a3-66ee40bad606")
+		)
+		(pin "4"
+			(uuid "cbd3d522-4e94-41eb-a0d4-c76246cf1d48")
+		)
+		(pin "5"
+			(uuid "4e3ee974-d9c0-4278-9866-a52cee4895e0")
+		)
+		(pin "6"
+			(uuid "f7fd9e1a-fdbc-4a61-97d2-b077a7de685a")
+		)
+		(pin "7"
+			(uuid "c2fc1876-43fb-47c9-a313-c92f79173383")
+		)
+		(pin "8"
+			(uuid "c9a4a45a-c7bf-480e-b1ab-56985fe022b4")
+		)
+		(pin "9"
+			(uuid "dd49b0c4-1060-4e2d-ae49-82f52cdff9e7")
+		)
+		(pin "1"
+			(uuid "399c34f4-da40-4b9e-aeaa-aaac29a3f446")
+		)
+		(pin "2"
+			(uuid "54a7d888-cf8b-4f53-8551-50a42dc31839")
+		)
+		(pin "3"
+			(uuid "87c29792-b478-4c6f-a257-3e448775c43a")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 179.07 120.65 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "a6e36734-4f2b-40c1-98a9-db7dcca3a39f")
+		(property "Reference" "U20"
+			(at 181.2133 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 181.2133 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 179.07 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 179.07 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 179.07 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 179.07 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 179.07 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 179.07 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 179.07 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "a7de88f5-69fa-46de-a249-a31f1fc7add4")
+		)
+		(pin "4"
+			(uuid "efdb0edb-df99-4792-bfaf-5796002582a1")
+		)
+		(pin "5"
+			(uuid "4b39614b-3eff-45b8-aca5-2705b1c8fe4e")
+		)
+		(pin "6"
+			(uuid "ecabd087-826c-4c83-8b40-d128abbfa35b")
+		)
+		(pin "7"
+			(uuid "8f865402-3d80-41e5-82dc-75f3bf9de71c")
+		)
+		(pin "8"
+			(uuid "6f9ff183-e3d7-4016-a53e-aa8188f67cda")
+		)
+		(pin "9"
+			(uuid "f12857a6-84f3-4bac-ad8f-023234535d16")
+		)
+		(pin "1"
+			(uuid "83c5fbed-7043-4f1a-b13c-7320dbe71d09")
+		)
+		(pin "2"
+			(uuid "1bced8f3-25bb-4137-ae9d-0b81e6c226e3")
+		)
+		(pin "3"
+			(uuid "eb5fc4af-eab5-4af5-a913-78d75b0a7eae")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 226.06 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "aa4fba2b-48be-491b-b0d5-7cc850da6d95")
+		(property "Reference" "U16"
+			(at 228.2033 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 228.2033 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 226.06 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 226.06 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 226.06 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 226.06 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 226.06 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 226.06 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 226.06 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "4fc7f8db-5640-46c5-a182-5ad3adedc8e0")
+		)
+		(pin "4"
+			(uuid "b1fbeb42-fb72-4de6-bd68-e5fc5247dc15")
+		)
+		(pin "5"
+			(uuid "25d070bd-582c-4320-99db-34b0cf423673")
+		)
+		(pin "6"
+			(uuid "6ad610da-b9e1-49ca-844f-200f40368e46")
+		)
+		(pin "7"
+			(uuid "5cfa8cf6-c0d9-496e-bd6c-872da8637d79")
+		)
+		(pin "8"
+			(uuid "ee3e8b5c-1a5a-4dbe-b93c-db4fcf5a1545")
+		)
+		(pin "9"
+			(uuid "196aeee2-1499-4344-b2ba-c7f64638a69f")
+		)
+		(pin "1"
+			(uuid "d7c677e2-43c0-4da2-b9f6-88b1a19bf613")
+		)
+		(pin "2"
+			(uuid "f84298ba-f1e6-4724-ad46-4acc78141ad7")
+		)
+		(pin "3"
+			(uuid "8e637a6d-40b9-4337-85bb-72e9eb4c921f")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 226.06 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "c9c12682-75f8-406f-a360-60c731096d9b")
+		(property "Reference" "U11"
+			(at 228.2033 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 228.2033 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 226.06 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 226.06 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 226.06 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 226.06 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 226.06 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 226.06 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 226.06 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "2b4fb82d-a009-413f-95b8-a772c9b53421")
+		)
+		(pin "4"
+			(uuid "09e23293-8a43-4344-9e76-465d34eeff96")
+		)
+		(pin "5"
+			(uuid "e0595df7-73fe-4601-b62b-4a2a725f0a1e")
+		)
+		(pin "6"
+			(uuid "075c1692-ee57-4a95-ae8a-0f00f7ba97f8")
+		)
+		(pin "7"
+			(uuid "b21390ba-146b-4f31-aa6a-53e7d434b0a0")
+		)
+		(pin "8"
+			(uuid "8a681769-7019-4d99-9416-c575fa3ec400")
+		)
+		(pin "9"
+			(uuid "61c139d9-663c-41c6-bf3a-a5552458f760")
+		)
+		(pin "1"
+			(uuid "e2f88b83-9576-42f1-b159-62112cc50173")
+		)
+		(pin "2"
+			(uuid "9ee6ea4f-54b4-401e-830d-6246baf0a75f")
+		)
+		(pin "3"
+			(uuid "8e3aa5db-7397-4d82-ad5c-0e7ddceae637")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 179.07 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "ca28048b-35c0-4122-91dd-364f83a0c271")
+		(property "Reference" "U10"
+			(at 181.2133 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 181.2133 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 179.07 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 179.07 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 179.07 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 179.07 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 179.07 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 179.07 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 179.07 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "47e8958c-a506-4cf4-a34d-323e1f479257")
+		)
+		(pin "4"
+			(uuid "73f332fa-26f5-4f15-8c6e-0da5dccdc448")
+		)
+		(pin "5"
+			(uuid "36a1cf36-8c64-41aa-b131-e2fc928eff7d")
+		)
+		(pin "6"
+			(uuid "a2815ff6-8dc9-48a7-8932-b65972b33a8c")
+		)
+		(pin "7"
+			(uuid "c8b61ea7-74b0-4aab-9b3b-6035cf45f1cf")
+		)
+		(pin "8"
+			(uuid "6f01098d-cbc0-41c8-abe8-5f5c6c632baf")
+		)
+		(pin "9"
+			(uuid "f1070f2d-0069-4d76-8b3f-5e5e5a70d03b")
+		)
+		(pin "1"
+			(uuid "0a79bdb7-a515-4b03-ae21-e9c4b9aad9cd")
+		)
+		(pin "2"
+			(uuid "3b32c6c7-1053-4a17-ba4c-7e51d72560ed")
+		)
+		(pin "3"
+			(uuid "855a08aa-8c85-47a2-b2c2-67f95843704b")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 39.37 120.65 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "cf645575-c72d-4084-a2c5-9e93e9ca5cca")
+		(property "Reference" "U17"
+			(at 41.5133 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 41.5133 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 39.37 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 39.37 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 39.37 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 39.37 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 39.37 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 39.37 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 39.37 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "fc98e85b-905f-40a3-bbcb-a6584da306c8")
+		)
+		(pin "4"
+			(uuid "0692bc43-3690-4d70-bdb7-7deacf6faabb")
+		)
+		(pin "5"
+			(uuid "c078c291-2e24-4c8a-a0b0-28eaddae15a9")
+		)
+		(pin "6"
+			(uuid "7535fc27-bc6f-4439-8dc1-8787f8be4f39")
+		)
+		(pin "7"
+			(uuid "962d5ccf-165d-41c9-b81a-3981ba2e8136")
+		)
+		(pin "8"
+			(uuid "f2924ace-db15-40e0-a6fd-149386c71aad")
+		)
+		(pin "9"
+			(uuid "ef90b52e-765b-47ae-96c6-f1e99c432726")
+		)
+		(pin "1"
+			(uuid "6e552478-1bcc-4077-a251-4ffd94fbb59a")
+		)
+		(pin "2"
+			(uuid "9779d5ae-252e-4cbe-90e3-b6c7e86536a4")
+		)
+		(pin "3"
+			(uuid "e2b39c02-e345-4a2f-9c33-5704e73146e2")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 87.63 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "dda343d1-f5e2-4c1e-86a9-ae1a46f131b0")
+		(property "Reference" "U13"
+			(at 89.7733 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 89.7733 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 87.63 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 87.63 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 87.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 87.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 87.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 87.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 87.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "495f4964-af23-43d6-9503-38c9502ffa46")
+		)
+		(pin "4"
+			(uuid "01f28fe9-cb5d-40ae-8c12-a32fe5944c83")
+		)
+		(pin "5"
+			(uuid "0955bb3f-8fff-4be1-ac69-2a526445353b")
+		)
+		(pin "6"
+			(uuid "9d27107f-c7aa-4e2f-a192-dad013d2e70a")
+		)
+		(pin "7"
+			(uuid "f8a4a4ec-89d1-45ec-a8d4-c97a27288362")
+		)
+		(pin "8"
+			(uuid "f0acb51c-d66c-4b71-a9cd-085de2ce77ab")
+		)
+		(pin "9"
+			(uuid "b9fd256b-cbe5-4f94-bbcb-129fe063960a")
+		)
+		(pin "1"
+			(uuid "e9dc0445-4f6f-4bf6-bcb6-0e2c094aea48")
+		)
+		(pin "2"
+			(uuid "3a228b1a-d142-43df-ad0e-8373b6247b9b")
+		)
+		(pin "3"
+			(uuid "e3daba89-a66b-45aa-9279-0615964aef1c")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 87.63 120.65 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "dfedcbf1-e0b9-4791-94dd-929eb5dfecee")
+		(property "Reference" "U18"
+			(at 89.7733 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 89.7733 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 87.63 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 87.63 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 87.63 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 87.63 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 87.63 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 87.63 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 87.63 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "ebdef3be-801e-44b3-9788-bef2f336976c")
+		)
+		(pin "4"
+			(uuid "61eb3281-47e6-4665-af84-8d2009286203")
+		)
+		(pin "5"
+			(uuid "97f54406-6bf4-485f-8e2a-79015bf4dddc")
+		)
+		(pin "6"
+			(uuid "555ed2b8-44ee-4f55-a6f5-67e959e0c229")
+		)
+		(pin "7"
+			(uuid "e17e4d9c-8e41-4107-b556-151bda14ffe6")
+		)
+		(pin "8"
+			(uuid "2f0db5b9-b29a-44f9-8af2-aa7d3f58e1e2")
+		)
+		(pin "9"
+			(uuid "cce22b55-4324-4d78-8db8-c1a82e7d9546")
+		)
+		(pin "1"
+			(uuid "337618e6-af05-4118-baf4-c39b537b927a")
+		)
+		(pin "2"
+			(uuid "98b86eeb-e8af-4c41-93dc-636f99addc33")
+		)
+		(pin "3"
+			(uuid "108e192a-0c30-401d-b64c-bd236f63f8e6")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 226.06 120.65 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "ec3be760-6155-4edd-a815-79c0587f6ffd")
+		(property "Reference" "U21"
+			(at 228.2033 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 228.2033 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 226.06 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 226.06 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 226.06 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 226.06 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 226.06 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 226.06 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 226.06 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "05f59f54-3247-4658-86b4-f1d0ee923527")
+		)
+		(pin "4"
+			(uuid "47813e10-f52f-4166-9447-0fc424024546")
+		)
+		(pin "5"
+			(uuid "70a4a7b9-a4c6-4ee3-8aa1-8e164621043d")
+		)
+		(pin "6"
+			(uuid "1e69e9ea-5098-4e8b-bddd-7c75c860168b")
+		)
+		(pin "7"
+			(uuid "cb438655-704c-4dab-b323-a0d5b0aba631")
+		)
+		(pin "8"
+			(uuid "4467defd-98bc-479f-bdf7-396158347d3f")
+		)
+		(pin "9"
+			(uuid "dcfce642-4ab4-4f31-99d4-6daf8a66f3e2")
+		)
+		(pin "1"
+			(uuid "59db20d6-18b1-458e-9764-cfb3e0ec1f47")
+		)
+		(pin "2"
+			(uuid "2c0627ad-ddfe-4a7f-89a9-bad27e29f735")
+		)
+		(pin "3"
+			(uuid "3fa1d2de-3269-4435-bf7b-7ab7eb75b384")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U21")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 133.35 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "ee1e101a-b022-413d-a3c9-b6d2947a799e")
+		(property "Reference" "U9"
+			(at 135.4933 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 135.4933 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 133.35 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 133.35 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 133.35 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 133.35 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 133.35 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 133.35 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 133.35 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "0ac57bfb-86f2-42ee-bd1f-b2833a42cb8d")
+		)
+		(pin "4"
+			(uuid "fc2e5867-5879-4f45-93ac-f38490c55072")
+		)
+		(pin "5"
+			(uuid "fdea8c2c-fba6-4009-ae85-e3381017eec7")
+		)
+		(pin "6"
+			(uuid "4ec0c82e-2de5-4cc7-9b4c-9ddfde02b59a")
+		)
+		(pin "7"
+			(uuid "87e6db98-1f92-4a0d-a641-beeb1acfe1aa")
+		)
+		(pin "8"
+			(uuid "5841d142-0802-4d02-a1bd-5c4f2e72cc54")
+		)
+		(pin "9"
+			(uuid "1630fff3-1983-4508-afa2-ed25cdce1265")
+		)
+		(pin "1"
+			(uuid "89fc202b-ee9b-4248-b0a5-572adb7b451f")
+		)
+		(pin "2"
+			(uuid "db2e47ad-0966-4670-adb5-d5e305d2c45d")
+		)
+		(pin "3"
+			(uuid "9e45862b-2e6b-4c7b-a623-098f70179d6a")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 133.35 34.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "f3c8aefa-77d4-4681-8aff-9c70c589ca60")
+		(property "Reference" "U4"
+			(at 135.4933 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 135.4933 26.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 133.35 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 133.35 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 133.35 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 133.35 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 133.35 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 133.35 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 133.35 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "1e179a76-df78-4b15-8af9-e009a7b98211")
+		)
+		(pin "4"
+			(uuid "6167f672-3aa4-4671-b1c1-f518cfafb90f")
+		)
+		(pin "5"
+			(uuid "8093437e-221b-4d5e-bc89-85545278b7d8")
+		)
+		(pin "6"
+			(uuid "1140a9e2-af95-48ac-97e5-e5f65da90eb9")
+		)
+		(pin "7"
+			(uuid "a8d8b81b-1f2e-48e6-875c-dc0fb26f6376")
+		)
+		(pin "8"
+			(uuid "a03d7418-ee5c-4129-b5ca-86366a31f55d")
+		)
+		(pin "9"
+			(uuid "03e92685-55cd-4fd6-93d1-8c79adf96ca0")
+		)
+		(pin "1"
+			(uuid "2ebd68f1-4615-4e43-bf14-52db76a3b122")
+		)
+		(pin "2"
+			(uuid "74727150-de52-4956-9343-8ad1e72c3535")
+		)
+		(pin "3"
+			(uuid "22ece670-37bf-4448-94d4-771dae69edac")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Analog_DAC:MCP4728")
+		(at 39.37 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp yes)
+		(fields_autoplaced yes)
+		(uuid "f558290a-f319-4dca-8450-d9b9fd7443ed")
+		(property "Reference" "U7"
+			(at 41.5133 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MCP4728"
+			(at 41.5133 55.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
+			(at 39.37 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf"
+			(at 39.37 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "12-bit digital to analog converter, quad output, 2.048V internal reference, integrated EEPROM, I2C interface"
+			(at 39.37 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C478093"
+			(at 39.37 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 39.37 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 39.37 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 39.37 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "d33cb7fd-6df2-4411-92d1-9e8e370d68df")
+		)
+		(pin "4"
+			(uuid "5960d27e-a017-4442-b7f2-b1b62a277117")
+		)
+		(pin "5"
+			(uuid "2e2688c6-0316-4c39-9881-94c6228febd2")
+		)
+		(pin "6"
+			(uuid "15a9669e-096c-4b5d-97e8-758099ff03fc")
+		)
+		(pin "7"
+			(uuid "93eeb4a4-2f04-4e08-960a-fb38bca3adeb")
+		)
+		(pin "8"
+			(uuid "f392b687-2889-41ee-a394-da9fd57bc9d7")
+		)
+		(pin "9"
+			(uuid "377f60cf-8c2d-45dd-99ce-8ae6184e3b44")
+		)
+		(pin "1"
+			(uuid "fede7d34-c558-4438-a568-18c62353dfe0")
+		)
+		(pin "2"
+			(uuid "47099f6a-7264-453c-bd95-b1adcf69e453")
+		)
+		(pin "3"
+			(uuid "4ae0ce3c-96e5-4320-a8a1-0b71e4b7d2d8")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/bbfb9c22-3959-4da6-b463-467e6fdf3a09"
+					(reference "U7")
+					(unit 1)
+				)
+			)
+		)
+	)
+)
