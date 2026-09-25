@@ -204,8 +204,8 @@ int main(void)
     i2c_probeall();
   }
 
+  led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
   init_control_interface();
-  led_init();
   shiftreg_init();
 
   led_print_config();
