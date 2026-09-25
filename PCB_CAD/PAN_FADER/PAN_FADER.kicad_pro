@@ -60,7 +60,7 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.5,
+          "min_clearance": 0.0,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -76,7 +76,24 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "duplicate_footprints|102500000|99250000|00f011e9-1928-49d3-aba7-756f2644daaf|1cbef667-05ae-4fff-a7d1-b376b80dc0df",
+          ""
+        ],
+        [
+          "duplicate_footprints|134250000|52500000|772a1501-86e1-4565-b2ad-475167699dfc|1cbef667-05ae-4fff-a7d1-b376b80dc0df",
+          ""
+        ],
+        [
+          "extra_footprint|102500000|99250000|00f011e9-1928-49d3-aba7-756f2644daaf|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "extra_footprint|134250000|52500000|772a1501-86e1-4565-b2ad-475167699dfc|00000000-0000-0000-0000-000000000000",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -107,7 +124,7 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
@@ -778,7 +795,7 @@
         "uuid": "1ff51d4a-5c60-429a-8d32-cdff810802ec"
       }
     ],
-    "used_designators": "H1-2,R9R1,R7R1,R6R1,R1R1,R3R1,R14R1,R12R1,R10L1,R11R1,R13R1,R10R1,U1-10,C7R1,R9L1,JP1,J1-5,R4L1,R14L1,R4R1,C3R1,C2R1,R6L1,R3L1,C4R1,C5R1,R2R1,R12L1,TH1L1,R8L1,C3L1,R8R1,R1-15,R17-20,C7L1,C1L1,R5R1,R1L1,R11L1,R15L1,R15R1,TH1-3,C1R1,R5L1,R13L1,C5L1,C2L1,C1-35,C4L1,R7L1,TH1R1,C6R1,R2L1,C6L1,#PWR1-99",
+    "used_designators": "C5R1,C4R1,H1-2,R14L1,R11R1,R10L1,R9R1,U1-10,C7R1,R9L1,R7R1,R6R1,R12R1,R13R1,R10R1,JP1,J1-5,R4L1,R1R1,R3R1,C2R1,R6L1,R4R1,C3R1,R3L1,C1R1,R5L1,R13L1,R12L1,R2R1,R8L1,TH1L1,R14R1,C3L1,C1L1,R5R1,R1L1,R11L1,R15L1,C2L1,C1-35,C5L1,#PWR1-99,C6R1,TH1R1,R2L1,TH1-3,R15R1,C6L1,R7L1,C7L1,R1-15,R17-20,R8R1,C4L1",
     "variants": []
   },
   "sheets": [
