@@ -52,15 +52,15 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 0.0,
-          "corner_smoothing": 0,
+          "corner_radius": 6.0,
+          "corner_smoothing": 2,
           "fill_mode": 0,
           "hatch_gap": 1.5,
           "hatch_orientation": 0.0,
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.5,
+          "min_clearance": 0.3,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -213,7 +213,8 @@
         0.0,
         0.2,
         0.3,
-        0.4
+        0.4,
+        0.6
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -718,7 +719,7 @@
         "uuid": "bac14397-d362-4ce7-b0b5-2362ec4955a2"
       }
     ],
-    "used_designators": "TP9-12,TP19-20,F1-2,BOOT_MODE1,X1,L1-2,J2-10,J12-13,J15-20,J24-31,J101-108,C8-181,FB1,SW1,SW101-110,U1-23,U28-39,U101-104,Q1,#PWR1-71,#PWR74-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,H1-4,R1-28,R101-142,DZ1-3",
+    "used_designators": "JP1-8,TP9-12,TP19-20,F1-2,BOOT_MODE1,X1,L1-2,J2-10,J12-13,J15-20,J24-31,J101-108,C8-181,FB1,SW1,SW101-110,U1-23,U28-39,U101-104,Q1,#PWR1-72,#PWR74-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,H1-4,R1-28,R101-142,DZ1-3",
     "variants": []
   },
   "sheets": [
@@ -727,20 +728,8 @@
       "Root"
     ],
     [
-      "b1304d66-6258-4227-bb69-33bf619d3bc5",
-      "cv_sw"
-    ],
-    [
-      "bbfb9c22-3959-4da6-b463-467e6fdf3a09",
-      "DACs"
-    ],
-    [
       "d0706879-2b65-4dbf-9b6d-f2ef321ff29d",
       "disps"
-    ],
-    [
-      "abbd3e76-9455-4420-88f2-f0b1c4124bb0",
-      "power"
     ]
   ],
   "text_variables": {},

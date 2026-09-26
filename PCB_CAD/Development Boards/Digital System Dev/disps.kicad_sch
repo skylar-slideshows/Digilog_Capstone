@@ -5,7 +5,8 @@
 	(uuid "9242862f-3a82-4cc3-ba1e-94f3b0a203e0")
 	(paper "A4")
 	(title_block
-		(date "2026-09-09")
+		(title "DIGITAL SYSTEMS DEV BOARD")
+		(date "2026-09-25")
 		(rev "0")
 		(company "EECE CAPSTONE")
 		(comment 3 "S.E.D.")
@@ -2104,6 +2105,22 @@
 		(color 0 0 0 0)
 		(uuid "fc779b66-eb82-4ddf-b15b-d745af9e9c38")
 	)
+	(no_connect
+		(at 86.36 110.49)
+		(uuid "27e92005-2e69-49e5-8cc6-d54ef279e98f")
+	)
+	(no_connect
+		(at 114.3 110.49)
+		(uuid "6787e78f-3982-48dd-82e1-4fed68fd8ae7")
+	)
+	(no_connect
+		(at 142.24 110.49)
+		(uuid "aee6cdad-9025-434e-b58f-63b14e0cb5d3")
+	)
+	(no_connect
+		(at 57.15 110.49)
+		(uuid "d5b6e58d-5aa9-405b-9e9e-b5412f023c35")
+	)
 	(wire
 		(pts
 			(xy 58.42 152.4) (xy 59.69 152.4)
@@ -3229,31 +3246,6 @@
 			)
 		)
 	)
-	(global_label "xTE3"
-		(shape input)
-		(at 142.24 110.49 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 255 255 255 1)
-			)
-			(justify right)
-		)
-		(uuid "429fc2ba-5f3c-40f2-aa5d-730890296fd2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 134.9006 110.49 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "DISP_D3_FMC"
 		(shape input)
 		(at 114.3 90.17 180)
@@ -3368,31 +3360,6 @@
 		(uuid "661a53f9-4513-4613-ab3a-aa46f2a54195")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 69.3444 102.87 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
-	(global_label "xTE1"
-		(shape input)
-		(at 86.36 110.49 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 255 255 255 1)
-			)
-			(justify right)
-		)
-		(uuid "67409961-87b8-4211-9fcc-9df9814e08d6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 79.0206 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3854,31 +3821,6 @@
 			)
 		)
 	)
-	(global_label "xTE0"
-		(shape input)
-		(at 57.15 110.49 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 255 255 255 1)
-			)
-			(justify right)
-		)
-		(uuid "b61c9245-1b77-4321-99bd-1653a746d05f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 49.8106 110.49 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "DISP_A0_FMC"
 		(shape input)
 		(at 114.3 105.41 180)
@@ -4093,31 +4035,6 @@
 		(uuid "d76357d4-4f4c-47b3-a16a-ef3de46054b2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 98.7358 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
-	(global_label "xTE2"
-		(shape input)
-		(at 114.3 110.49 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 255 255 255 1)
-			)
-			(justify right)
-		)
-		(uuid "d9dd5b3c-f5f7-4f47-a205-159592955b81")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 106.9606 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
