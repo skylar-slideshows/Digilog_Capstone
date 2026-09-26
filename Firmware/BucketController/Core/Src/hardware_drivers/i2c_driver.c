@@ -97,10 +97,7 @@ static inline void clear_flags (I2C_TypeDef *bus)
 static bool bus_idle (I2C_TypeDef *bus)
 {
     clear_flags(bus);
-    uint32_t t0 = DWT->CYCCNT;
-    while (bus->ISR & I2C_ISR_BUSY)
-        if ((DWT->CYCCNT - t0) > timeout_cycles) return false;
-    return true;
+    return !(bus->ISR & I2C_ISR_BUSY);
 }
 
 /**
@@ -118,12 +115,13 @@ static void abort_transfer (I2C_TypeDef *bus)
     {
         bus->CR2 |= I2C_CR2_STOP;
         uint32_t t0 = DWT->CYCCNT;
-        while ((bus->ISR & I2C_ISR_BUSY) && (DWT->CYCCNT - t0) < timeout_cycles)
+        /*while ((bus->ISR & I2C_ISR_BUSY) && (DWT->CYCCNT - t0) < timeout_cycles)
         {
-        }
+        }*/
         if (bus->ISR & I2C_ISR_BUSY)
         {
             LL_I2C_Disable(bus);
+            (void)bus->CR1;
             LL_I2C_Enable(bus);
         }
     }
@@ -149,7 +147,7 @@ void i2c_init (void)
         DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
     }
     timeout_cycles = (uint64_t)(((uint64_t)TIMEOUT_US * (uint64_t)SystemCoreClock) / 1000000U);
-    printf("    timeout_cycles=%lu (want 340000)", timeout_cycles);
+    printf("\r\n    timeout_cycles=%lu", timeout_cycles);
 }
 
 

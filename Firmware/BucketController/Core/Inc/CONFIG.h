@@ -81,7 +81,7 @@
 
     // timeouts (how long to try busy bus until declare fail?)
     #define RESTART_US               4   // 4 microsec restart time
-    #define TIMEOUT_US            2000   // 2ms waiting for transfer to complete
+    #define TIMEOUT_US            500   // 500us waiting for transfer to complete
 
 
     /*=============================== GENERAL PURPOSE SHIFT REGISTERS ================================*/
@@ -172,7 +172,7 @@
 
     // timeouts (how long to try busy bus until declare fail?)
     #define RESTART_US               4   // 4 microsec restart time
-    #define TIMEOUT_US            2000   // 2ms waiting for transfer to complete
+    #define TIMEOUT_US            500   // 500us waiting for transfer to complete
 
 
     /*=============================== SPI 1 ================================*/

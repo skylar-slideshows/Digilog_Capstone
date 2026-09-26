@@ -224,9 +224,30 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
 
     //begin skylar [edit 1/2]
 
+    if(channel == 0)
+    {
+        // CHANNEL 0 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
+        io->input_gain_knob.led_ring = led_device_at(4);
+        io->hf_interface.gain_knob.led_ring = led_device_at(5);
+    }
+    
+    if(channel == 1)
+    {
+        // CHANNEL 1 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
+    }
+
+    if(channel == 2)
+    {
+        // CHANNEL 2 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
+    }
+
+    if(channel == 3)
+    {
+        // CHANNEL 3 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
+    }
     // this is how to link the button info objects with the led devices
-    io->input_gain_knob.led_ring = led_device_at(4);
-    io->hf_interface.gain_knob.led_ring = led_device_at(5);
+
+    
 
     //end skylar [edit 1/2]
 }

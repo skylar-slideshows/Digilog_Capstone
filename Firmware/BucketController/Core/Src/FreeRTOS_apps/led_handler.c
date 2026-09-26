@@ -38,6 +38,8 @@
 #include "cmsis_os2.h"
 #include "main.h"
 #include <stdio.h>
+#include "control_integration/control_interface.h"
+
 
 extern TIM_HandleTypeDef htim5;
 
@@ -49,7 +51,13 @@ static void led_task (void *_)
 {
     for (;;)
     {
+        
         osThreadFlagsWait(LED_FLAG_TICK, osFlagsWaitAny, osWaitForever);
+        
+        //update_control_leds(0);
+        //update_control_leds(1);
+        //update_control_leds(2);
+        //update_control_leds(3);
         led_update();
     }
 }
@@ -70,7 +78,7 @@ void init_led_handler (void)
         .stack_size = sizeof(LEDHandlerBuffer),
         .cb_mem = &LEDHandlerControlBlocks,
         .cb_size = sizeof(LEDHandlerControlBlocks),
-        .priority = osPriorityBelowNormal,
+        .priority = osPriorityNormal,
     };
     led_task_handle = osThreadNew(led_task, NULL, &attr);
 

@@ -191,12 +191,15 @@ int main(void)
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
 
-  i2c_init(); // i2c startup
-  uart_cmd_init(); // uart2 startup for comms w/ remote app
-
   if(DEVELOPER_MODE)
   {
     setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
+  }
+
+  i2c_init(); // i2c startup
+
+  if(DEVELOPER_MODE)
+  {
     printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
     printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
     printf("*******************************************************\r\n");
@@ -204,13 +207,25 @@ int main(void)
     i2c_probeall();
   }
 
+  uart_cmd_init(); // uart2 startup for comms w/ remote app
+
   led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
   init_control_interface();
   shiftreg_init();
 
+  led_brightness(10);
+
+
+  // I2C DEVICES INIT
+  mcp23017_init(I2C1, 0x20);
+  mcp4728_init_settings(I2C1, 0x61);
+
+  if(DEVELOPER_MODE)
+  {
   led_print_config();
 
   printf("\r\n*******************************************************\n");
+  }
 
 
 
@@ -906,9 +921,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 50;
+  htim4.Init.Prescaler = 169;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 10301;
+  htim4.Init.Period = 666;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -951,9 +966,9 @@ static void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 64;
+  htim5.Init.Prescaler = 169;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 65535;
+  htim5.Init.Period = 4166;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
@@ -1123,10 +1138,8 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+  
 
-  led_brightness(10);
-  mcp23017_init(I2C1, 0x20);
-  mcp4728_init_settings(I2C1, 0x61);
   // bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
   /*mcp4728_init_address(
     GPIOA, // Clock port
@@ -1139,10 +1152,9 @@ void StartDefaultTask(void *argument)
   );*/
   // bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
-
-  for (;;)
+  for (;;) // this MUST STAY
   {
-    osDelay(5);
+    osDelay(1);
   }
   
 

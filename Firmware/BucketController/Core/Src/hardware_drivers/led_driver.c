@@ -546,7 +546,7 @@ void led_init (void)
     LED_OE_TIM->CCMR1 = (6U << 12) | (1U << 11);
 
     // capture/compare enable: route the compare output to pin OC2
-    LED_OE_TIM->CCER = (1U << 4);
+    LED_OE_TIM->CCER |= (1U << 4);
 
     // start blanked (PWM always high = 0 brightness) until led_brightness runs
     LED_OE_TIM->CCR2 = LED_OE_TIM->ARR + 1U;

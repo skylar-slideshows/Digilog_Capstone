@@ -10,7 +10,7 @@
 #include "projdefs.h"
 #include "stm32g474xx.h"
 #include "stm32g4xx_hal.h"
-// #include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 
 #define MCP23017_1_ADDR 0x20
@@ -22,6 +22,10 @@
 #define MCP4728S_PER_FRAME 2
 
 #define SUPERFRAME_SIZE 15
+
+
+// skylar
+static bool channel_present[CHANNELS];
 
 typedef struct
 {
@@ -65,11 +69,9 @@ static void start_i2c_frame (uint8_t channel)
     //     printf("chan %d\n", channel);
     // }
     read_mcp23017s(channel);
-
     update_control_values(channel);
     update_control_leds(channel);
     // TODO: DAC values
-
     write_mcp4728s(channel);
     scheduler_states[channel].frame_counter++;
 }
@@ -94,6 +96,7 @@ extern TIM_HandleTypeDef htim4; // from main.c
 
 void init_i2c_scheduler (void)
 {
+
     const char *names[4] = {
         "i2cscheduler1",
         "i2cscheduler2",
@@ -103,13 +106,16 @@ void init_i2c_scheduler (void)
 
     for (uint8_t i = 0; i < CHANNELS; i++)
     {
+        // skip floating or n/c i2c buses since they will not respond correctly until timeout!!
+        //if (!channel_present[i]) continue;
+
         const osThreadAttr_t attr = {
             .name = names[i],
             .stack_mem = I2CSchedulerBuffers[i],
             .stack_size = sizeof(I2CSchedulerBuffers[i]),
             .cb_mem = &(I2CSchedulerControlBlocks[i]),
             .cb_size = sizeof(I2CSchedulerControlBlocks[i]),
-            .priority = osPriorityRealtime,
+            .priority = osPriorityNormal,
         };
         i2c_sched_task_args[i] = i;
         i2c_scheduler_task_handles[i] = osThreadNew(i2c_scheduler_task, &(i2c_sched_task_args[i]), &attr);
@@ -122,13 +128,13 @@ void init_i2c_scheduler (void)
 
 void i2c_scheduler_trigger_frame (void)
 {
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        if (i2c_scheduler_task_handles[i] == NULL)
-        {
-            continue;
-        }
+    BaseType_t enabled = 0;
 
-        vTaskNotifyGiveFromISR(i2c_scheduler_task_handles[i], NULL);
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
+
+        vTaskNotifyGiveFromISR(i2c_scheduler_task_handles[i], &enabled);
     }
+
+    portYIELD_FROM_ISR(enabled);
 }
