@@ -51,9 +51,7 @@ static void led_task (void *_)
 {
     for (;;)
     {
-        
         osThreadFlagsWait(LED_FLAG_TICK, osFlagsWaitAny, osWaitForever);
-        
         update_control_leds(0);
         update_control_leds(1);
         update_control_leds(2);

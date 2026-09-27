@@ -39,9 +39,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.8,
-          "height": 1.27,
-          "width": 1.27
+          "drill": 0.0,
+          "height": 0.4,
+          "width": 0.41
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -52,15 +52,15 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 6.0,
-          "corner_smoothing": 2,
+          "corner_radius": 0.0,
+          "corner_smoothing": 0,
           "fill_mode": 0,
           "hatch_gap": 1.5,
           "hatch_orientation": 0.0,
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.3,
+          "min_clearance": 0.0,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -82,7 +82,7 @@
       },
       "rule_severities": {
         "annular_width": "error",
-        "clearance": "error",
+        "clearance": "warning",
         "connection_width": "warning",
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",
@@ -100,18 +100,18 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_to_hole": "warning",
-        "holes_co_located": "warning",
+        "holes_co_located": "ignore",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "ignore",
+        "lib_footprint_mismatch": "warning",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
-        "missing_courtyard": "error",
+        "missing_courtyard": "ignore",
         "missing_footprint": "warning",
         "missing_tuning_profile": "warning",
         "net_conflict": "warning",
@@ -121,24 +121,24 @@
         "pth_inside_courtyard": "error",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
-        "silk_over_copper": "ignore",
-        "silk_overlap": "ignore",
+        "silk_over_copper": "warning",
+        "silk_overlap": "warning",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
-        "text_height": "ignore",
+        "text_height": "warning",
         "text_on_edge_cuts": "error",
-        "text_thickness": "ignore",
+        "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
-        "track_not_centered_on_via": "error",
+        "track_not_centered_on_via": "warning",
         "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "error",
+        "tuning_profile_track_geometries": "warning",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -146,7 +146,7 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.0,
+        "min_clearance": 0.18,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.5,
         "min_groove_width": 0.0,
@@ -159,8 +159,8 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.1,
-        "min_via_annular_width": 0.1,
+        "min_track_width": 0.2,
+        "min_via_annular_width": 0.0999,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.005,
         "use_height_for_length_calcs": true
@@ -214,7 +214,10 @@
         0.2,
         0.3,
         0.4,
-        0.6
+        0.5,
+        0.8,
+        1.0,
+        1.5
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -246,6 +249,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.5,
+          "drill": 0.3
         }
       ],
       "zones_allow_external_fillets": false
@@ -257,7 +264,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "0"
+      "sch_revision": ""
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -505,14 +512,14 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "Digital System Dev.kicad_pro",
+    "filename": "led_ring_rev1.kicad_pro",
     "version": 3
   },
   "net_settings": {
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.2,
+        "clearance": 0.18,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -523,7 +530,7 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.1,
+        "track_width": 0.2,
         "tuning_profile": "",
         "via_diameter": 0.6,
         "via_drill": 0.3,
@@ -542,7 +549,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "../../../../Digital System Dev.dsn",
+      "specctra_dsn": "led_ring_auto.dsn",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -551,7 +558,7 @@
     "annotate_start_num": 0,
     "annotation": {
       "method": 0,
-      "sort_order": 1
+      "sort_order": 0
     },
     "bom_export_filename": "../bom_jlc.csv",
     "bom_fmt_presets": [],
@@ -578,7 +585,7 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": false
+          "show": true
         },
         {
           "group_by": true,
@@ -587,22 +594,22 @@
           "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "DNP",
           "name": "${DNP}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": false
+          "show": true
         },
         {
           "group_by": true,
@@ -614,37 +621,13 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": false
-        },
-        {
-          "group_by": true,
-          "label": "LCSC",
-          "name": "LCSC",
           "show": true
         },
         {
           "group_by": false,
-          "label": "PURC_LINK",
-          "name": "PURC_LINK",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Device",
-          "name": "Sim.Device",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Pins",
-          "name": "Sim.Pins",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Field5",
-          "name": "Field5",
-          "show": false
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": true
         },
         {
           "group_by": false,
@@ -660,14 +643,8 @@
         },
         {
           "group_by": false,
-          "label": "KLC_S5.1",
-          "name": "KLC_S5.1",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "KLC_S3.3",
-          "name": "KLC_S3.3",
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
           "show": false
         }
       ],
@@ -676,7 +653,7 @@
       "include_excluded_from_bom": true,
       "name": "",
       "sort_asc": true,
-      "sort_field": "Reference"
+      "sort_field": "Footprint"
     },
     "bus_aliases": {},
     "connection_grid_size": 50.0,
@@ -707,29 +684,25 @@
     "meta": {
       "version": 1
     },
-    "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks",
+    "page_layout_descr_file": "",
     "plot_directory": "",
     "reuse_designators": true,
     "subpart_first_id": 65,
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "Digital System Dev.kicad_sch",
-        "name": "Root",
-        "uuid": "bac14397-d362-4ce7-b0b5-2362ec4955a2"
+        "filename": "led_ring_rev1.kicad_sch",
+        "name": "led_ring_rev1",
+        "uuid": "bcb72a3c-cbab-4c31-aca5-d80495ce127e"
       }
     ],
-    "used_designators": "JP1-8,BOOT_MODE1,TP9-12,TP19-20,F1-2,L1-2,X1,J2-10,J12-13,J15-20,J24-31,J101-108,SW1,SW101-110,U1-23,U28-39,U101-104,C8-181,FB1,Q1,#PWR1-72,#PWR74-251,#PWR253-254,#PWR263-264,#PWR271-272,D1-6,D101-106,H1-4,R1-28,R101-142,DZ1-3",
+    "used_designators": "R1-32,#PWR1-2,D1-2,D9-32,V2-32,U5,J3",
     "variants": []
   },
   "sheets": [
     [
-      "bac14397-d362-4ce7-b0b5-2362ec4955a2",
-      "Root"
-    ],
-    [
-      "d0706879-2b65-4dbf-9b6d-f2ef321ff29d",
-      "disps"
+      "bcb72a3c-cbab-4c31-aca5-d80495ce127e",
+      "led_ring_rev1"
     ]
   ],
   "text_variables": {},
