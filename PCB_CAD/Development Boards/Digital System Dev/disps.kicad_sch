@@ -2011,6 +2011,16 @@
 		)
 		(uuid "d8c661f2-2b58-4f21-b618-cf20386b3888")
 	)
+	(text "NOTE: Displays not using NE1, just using standard GPIOs as chip select"
+		(exclude_from_sim no)
+		(at 230.124 107.442 0)
+		(effects
+			(font
+				(size 1.905 1.905)
+			)
+		)
+		(uuid "f44168a0-ecf3-427a-be20-0e532e548d23")
+	)
 	(text "BULK DECOUPLING"
 		(exclude_from_sim no)
 		(at 93.472 130.81 0)
@@ -2050,12 +2060,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "845d3c28-7d3c-4fba-8085-7ccf3deff73a")
-	)
-	(junction
-		(at 59.69 152.4)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8f6cd3aa-98c5-47ee-ad5f-1f176b56ea74")
 	)
 	(junction
 		(at 52.07 118.11)
@@ -2100,6 +2104,12 @@
 		(uuid "e9e6a2e5-d1ab-4fdd-8627-9bf307f5308f")
 	)
 	(junction
+		(at 59.69 152.4)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ea5b6f1a-da9b-4397-b9d6-4c9a2a4fbf4c")
+	)
+	(junction
 		(at 142.24 69.85)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2120,16 +2130,6 @@
 	(no_connect
 		(at 57.15 110.49)
 		(uuid "d5b6e58d-5aa9-405b-9e9e-b5412f023c35")
-	)
-	(wire
-		(pts
-			(xy 58.42 152.4) (xy 59.69 152.4)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0c3135e0-3747-4b0d-a38d-1aa90a309640")
 	)
 	(wire
 		(pts
@@ -2180,6 +2180,16 @@
 			(type default)
 		)
 		(uuid "1a5b124c-17cd-4c71-871f-904379034c14")
+	)
+	(wire
+		(pts
+			(xy 59.69 163.83) (xy 59.69 167.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c37832c-dbce-4acc-b361-1ac3016f9fa0")
 	)
 	(wire
 		(pts
@@ -2320,6 +2330,16 @@
 			(type default)
 		)
 		(uuid "4c769925-912e-4752-ab78-b48faaf52b6d")
+	)
+	(wire
+		(pts
+			(xy 59.69 152.4) (xy 60.96 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c9a174f-2de4-45fb-bf62-9e2b26de659e")
 	)
 	(wire
 		(pts
@@ -2753,7 +2773,7 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 152.4) (xy 60.96 152.4)
+			(xy 58.42 152.4) (xy 59.69 152.4)
 		)
 		(stroke
 			(width 0)
@@ -2820,6 +2840,16 @@
 			(type default)
 		)
 		(uuid "fe301dc9-83b3-4457-b677-52a8011a0673")
+	)
+	(wire
+		(pts
+			(xy 59.69 152.4) (xy 59.69 156.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ff5efcc4-3f78-4bec-ab71-58271be953ec")
 	)
 	(global_label "DISP_CS2"
 		(shape input)
@@ -5565,6 +5595,140 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_US")
+		(at 59.69 160.02 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "356c94e1-6816-4354-8b07-6de4a3109f0d")
+		(property "Reference" "R22"
+			(at 55.118 160.02 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "680"
+			(at 57.15 160.02 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 58.674 159.766 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 59.69 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 59.69 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25822"
+			(at 59.69 160.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Field5" ""
+			(at 59.69 160.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Sim.Device" ""
+			(at 59.69 160.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S3.3" ""
+			(at 59.69 160.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KLC_S5.1" ""
+			(at 59.69 160.02 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "acddd803-89fe-4c5c-9b69-7cda3ec7d476")
+		)
+		(pin "1"
+			(uuid "2c63c085-01e7-47e7-83e7-caa6c7b874a7")
+		)
+		(instances
+			(project "Digital System Dev"
+				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/d0706879-2b65-4dbf-9b6d-f2ef321ff29d"
+					(reference "R22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 119.38 170.18 0)
 		(unit 1)
@@ -6527,132 +6691,6 @@
 			(project "Digital System Dev"
 				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/d0706879-2b65-4dbf-9b6d-f2ef321ff29d"
 					(reference "#PWR0113")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_US")
-		(at 59.69 163.83 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "634765e8-0931-4666-aca4-ab90765a9ec1")
-		(property "Reference" "R27"
-			(at 62.23 162.5599 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "47k"
-			(at 62.23 165.0999 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 60.706 164.084 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C25819"
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Device" ""
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "KLC_S3.3" ""
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "KLC_S5.1" ""
-			(at 59.69 163.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "26d01b9f-bc41-4881-ad38-0fd09c112d39")
-		)
-		(pin "1"
-			(uuid "261cefaa-e403-44f6-b276-7ee5aa969e55")
-		)
-		(instances
-			(project "Digital System Dev"
-				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/d0706879-2b65-4dbf-9b6d-f2ef321ff29d"
-					(reference "R27")
 					(unit 1)
 				)
 			)
@@ -7731,132 +7769,6 @@
 			(project "Digital System Dev"
 				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/d0706879-2b65-4dbf-9b6d-f2ef321ff29d"
 					(reference "#PWR0142")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_US")
-		(at 59.69 156.21 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9e361f53-8bea-4025-8248-a4d51df7bb74")
-		(property "Reference" "R26"
-			(at 62.23 154.9399 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "47k"
-			(at 62.23 157.4799 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 60.706 156.464 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C25819"
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Device" ""
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "KLC_S3.3" ""
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "KLC_S5.1" ""
-			(at 59.69 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "88e5ce45-32a0-4d67-89ae-1ca832eec5f0")
-		)
-		(pin "1"
-			(uuid "b3cae74c-dbd0-48d4-91b5-4c01b5081a1f")
-		)
-		(instances
-			(project "Digital System Dev"
-				(path "/bac14397-d362-4ce7-b0b5-2362ec4955a2/d0706879-2b65-4dbf-9b6d-f2ef321ff29d"
-					(reference "R26")
 					(unit 1)
 				)
 			)

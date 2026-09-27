@@ -24,9 +24,6 @@
 #define SUPERFRAME_SIZE 15
 
 
-// skylar
-static bool channel_present[CHANNELS];
-
 typedef struct
 {
     uint8_t frame_counter;
@@ -70,7 +67,7 @@ static void start_i2c_frame (uint8_t channel)
     // }
     read_mcp23017s(channel);
     update_control_values(channel);
-    update_control_leds(channel);
+    //update_control_leds(channel);
     // TODO: DAC values
     write_mcp4728s(channel);
     scheduler_states[channel].frame_counter++;
@@ -79,10 +76,16 @@ static void start_i2c_frame (uint8_t channel)
 static void i2c_scheduler_task (void *arg)
 {
     uint8_t channel = *(uint8_t *)arg;
+
+    
+
     for (;;)
     {
+        //uint32_t t0 = DWT->CYCCNT;
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         start_i2c_frame(channel);
+        //uint32_t t1 = DWT->CYCCNT;
+        //printf("\r\n%d us\n", (t1 - t0) / 170);
     }
 }
 

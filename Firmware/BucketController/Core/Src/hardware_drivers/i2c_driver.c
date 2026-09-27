@@ -48,6 +48,8 @@
 #include <stdbool.h>
 #include "CONFIG.h"
 #include <stdio.h>
+#include "FreeRTOS.h"
+#include "task.h"
 
 #define TRANSFER_US(n) (((((n) + 1) * 9 + 3) * 5) / 2) // transfer time in microseconds for any number of bytes
 #define BUDGET_LIMIT ((I2C_SLOT_PERIOD_US * 92) / 100) // max time budget during send frame.
@@ -65,6 +67,8 @@ static uint32_t timeout_cycles;
 static bool wait_flag (I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
 {
     uint32_t time0 = DWT->CYCCNT;
+    uint32_t spins = 0;
+
     for (;;)
     {
         uint32_t isr = bus->ISR;
@@ -72,6 +76,12 @@ static bool wait_flag (I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
         if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false; // flag will never reach with NACK
         if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO)) return false;
         if ((DWT->CYCCNT - time0) > timeout_cycles) return false;
+
+        if ((++spins & 0xFF) == 0 && xTaskGetSchedulerState() == taskSCHEDULER_RUNNING)
+        {
+            taskYIELD();
+        }
+
     }
 }
 
