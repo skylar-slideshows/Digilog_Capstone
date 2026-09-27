@@ -10,16 +10,38 @@
 #include "projdefs.h"
 #include "stm32g474xx.h"
 #include "stm32g4xx_hal.h"
-#include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
+
+#ifdef DEVELOPER_MODE
+
+#include <stdio.h>
+
+// note: this code only exists when developer_mode is defined (see the ifdef)
+// static const char* I2CBusToStr(I2C_TypeDef *bus){
+//     if(bus == I2C1){
+//         return "I2C1";
+//     }
+//     if(bus == I2C2){
+//         return "I2C2";
+//     }
+//     if(bus == I2C3){
+//         return "I2C3";
+//     }
+//     return "I2C4";
+// }
+
+#endif
 
 #define MCP23017_1_ADDR 0x20
 #define MCP23017_2_ADDR 0x21
 #define MCP23017_BUTTON_ADDR 0x22
+#define MCP23017_FRAMES_UNTIL_RETRY 2000
 
 #define MCP4728_BASE_ADDR 0x60
 #define MCP4728S_PER_CHANNEL 5
 #define MCP4728S_PER_FRAME 2
+#define MCP4728_CALLS_UNTIL_RETRY 800
 
 #define SUPERFRAME_SIZE 15
 
@@ -27,25 +49,76 @@
 typedef struct
 {
     uint8_t frame_counter;
-    uint8_t last_read_mcp4728_idx;
+    uint8_t last_written_mcp4728_idx;
+
+    uint16_t mcp4728_fail_retry_counter[MCP4728S_PER_CHANNEL]; //!< Countdown until we retry polling after fails an i2c call
+
+    uint16_t mcp23017_retry_counter[3]; //!< Countdown until we retry polling after a GPIO expander fails an i2c call
 } i2c_scheduler_state_t;
 
-static const i2c_scheduler_state_t default_scheduler_state = {.frame_counter = 0, .last_read_mcp4728_idx = 0};
+static const i2c_scheduler_state_t default_scheduler_state = {
+    .frame_counter = 0,
+    .last_written_mcp4728_idx = 0,
+    .mcp4728_fail_retry_counter = {0},
+    .mcp23017_retry_counter = {0} //
+};
 
 static I2C_TypeDef *i2c_busses[CHANNELS] = {I2C1, I2C2, I2C3, I2C4};
 static i2c_scheduler_state_t scheduler_states[CHANNELS] = {default_scheduler_state};
+
+static inline void mcp23017_poll_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter, uint16_t frames_until_retry)
+{
+    if (*retry_counter > 0)
+    {
+        *retry_counter = *retry_counter - 1;
+        return;
+    }
+    const bool succ = mcp23017_poll_to_cache(bus, addr);
+    if (succ) return;
+
+    *retry_counter = frames_until_retry;
+#ifdef DEVELOPER_MODE
+    // if(bus == I2C1){
+    //     printf("\r\n%s addr %#x (GPIO exp.) failed an i2c poll; waiting %d frames to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
+    // }
+#endif
+}
 
 static void read_mcp23017s (uint8_t channel)
 {
     i2c_scheduler_state_t *state = &(scheduler_states[channel]);
     I2C_TypeDef *i2c_bus = i2c_busses[channel];
 
-    mcp23017_poll_to_cache(i2c_bus, MCP23017_1_ADDR);
-    mcp23017_poll_to_cache(i2c_bus, MCP23017_2_ADDR);
+    mcp23017_poll_maybe(i2c_bus, MCP23017_1_ADDR, &(state->mcp23017_retry_counter[0]), MCP23017_FRAMES_UNTIL_RETRY);
+    mcp23017_poll_maybe(i2c_bus, MCP23017_2_ADDR, &(state->mcp23017_retry_counter[1]), MCP23017_FRAMES_UNTIL_RETRY);
     if (state->frame_counter == SUPERFRAME_SIZE - 1)
     {
-        mcp23017_poll_to_cache(i2c_bus, MCP23017_BUTTON_ADDR);
+        mcp23017_poll_maybe(
+            i2c_bus,
+            MCP23017_BUTTON_ADDR,
+            &(state->mcp23017_retry_counter[2]),
+            MCP23017_FRAMES_UNTIL_RETRY / SUPERFRAME_SIZE
+        );
     }
+}
+
+static inline void mcp4728_flush_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter, uint16_t frames_until_retry)
+{
+    if (*retry_counter > 0)
+    {
+        *retry_counter = *retry_counter - 1;
+        return;
+    }
+    const bool code = mcp4728_cache_flush_fastWrite(bus, addr);
+    if (code == 0) return;
+
+    *retry_counter = frames_until_retry;
+
+    #ifdef DEVELOPER_MODE
+    // if(bus == I2C1){
+    //     printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
+    // }
+    #endif
 }
 
 static void write_mcp4728s (uint8_t channel)
@@ -55,29 +128,29 @@ static void write_mcp4728s (uint8_t channel)
 
     for (uint8_t i = 0; i < MCP4728S_PER_FRAME; i++)
     {
-        state->last_read_mcp4728_idx = (state->last_read_mcp4728_idx + 1) % MCP4728S_PER_CHANNEL;
-        mcp4728_cache_flush_fastWrite(i2c_bus, MCP4728_BASE_ADDR + state->last_read_mcp4728_idx);
+        mcp4728_flush_maybe(
+            i2c_bus,
+            MCP4728_BASE_ADDR + state->last_written_mcp4728_idx,
+            &(state->mcp4728_fail_retry_counter[state->last_written_mcp4728_idx]),
+            MCP4728_CALLS_UNTIL_RETRY
+        );
+        state->last_written_mcp4728_idx = (state->last_written_mcp4728_idx + 1) % MCP4728S_PER_CHANNEL;
     }
 }
 
 static void start_i2c_frame (uint8_t channel)
 {
-    // if(channel == 3){
-    //     printf("chan %d\n", channel);
-    // }
     read_mcp23017s(channel);
     update_control_values(channel);
     //update_control_leds(channel);
     // TODO: DAC values
     write_mcp4728s(channel);
-    scheduler_states[channel].frame_counter++;
+    scheduler_states[channel].frame_counter = (scheduler_states[channel].frame_counter + 1) % SUPERFRAME_SIZE;
 }
 
 static void i2c_scheduler_task (void *arg)
 {
     uint8_t channel = *(uint8_t *)arg;
-
-    
 
     for (;;)
     {
@@ -89,7 +162,7 @@ static void i2c_scheduler_task (void *arg)
     }
 }
 
-static osThreadId_t i2c_scheduler_task_handles[4];
+static osThreadId_t i2c_scheduler_task_handles[4] = {NULL, NULL, NULL, NULL};
 static uint8_t i2c_sched_task_args[4];
 
 static uint32_t I2CSchedulerBuffers[4][512];
@@ -99,7 +172,6 @@ extern TIM_HandleTypeDef htim4; // from main.c
 
 void init_i2c_scheduler (void)
 {
-
     const char *names[4] = {
         "i2cscheduler1",
         "i2cscheduler2",
@@ -109,9 +181,6 @@ void init_i2c_scheduler (void)
 
     for (uint8_t i = 0; i < CHANNELS; i++)
     {
-        // skip floating or n/c i2c buses since they will not respond correctly until timeout!!
-        //if (!channel_present[i]) continue;
-
         const osThreadAttr_t attr = {
             .name = names[i],
             .stack_mem = I2CSchedulerBuffers[i],
@@ -135,7 +204,10 @@ void i2c_scheduler_trigger_frame (void)
 
     for (uint8_t i = 0; i < CHANNELS; i++)
     {
-
+        if (i2c_scheduler_task_handles[i] == NULL)
+        {
+            continue;
+        }
         vTaskNotifyGiveFromISR(i2c_scheduler_task_handles[i], &enabled);
     }
 

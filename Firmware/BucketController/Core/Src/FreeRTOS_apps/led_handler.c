@@ -76,7 +76,7 @@ void init_led_handler (void)
         .stack_size = sizeof(LEDHandlerBuffer),
         .cb_mem = &LEDHandlerControlBlocks,
         .cb_size = sizeof(LEDHandlerControlBlocks),
-        .priority = osPriorityNormal,
+        .priority = osPriorityBelowNormal,
     };
     led_task_handle = osThreadNew(led_task, NULL, &attr);
 
