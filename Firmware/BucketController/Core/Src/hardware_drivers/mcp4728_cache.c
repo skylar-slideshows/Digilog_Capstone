@@ -32,6 +32,7 @@
   **********************************************************************************
 */
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "hardware_drivers/mcp4728.h"
@@ -50,6 +51,9 @@ mcp4728_output_value_t mcp4728_value_cache[4]  // 4 I2C channels
                                           [8]  // 8 possible addresses per channel
                                           [4]; // 4 12-bit outputs cached per chip
 
+// true when the chip's outputs match the cache. starts false so every chip gets written once at boot
+static volatile bool mcp4728_cache_synced[4][8];
+
 /*
  * Writes an output value to the mcp4728 cache
  */
@@ -60,7 +64,22 @@ void mcp4728_cache_write (
     mcp4728_output_value_t val // 12-bit output value
 )
 {
-    mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07][output_channel] = val;
+    const uint8_t bus_idx = i2c_to_int(bus);
+    if (mcp4728_value_cache[bus_idx][addr & 0x07][output_channel] == val) return;
+
+    mcp4728_value_cache[bus_idx][addr & 0x07][output_channel] = val;
+    mcp4728_cache_synced[bus_idx][addr & 0x07] = false;
+}
+
+/*
+ * Returns whether the chip's outputs already match the cached values
+ */
+bool mcp4728_cache_is_synced (
+    I2C_TypeDef *bus, // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+    uint8_t addr      // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
+)
+{
+    return mcp4728_cache_synced[i2c_to_int(bus)][addr & 0x07];
 }
 
 /*
@@ -78,6 +97,13 @@ uint8_t mcp4728_cache_flush_fastWrite (
     uint8_t addr      // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
 )
 {
-    mcp4728_output_value_t *outs = mcp4728_value_cache[i2c_to_int(bus)][addr & 0x07];
-    return mcp4728_fastWrite(bus, addr, outs[0], outs[1], outs[2], outs[3]);
+    const uint8_t bus_idx = i2c_to_int(bus);
+    mcp4728_output_value_t *outs = mcp4728_value_cache[bus_idx][addr & 0x07];
+
+    // mark synced *before* reading the values: if another task writes the cache mid-flush,
+    // it clears the flag again and the new value goes out on the next flush
+    mcp4728_cache_synced[bus_idx][addr & 0x07] = true;
+    const uint8_t code = mcp4728_fastWrite(bus, addr, outs[0], outs[1], outs[2], outs[3]);
+    if (code != 0) mcp4728_cache_synced[bus_idx][addr & 0x07] = false;
+    return code;
 }

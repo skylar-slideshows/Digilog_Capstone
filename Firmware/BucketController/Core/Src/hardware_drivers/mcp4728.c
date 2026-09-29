@@ -138,11 +138,11 @@ uint8_t mcp4728_fastWrite (
     uint8_t data[8] = {
         MCP4728_FAST_WRITE | (uint8_t)(output_a >> 8),
         (uint8_t)output_a,
-        (uint8_t)output_b >> 8,
+        (uint8_t)(output_b >> 8),
         (uint8_t)output_b,
-        (uint8_t)output_c >> 8,
+        (uint8_t)(output_c >> 8),
         (uint8_t)output_c,
-        (uint8_t)output_d >> 8,
+        (uint8_t)(output_d >> 8),
         (uint8_t)output_d,
     };
     return !i2c_write(bus, addr, data, sizeof(data));
