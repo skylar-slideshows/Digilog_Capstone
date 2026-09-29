@@ -5,6 +5,13 @@
 #include "hardware_state_sets.h"
 #include "portmacro.h"
 
+static inline I2C_TypeDef *channel_to_i2c_bus(uint8_t channel){
+    if(channel == 0) return I2C1;
+    if(channel == 1) return I2C2;
+    if(channel == 2) return I2C3;
+    return I2C4;
+}
+
 static void update_toggle_button_val_from_info (
     SemaphoreHandle_t *out_mutex,
     button_state_t *btn_state,

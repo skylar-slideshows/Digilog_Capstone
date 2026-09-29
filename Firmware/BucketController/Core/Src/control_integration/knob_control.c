@@ -7,9 +7,17 @@
 #include "hardware_state_sets.h"
 #include "hardware_structs.h"
 #include "portmacro.h"
+#include "stm32g474xx.h"
 #include <stdbool.h>
 
 /* Functions related to accepting some states and updating control values */
+
+static inline I2C_TypeDef *channel_to_i2c_bus(uint8_t channel){
+    if(channel == 0) return I2C1;
+    if(channel == 1) return I2C2;
+    if(channel == 2) return I2C3;
+    return I2C4;
+}
 
 static void s_update_knob_button (
     SemaphoreHandle_t *out_mutex,
@@ -192,9 +200,11 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
 {
     // TODO: per-channel config stuff (probably just choosing i2c bus based on channel arg)
 
+    I2C_TypeDef *bus = channel_to_i2c_bus(channel);
+
     // INPUT GAIN KNOB CHANNEL 1
-    button_info_t input_gain_button = {.bus = I2C1, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy
-    io->input_gain_knob.encoder = (encoder_info_t){.i2c_bus = I2C1,
+    button_info_t input_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy
+    io->input_gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
                                                    .i2c_addr = 0x20,
                                                    .a_register = MCP_GPIOB,
                                                    .a_pin = 1,
@@ -205,8 +215,8 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
     state->input_gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
 
     // HF GAIN KNOB CHANNEL 1
-    button_info_t hf_gain_button = {.bus = I2C1, .addr = 0x20, .port = MCP_GPIOB, .pin = 5}; // dummy
-    io->hf_interface.gain_knob.encoder = (encoder_info_t){.i2c_bus = I2C1,
+    button_info_t hf_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 5}; // dummy
+    io->hf_interface.gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
                                                           .i2c_addr = 0x20,
                                                           .a_register = MCP_GPIOB,
                                                           .a_pin = 4,
