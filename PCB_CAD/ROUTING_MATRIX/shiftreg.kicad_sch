@@ -1,0 +1,1633 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "8878215c-eb9b-4476-b463-ef2c9415c2fe")
+	(paper "A4")
+	(lib_symbols
+		(symbol "4xxx:HEF4094B"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -6.858 17.018 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "HEF4094B"
+				(at 6.858 16.764 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/HEF4094B.pdf"
+				(at 0.254 -30.48 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "8-bit serial-in parallel-out shift register, 3..15V"
+				(at 0.254 -28.448 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "shift-store store logic shift-and-store 8-stage"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SOIC*16*3.9x9.9mm*P1.27mm* TSSOP*16*4.4x5mm*P0.65mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "HEF4094B_1_0"
+				(pin tri_state line
+					(at 10.16 10.16 180)
+					(length 2.54)
+					(name "P1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 7.62 180)
+					(length 2.54)
+					(name "P2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 5.08 180)
+					(length 2.54)
+					(name "P3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -17.78 90)
+					(length 2.54)
+					(name "V_{SS}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 10.16 -7.62 180)
+					(length 2.54)
+					(name "P7'_Rising"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 10.16 -10.16 180)
+					(length 2.54)
+					(name "P7'_Falling"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 -5.08 180)
+					(length 2.54)
+					(name "P7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 -2.54 180)
+					(length 2.54)
+					(name "P6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 0 180)
+					(length 2.54)
+					(name "P5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 2.54 180)
+					(length 2.54)
+					(name "P4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 5.08 0)
+					(length 2.54)
+					(name "OE"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "15"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 17.78 270)
+					(length 2.54)
+					(name "V_{DD}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "16"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "HEF4094B_1_1"
+				(rectangle
+					(start -7.62 15.24)
+					(end 7.62 -15.24)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin input line
+					(at -10.16 7.62 0)
+					(length 2.54)
+					(name "LAT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 12.7 0)
+					(length 2.54)
+					(name "DAT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 10.16 0)
+					(length 2.54)
+					(name "CLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 10.16 12.7 180)
+					(length 2.54)
+					(name "P0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Comparator:LM339"
+			(pin_names
+				(offset 0.127)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "LM339"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.27 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+				(at 1.27 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cmp open collector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SOIC*3.9x8.7mm*P1.27mm* TSSOP*4.4x5mm*P0.65mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "LM339_1_1"
+				(polyline
+					(pts
+						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 -0.508) (xy 2.794 -0.508) (xy 3.302 0) (xy 2.794 0.508) (xy 2.286 0) (xy 2.794 -0.508)
+						(xy 2.286 -0.508)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin open_collector line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "LM339_2_1"
+				(polyline
+					(pts
+						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 -0.508) (xy 2.794 -0.508) (xy 3.302 0) (xy 2.794 0.508) (xy 2.286 0) (xy 2.794 -0.508)
+						(xy 2.286 -0.508)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin open_collector line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "LM339_3_1"
+				(polyline
+					(pts
+						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 -0.508) (xy 2.794 -0.508) (xy 3.302 0) (xy 2.794 0.508) (xy 2.286 0) (xy 2.794 -0.508)
+						(xy 2.286 -0.508)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "LM339_4_1"
+				(polyline
+					(pts
+						(xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 -0.508) (xy 2.794 -0.508) (xy 3.302 0) (xy 2.794 0.508) (xy 2.286 0) (xy 2.794 -0.508)
+						(xy 2.286 -0.508)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "LM339_5_1"
+				(pin power_in line
+					(at -2.54 7.62 270)
+					(length 3.81)
+					(name "V+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -2.54 -7.62 90)
+					(length 3.81)
+					(name "V-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(global_label "SHIFTREG_DAT"
+		(shape input)
+		(at 170.18 130.81 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "63ee6891-697e-4fc7-bf94-121ec64516cd")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 154.011 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "SHIFTREG_CLK"
+		(shape input)
+		(at 170.18 128.27 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "be812469-451c-4df4-89db-e9aa73fa5f79")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 153.7691 128.27 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "SHIFTREG_LAT"
+		(shape input)
+		(at 170.18 133.35 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d78edd20-abe4-4149-9087-52039662b5de")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 154.2529 133.35 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Comparator:LM339")
+		(at 238.76 68.58 0)
+		(unit 4)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "32c78b0d-ca99-4756-90e8-d30299d1f88a")
+		(property "Reference" "U3"
+			(at 238.76 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LM339"
+			(at 238.76 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 237.49 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+			(at 240.03 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+			(at 238.76 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "8"
+			(uuid "e6de0780-204a-4fa4-95cc-a7c431a88bc7")
+		)
+		(pin "12"
+			(uuid "2ab05c0d-e536-47d6-8889-863b3a801b9b")
+		)
+		(pin "2"
+			(uuid "3a1967da-7e37-492f-bea0-74cf045468ab")
+		)
+		(pin "3"
+			(uuid "687b02e8-954e-45dd-8dae-fa3e50f130eb")
+		)
+		(pin "4"
+			(uuid "583f6874-85c2-4177-bfe6-875129aef1eb")
+		)
+		(pin "5"
+			(uuid "1752c9b6-274a-473f-803c-01a29290bb00")
+		)
+		(pin "10"
+			(uuid "b5308c0e-10d9-4906-a5ee-b3006d5158ac")
+		)
+		(pin "7"
+			(uuid "10de28b8-28e3-469c-9708-27785d781000")
+		)
+		(pin "13"
+			(uuid "874a557b-bd43-492e-9f1e-cf154cb971bf")
+		)
+		(pin "11"
+			(uuid "a739366f-96af-4c9d-8a8e-a1fe8a705295")
+		)
+		(pin "6"
+			(uuid "007998f7-10ae-4b26-a65b-21a14e969324")
+		)
+		(pin "14"
+			(uuid "c3b7c47c-4dc0-4483-9bfd-bd967fdac6e4")
+		)
+		(pin "9"
+			(uuid "6e56703d-d40c-4688-9eee-8c7899d809a3")
+		)
+		(pin "1"
+			(uuid "f08a741b-c171-4aa1-9782-8f80108d8296")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U3")
+					(unit 4)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Comparator:LM339")
+		(at 175.26 67.31 0)
+		(unit 2)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "39a7adc5-0118-4f58-b195-4731a0480387")
+		(property "Reference" "U3"
+			(at 175.26 58.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LM339"
+			(at 175.26 60.96 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 173.99 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+			(at 176.53 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+			(at 175.26 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "8"
+			(uuid "ab92b855-0347-4d83-a94a-38c711462d70")
+		)
+		(pin "12"
+			(uuid "2ab05c0d-e536-47d6-8889-863b3a801b9c")
+		)
+		(pin "2"
+			(uuid "3a1967da-7e37-492f-bea0-74cf045468ac")
+		)
+		(pin "3"
+			(uuid "687b02e8-954e-45dd-8dae-fa3e50f130ec")
+		)
+		(pin "4"
+			(uuid "583f6874-85c2-4177-bfe6-875129aef1ec")
+		)
+		(pin "5"
+			(uuid "1752c9b6-274a-473f-803c-01a29290bb01")
+		)
+		(pin "10"
+			(uuid "b5308c0e-10d9-4906-a5ee-b3006d5158ad")
+		)
+		(pin "7"
+			(uuid "33a5a6bb-0b84-4391-9090-db38c2d5f09a")
+		)
+		(pin "13"
+			(uuid "874a557b-bd43-492e-9f1e-cf154cb971c0")
+		)
+		(pin "11"
+			(uuid "a739366f-96af-4c9d-8a8e-a1fe8a705296")
+		)
+		(pin "6"
+			(uuid "010dcbb0-3913-4100-8b93-0fedd0df2ba6")
+		)
+		(pin "14"
+			(uuid "ba18cc93-bf17-450d-b7cf-673521b70499")
+		)
+		(pin "9"
+			(uuid "c3179dec-c152-451d-a584-a46194bb176a")
+		)
+		(pin "1"
+			(uuid "5acf707e-278f-4d9c-8a87-04c40ec9fa34")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U3")
+					(unit 2)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Comparator:LM339")
+		(at 265.43 68.58 0)
+		(unit 5)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4c9ee99a-1b2e-4eae-af3d-1d11fa3af121")
+		(property "Reference" "U3"
+			(at 264.16 67.3099 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LM339"
+			(at 264.16 69.8499 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 264.16 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+			(at 266.7 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+			(at 265.43 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "8"
+			(uuid "ab92b855-0347-4d83-a94a-38c711462d6e")
+		)
+		(pin "12"
+			(uuid "e995d230-aad5-4d49-8f83-113d3e3f27eb")
+		)
+		(pin "2"
+			(uuid "3a1967da-7e37-492f-bea0-74cf045468aa")
+		)
+		(pin "3"
+			(uuid "b0f292f6-eb21-4830-b7ab-488db06737a2")
+		)
+		(pin "4"
+			(uuid "583f6874-85c2-4177-bfe6-875129aef1ea")
+		)
+		(pin "5"
+			(uuid "1752c9b6-274a-473f-803c-01a29290baff")
+		)
+		(pin "10"
+			(uuid "b5308c0e-10d9-4906-a5ee-b3006d5158ab")
+		)
+		(pin "7"
+			(uuid "10de28b8-28e3-469c-9708-27785d780fff")
+		)
+		(pin "13"
+			(uuid "874a557b-bd43-492e-9f1e-cf154cb971be")
+		)
+		(pin "11"
+			(uuid "a739366f-96af-4c9d-8a8e-a1fe8a705294")
+		)
+		(pin "6"
+			(uuid "007998f7-10ae-4b26-a65b-21a14e969323")
+		)
+		(pin "14"
+			(uuid "ba18cc93-bf17-450d-b7cf-673521b70497")
+		)
+		(pin "9"
+			(uuid "c3179dec-c152-451d-a584-a46194bb1768")
+		)
+		(pin "1"
+			(uuid "f08a741b-c171-4aa1-9782-8f80108d8295")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U3")
+					(unit 5)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "4xxx:HEF4094B")
+		(at 77.47 118.11 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a1e9e850-c09f-4096-a944-7f4e2a5dc65d")
+		(property "Reference" "U101"
+			(at 79.6133 97.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CD4094"
+			(at 79.6133 100.33 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 77.47 114.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/HEF4094B.pdf"
+			(at 77.724 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "8-bit serial-in parallel-out shift register, 3..15V"
+			(at 77.724 146.558 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "4"
+			(uuid "8ed9dc07-fb92-4005-8df3-8380cdfa25a7")
+		)
+		(pin "3"
+			(uuid "ab3004ab-5836-4061-a320-730b6a61cb15")
+		)
+		(pin "12"
+			(uuid "49d24823-bcf0-4315-9982-f67b7e73345a")
+		)
+		(pin "11"
+			(uuid "6b78d7a2-e8c7-4b9d-9d62-4adab8c53b03")
+		)
+		(pin "10"
+			(uuid "5db0ea13-09a5-4c91-b291-c4533b8c7393")
+		)
+		(pin "9"
+			(uuid "bb1c1b2f-9e30-4fe0-a3b9-24247088bcba")
+		)
+		(pin "8"
+			(uuid "a083f939-c4b6-4afd-b339-fac8bbd13f63")
+		)
+		(pin "7"
+			(uuid "7f9863fd-27cb-40fa-969f-b90a2dab5293")
+		)
+		(pin "6"
+			(uuid "80832ee4-1a7d-43a9-85ae-9b1b4a350bfe")
+		)
+		(pin "13"
+			(uuid "f59056fa-409e-419f-a70d-7d9f15b5ca19")
+		)
+		(pin "14"
+			(uuid "ee0e1d86-5469-491b-8a0e-f2384436dcad")
+		)
+		(pin "16"
+			(uuid "d980ae98-ce98-4f5d-8865-eeb0b121c88a")
+		)
+		(pin "1"
+			(uuid "73527886-8ec8-4507-87a6-99b42b3617da")
+		)
+		(pin "15"
+			(uuid "20209d3c-f238-43f6-a424-b40c92862a9a")
+		)
+		(pin "5"
+			(uuid "09cf7a3f-ff44-4dd1-821a-36f89f7b4b1b")
+		)
+		(pin "2"
+			(uuid "fb4a5c99-fe9c-401c-975c-a07a39f87c01")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U101")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Comparator:LM339")
+		(at 204.47 67.31 0)
+		(unit 3)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "aa3a1998-02dd-4672-a070-4a1a5e237593")
+		(property "Reference" "U3"
+			(at 204.47 58.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LM339"
+			(at 204.47 60.96 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 203.2 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+			(at 205.74 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+			(at 204.47 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "8"
+			(uuid "ab92b855-0347-4d83-a94a-38c711462d6d")
+		)
+		(pin "12"
+			(uuid "2ab05c0d-e536-47d6-8889-863b3a801b99")
+		)
+		(pin "2"
+			(uuid "3a1967da-7e37-492f-bea0-74cf045468a9")
+		)
+		(pin "3"
+			(uuid "687b02e8-954e-45dd-8dae-fa3e50f130e9")
+		)
+		(pin "4"
+			(uuid "583f6874-85c2-4177-bfe6-875129aef1e9")
+		)
+		(pin "5"
+			(uuid "1752c9b6-274a-473f-803c-01a29290bafe")
+		)
+		(pin "10"
+			(uuid "abaf7820-aa73-4730-b361-24e559eb0594")
+		)
+		(pin "7"
+			(uuid "10de28b8-28e3-469c-9708-27785d780ffe")
+		)
+		(pin "13"
+			(uuid "d7deebf8-5b81-49f5-b79b-1c7886588cb4")
+		)
+		(pin "11"
+			(uuid "62634454-1324-48ef-881d-05b9b9b5386c")
+		)
+		(pin "6"
+			(uuid "007998f7-10ae-4b26-a65b-21a14e969322")
+		)
+		(pin "14"
+			(uuid "ba18cc93-bf17-450d-b7cf-673521b70496")
+		)
+		(pin "9"
+			(uuid "c3179dec-c152-451d-a584-a46194bb1767")
+		)
+		(pin "1"
+			(uuid "f08a741b-c171-4aa1-9782-8f80108d8294")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U3")
+					(unit 3)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Comparator:LM339")
+		(at 148.59 67.31 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e125e66e-15fd-4140-b5ba-96eba158c069")
+		(property "Reference" "U3"
+			(at 148.59 58.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LM339"
+			(at 148.59 60.96 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 147.32 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lm139.pdf"
+			(at 149.86 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Quad Differential Comparators, SOIC-14/TSSOP-14"
+			(at 148.59 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "8"
+			(uuid "ab92b855-0347-4d83-a94a-38c711462d71")
+		)
+		(pin "12"
+			(uuid "2ab05c0d-e536-47d6-8889-863b3a801b9d")
+		)
+		(pin "2"
+			(uuid "601a1462-889c-4061-b19e-ef3c070b2f43")
+		)
+		(pin "3"
+			(uuid "687b02e8-954e-45dd-8dae-fa3e50f130ed")
+		)
+		(pin "4"
+			(uuid "5692fc79-a8c8-4215-8d59-1d2b5932af5b")
+		)
+		(pin "5"
+			(uuid "b3a087d5-cf60-4e37-8ccf-e0e93be8c181")
+		)
+		(pin "10"
+			(uuid "b5308c0e-10d9-4906-a5ee-b3006d5158ae")
+		)
+		(pin "7"
+			(uuid "10de28b8-28e3-469c-9708-27785d781002")
+		)
+		(pin "13"
+			(uuid "874a557b-bd43-492e-9f1e-cf154cb971c1")
+		)
+		(pin "11"
+			(uuid "a739366f-96af-4c9d-8a8e-a1fe8a705297")
+		)
+		(pin "6"
+			(uuid "007998f7-10ae-4b26-a65b-21a14e969326")
+		)
+		(pin "14"
+			(uuid "ba18cc93-bf17-450d-b7cf-673521b7049a")
+		)
+		(pin "9"
+			(uuid "c3179dec-c152-451d-a584-a46194bb176b")
+		)
+		(pin "1"
+			(uuid "f08a741b-c171-4aa1-9782-8f80108d8298")
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1/a9820236-1baa-47d7-8e4e-058cc0e6db4f"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+)

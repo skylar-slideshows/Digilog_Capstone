@@ -791,145 +791,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "power:+10V"
-			(power global)
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 0)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "#PWR"
-				(at 0 -3.81 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "+10V"
-				(at 0 3.556 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Power symbol creates a global label with name \"+10V\""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "global power"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "+10V_0_1"
-				(polyline
-					(pts
-						(xy -0.762 1.27) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.54) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "+10V_1_1"
-				(pin power_in line
-					(at 0 0 90)
-					(length 0)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "power:+3V3"
 			(power global)
 			(pin_numbers
@@ -2324,56 +2185,6 @@
 		)
 		(uuid "fc6207b9-e828-4051-8bbe-4e139bcb24e2")
 	)
-	(global_label "FADER4_POS"
-		(shape output)
-		(at 176.53 22.86 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "10ea8762-41b8-44e1-bc7d-126d900c1a50")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 191.3685 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER2_TOUCH"
-		(shape output)
-		(at 138.43 25.4 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "13dbed97-0a2a-4505-ac6d-6fa24cb78413")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 155.6876 25.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "I2C4_SDA"
 		(shape output)
 		(at 48.26 90.17 180)
@@ -2424,31 +2235,6 @@
 			)
 		)
 	)
-	(global_label "FADER1_A"
-		(shape output)
-		(at 119.38 17.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "27186657-8a4a-4015-84f3-915e3810b9b1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 131.4971 17.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "I2C3_CLK"
 		(shape input)
 		(at 48.26 81.28 180)
@@ -2474,31 +2260,6 @@
 			)
 		)
 	)
-	(global_label "FADER4_TOUCH"
-		(shape output)
-		(at 176.53 25.4 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "2f86af05-4339-45ec-9231-5839078b6d06")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 193.7876 25.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "LED_LATCH"
 		(shape input)
 		(at 48.26 101.6 180)
@@ -2521,31 +2282,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-	)
-	(global_label "FADER2_POS"
-		(shape output)
-		(at 138.43 22.86 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "35ada3e4-37f7-4f91-8938-33c021ebcb79")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 153.2685 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 	)
@@ -2624,81 +2360,6 @@
 			)
 		)
 	)
-	(global_label "FADER1_B"
-		(shape output)
-		(at 119.38 20.32 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "5d50f9e8-6c0d-43a2-9f54-bc453388018a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 131.6785 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER2_B"
-		(shape output)
-		(at 138.43 20.32 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "5fceea83-42cf-49ef-acea-ded098f88a85")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 150.7285 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER4_B"
-		(shape output)
-		(at 176.53 20.32 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "6654f563-3281-400a-9908-4b287cea7b54")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 188.8285 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "I2C1_CLK"
 		(shape input)
 		(at 48.26 68.58 180)
@@ -2749,56 +2410,6 @@
 			)
 		)
 	)
-	(global_label "FADER3_POS"
-		(shape output)
-		(at 157.48 22.86 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "a531c0f0-dbdb-46b4-920c-5c9b6cd63d55")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 172.3185 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER1_POS"
-		(shape output)
-		(at 119.38 22.86 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "b6dbc674-a9b1-4b49-a40a-018ffd1beafb")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 134.2185 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "LED_CLOCK"
 		(shape input)
 		(at 48.26 99.06 180)
@@ -2821,131 +2432,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-	)
-	(global_label "FADER3_A"
-		(shape output)
-		(at 157.48 17.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "cabed6bf-8eb9-4bd1-b864-50c3d6acf549")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 169.5971 17.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER1_TOUCH"
-		(shape output)
-		(at 119.38 25.4 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "e048bc83-5e6b-4f56-80fd-abef4842f856")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 136.6376 25.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER4_A"
-		(shape output)
-		(at 176.53 17.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "e1603257-0b31-4c7d-9172-89777eb58f5d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 188.6471 17.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER3_B"
-		(shape output)
-		(at 157.48 20.32 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "ef35b10d-5da1-41e3-aa98-83c325e7f1eb")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 169.7785 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "FADER3_TOUCH"
-		(shape output)
-		(at 157.48 25.4 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "f0656242-c81b-47f4-8bae-fb64d3d11c4b")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 174.7376 25.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 	)
@@ -2996,31 +2482,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-	)
-	(global_label "FADER2_A"
-		(shape output)
-		(at 138.43 17.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 68 113 255 1)
-			)
-			(justify left)
-		)
-		(uuid "ffd9a118-9877-4e64-964f-c141b4b5210e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 150.5471 17.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 	)
@@ -4032,84 +3493,6 @@
 			(project "bucket_controls"
 				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/067d1a4b-f5f5-4939-a1e7-585ab3f06f81"
 					(reference "#PWR0516")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+10V")
-		(at 201.93 20.32 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8532eb19-f580-42f9-99f6-e3ad4332ccae")
-		(property "Reference" "#PWR0513"
-			(at 201.93 24.13 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+10V"
-			(at 201.93 15.24 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 201.93 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 201.93 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 201.93 20.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7c1501f6-bf12-4734-a41f-d7a7f24e2169")
-		)
-		(instances
-			(project "bucket_controls"
-				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/067d1a4b-f5f5-4939-a1e7-585ab3f06f81"
-					(reference "#PWR0513")
 					(unit 1)
 				)
 			)
