@@ -42,6 +42,7 @@
 #define MCP4728S_PER_CHANNEL 5
 #define MCP4728S_PER_FRAME 2
 #define MCP4728_CALLS_UNTIL_RETRY 800
+#define MCP4728_CALLS_UNTIL_REFRESH 60 // rewrite an unchanged DAC every 100ms in case it was reset/replugged
 
 #define SUPERFRAME_SIZE 15
 
@@ -52,6 +53,7 @@ typedef struct
     uint8_t last_written_mcp4728_idx;
 
     uint16_t mcp4728_fail_retry_counter[MCP4728S_PER_CHANNEL]; //!< Countdown until we retry polling after fails an i2c call
+    uint8_t mcp4728_refresh_counter[MCP4728S_PER_CHANNEL];     //!< Countdown until we rewrite a DAC even if its cache is unchanged
 
     uint16_t mcp23017_retry_counter[3]; //!< Countdown until we retry polling after a GPIO expander fails an i2c call
 } i2c_scheduler_state_t;
@@ -60,6 +62,7 @@ static const i2c_scheduler_state_t default_scheduler_state = {
     .frame_counter = 0,
     .last_written_mcp4728_idx = 0,
     .mcp4728_fail_retry_counter = {0},
+    .mcp4728_refresh_counter = {0},
     .mcp23017_retry_counter = {0} //
 };
 
@@ -102,13 +105,27 @@ static void read_mcp23017s (uint8_t channel)
     }
 }
 
-static inline void mcp4728_flush_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter, uint16_t frames_until_retry)
+static inline void mcp4728_flush_maybe (
+    I2C_TypeDef *bus,
+    uint8_t addr,
+    uint16_t *retry_counter,
+    uint16_t frames_until_retry,
+    uint8_t *refresh_counter
+)
 {
     if (*retry_counter > 0)
     {
         *retry_counter = *retry_counter - 1;
         return;
     }
+    // DAC writes are most of the bus time, so skip chips whose outputs haven't changed
+    if (mcp4728_cache_is_synced(bus, addr) && *refresh_counter > 0)
+    {
+        *refresh_counter = *refresh_counter - 1;
+        return;
+    }
+    *refresh_counter = MCP4728_CALLS_UNTIL_REFRESH;
+
     const bool code = mcp4728_cache_flush_fastWrite(bus, addr);
     if (code == 0) return;
 
@@ -132,7 +149,8 @@ static void write_mcp4728s (uint8_t channel)
             i2c_bus,
             MCP4728_BASE_ADDR + state->last_written_mcp4728_idx,
             &(state->mcp4728_fail_retry_counter[state->last_written_mcp4728_idx]),
-            MCP4728_CALLS_UNTIL_RETRY
+            MCP4728_CALLS_UNTIL_RETRY,
+            &(state->mcp4728_refresh_counter[state->last_written_mcp4728_idx])
         );
         state->last_written_mcp4728_idx = (state->last_written_mcp4728_idx + 1) % MCP4728S_PER_CHANNEL;
     }
