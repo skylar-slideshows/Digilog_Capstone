@@ -22,7 +22,7 @@ Master Controller
 - [main.h](@ref Firmware/MasterController/Core/Inc/main.h) - Main header
 
 <br><br><br>
-<img src="pins.png" width="72%"><br><br><br>
+<img src="pins1.png" width="72%"><br><br><br>
 <img src="pinout.png" width="60%"><br><br><br>
 <img src="diagram2.png" width="58%"><br><br><br>
 <img src="pinssr.png" width="72%"><br><br><br>
