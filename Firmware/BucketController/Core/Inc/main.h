@@ -59,8 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_Data_Pin GPIO_PIN_14
-#define LED_Data_GPIO_Port GPIOC
+#define LDAC1_Pin GPIO_PIN_13
+#define LDAC1_GPIO_Port GPIOC
 #define __OSC_IN_Pin GPIO_PIN_0
 #define __OSC_IN_GPIO_Port GPIOF
 #define __OSC_OUT_Pin GPIO_PIN_1
@@ -101,8 +101,8 @@ void Error_Handler(void);
 #define LED_Clock_GPIO_Port GPIOB
 #define LED_Latch_Pin GPIO_PIN_14
 #define LED_Latch_GPIO_Port GPIOB
-#define LED_DataB15_Pin GPIO_PIN_15
-#define LED_DataB15_GPIO_Port GPIOB
+#define LED_Data_Pin GPIO_PIN_15
+#define LED_Data_GPIO_Port GPIOB
 #define I2C4_Clock_Pin GPIO_PIN_6
 #define I2C4_Clock_GPIO_Port GPIOC
 #define I2C4_Data_Pin GPIO_PIN_7
