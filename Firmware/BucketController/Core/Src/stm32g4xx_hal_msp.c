@@ -120,7 +120,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     PC3     ------> ADC2_IN9
     PC4     ------> ADC2_IN5
     */
-    GPIO_InitStruct.Pin = Fader2_ADC_Pos_Pin|Fader3_ADC_Pos_Pin|Fader4_ADC_Pos_Pin|Fader1_ADC_Pos_Pin;
+    GPIO_InitStruct.Pin = F1_ADC_Pin|F2_ADC_Pin|F3_ADC_Pin|F0_ADC_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -155,7 +155,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     PC3     ------> ADC2_IN9
     PC4     ------> ADC2_IN5
     */
-    HAL_GPIO_DeInit(GPIOC, Fader2_ADC_Pos_Pin|Fader3_ADC_Pos_Pin|Fader4_ADC_Pos_Pin|Fader1_ADC_Pos_Pin);
+    HAL_GPIO_DeInit(GPIOC, F1_ADC_Pin|F2_ADC_Pin|F3_ADC_Pin|F0_ADC_Pin);
 
     /* USER CODE BEGIN ADC2_MspDeInit 1 */
 
@@ -309,24 +309,16 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     }
 
     __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
     /**I2C3 GPIO Configuration
     PC8     ------> I2C3_SCL
-    PB5     ------> I2C3_SDA
+    PC9     ------> I2C3_SDA
     */
-    GPIO_InitStruct.Pin = I2C3_Clock_Pin;
+    GPIO_InitStruct.Pin = I2C3_Clock_Pin|I2C3_Data_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF8_I2C3;
-    HAL_GPIO_Init(I2C3_Clock_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = I2C3_Data_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF8_I2C3;
-    HAL_GPIO_Init(I2C3_Data_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /* Peripheral clock enable */
     __HAL_RCC_I2C3_CLK_ENABLE();
@@ -428,7 +420,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
 
     /**I2C3 GPIO Configuration
     PC8     ------> I2C3_SCL
-    PB5     ------> I2C3_SDA
+    PC9     ------> I2C3_SDA
     */
     HAL_GPIO_DeInit(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin);
 
@@ -726,14 +718,14 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PB10     ------> TIM2_CH3
     PB11     ------> TIM2_CH4
     */
-    GPIO_InitStruct.Pin = Fader1_MotB_Pin|Fader1_MotA_Pin;
+    GPIO_InitStruct.Pin = F0_MB_Pin|F0_MA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = Fader2_MotA_Pin|Fader2_MotB_Pin;
+    GPIO_InitStruct.Pin = F1_MA_Pin|F1_MB_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -758,14 +750,14 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PB0     ------> TIM3_CH3
     PB1     ------> TIM3_CH4
     */
-    GPIO_InitStruct.Pin = Fader3_MotB_Pin|Fader3_MotA_Pin;
+    GPIO_InitStruct.Pin = F2_MB_Pin|F2_MA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = Fader4_MotA_Pin|Fader4_MotB_Pin;
+    GPIO_InitStruct.Pin = F3_MA_Pin|F3_MB_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
