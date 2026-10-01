@@ -358,7 +358,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Interface_Expansion:MCP23017x-x-SS"
+		(symbol "Interface_Expansion:MCP23017x-x-ML"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -374,7 +374,7 @@
 					)
 				)
 			)
-			(property "Value" "MCP23017x-x-SS"
+			(property "Value" "MCP23017x-x-ML"
 				(at 11.176 24.638 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -384,7 +384,7 @@
 					)
 				)
 			)
-			(property "Footprint" "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm"
+			(property "Footprint" "Package_DFN_QFN:QFN-28-1EP_6x6mm_P0.65mm_EP4.25x4.25mm"
 				(at 5.08 -25.4 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -408,7 +408,7 @@
 					(justify left)
 				)
 			)
-			(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, SSOP-28"
+			(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, GPA7/GPB7 output only (https://microchip.my.site.com/s/article/GPA7---GPB7-Cannot-Be-Used-as-Inputs-In-MCP23017), QFN-28"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -430,7 +430,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "SSOP*5.3x10.2mm*P0.65mm*"
+			(property "ki_fp_filters" "QFN*6x6mm*P0.65mm*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -441,7 +441,7 @@
 					)
 				)
 			)
-			(symbol "MCP23017x-x-SS_0_1"
+			(symbol "MCP23017x-x-ML_0_1"
 				(rectangle
 					(start -10.16 22.86)
 					(end 10.16 -22.86)
@@ -454,79 +454,7 @@
 					)
 				)
 			)
-			(symbol "MCP23017x-x-SS_1_1"
-				(pin bidirectional line
-					(at 12.7 -2.54 180)
-					(length 2.54)
-					(name "GPB0"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 12.7 -5.08 180)
-					(length 2.54)
-					(name "GPB1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 12.7 -7.62 180)
-					(length 2.54)
-					(name "GPB2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 12.7 -10.16 180)
-					(length 2.54)
-					(name "GPB3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
+			(symbol "MCP23017x-x-ML_1_1"
 				(pin bidirectional line
 					(at 12.7 -12.7 180)
 					(length 2.54)
@@ -537,7 +465,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -555,7 +483,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -573,7 +501,7 @@
 							)
 						)
 					)
-					(number "7"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -591,7 +519,7 @@
 							)
 						)
 					)
-					(number "8"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -609,7 +537,7 @@
 							)
 						)
 					)
-					(number "9"
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -627,7 +555,7 @@
 							)
 						)
 					)
-					(number "10"
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -646,7 +574,7 @@
 							)
 						)
 					)
-					(number "11"
+					(number "7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -664,7 +592,7 @@
 							)
 						)
 					)
-					(number "12"
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -682,7 +610,7 @@
 							)
 						)
 					)
-					(number "13"
+					(number "9"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -701,7 +629,7 @@
 							)
 						)
 					)
-					(number "14"
+					(number "10"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -719,7 +647,7 @@
 							)
 						)
 					)
-					(number "15"
+					(number "11"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -737,7 +665,7 @@
 							)
 						)
 					)
-					(number "16"
+					(number "12"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -755,7 +683,7 @@
 							)
 						)
 					)
-					(number "17"
+					(number "13"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -773,7 +701,7 @@
 							)
 						)
 					)
-					(number "18"
+					(number "14"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -791,7 +719,7 @@
 							)
 						)
 					)
-					(number "19"
+					(number "15"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -809,7 +737,7 @@
 							)
 						)
 					)
-					(number "20"
+					(number "16"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -827,7 +755,7 @@
 							)
 						)
 					)
-					(number "21"
+					(number "17"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -845,7 +773,7 @@
 							)
 						)
 					)
-					(number "22"
+					(number "18"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -863,7 +791,7 @@
 							)
 						)
 					)
-					(number "23"
+					(number "19"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -881,7 +809,7 @@
 							)
 						)
 					)
-					(number "24"
+					(number "20"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -899,7 +827,7 @@
 							)
 						)
 					)
-					(number "25"
+					(number "21"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -917,7 +845,7 @@
 							)
 						)
 					)
-					(number "26"
+					(number "22"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -935,7 +863,7 @@
 							)
 						)
 					)
-					(number "27"
+					(number "23"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -953,7 +881,97 @@
 							)
 						)
 					)
+					(number "24"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "GPB0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "25"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -5.08 180)
+					(length 2.54)
+					(name "GPB1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "26"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -7.62 180)
+					(length 2.54)
+					(name "GPB2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "27"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 12.7 -10.16 180)
+					(length 2.54)
+					(name "GPB3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
 					(number "28"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -2.54 -25.4 90)
+					(length 2.54)
+					(name "EP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "29"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2806,7 +2824,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Interface_Expansion:MCP23017x-x-SS")
+		(lib_id "Interface_Expansion:MCP23017x-x-ML")
 		(at 105.41 55.88 0)
 		(unit 1)
 		(body_style 1)
@@ -2839,7 +2857,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm"
+		(property "Footprint" "Package_DFN_QFN:QFN-28-1EP_6x6mm_P0.65mm_EP4.25x4.25mm"
 			(at 110.49 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -2863,7 +2881,7 @@
 				(justify left)
 			)
 		)
-		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, SSOP-28"
+		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, GPA7/GPB7 output only (https://microchip.my.site.com/s/article/GPA7---GPB7-Cannot-Be-Used-as-Inputs-In-MCP23017), QFN-28"
 			(at 105.41 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -2874,7 +2892,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C558584"
+		(property "LCSC" "C629439"
 			(at 105.41 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -2968,6 +2986,9 @@
 		)
 		(pin "28"
 			(uuid "7e67731a-6165-49e2-adf7-0721ea574016")
+		)
+		(pin "29"
+			(uuid "92086011-83b3-48da-b453-362e19d79006")
 		)
 		(instances
 			(project "bucket_controls"
@@ -4808,7 +4829,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Interface_Expansion:MCP23017x-x-SS")
+		(lib_id "Interface_Expansion:MCP23017x-x-ML")
 		(at 53.34 55.88 0)
 		(unit 1)
 		(body_style 1)
@@ -4841,7 +4862,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm"
+		(property "Footprint" "Package_DFN_QFN:QFN-28-1EP_6x6mm_P0.65mm_EP4.25x4.25mm"
 			(at 58.42 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -4865,7 +4886,7 @@
 				(justify left)
 			)
 		)
-		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, SSOP-28"
+		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, GPA7/GPB7 output only (https://microchip.my.site.com/s/article/GPA7---GPB7-Cannot-Be-Used-as-Inputs-In-MCP23017), QFN-28"
 			(at 53.34 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -4876,7 +4897,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C558584"
+		(property "LCSC" "C629439"
 			(at 53.34 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -4970,6 +4991,9 @@
 		)
 		(pin "25"
 			(uuid "9777acb0-e916-4806-829e-5d20f8133c53")
+		)
+		(pin "29"
+			(uuid "05a54d13-ceb9-45d9-baae-94e2f2d796ba")
 		)
 		(instances
 			(project "bucket_controls"
@@ -5304,7 +5328,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Interface_Expansion:MCP23017x-x-SS")
+		(lib_id "Interface_Expansion:MCP23017x-x-ML")
 		(at 157.48 55.88 0)
 		(unit 1)
 		(body_style 1)
@@ -5337,7 +5361,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm"
+		(property "Footprint" "Package_DFN_QFN:QFN-28-1EP_6x6mm_P0.65mm_EP4.25x4.25mm"
 			(at 162.56 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -5361,7 +5385,7 @@
 				(justify left)
 			)
 		)
-		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, SSOP-28"
+		(property "Description" "16-bit I/O expander, I2C, interrupts, w pull-ups, GPA7/GPB7 output only (https://microchip.my.site.com/s/article/GPA7---GPB7-Cannot-Be-Used-as-Inputs-In-MCP23017), QFN-28"
 			(at 157.48 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -5372,7 +5396,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C558584"
+		(property "LCSC" "C629439"
 			(at 157.48 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -5466,6 +5490,9 @@
 		)
 		(pin "28"
 			(uuid "36951980-a133-4ee9-ab59-af14d9487888")
+		)
+		(pin "29"
+			(uuid "51be6265-d8b4-45c7-bebe-c419dd798672")
 		)
 		(instances
 			(project "bucket_controls"

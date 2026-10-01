@@ -457,7 +457,7 @@
 				)
 				(polyline
 					(pts
-						(xy 2.54 0) (xy 1.7038 2.2338)
+						(xy 2.54 0) (xy 2.54 1.27)
 					)
 					(stroke
 						(width 0)
@@ -470,6 +470,32 @@
 				(circle
 					(center 2.54 0)
 					(radius 0.2032)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "EC11_Rotary_Encoder_0_1"
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 0 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 0 0)
+					)
 					(stroke
 						(width 0)
 						(type default)
@@ -525,6 +551,17 @@
 					)
 				)
 				(rectangle
+					(start 2.54 -2.413)
+					(end 3.81 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
 					(start 3.81 2.667)
 					(end 2.54 2.413)
 					(stroke
@@ -538,17 +575,6 @@
 				(rectangle
 					(start 3.81 0.127)
 					(end 2.54 -0.127)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 3.81 -2.413)
-					(end 2.54 -2.667)
 					(stroke
 						(width 0.1524)
 						(type default)
@@ -593,7 +619,7 @@
 						)
 					)
 				)
-				(pin passive line
+				(pin no_connect line
 					(at -5.08 0 0)
 					(length 3.81)
 					(name "Pin_2"
@@ -611,7 +637,7 @@
 						)
 					)
 				)
-				(pin passive line
+				(pin no_connect line
 					(at 7.62 2.54 180)
 					(length 3.81)
 					(name "Pin_4"
@@ -6392,7 +6418,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 81.28 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -6425,7 +6451,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 81.28 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -6771,7 +6797,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 201.93 248.92 0)
 			(hide yes)
 			(show_name no)
@@ -6804,7 +6830,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 201.93 248.92 0)
 			(hide yes)
 			(show_name no)
@@ -7043,7 +7069,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 201.93 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -7076,7 +7102,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 201.93 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -9877,7 +9903,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 81.28 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -9910,7 +9936,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 81.28 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -11924,7 +11950,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 201.93 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -11957,7 +11983,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 201.93 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -12106,7 +12132,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 81.28 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -12139,7 +12165,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 81.28 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -12796,7 +12822,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 201.93 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -12829,7 +12855,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 201.93 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -14549,7 +14575,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 201.93 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -14582,7 +14608,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 201.93 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -15517,7 +15543,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 81.28 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -15550,7 +15576,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 81.28 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -16037,7 +16063,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11J0924411"
+		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
 			(at 81.28 248.92 0)
 			(hide yes)
 			(show_name no)
@@ -16070,7 +16096,7 @@
 				)
 			)
 		)
-		(property "LCSC" "manual"
+		(property "LCSC" "dnp"
 			(at 81.28 248.92 0)
 			(hide yes)
 			(show_name no)

@@ -531,7 +531,7 @@
     "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks"
   },
   "schematic": {
-    "annotate_start_num": 300,
+    "annotate_start_num": 1,
     "annotation": {
       "method": 0,
       "sort_order": 1
@@ -588,7 +588,7 @@
           "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -678,7 +678,7 @@
         "uuid": "96563cb2-2d6f-462f-b797-f4c345bb605c"
       }
     ],
-    "used_designators": "J2-80,J101-120,J201-220,J301-320,#PWR1-619,D1-80,D101-120,D201-220,D301-320,C1-160,C201-260,C301-342,R1-416,U2-28,U301-304,F2-4,F301,SW1-58,SW101-122,SW201-222,SW301-322",
+    "used_designators": "H5-40,H301-332,J2-80,J101-120,J201-220,J301-320,#PWR1-619,D1-80,D101-120,D201-220,D301-320,C1-160,C201-260,C301-342,R1-416,U2-28,U301-304,F2-4,F301,SW1-58,SW101-122,SW201-222,SW301-322",
     "variants": []
   },
   "sheets": [
@@ -745,6 +745,10 @@
     [
       "067d1a4b-f5f5-4939-a1e7-585ab3f06f81",
       "Board Connections"
+    ],
+    [
+      "1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08",
+      "Screws and Mounting"
     ]
   ],
   "text_variables": {},
