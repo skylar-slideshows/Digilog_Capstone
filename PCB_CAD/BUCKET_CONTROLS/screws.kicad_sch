@@ -302,20 +302,12 @@
 		(uuid "10840184-51b4-443a-852b-b3660e9d132b")
 	)
 	(no_connect
-		(at 177.8 39.37)
-		(uuid "1fb48a48-ded3-45a0-ab0f-9bff5728f557")
-	)
-	(no_connect
 		(at 195.58 68.58)
 		(uuid "40e73060-5cd5-443f-8ff6-696b4f427633")
 	)
 	(no_connect
 		(at 177.8 54.61)
 		(uuid "5f9cbb90-b27f-4287-a272-9e3fc1fe0343")
-	)
-	(no_connect
-		(at 213.36 39.37)
-		(uuid "662ca883-e4ce-41ba-a706-4c782fbb419e")
 	)
 	(no_connect
 		(at 195.58 54.61)
@@ -326,16 +318,8 @@
 		(uuid "78ea4925-2530-47dc-9e67-37407edae238")
 	)
 	(no_connect
-		(at 195.58 39.37)
-		(uuid "7b67e6d5-d071-493c-808e-03f287b4f0f1")
-	)
-	(no_connect
 		(at 177.8 68.58)
 		(uuid "aa02f4d4-788d-47b9-89ab-54d0d2640ba8")
-	)
-	(no_connect
-		(at 160.02 39.37)
-		(uuid "c233d811-7fc2-47ea-9a25-e47e3c7ba921")
 	)
 	(no_connect
 		(at 160.02 68.58)
@@ -664,96 +648,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 195.58 36.83 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "3367560e-de7a-45a5-a55d-2189c6320bd5")
-		(property "Reference" "H7"
-			(at 198.12 34.2899 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "dac3"
-			(at 198.12 36.8299 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "My Footprints:SMTSO-M3-3ET"
-			(at 195.58 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 195.58 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Mounting Hole with connection"
-			(at 195.58 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "dnp"
-			(at 195.58 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "983e41e6-550f-4ca4-b685-82af96a8a186")
-		)
-		(instances
-			(project "bucket_controls"
-				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
-					(reference "H7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
 		(at 50.8 43.18 0)
 		(unit 1)
@@ -942,7 +836,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MCP23017_4"
+		(property "Value" "dac4"
 			(at 215.9 52.0699 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1011,96 +905,6 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 213.36 36.83 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "57fab081-0440-4d91-9c39-e98fc640448d")
-		(property "Reference" "H8"
-			(at 215.9 34.2899 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "dac4"
-			(at 215.9 36.8299 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "My Footprints:SMTSO-M3-3ET"
-			(at 213.36 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 213.36 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Mounting Hole with connection"
-			(at 213.36 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "dnp"
-			(at 213.36 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6e836856-15f1-45d0-9f93-55fd97133aae")
-		)
-		(instances
-			(project "bucket_controls"
-				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
-					(reference "H8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
 		(at 177.8 52.07 0)
 		(unit 1)
 		(body_style 1)
@@ -1122,7 +926,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MCP23017_2"
+		(property "Value" "dac2"
 			(at 180.34 52.0699 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1468,7 +1272,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MCP23017_3"
+		(property "Value" "dac3"
 			(at 198.12 52.0699 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1606,96 +1410,6 @@
 			(project "bucket_controls"
 				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
 					(reference "H12")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 160.02 36.83 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9bb97eb6-b5a2-4446-953a-bde01ed763f0")
-		(property "Reference" "H5"
-			(at 162.56 34.2899 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "dac1"
-			(at 162.56 36.8299 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "My Footprints:SMTSO-M3-3ET"
-			(at 160.02 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 160.02 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Mounting Hole with connection"
-			(at 160.02 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "dnp"
-			(at 160.02 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3c30855a-840e-43b2-8dc1-291ab62b47b9")
-		)
-		(instances
-			(project "bucket_controls"
-				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
-					(reference "H5")
 					(unit 1)
 				)
 			)
@@ -1876,7 +1590,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MCP23017_1"
+		(property "Value" "dac1"
 			(at 162.56 52.0699 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2090,96 +1804,6 @@
 			(project "bucket_controls"
 				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
 					(reference "H40")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 177.8 36.83 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "fd0767c5-6dca-42f2-b44d-7e612cb01891")
-		(property "Reference" "H6"
-			(at 180.34 34.2899 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "dac2"
-			(at 180.34 36.8299 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "My Footprints:SMTSO-M3-3ET"
-			(at 177.8 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 177.8 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Mounting Hole with connection"
-			(at 177.8 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "dnp"
-			(at 177.8 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "bfca0f6e-6ed8-4d1f-aec5-99b9360f5d60")
-		)
-		(instances
-			(project "bucket_controls"
-				(path "/96563cb2-2d6f-462f-b797-f4c345bb605c/1b33c43e-2f0d-4a5c-b4e8-7d1e9fa17d08"
-					(reference "H6")
 					(unit 1)
 				)
 			)
