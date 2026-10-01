@@ -20,8 +20,7 @@ typedef struct
     GPIO_TypeDef *motor_b_port;
     uint8_t motor_b_pin;
 
-    ADC_HandleTypeDef *adc;
-    uint32_t adc_channel;
+    uint8_t channel; //!< Channel in the bucket
 } fader_info_t;
 
 typedef enum
@@ -48,8 +47,8 @@ void update_fader (
 );
 
 /**
- * @brief initialize hardware as necessary for the given fader
+ * @brief initialize hardware as necessary for the fader driver
  */
-void init_fader(fader_info_t *info);
+void init_faders(void);
 
 #endif

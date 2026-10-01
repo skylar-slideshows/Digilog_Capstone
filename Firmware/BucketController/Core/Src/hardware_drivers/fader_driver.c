@@ -1,21 +1,34 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "hardware_drivers/fader_driver.h"
+#include "control_integration/control_interface.h"
+#include "stm32g4xx_hal_adc.h"
 #include "stm32g4xx_hal_adc_ex.h"
+#include "stm32g4xx_hal_gpio.h"
 
 #define FADER_POWER_COEFFICIENT 4
 
-static uint16_t get_physical_fader_position (fader_info_t *info)
+extern ADC_HandleTypeDef *hadc2;
+#define FADER_ADC hadc2
+
+const uint8_t bucket_channel_to_adc_channel[] = {5, 6, 8, 9};
+uint32_t adc_buf[CHANNELS];
+
+void init_faders (void)
 {
-    // TODO
+    HAL_ADCEx_Calibration_Start(FADER_ADC, ADC_SINGLE_ENDED);
+    HAL_ADC_Start_DMA(FADER_ADC, adc_buf, CHANNELS);
 }
+
+static uint16_t get_physical_fader_position (fader_info_t *info) { return adc_buf[info->channel]; }
 
 static bool is_fader_touched (fader_info_t *info)
 {
-    // TODO
+    return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_SET;
 }
 
-static void update_motor_power (int32_t power){
+static void update_motor_power (int32_t power)
+{
     // TODO
 }
 
@@ -66,9 +79,4 @@ void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *
     }
 
     *new_state = new_state_i;
-}
-
-void init_fader(fader_info_t *info){
-    //HAL_ADCEx_Calibration_Start(info->adc, ADC_SINGLE_ENDED);
-    // TODO
 }

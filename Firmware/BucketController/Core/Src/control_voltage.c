@@ -32,3 +32,9 @@
 */
 
 #include "control_voltage.h"
+#include "control_integration/control_interface.h"
+
+static uint16_t fader_pos_to_cv (u_scalar_control_t fader_pos)
+{
+    // TODO
+}
