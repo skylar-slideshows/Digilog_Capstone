@@ -5,18 +5,21 @@
 #include "stm32g4xx_hal_adc.h"
 #include "stm32g4xx_hal_adc_ex.h"
 #include "stm32g4xx_hal_gpio.h"
+#include "stm32g4xx_hal_tim.h"
 
-#define FADER_POWER_COEFFICIENT 4
+#define FADER_DEVIATION_UNTIL_MOTOR_MAX 100
 
-extern ADC_HandleTypeDef hadc2;
-#define FADER_ADC hadc2
-
-const uint8_t bucket_channel_to_adc_channel[] = {5, 6, 8, 9};
+// ADC STUFF
+extern ADC_HandleTypeDef FADER_ADC; // from main.c
 uint32_t adc_buf[CHANNELS];
+
+// TIMER STUFF
+extern TIM_HandleTypeDef FADER1_TIM_HANDLE; // from main.c
+extern TIM_HandleTypeDef FADER3_TIM_HANDLE; // from main.c
 
 void init_faders (void)
 {
-    HAL_ADCEx_Calibration_Start(&FADER_ADC, ADC_SINGLE_ENDED);
+    // HAL_ADCEx_Calibration_Start(&FADER_ADC, ADC_SINGLE_ENDED);
     HAL_ADC_Start_DMA(&FADER_ADC, adc_buf, CHANNELS);
 }
 
@@ -27,27 +30,32 @@ static bool is_fader_touched (fader_info_t *info)
     return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_RESET;
 }
 
-static void update_motor_power (int32_t power)
+typedef struct
 {
-    // TODO
-}
+    TIM_HandleTypeDef *timer;
+    uint8_t timer_a_channel;
+    uint8_t timer_b_channel;
+} motor_hw_info;
 
-static inline int32_t clamp_mult (int32_t a, int32_t b)
+const motor_hw_info motor_hw[CHANNELS] = {
+    (motor_hw_info){.timer = &FADER1_TIM_HANDLE, .timer_a_channel = FADER1_A_TIM_AF, .timer_b_channel = FADER1_B_TIM_AF},
+    (motor_hw_info){.timer = &FADER2_TIM_HANDLE, .timer_a_channel = FADER2_A_TIM_AF, .timer_b_channel = FADER2_B_TIM_AF},
+    (motor_hw_info){.timer = &FADER3_TIM_HANDLE, .timer_a_channel = FADER3_A_TIM_AF, .timer_b_channel = FADER3_B_TIM_AF},
+    (motor_hw_info){.timer = &FADER4_TIM_HANDLE, .timer_a_channel = FADER4_A_TIM_AF, .timer_b_channel = FADER4_B_TIM_AF},
+};
+
+static void update_motor_power (fader_info_t *info, int32_t power)
 {
-    int32_t x = a * b;
-    if (a != 0 && x / a != b)
-    {
-        if (a > 0 && b > 0)
-        {
-            return INT32_MAX;
-        }
-        if (a < 0 && b < 0)
-        {
-            return INT32_MAX;
-        }
-        return INT32_MIN;
-    }
-    return x;
+    const motor_hw_info *hw = &(motor_hw[info->channel]);
+
+
+    const uint8_t main_channel = power > 0 ? hw->timer_a_channel : hw->timer_b_channel;
+    const uint8_t low_channel = power > 0 ? hw->timer_b_channel : hw->timer_a_channel;
+
+    power = power < 0 ? (power == INT32_MIN ? INT32_MAX : -power) : power;
+
+    __HAL_TIM_SET_COMPARE(hw->timer, main_channel, power);
+    __HAL_TIM_SET_COMPARE(hw->timer, low_channel, 0);
 }
 
 /**
@@ -60,8 +68,18 @@ static int32_t get_motor_power (fader_info_t *info, fader_state_t *state)
     const int32_t where_it_is = get_physical_fader_position(info);
     const int32_t where_it_isnt = state->position;
 
-    const int32_t deviation = where_it_isnt - where_it_is;
-    return clamp_mult(deviation, FADER_POWER_COEFFICIENT);
+    int64_t deviation = where_it_isnt - where_it_is;
+    if (deviation < -FADER_DEVIATION_UNTIL_MOTOR_MAX)
+    {
+        deviation = -FADER_DEVIATION_UNTIL_MOTOR_MAX;
+    }
+    else if (deviation > FADER_DEVIATION_UNTIL_MOTOR_MAX)
+    {
+        deviation = FADER_DEVIATION_UNTIL_MOTOR_MAX;
+    }
+
+    const uint32_t motor_pwm_period = __HAL_TIM_GET_AUTORELOAD(motor_hw[info->channel].timer) + 1;
+    return (deviation * motor_pwm_period) / FADER_DEVIATION_UNTIL_MOTOR_MAX;
 }
 
 void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *new_state)
@@ -75,7 +93,7 @@ void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *
     else
     {
         new_state_i.movement_mode = FADER_MOVE_OR_HOLD_TARGET;
-        update_motor_power(get_motor_power(info, &new_state_i));
+        update_motor_power(info, get_motor_power(info, &new_state_i));
     }
 
     *new_state = new_state_i;

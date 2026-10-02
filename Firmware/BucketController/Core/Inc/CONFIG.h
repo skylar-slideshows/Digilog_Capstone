@@ -136,6 +136,26 @@
     #define LED_ANIM_BREATHE_MAX   128U // brightest
     #define LED_ANIM_BREATHE_STEPS 64U // num steps between these values
 
+    /*=============================== FADERS ================================*/
+    /** @brief Set parameters for faders below */
+
+    #define FADER_ADC hadc2
+
+    #define FADER1_TIM_HANDLE        htim2
+    #define FADER1_A_TIM_AF          0U
+    #define FADER1_B_TIM_AF          1U
+
+    #define FADER2_TIM_HANDLE        htim2
+    #define FADER2_A_TIM_AF          2U
+    #define FADER2_B_TIM_AF          3U
+
+    #define FADER3_TIM_HANDLE        htim3
+    #define FADER3_A_TIM_AF          0U
+    #define FADER3_B_TIM_AF          1U
+
+    #define FADER4_TIM_HANDLE        htim3
+    #define FADER4_A_TIM_AF          2U
+    #define FADER4_B_TIM_AF          3U
 
 #else // please do not edit the below configuration
 
