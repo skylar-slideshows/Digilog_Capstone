@@ -3,7 +3,6 @@
 #include "hardware_drivers/fader_driver.h"
 #include "control_integration/control_interface.h"
 #include "stm32g4xx_hal_adc.h"
-#include "stm32g4xx_hal_adc_ex.h"
 #include "stm32g4xx_hal_gpio.h"
 #include "stm32g4xx_hal_tim.h"
 
@@ -17,13 +16,24 @@ uint32_t adc_buf[CHANNELS];
 extern TIM_HandleTypeDef FADER1_TIM_HANDLE; // from main.c
 extern TIM_HandleTypeDef FADER3_TIM_HANDLE; // from main.c
 
-void init_faders (void)
+void poll_faders (void)
 {
-    // HAL_ADCEx_Calibration_Start(&FADER_ADC, ADC_SINGLE_ENDED);
-    HAL_ADC_Start_DMA(&FADER_ADC, adc_buf, CHANNELS);
+    HAL_ADC_Start(&FADER_ADC);
+
+    for (int i = 0; i < CHANNELS; i++)
+    {
+        if (HAL_ADC_PollForConversion(&FADER_ADC, 10) == HAL_OK)
+        {
+            adc_buf[i] = HAL_ADC_GetValue(&FADER_ADC);
+        }
+    }
+
+    HAL_ADC_Stop(&FADER_ADC);
 }
 
-static uint16_t get_physical_fader_position (fader_info_t *info) { return adc_buf[info->channel]; }
+static uint16_t get_physical_fader_position (fader_info_t *info) {
+    return adc_buf[info->channel];
+}
 
 static bool is_fader_touched (fader_info_t *info)
 {

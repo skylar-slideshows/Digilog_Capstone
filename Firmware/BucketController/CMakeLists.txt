@@ -118,6 +118,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/FreeRTOS_apps/remote_cmd_handler.c
     Core/Src/FreeRTOS_apps/led_handler.c
     Core/Src/FreeRTOS_apps/i2c_scheduler.c
+    Core/Src/FreeRTOS_apps/fader_poller.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE

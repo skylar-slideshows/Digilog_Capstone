@@ -47,8 +47,8 @@ void update_fader (
 );
 
 /**
- * @brief initialize hardware as necessary for the fader driver
+ * @brief Poll fader values into the cache/buffer
  */
-void init_faders(void);
+void poll_faders(void);
 
 #endif
