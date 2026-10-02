@@ -37,7 +37,7 @@ static uint16_t get_physical_fader_position (fader_info_t *info) {
 
 static bool is_fader_touched (fader_info_t *info)
 {
-    return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_RESET;
+    return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_SET;
 }
 
 typedef struct
