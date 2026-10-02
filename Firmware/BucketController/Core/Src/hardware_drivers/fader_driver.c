@@ -8,7 +8,7 @@
 
 #define FADER_POWER_COEFFICIENT 4
 
-extern ADC_HandleTypeDef *hadc2;
+extern ADC_HandleTypeDef hadc2;
 #define FADER_ADC hadc2
 
 const uint8_t bucket_channel_to_adc_channel[] = {5, 6, 8, 9};
@@ -16,15 +16,15 @@ uint32_t adc_buf[CHANNELS];
 
 void init_faders (void)
 {
-    HAL_ADCEx_Calibration_Start(FADER_ADC, ADC_SINGLE_ENDED);
-    HAL_ADC_Start_DMA(FADER_ADC, adc_buf, CHANNELS);
+    HAL_ADCEx_Calibration_Start(&FADER_ADC, ADC_SINGLE_ENDED);
+    HAL_ADC_Start_DMA(&FADER_ADC, adc_buf, CHANNELS);
 }
 
 static uint16_t get_physical_fader_position (fader_info_t *info) { return adc_buf[info->channel]; }
 
 static bool is_fader_touched (fader_info_t *info)
 {
-    return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_SET;
+    return HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_RESET;
 }
 
 static void update_motor_power (int32_t power)

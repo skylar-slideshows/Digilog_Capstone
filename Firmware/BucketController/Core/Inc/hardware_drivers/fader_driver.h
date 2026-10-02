@@ -13,12 +13,12 @@
 typedef struct
 {
     GPIO_TypeDef *touch_sensor_port;
-    uint8_t touch_sensor_pin;
+    uint16_t touch_sensor_pin;
 
     GPIO_TypeDef *motor_a_port;
-    uint8_t motor_a_pin;
+    uint16_t motor_a_pin;
     GPIO_TypeDef *motor_b_port;
-    uint8_t motor_b_pin;
+    uint16_t motor_b_pin;
 
     uint8_t channel; //!< Channel in the bucket
 } fader_info_t;

@@ -29,6 +29,7 @@
 #include "CONFIG.h"
 #include "cmsis_os2.h"
 #include "control_integration/control_interface.h"
+#include "hardware_drivers/fader_driver.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728.h"
@@ -210,6 +211,7 @@ int main(void)
 
   uart_cmd_init(); // uart2 startup for comms w/ remote app
 
+  init_faders();
   led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
   init_control_interface();
   shiftreg_init();
@@ -1072,9 +1074,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-  /* DMAMUX_OVR_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMAMUX_OVR_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMAMUX_OVR_IRQn);
 
 }
 
