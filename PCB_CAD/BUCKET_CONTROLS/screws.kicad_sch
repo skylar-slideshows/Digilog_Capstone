@@ -173,13 +173,9 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Mechanical:MountingHole_Pad"
-			(pin_numbers
-				(hide yes)
-			)
+		(symbol "Mechanical:MountingHole"
 			(pin_names
 				(offset 1.016)
-				(hide yes)
 			)
 			(exclude_from_sim no)
 			(in_bom no)
@@ -187,7 +183,7 @@
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "H"
-				(at 0 6.35 0)
+				(at 0 5.08 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -196,8 +192,8 @@
 					)
 				)
 			)
-			(property "Value" "MountingHole_Pad"
-				(at 0 4.445 0)
+			(property "Value" "MountingHole"
+				(at 0 3.175 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -228,7 +224,7 @@
 					)
 				)
 			)
-			(property "Description" "Mounting Hole with connection"
+			(property "Description" "Mounting Hole without connection"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -250,7 +246,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "MountingHole*Pad*"
+			(property "ki_fp_filters" "MountingHole*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -261,9 +257,9 @@
 					)
 				)
 			)
-			(symbol "MountingHole_Pad_0_1"
+			(symbol "MountingHole_0_1"
 				(circle
-					(center 0 1.27)
+					(center 0 0)
 					(radius 1.27)
 					(stroke
 						(width 1.27)
@@ -274,60 +270,8 @@
 					)
 				)
 			)
-			(symbol "MountingHole_Pad_1_1"
-				(pin input line
-					(at 0 -2.54 90)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
 			(embedded_fonts no)
 		)
-	)
-	(no_connect
-		(at 213.36 68.58)
-		(uuid "10840184-51b4-443a-852b-b3660e9d132b")
-	)
-	(no_connect
-		(at 195.58 68.58)
-		(uuid "40e73060-5cd5-443f-8ff6-696b4f427633")
-	)
-	(no_connect
-		(at 177.8 54.61)
-		(uuid "5f9cbb90-b27f-4287-a272-9e3fc1fe0343")
-	)
-	(no_connect
-		(at 195.58 54.61)
-		(uuid "6a30ba2a-b38f-4c4d-93e5-7180e8a88070")
-	)
-	(no_connect
-		(at 213.36 54.61)
-		(uuid "78ea4925-2530-47dc-9e67-37407edae238")
-	)
-	(no_connect
-		(at 177.8 68.58)
-		(uuid "aa02f4d4-788d-47b9-89ab-54d0d2640ba8")
-	)
-	(no_connect
-		(at 160.02 68.58)
-		(uuid "d3e5e10d-ac90-4ae3-91fa-7396c19f1627")
-	)
-	(no_connect
-		(at 160.02 54.61)
-		(uuid "fdb5b283-7ec9-437f-ad11-f66aee5a0578")
 	)
 	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
@@ -558,7 +502,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 177.8 66.04 0)
 		(unit 1)
 		(body_style 1)
@@ -570,7 +514,7 @@
 		(fields_autoplaced yes)
 		(uuid "17b40503-f3c8-448e-872f-87d292121210")
 		(property "Reference" "H2"
-			(at 180.34 63.4999 0)
+			(at 180.34 64.7699 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -581,7 +525,7 @@
 			)
 		)
 		(property "Value" "logic_board2"
-			(at 180.34 66.0399 0)
+			(at 180.34 67.3099 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -613,7 +557,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 177.8 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -634,9 +578,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "60c1a532-6561-4e55-955a-82f46d8bc166")
 		)
 		(instances
 			(project "bucket_controls"
@@ -724,7 +665,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 160.02 66.04 0)
 		(unit 1)
 		(body_style 1)
@@ -736,7 +677,7 @@
 		(fields_autoplaced yes)
 		(uuid "4ef29956-b4f6-4153-b2f2-9795eaa56d00")
 		(property "Reference" "H1"
-			(at 162.56 63.4999 0)
+			(at 162.56 64.7699 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -747,7 +688,7 @@
 			)
 		)
 		(property "Value" "logic_board1"
-			(at 162.56 66.0399 0)
+			(at 162.56 67.3099 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -779,7 +720,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 160.02 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -800,9 +741,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "6b3451cc-7575-49c0-8592-d24f90e4cdb6")
 		)
 		(instances
 			(project "bucket_controls"
@@ -814,7 +752,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 213.36 52.07 0)
 		(unit 1)
 		(body_style 1)
@@ -826,7 +764,7 @@
 		(fields_autoplaced yes)
 		(uuid "57935863-f6fb-4bcd-ab45-42de1baa4b27")
 		(property "Reference" "H13"
-			(at 215.9 49.5299 0)
+			(at 215.9 50.7999 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -837,7 +775,7 @@
 			)
 		)
 		(property "Value" "dac4"
-			(at 215.9 52.0699 0)
+			(at 215.9 53.3399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -869,7 +807,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 213.36 52.07 0)
 			(hide yes)
 			(show_name no)
@@ -890,9 +828,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "ecf58a27-e10a-4908-8fe9-4a9f30d0b2d3")
 		)
 		(instances
 			(project "bucket_controls"
@@ -904,7 +839,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 177.8 52.07 0)
 		(unit 1)
 		(body_style 1)
@@ -916,7 +851,7 @@
 		(fields_autoplaced yes)
 		(uuid "5d1c97b0-e8fb-4450-acb8-42cd1c49ae12")
 		(property "Reference" "H10"
-			(at 180.34 49.5299 0)
+			(at 180.34 50.7999 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -927,7 +862,7 @@
 			)
 		)
 		(property "Value" "dac2"
-			(at 180.34 52.0699 0)
+			(at 180.34 53.3399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -959,7 +894,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 177.8 52.07 0)
 			(hide yes)
 			(show_name no)
@@ -980,9 +915,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "7d80d200-cc56-4fa7-9ff1-1c07423fb04c")
 		)
 		(instances
 			(project "bucket_controls"
@@ -994,7 +926,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 195.58 66.04 0)
 		(unit 1)
 		(body_style 1)
@@ -1006,7 +938,7 @@
 		(fields_autoplaced yes)
 		(uuid "6cf50ede-0ee2-4eb7-acbf-8add9d330e6a")
 		(property "Reference" "H3"
-			(at 198.12 63.4999 0)
+			(at 198.12 64.7699 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1017,7 +949,7 @@
 			)
 		)
 		(property "Value" "logic_board3"
-			(at 198.12 66.0399 0)
+			(at 198.12 67.3099 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1049,7 +981,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 195.58 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -1070,9 +1002,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "c31c2597-4515-4224-b78d-891f7c0176e2")
 		)
 		(instances
 			(project "bucket_controls"
@@ -1160,7 +1089,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 213.36 66.04 0)
 		(unit 1)
 		(body_style 1)
@@ -1172,7 +1101,7 @@
 		(fields_autoplaced yes)
 		(uuid "81800b05-4c5e-4b77-8bf0-99ca5bb3b381")
 		(property "Reference" "H4"
-			(at 215.9 63.4999 0)
+			(at 215.9 64.7699 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1183,7 +1112,7 @@
 			)
 		)
 		(property "Value" "logic_board4"
-			(at 215.9 66.0399 0)
+			(at 215.9 67.3099 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1215,7 +1144,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 213.36 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -1236,9 +1165,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "1fc64dbf-4d3a-4947-b48e-d6306c7e4509")
 		)
 		(instances
 			(project "bucket_controls"
@@ -1250,7 +1176,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 195.58 52.07 0)
 		(unit 1)
 		(body_style 1)
@@ -1262,7 +1188,7 @@
 		(fields_autoplaced yes)
 		(uuid "86bd674e-8f10-40bb-aa7d-b72c279901b2")
 		(property "Reference" "H11"
-			(at 198.12 49.5299 0)
+			(at 198.12 50.7999 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1273,7 +1199,7 @@
 			)
 		)
 		(property "Value" "dac3"
-			(at 198.12 52.0699 0)
+			(at 198.12 53.3399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1305,7 +1231,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 195.58 52.07 0)
 			(hide yes)
 			(show_name no)
@@ -1326,9 +1252,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "fac049cd-e0c3-46e3-82c5-29d66ba08e68")
 		)
 		(instances
 			(project "bucket_controls"
@@ -1568,7 +1491,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
+		(lib_id "Mechanical:MountingHole")
 		(at 160.02 52.07 0)
 		(unit 1)
 		(body_style 1)
@@ -1580,7 +1503,7 @@
 		(fields_autoplaced yes)
 		(uuid "e1ac1309-f3d7-456a-a925-bc4a739b4df5")
 		(property "Reference" "H9"
-			(at 162.56 49.5299 0)
+			(at 162.56 50.7999 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1591,7 +1514,7 @@
 			)
 		)
 		(property "Value" "dac1"
-			(at 162.56 52.0699 0)
+			(at 162.56 53.3399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1623,7 +1546,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole with connection"
+		(property "Description" "Mounting Hole without connection"
 			(at 160.02 52.07 0)
 			(hide yes)
 			(show_name no)
@@ -1644,9 +1567,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "26b6a7d7-c2e6-44d1-9bd0-0a47d50c3480")
 		)
 		(instances
 			(project "bucket_controls"

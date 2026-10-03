@@ -358,7 +358,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "My Symbols:EC11_Rotary_Encoder"
+		(symbol "My Symbols:EC11_Rotary_Encoder_Board"
 			(pin_names
 				(offset 1.016)
 				(hide yes)
@@ -378,7 +378,7 @@
 					)
 				)
 			)
-			(property "Value" "EC11_Rotary_Encoder"
+			(property "Value" "EC11_Rotary_Encoder_Board"
 				(at 1.27 -5.08 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -443,7 +443,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_0_0"
+			(symbol "EC11_Rotary_Encoder_Board_0_0"
 				(circle
 					(center 2.54 2.54)
 					(radius 0.2032)
@@ -479,7 +479,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_0_1"
+			(symbol "EC11_Rotary_Encoder_Board_0_1"
 				(polyline
 					(pts
 						(xy 2.54 2.54) (xy 0 0)
@@ -505,7 +505,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_1_1"
+			(symbol "EC11_Rotary_Encoder_Board_1_1"
 				(rectangle
 					(start -1.27 3.81)
 					(end 3.81 -3.81)
@@ -612,42 +612,6 @@
 						)
 					)
 					(number "B"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin no_connect line
-					(at -5.08 0 0)
-					(length 3.81)
-					(name "Pin_2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "C"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin no_connect line
-					(at 7.62 2.54 180)
-					(length 3.81)
-					(name "Pin_4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "D"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -6701,7 +6665,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 81.28 96.52 180)
 		(unit 1)
 		(body_style 1)
@@ -6776,12 +6740,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "5a964837-e611-409a-9a6f-904d0b7f3323")
-		)
-		(pin "C"
-			(uuid "62c461c7-552a-4b4f-96ec-febbb669891f")
 		)
 		(pin "G"
 			(uuid "f6129d75-89a3-4750-bb78-ad0c8384a90a")
@@ -8332,7 +8290,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 81.28 248.92 180)
 		(unit 1)
 		(body_style 1)
@@ -8407,12 +8365,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "05d150bf-1271-42a0-9001-952b535edc66")
-		)
-		(pin "C"
-			(uuid "b80c5c4f-06c2-496a-a4f0-2f086ad103d8")
 		)
 		(pin "G"
 			(uuid "94334c9b-85a8-454b-a8e4-c06c000788c4")
@@ -10787,7 +10739,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 81.28 198.12 180)
 		(unit 1)
 		(body_style 1)
@@ -10862,12 +10814,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "e5774556-8f7d-4a87-ad28-ec31798c5582")
-		)
-		(pin "C"
-			(uuid "96385119-a00d-4aa5-9758-a00b323686e7")
 		)
 		(pin "G"
 			(uuid "e80b2b0c-7348-4f0d-8024-c93865c03fd4")
@@ -11998,7 +11944,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 201.93 96.52 180)
 		(unit 1)
 		(body_style 1)
@@ -12073,12 +12019,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "3193d2ae-95b8-4628-a397-eb93076ea664")
-		)
-		(pin "C"
-			(uuid "a373b4eb-0ea6-4354-a191-bb8666596e4d")
 		)
 		(pin "G"
 			(uuid "0dcae848-686f-415d-b24f-31c1104ae0d5")
@@ -13614,7 +13554,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 81.28 45.72 180)
 		(unit 1)
 		(body_style 1)
@@ -13690,12 +13630,6 @@
 				)
 			)
 		)
-		(pin "D"
-			(uuid "b84460c9-d20c-4ae1-abf8-fa24177698ba")
-		)
-		(pin "C"
-			(uuid "e99d7fc5-598b-4fa2-871a-becde6f5aa55")
-		)
 		(pin "G"
 			(uuid "4e23ec67-ce0b-4e45-bec6-c891a9438d9d")
 		)
@@ -13718,7 +13652,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 201.93 45.72 180)
 		(unit 1)
 		(body_style 1)
@@ -13793,12 +13727,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "6cf03a68-1060-48a5-9b1b-8d9c35b41580")
-		)
-		(pin "C"
-			(uuid "391c80d0-f4c4-49f3-8b84-0d71dfc51fb3")
 		)
 		(pin "G"
 			(uuid "de7f623f-c241-48e7-a46b-c05cf7957ed4")
@@ -14082,7 +14010,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 81.28 147.32 180)
 		(unit 1)
 		(body_style 1)
@@ -14157,12 +14085,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "2bdf19bc-a3ef-4274-9921-d44d88fc150f")
-		)
-		(pin "C"
-			(uuid "f0ad256e-cdbc-41f8-a0ec-c659e8adfb13")
 		)
 		(pin "G"
 			(uuid "af82d21e-1cf9-459c-a082-21a52186f957")
@@ -15712,7 +15634,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 201.93 198.12 180)
 		(unit 1)
 		(body_style 1)
@@ -15787,12 +15709,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "2dacb762-a4ad-44af-af26-f925048e6998")
-		)
-		(pin "C"
-			(uuid "492bdcf1-af71-47b4-bbf5-44d21b994137")
 		)
 		(pin "G"
 			(uuid "867bef23-b588-492d-bff9-277ffb54d04e")
@@ -17410,7 +17326,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 201.93 147.32 180)
 		(unit 1)
 		(body_style 1)
@@ -17485,12 +17401,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "d1bdf6df-1d4d-47c7-b2ba-d0e0783452d0")
-		)
-		(pin "C"
-			(uuid "9e14c3e1-0034-4063-89da-0c35481e263f")
 		)
 		(pin "G"
 			(uuid "ef19153e-a03f-40e5-87af-31359fdcfb1f")
@@ -20176,7 +20086,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder")
+		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
 		(at 201.93 248.92 180)
 		(unit 1)
 		(body_style 1)
@@ -20251,12 +20161,6 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "D"
-			(uuid "8d41e359-bbca-43a7-9a6e-f7ea93e9bf92")
-		)
-		(pin "C"
-			(uuid "ba59c026-964e-464e-9f30-1d4207990a1a")
 		)
 		(pin "G"
 			(uuid "1fac21df-26f6-4737-aaa0-171c8b44e1d2")
