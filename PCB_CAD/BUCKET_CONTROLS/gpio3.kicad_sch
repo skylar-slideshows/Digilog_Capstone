@@ -1728,7 +1728,7 @@
 	)
 	(global_label "C3_B6"
 		(shape input)
-		(at 196.85 90.17 0)
+		(at 196.85 80.01 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1738,7 +1738,7 @@
 		)
 		(uuid "04459f24-8a50-4876-aec5-00eb62ba551e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 205.7618 90.17 0)
+			(at 205.7618 80.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1837,30 +1837,6 @@
 		(uuid "1dea3e03-a74e-4eb2-9977-05a0e674d4fd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 205.7618 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "C3_B10"
-		(shape input)
-		(at 196.85 100.33 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "270f6fc3-bf6c-4ac0-907d-461268162af6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 206.9713 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2135,6 +2111,31 @@
 		(uuid "5fca2bdc-aa9f-4d96-9aef-3cfa8e833d04")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 103.8594 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "btnB_3"
+		(shape output)
+		(at 196.85 102.87 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 255 255 1)
+			)
+			(justify left)
+		)
+		(uuid "62e99b10-fa81-4e16-9ac7-8402d1722620")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 206.306 102.87 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2570,7 +2571,7 @@
 	)
 	(global_label "C3_B4"
 		(shape input)
-		(at 196.85 80.01 0)
+		(at 196.85 90.17 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2580,7 +2581,7 @@
 		)
 		(uuid "b015c078-be85-48c6-b1ba-2f55523a0e7f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 205.7618 80.01 0)
+			(at 205.7618 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2740,19 +2741,20 @@
 			)
 		)
 	)
-	(global_label "C3_B11"
-		(shape input)
-		(at 196.85 102.87 0)
+	(global_label "btnA_3"
+		(shape output)
+		(at 196.85 100.33 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
+				(color 255 255 255 1)
 			)
 			(justify left)
 		)
-		(uuid "d4f283c7-3c37-4923-a7ff-d397f8a16c76")
+		(uuid "dcde1c44-efe7-49e8-853d-3dee5628d648")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 206.9713 102.87 0)
+			(at 206.1246 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

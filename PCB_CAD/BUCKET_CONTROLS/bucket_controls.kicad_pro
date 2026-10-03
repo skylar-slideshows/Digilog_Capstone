@@ -120,9 +120,9 @@
         "padstack": "warning",
         "pth_inside_courtyard": "error",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
-        "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_edge_clearance": "ignore",
+        "silk_over_copper": "ignore",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
@@ -542,7 +542,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "",
+      "specctra_dsn": "../../../bucket_controls2.dsn",
       "vrml": ""
     },
     "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks"
@@ -569,7 +569,7 @@
       "exclude_dnp": false,
       "fields_ordered": [
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Reference",
           "name": "Reference",
           "show": true
@@ -605,7 +605,7 @@
           "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -695,7 +695,7 @@
         "uuid": "96563cb2-2d6f-462f-b797-f4c345bb605c"
       }
     ],
-    "used_designators": "H5-40,H301-332,J2-80,J101-120,J201-220,J301-320,#PWR1-619,#PWR627-638,D1-80,D101-120,D201-220,D301-320,C1-160,C201-260,C301-342,R1-416,U2-28,U301-304,F2-4,F301,SW1-58,SW101-122,SW201-222,SW301-322",
+    "used_designators": "H5-40,H301-332,J2-80,J101-120,J201-220,J301-320,#PWR1-619,#PWR627-669,D1-80,D101-120,D201-220,D301-320,C1-160,C201-260,C301-342,R1-416,U2-28,U301-304,F2-4,F301,SW1-58,SW101-122,SW201-222,SW301-322",
     "variants": []
   },
   "sheets": [
