@@ -340,6 +340,7 @@ int main(void)
   init_led_handler(); // start LED frame renderer
   init_i2c_scheduler();
   init_fader_poller();
+  init_faders();
 
   /* USER CODE END RTOS_THREADS */
 

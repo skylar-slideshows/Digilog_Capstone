@@ -5,7 +5,7 @@
 #include "stm32g474xx.h"
 #include "stm32g4xx_ll_adc.h"
 
-#define DEFAULT_FADER_STATE (fader_state_t){.movement_mode = FADER_UNPOWERED, .position = UINT16_MAX / 2}
+#define DEFAULT_FADER_STATE (fader_state_t){.movement_mode = FADER_UNPOWERED, .position = UINT16_MAX >> 5}
 
 /**
  * @brief Hardware connection info of the fader
@@ -50,5 +50,10 @@ void update_fader (
  * @brief Poll fader values into the cache/buffer
  */
 void poll_faders(void);
+
+/**
+ * @brief Init fader timers and adc stuff
+ */
+void init_faders(void);
 
 #endif

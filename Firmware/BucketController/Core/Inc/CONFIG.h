@@ -142,20 +142,20 @@
     #define FADER_ADC hadc2
 
     #define FADER1_TIM_HANDLE        htim2
-    #define FADER1_A_TIM_AF          0U
-    #define FADER1_B_TIM_AF          1U
+    #define FADER1_A_TIM_CHAN        TIM_CHANNEL_1
+    #define FADER1_B_TIM_CHAN        TIM_CHANNEL_2
 
     #define FADER2_TIM_HANDLE        htim2
-    #define FADER2_A_TIM_AF          2U
-    #define FADER2_B_TIM_AF          3U
+    #define FADER2_A_TIM_CHAN        TIM_CHANNEL_3
+    #define FADER2_B_TIM_CHAN        TIM_CHANNEL_4
 
     #define FADER3_TIM_HANDLE        htim3
-    #define FADER3_A_TIM_AF          0U
-    #define FADER3_B_TIM_AF          1U
+    #define FADER3_A_TIM_CHAN        TIM_CHANNEL_1
+    #define FADER3_B_TIM_CHAN        TIM_CHANNEL_2
 
     #define FADER4_TIM_HANDLE        htim3
-    #define FADER4_A_TIM_AF          2U
-    #define FADER4_B_TIM_AF          3U
+    #define FADER4_A_TIM_CHAN        TIM_CHANNEL_3
+    #define FADER4_B_TIM_CHAN        TIM_CHANNEL_4
 
 #else // please do not edit the below configuration
 
