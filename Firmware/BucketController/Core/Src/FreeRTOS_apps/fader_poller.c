@@ -37,7 +37,7 @@ void init_fader_poller (void)
         .stack_size = sizeof(FaderSchedulerBuffer),
         .cb_mem = &FaderSchedulerControlBlock,
         .cb_size = sizeof(FaderSchedulerControlBlock),
-        .priority = osPriorityNormal,
+        .priority = osPriorityBelowNormal,
     };
 
     fader_scheduler_task_handle = osThreadNew(fader_poller_task, NULL, &attr);

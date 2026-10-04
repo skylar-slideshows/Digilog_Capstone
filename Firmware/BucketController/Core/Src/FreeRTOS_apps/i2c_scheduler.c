@@ -205,7 +205,7 @@ void init_i2c_scheduler (void)
             .stack_size = sizeof(I2CSchedulerBuffers[i]),
             .cb_mem = &(I2CSchedulerControlBlocks[i]),
             .cb_size = sizeof(I2CSchedulerControlBlocks[i]),
-            .priority = osPriorityNormal,
+            .priority = osPriorityBelowNormal,
         };
         i2c_sched_task_args[i] = i;
         i2c_scheduler_task_handles[i] = osThreadNew(i2c_scheduler_task, &(i2c_sched_task_args[i]), &attr);
