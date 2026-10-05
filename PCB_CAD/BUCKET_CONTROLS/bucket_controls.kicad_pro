@@ -128,7 +128,7 @@
         "starved_thermal": "error",
         "text_height": "warning",
         "text_on_edge_cuts": "error",
-        "text_thickness": "warning",
+        "text_thickness": "ignore",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
@@ -542,7 +542,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "../../../bucket_controls2.dsn",
+      "specctra_dsn": "../../../bucket_controls3.dsn",
       "vrml": ""
     },
     "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks"
@@ -569,7 +569,7 @@
       "exclude_dnp": false,
       "fields_ordered": [
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Reference",
           "name": "Reference",
           "show": true
@@ -581,7 +581,7 @@
           "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Value",
           "name": "Value",
           "show": true
@@ -605,7 +605,7 @@
           "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -644,6 +644,18 @@
           "group_by": false,
           "label": "Sim.Device",
           "name": "Sim.Device",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PURC_LINK",
+          "name": "PURC_LINK",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Field5",
+          "name": "Field5",
           "show": false
         }
       ],
