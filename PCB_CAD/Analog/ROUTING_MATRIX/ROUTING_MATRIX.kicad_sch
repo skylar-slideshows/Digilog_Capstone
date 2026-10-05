@@ -1,0 +1,415 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "aa8eb427-a80e-4e0f-8f48-447b7f7c56a1")
+	(paper "A4")
+	(lib_symbols)
+	(text "FOR THE INSERT/FX CHAIN MATRIX:\nCD4067 x 48\n\n16 for Channel insert -> select insert line 1-16\n16 (one for each insert return) -> select another insert (1-15) or 0 go below\n16 From 0 out of previous mux -> select return channel 1-16\n\nUSE CD4094 SHIFT REGS TO WRITE THEM\n\nAnything that drives a CD4067 input also runs on ±8 V\n78L08 and a 79L08\n\nLevel-shift 3.3 V logic with an LM339\n\nCD4094s power up with random contents, which means random routes and possible source conflicts. To avoid this:\n\nPull every CD4067 inhibit line up to +8 V through about 100 kΩ, so every mux is off by default.\nHold the CD4094 output-enable low at power-up. Its outputs then float and the pull-ups keep all muxes disabled.\nThe comparator input for this line needs a pull-down on the microcontroller side, so the line stays\nlow while the microcontroller is in reset.\nAt boot, the firmware shifts in a known safe state, pulses strobe, and then raises output enable."
+		(exclude_from_sim no)
+		(at 305.054 18.796 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "320cbf93-b3a8-4eee-976b-1ccc2010e2da")
+	)
+	(sheet
+		(at 410.21 106.68)
+		(size 49.53 39.37)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "0a9f69c3-9d1f-48cb-9269-f2be0f64da86")
+		(property "Sheetname" "INPUT RXVERS"
+			(at 410.21 105.9684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "in_recs.kicad_sch"
+			(at 410.21 146.6346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 88.9 25.4)
+		(size 50.8 76.2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "2d1b28a8-8d1f-45f5-8623-bd1be04629a0")
+		(property "Sheetname" "CHAIN_MATRIX"
+			(at 88.9 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "matrix1.kicad_sch"
+			(at 88.9 102.1846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 345.44 106.68)
+		(size 52.07 40.64)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "3e74b5aa-9ba2-4f84-bcba-46aa26db338a")
+		(property "Sheetname" "OUTPUT_DRIVERS"
+			(at 345.44 105.9684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "out_drivers.kicad_sch"
+			(at 345.44 147.9046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 292.1 158.75)
+		(size 41.91 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "49fab782-a9c4-4361-8389-7a2e91b2b8ae")
+		(property "Sheetname" "POWER"
+			(at 292.1 158.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 292.1 197.4346 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 25.4)
+		(size 50.8 76.2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "8a0412ad-819f-44fc-a831-26f7c326bc6a")
+		(property "Sheetname" "SEND_SELECT"
+			(at 25.4 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "matrix0.kicad_sch"
+			(at 25.4 102.1846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 152.4 25.4)
+		(size 50.8 76.2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "99c8aa66-efce-45fc-b8f4-a6188decb4d4")
+		(property "Sheetname" "RETURN_SELECT"
+			(at 152.4 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "matrix2.kicad_sch"
+			(at 152.4 102.1846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 292.1 104.14)
+		(size 43.18 44.45)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a9820236-1baa-47d7-8e4e-058cc0e6db4f")
+		(property "Sheetname" "SHIFT REGISTERS"
+			(at 292.1 103.4284 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "shiftreg.kicad_sch"
+			(at 292.1 149.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 215.9 25.4)
+		(size 50.8 76.2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "ebdc01fb-6b79-4e08-a265-bac7cb7f259d")
+		(property "Sheetname" "CHAN_BUS_SWITCHES"
+			(at 215.9 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "buses.kicad_sch"
+			(at 215.9 102.1846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ROUTING_MATRIX"
+				(path "/aa8eb427-a80e-4e0f-8f48-447b7f7c56a1"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+	(embedded_files
+		(file
+			(name "default_sheet.kicad_wks")
+			(type worksheet)
+			(data |KLUv/WBDDAUYANYgZiDwGjdAiNhXhEkQtFUYSU2apGCmL9l0goFLY2FxGKOpCl8AWABcALXk3fxV
+				XApzDj2mMItCFrvsa0PYK3UyqIIZldFblD9WVa8FMxpl15Y95VXNAwAgYELlevLoEutgOMz2Uzug
+				CWscZg/XW0MDQCDbpJTz/fuG9oRragAInEiqzsf7LGkQHpdzALghiEZKaBoLs0+hCZNYezL1Sb+d
+				BjLWCn/XdvaqqbbjenH4ZbC9HSN9IejpCmabu4pyfy4qxF5jnW8tlcLP3eP39+fWf/domH3YDvHg
+				sjP28gnDOhd3j5tsl9J9xpcvTpKYuASN4CIOxmdBL9vONs3jfPePPpvGzS/ncl5cpHN0HzD09Lsf
+				4s+erwnFcXFkOItLoMWtJ4LrEguMMQvXfOvXLJDNJ9ToWyZYT9tl0/cEgez/cl6v+avDYS4Xx8Gl
+				R6rROJ/OgpxoEpYFnW/4KGncNLrgIAquoXjDZpKoYM26nikrbD9lp+AeFEtF0ujaa3FO6fI3qWGu
+				+OnxDd8v2U04iYSicAkKjS5R6TiuEYCYoAE5yJTNSJIklWEOUIRMTVXxbDECBK0d61sifbINU0pC
+				cgbbv8VH4HQTncAsWgbELYTiKzMxasRto88RlNTtHIYSJkos5qJW7s0ZR38ZmLMUQRLQG9CjBdR6
+				v96OXgqcKYn8JOHSGrDxUFc+CtAfzJLStbNlA82dkUaD1fFSwBZopIfIBpvlyRqOWNIucyJ+1W8+
+				FlZb7ViCRDjSwMnPGSXkSfqiJoxzi3K5knQz2dWJEIhhhD0kyY0iEEToEriVEgYYBGC/Tlie1uh3
+				xNk2A7msZ1WTlPYEK5FMA1Ba+SRx0yQyraBcB/+sLGhCGy2Ljg8AGeGBaSbM+gG8MHEWaf8T2+lR
+				KNZzVP6c0hH95Fk8sJ4FvfLrtpgqsqPBpHxw5WRtDGyM4zlKjGcYRaPPd/cyb/6weLleVUy4GnXR
+				ksiIbmvfrbBYZMMA4A+rd31Hx36ln9g1Al94X/zjRZOYjQ9cBQ==|
+			)
+			(checksum "3D790943F8DE9621CB81BD663D8A02EA")
+		)
+	)
+)
