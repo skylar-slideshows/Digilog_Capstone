@@ -56,27 +56,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-/*----- DRV8871 fader motor PWM bring-up test --------------------------------
- * TIM2_CH1 -> PA5 (F0_MA), TIM2_CH2 -> PA1 (F0_MB), both AF1.
- * PWM frequency is whatever CubeMX set for TIM2 (Period 6799, PSC 0 ->
- * 170 MHz / 6800 = 25 kHz); duty is scaled from the live ARR, so changing the
- * period in the .ioc needs no edits here.
- */
-#define MOTOR_TEST_DUTY_P_PCT  30U    // p: duty on PA5 (TIM2_CH1) during phase A
-#define MOTOR_TEST_DUTY_Q_PCT  70U    // q: duty on PA1 (TIM2_CH2) during phase B
-#define MOTOR_TEST_PHASE_MS    1000U  // time spent in each phase
-
-/* The DRV8871 has no nSLEEP pin. It enters sleep by itself when IN1 = IN2 = 0
- * for tSLEEP (1 ms typ, 1.5 ms max), and needs ~50 us (tON) to wake. In this
- * test one input is always held at 0%, so the PWMing input must never be 0%,
- * otherwise the bridge falls asleep. */
-#if (MOTOR_TEST_DUTY_P_PCT == 0U) || (MOTOR_TEST_DUTY_Q_PCT == 0U)
-#error "DRV8871 test: a 0% duty with the other input low puts the DRV8871 to sleep"
-#endif
-#if (MOTOR_TEST_DUTY_P_PCT > 100U) || (MOTOR_TEST_DUTY_Q_PCT > 100U)
-#error "DRV8871 test: duty must be 1..100 %"
-#endif
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -155,66 +134,6 @@ int __io_putchar(int ch)
     HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 100);
   }
   return ch;
-}
-
-encoder_state_t enc0;
-encoder_info_t enc0_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOA, .a_pin=0, .b_register=MCP_GPIOA, .b_pin=1 };
-encoder_state_t enc1;
-encoder_info_t enc1_info = { .i2c_bus=I2C1, .i2c_addr=0x20, .a_register=MCP_GPIOB, .a_pin=1, .b_register=MCP_GPIOB, .b_pin=0 };
-
-
-/*=============================== DRV8871 PWM ================================*/
-
-/**
- ----------------------------------------------------------------------------------
-  @brief motor_set_duty_pct : PA5 duty %, PA1 duty % -> void
-  Sets both DRV8871 inputs so they change on the SAME PWM period.
-  HAL_TIM_PWM_ConfigChannel enables CCR preload, so new compare values only
-  take effect at the next update event. UDIS holds off that update while both
-  CCRs are written, so a handover (p% on PA5 -> q% on PA1) can never produce a
-  period with both inputs low (coast/sleep) or both PWMing (brake).
-  100% gives CCR = ARR + 1, which PWM mode 1 holds constantly high.
- ----------------------------------------------------------------------------------
-*/
-static void motor_set_duty_pct (uint32_t ma_pct, uint32_t mb_pct)
-{
-  const uint32_t steps = __HAL_TIM_GET_AUTORELOAD(&htim2) + 1U;
-
-  if (ma_pct > 100U) ma_pct = 100U;
-  if (mb_pct > 100U) mb_pct = 100U;
-
-  htim2.Instance->CR1 |= TIM_CR1_UDIS;  // freeze preload -> active transfer
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, (steps * ma_pct) / 100U); // PA5 / F0_MA
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, (steps * mb_pct) / 100U); // PA1 / F0_MB
-  htim2.Instance->CR1 &= ~TIM_CR1_UDIS; // both latch together at the next overflow
-}
-
-
-/**
- ----------------------------------------------------------------------------------
-  @brief motor_pwm_init : void -> void
-  Routes PA5/PA1 to TIM2 and starts CH1/CH2 with the phase-A duty already loaded,
-  so the DRV8871 wakes on the first period instead of sitting at 0%/0%.
- ----------------------------------------------------------------------------------
-*/
-static void motor_pwm_init (void)
-{
-  // HAL_TIM_MspPostInit should already do this if the .ioc maps TIM2_CH1/CH2 to
-  // PA5/PA1. Done explicitly so the firmware matches the board wiring regardless.
-  GPIO_InitTypeDef g = {0};
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  g.Pin = GPIO_PIN_5 | GPIO_PIN_1;
-  g.Mode = GPIO_MODE_AF_PP;
-  g.Pull = GPIO_NOPULL;            // DRV8871 IN1/IN2 have internal pulldowns
-  g.Speed = GPIO_SPEED_FREQ_LOW;   // plenty for 25 kHz, keeps edges gentle
-  g.Alternate = GPIO_AF1_TIM2;
-  HAL_GPIO_Init(GPIOA, &g);
-
-  motor_set_duty_pct(MOTOR_TEST_DUTY_P_PCT, 0U);
-  htim2.Instance->EGR = TIM_EGR_UG; // load the CCRs now rather than after the first period
-
-  if (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK) Error_Handler();
-  if (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2) != HAL_OK) Error_Handler();
 }
 
 /* USER CODE END 0 */
@@ -1308,22 +1227,9 @@ void StartDefaultTask(void *argument)
   );*/
   // bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
 
-  /*----- DRV8871 PWM bring-up: p% on PA5 for 1 s, then q% on PA1 for 1 s -----
-   * Sign-magnitude, fast decay: the idle input is held low, so each PWM off-time
-   * is IN1 = IN2 = 0 (coast). That off-time is < 40 us, far below tSLEEP (1 ms),
-   * so the DRV8871 never sleeps. osDelay (not HAL_Delay) so this task blocks
-   * instead of spinning and starving the LED handler (BelowNormal priority). */
-  motor_pwm_init();
-
   for (;;) // this MUST STAY
   {
-    // Phase A: PA5 (F0_MA) at p%, PA1 (F0_MB) low
-    motor_set_duty_pct(MOTOR_TEST_DUTY_P_PCT, 0U);
-    osDelay(pdMS_TO_TICKS(MOTOR_TEST_PHASE_MS));
-
-    // Phase B: PA1 (F0_MB) at q%, PA5 (F0_MA) low
-    motor_set_duty_pct(0U, MOTOR_TEST_DUTY_Q_PCT);
-    osDelay(pdMS_TO_TICKS(MOTOR_TEST_PHASE_MS));
+    vTaskDelay(portMAX_DELAY);
   }
   
 
@@ -1372,7 +1278,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  printf("\r\nError!!!!!!!!!!\n");
   __disable_irq();
   while (1)
   {
