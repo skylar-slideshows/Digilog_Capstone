@@ -60,7 +60,7 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.0,
+          "min_clearance": 0.5,
           "min_island_area": 10.0,
           "min_thickness": 0.25,
           "pad_connection": 1,
@@ -69,13 +69,7 @@
           "thermal_relief_spoke_width": 0.5
         }
       },
-      "diff_pair_dimensions": [
-        {
-          "gap": 0.0,
-          "via_gap": 0.0,
-          "width": 0.0
-        }
-      ],
+      "diff_pair_dimensions": [],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -107,7 +101,7 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "ignore",
+        "lib_footprint_mismatch": "warning",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
@@ -128,7 +122,7 @@
         "starved_thermal": "error",
         "text_height": "warning",
         "text_on_edge_cuts": "error",
-        "text_thickness": "ignore",
+        "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
@@ -138,7 +132,7 @@
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "error",
+        "tuning_profile_track_geometries": "ignore",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -162,7 +156,7 @@
         "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
-        "solder_mask_to_copper_clearance": 0.005,
+        "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -209,12 +203,7 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [
-        0.0,
-        0.3,
-        0.4,
-        0.5
-      ],
+      "track_widths": [],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -241,12 +230,7 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [
-        {
-          "diameter": 0.0,
-          "drill": 0.0
-        }
-      ],
+      "via_dimensions": [],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -256,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "2"
+      "sch_revision": "0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -504,7 +488,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "PAN_FADER.kicad_pro",
+    "filename": "BUCKET_FADER.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -541,7 +525,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "../../../PAN_FADER.dsn",
+      "specctra_dsn": "",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -552,7 +536,7 @@
       "method": 0,
       "sort_order": 1
     },
-    "bom_export_filename": "../bom_jlc.csv",
+    "bom_export_filename": "${PROJECTNAME}.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -577,31 +561,31 @@
           "group_by": false,
           "label": "Qty",
           "name": "${QUANTITY}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Value",
           "name": "Value",
           "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "DNP",
           "name": "${DNP}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": false
+          "show": true
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": false
+          "show": true
         },
         {
           "group_by": true,
@@ -613,145 +597,13 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Check_prices",
-          "name": "Check_prices",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Manufacturer",
-          "name": "Manufacturer",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "MF",
-          "name": "MF",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "MP",
-          "name": "MP",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "MPN",
-          "name": "MPN",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "OC_FARNELL",
-          "name": "OC_FARNELL",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "OC_NEWARK",
-          "name": "OC_NEWARK",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Package",
-          "name": "Package",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Part Number",
-          "name": "Part Number",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Price",
-          "name": "Price",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "SnapEDA_Link",
-          "name": "SnapEDA_Link",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Specifications",
-          "name": "Specifications",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "SUPPLIER",
-          "name": "SUPPLIER",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Availability",
-          "name": "Availability",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Description",
-          "name": "Description",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "#",
-          "name": "${ITEM_NUMBER}",
-          "show": false
-        },
-        {
-          "group_by": true,
-          "label": "LCSC",
-          "name": "LCSC",
           "show": true
-        },
-        {
-          "group_by": false,
-          "label": "KLC_S5.1",
-          "name": "KLC_S5.1",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "KLC_S3.3",
-          "name": "KLC_S3.3",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Device",
-          "name": "Sim.Device",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Pins",
-          "name": "Sim.Pins",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Sim.Type",
-          "name": "Sim.Type",
-          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "",
+      "name": "Default Editing",
       "sort_asc": true,
       "sort_field": "Reference"
     },
@@ -791,18 +643,26 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "PAN_FADER.kicad_sch",
+        "filename": "BUCKET_FADER.kicad_sch",
         "name": "Root",
-        "uuid": "1ff51d4a-5c60-429a-8d32-cdff810802ec"
+        "uuid": "02de189c-f5cc-44b5-98b8-6bf868153758"
       }
     ],
-    "used_designators": "J1-6,JP1,U4B1,U1-10,C7R1,R9L1,C2L1,U4A1,C1-35,C101,R9R1,T1L1,R14L1,R10L1,R11R1-2,C5R1,H1-3,C4R1,R1L1,VR1-2,R7R1,R6R1-2,R15L1,R11L1,C5L1,R12R1,R13R1,R10R1-2,R4L1,R1R1-2,R3R1,C2R1,R6L1,R4R1,C3R1-2,R3L1,C1R1,R5L1,R13L1,R12L1,R2R1,TH1L1,R8L1,C3L1,R5R1,C1L1,R16L1,#PWR1-99,C6R1,TH1R1,R7L1,R8R1,R1-15,R17-20,R101-102,C7L1,R2L1,C4L1,T1R1,R14R1,TH1-3,R15R1,C6L1,U4C1",
+    "used_designators": "SW1-8,SW21-28,R1-32,R94-117,D1-60,FB1-8,C1-34,C41-48,#PWR1-90,#PWR177-208,J1-8,U1-12,F1-4",
     "variants": []
   },
   "sheets": [
     [
-      "1ff51d4a-5c60-429a-8d32-cdff810802ec",
+      "02de189c-f5cc-44b5-98b8-6bf868153758",
       "Root"
+    ],
+    [
+      "9ab92bab-bf40-4a98-a70c-2a340b890e47",
+      "Buttons"
+    ],
+    [
+      "d5ab849b-a8bf-47dd-be78-4add00082f95",
+      "Meters"
     ]
   ],
   "text_variables": {},
