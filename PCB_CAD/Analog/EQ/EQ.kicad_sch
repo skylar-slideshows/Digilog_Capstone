@@ -9,12 +9,13 @@
 		(date "2026-10-08")
 		(rev "0")
 		(company "EECE CAPSTONE")
+		(comment 2 "control voltage scaler/buffers. Includes temp. compensation")
 		(comment 3 "S.E.D.")
 	)
 	(lib_symbols)
 	(sheet
-		(at 48.26 39.37)
-		(size 86.36 95.25)
+		(at 161.29 36.83)
+		(size 46.99 39.37)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -26,9 +27,9 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "19ac4027-12ee-4e8d-9629-324ed9c55b9f")
-		(property "Sheetname" "LMF"
-			(at 52.324 48.514 0)
+		(uuid "0470ac74-8718-4bd4-b523-fc97ec3d43bd")
+		(property "Sheetname" "HF"
+			(at 165.608 46.736 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -40,8 +41,8 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "lmf.kicad_sch"
-			(at 48.26 135.2046 0)
+		(property "Sheetfile" "hf.kicad_sch"
+			(at 161.29 76.7846 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -55,6 +56,147 @@
 			(project "EQ"
 				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
 					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 160.02 143.51)
+		(size 52.07 45.72)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "19ac4027-12ee-4e8d-9629-324ed9c55b9f")
+		(property "Sheetname" "LMF"
+			(at 164.084 152.654 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 3.81 3.81)
+					(thickness 0.762)
+					(bold yes)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lmf.kicad_sch"
+			(at 174.752 180.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 158.75 86.36)
+		(size 53.34 50.8)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a72d46b7-4023-4263-80e6-7f970a92ee09")
+		(property "Sheetname" "HMF"
+			(at 161.036 94.488 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 3.81 3.81)
+					(thickness 0.762)
+					(bold yes)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "hmf.kicad_sch"
+			(at 170.18 127.254 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 163.83 205.74)
+		(size 46.99 45.72)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "e0afefa7-57e9-4e5b-bcfb-b7d9511ab56b")
+		(property "Sheetname" "LF"
+			(at 165.354 215.392 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 3.81 3.81)
+					(thickness 0.762)
+					(bold yes)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lf.kicad_sch"
+			(at 163.83 252.0446 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
+					(page "5")
 				)
 			)
 		)
