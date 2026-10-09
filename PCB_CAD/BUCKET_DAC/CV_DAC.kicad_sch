@@ -1208,6 +1208,160 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:R_Small_US"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 0.762 0.508 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "R_Small_US"
+				(at 0.762 -1.016 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor, small US symbol"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "r resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_Small_US_1_1"
+				(polyline
+					(pts
+						(xy 0 1.524) (xy 1.016 1.143) (xy 0 0.762) (xy -1.016 0.381) (xy 0 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 1.016 -0.381) (xy 0 -0.762) (xy -1.016 -1.143) (xy 0 -1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at 0 2.54 270)
+					(length 1.016)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -2.54 90)
+					(length 1.016)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "PCM_Device_AKL:Ferrite_Bead"
 			(pin_numbers
 				(hide yes)
@@ -1688,7 +1842,7 @@
 	)
 	(text "Mounting"
 		(exclude_from_sim no)
-		(at 334.264 184.912 0)
+		(at 334.264 215.392 0)
 		(effects
 			(font
 				(size 3.81 3.81)
@@ -1735,6 +1889,18 @@
 		(uuid "5ed41962-a1e9-4304-b550-f78d39fe0c03")
 	)
 	(junction
+		(at 336.55 195.58)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7adbc44a-6886-4b72-8927-f0a78075a513")
+	)
+	(junction
+		(at 336.55 172.72)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8eba2e4d-fd95-4262-8bf8-09de0502cc03")
+	)
+	(junction
 		(at 111.76 233.68)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1745,6 +1911,18 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cac57d3c-8857-49b8-8243-72741e977684")
+	)
+	(junction
+		(at 336.55 184.15)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e164eb99-1417-4dcd-bda3-ddd499a888b7")
+	)
+	(junction
+		(at 336.55 161.29)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e3b88b88-d05f-436e-a257-2592579949fe")
 	)
 	(junction
 		(at 157.48 232.41)
@@ -1784,6 +1962,16 @@
 	)
 	(wire
 		(pts
+			(xy 322.58 172.72) (xy 320.04 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "098b3e55-1a5a-4137-b9db-eed3d304d71c")
+	)
+	(wire
+		(pts
 			(xy 252.73 204.47) (xy 236.22 204.47)
 		)
 		(stroke
@@ -1791,6 +1979,16 @@
 			(type default)
 		)
 		(uuid "0d37d9dd-24e8-4c2d-b241-e0fd7d3f38da")
+	)
+	(wire
+		(pts
+			(xy 322.58 161.29) (xy 320.04 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0e406bf6-6e73-49d4-b116-406f21b705d5")
 	)
 	(wire
 		(pts
@@ -1854,6 +2052,16 @@
 	)
 	(wire
 		(pts
+			(xy 327.66 195.58) (xy 336.55 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6488d108-e790-4b33-bbee-2cb8b9805261")
+	)
+	(wire
+		(pts
 			(xy 252.73 209.55) (xy 236.22 209.55)
 		)
 		(stroke
@@ -1904,6 +2112,36 @@
 	)
 	(wire
 		(pts
+			(xy 336.55 195.58) (xy 336.55 184.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7dbd5836-b36f-4318-b352-75c63af2eae0")
+	)
+	(wire
+		(pts
+			(xy 336.55 172.72) (xy 327.66 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "810e521c-2c4d-4c43-a300-ed02386c358c")
+	)
+	(wire
+		(pts
+			(xy 336.55 172.72) (xy 336.55 184.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f623758-94b8-4ce4-94e0-a009acd08a1a")
+	)
+	(wire
+		(pts
 			(xy 292.1 162.56) (xy 287.02 162.56)
 		)
 		(stroke
@@ -1914,6 +2152,26 @@
 	)
 	(wire
 		(pts
+			(xy 336.55 161.29) (xy 336.55 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "98ea943a-f5d1-43ce-837d-7f934e01e143")
+	)
+	(wire
+		(pts
+			(xy 322.58 195.58) (xy 320.04 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9dc4a80e-d83f-44cb-854e-096284e92e4c")
+	)
+	(wire
+		(pts
 			(xy 252.73 243.84) (xy 236.22 243.84)
 		)
 		(stroke
@@ -1921,6 +2179,16 @@
 			(type default)
 		)
 		(uuid "9f802395-6f39-4326-ad7f-8afa1ecbdd38")
+	)
+	(wire
+		(pts
+			(xy 336.55 149.86) (xy 336.55 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a22a0945-e212-401d-8a62-03e6b43692ae")
 	)
 	(wire
 		(pts
@@ -1974,6 +2242,16 @@
 	)
 	(wire
 		(pts
+			(xy 327.66 149.86) (xy 336.55 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b7a68964-0540-420c-996a-79b594a469b9")
+	)
+	(wire
+		(pts
 			(xy 157.48 232.41) (xy 157.48 233.68)
 		)
 		(stroke
@@ -1991,6 +2269,26 @@
 			(type default)
 		)
 		(uuid "ba21dd5f-097c-4da4-873c-5ee3bc772a9a")
+	)
+	(wire
+		(pts
+			(xy 322.58 149.86) (xy 320.04 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb1dd8f8-b36d-4c59-a97a-ddbc9bd122cc")
+	)
+	(wire
+		(pts
+			(xy 336.55 161.29) (xy 327.66 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc24fdc9-3a8f-480a-a880-1430acedb4c9")
 	)
 	(wire
 		(pts
@@ -2024,6 +2322,16 @@
 	)
 	(wire
 		(pts
+			(xy 336.55 184.15) (xy 327.66 184.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7260830-b665-42b5-9083-0ffad079f6a7")
+	)
+	(wire
+		(pts
 			(xy 152.4 232.41) (xy 157.48 232.41)
 		)
 		(stroke
@@ -2051,6 +2359,16 @@
 			(type default)
 		)
 		(uuid "e8ea7949-af5f-4294-8fd0-0cdcc6f5f7c4")
+	)
+	(wire
+		(pts
+			(xy 322.58 184.15) (xy 320.04 184.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "edabf86d-3f06-4684-b2db-a4703c657996")
 	)
 	(global_label "LDAC3_CHAN0"
 		(shape input)
@@ -2127,6 +2445,31 @@
 			)
 		)
 	)
+	(global_label "LDAC4_CHAN0"
+		(shape input)
+		(at 320.0812 195.58 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 33 188 1)
+			)
+			(justify right)
+		)
+		(uuid "284467aa-0ca4-4f39-baf3-76b5708da6fd")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 304.0331 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "I2C3_CLK"
 		(shape input)
 		(at 252.73 236.22 180)
@@ -2191,6 +2534,56 @@
 		(uuid "68fe820a-97fa-4d74-9d0a-fb2912dc9cff")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 240.0459 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "LDAC1_CHAN0"
+		(shape input)
+		(at 320.04 161.29 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 33 188 1)
+			)
+			(justify right)
+		)
+		(uuid "71bb07c2-7147-4c5b-8287-f833492d24ed")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 303.9919 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "LDAC3_CHAN0"
+		(shape input)
+		(at 320.04 184.15 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 33 188 1)
+			)
+			(justify right)
+		)
+		(uuid "79b81037-3a11-4004-9438-b32080cc9126")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 303.9919 184.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2302,6 +2695,31 @@
 			)
 		)
 	)
+	(global_label "LDAC0_CHAN0"
+		(shape input)
+		(at 320.04 149.86 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 33 188 1)
+			)
+			(justify right)
+		)
+		(uuid "bc594a54-9fb3-43b8-8a25-f003ac1865db")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 303.9919 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "I2C2_CLK"
 		(shape input)
 		(at 252.73 218.44 180)
@@ -2341,6 +2759,31 @@
 		(uuid "ddda7baf-bd3a-4a08-819f-bfd5ad0dffa3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 240.9153 201.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "LDAC2_CHAN0"
+		(shape input)
+		(at 320.04 172.72 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 33 188 1)
+			)
+			(justify right)
+		)
+		(uuid "de87b831-c176-40a6-b4b2-631be0be65bc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 303.9919 172.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2451,6 +2894,97 @@
 			(project "CV_DAC"
 				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
 					(reference "#PWR0222")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small_US")
+		(at 325.12 149.86 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0e3daad2-6b39-43e8-9902-14f9ee9f8583")
+		(property "Reference" "R81"
+			(at 325.12 143.51 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 325.12 146.05 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small US symbol"
+			(at 325.12 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 325.12 149.86 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "89e97823-dedf-42e3-8cf6-77c341296e00")
+		)
+		(pin "2"
+			(uuid "dbfbc7c4-dca0-4b2e-9880-1d62952d0653")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "R81")
 					(unit 1)
 				)
 			)
@@ -2794,6 +3328,97 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_Small_US")
+		(at 325.12 184.15 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "37b1f6ff-4241-4f4d-b70f-fb1b8ac9e98f")
+		(property "Reference" "R84"
+			(at 325.12 177.8 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 325.12 180.34 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small US symbol"
+			(at 325.12 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 325.12 184.15 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0de5ca9d-2957-4ace-89f5-abef36e23a59")
+		)
+		(pin "2"
+			(uuid "212cf817-32d3-486e-ba93-21fd820ebbaa")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "R84")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 236.22 204.47 0)
 		(unit 1)
@@ -2967,7 +3592,7 @@
 	)
 	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
-		(at 342.9 194.31 0)
+		(at 342.9 224.79 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2978,7 +3603,7 @@
 		(fields_autoplaced yes)
 		(uuid "458c1578-712a-437b-a70c-8083727ce4e4")
 		(property "Reference" "H4"
-			(at 342.9 190.246 0)
+			(at 342.9 220.726 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2989,7 +3614,7 @@
 			)
 		)
 		(property "Value" "MountingScrew"
-			(at 342.9 197.866 0)
+			(at 342.9 228.346 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3000,7 +3625,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 342.9 194.31 0)
+			(at 342.9 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3011,7 +3636,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 342.9 194.31 0)
+			(at 342.9 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3022,7 +3647,7 @@
 			)
 		)
 		(property "Description" "Mounting screw"
-			(at 342.9 194.31 0)
+			(at 342.9 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3036,6 +3661,97 @@
 			(project "CV_DAC"
 				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
 					(reference "H4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small_US")
+		(at 325.12 195.58 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4c8e944a-a27e-4770-b8c5-c9e56b1ddfff")
+		(property "Reference" "R85"
+			(at 325.12 189.23 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 325.12 191.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small US symbol"
+			(at 325.12 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 325.12 195.58 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f7888f60-1345-4ca1-89e3-e3c4672ed837")
+		)
+		(pin "2"
+			(uuid "e22e51e0-c8b9-488b-858b-54e5585aec9a")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "R85")
 					(unit 1)
 				)
 			)
@@ -3203,6 +3919,97 @@
 			(project "CV_DAC"
 				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
 					(reference "J10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small_US")
+		(at 325.12 172.72 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "695ca77b-9fd6-461f-9b60-4eca9b9dfa31")
+		(property "Reference" "R83"
+			(at 325.12 166.37 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 325.12 168.91 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small US symbol"
+			(at 325.12 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 325.12 172.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c4522aad-3349-4a3d-aae3-fc21ab75e06b")
+		)
+		(pin "2"
+			(uuid "69e3a41f-9a4a-4ebf-860a-107ce9084e34")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "R83")
 					(unit 1)
 				)
 			)
@@ -3380,7 +4187,7 @@
 	)
 	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
-		(at 330.2 194.31 0)
+		(at 330.2 224.79 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3391,7 +4198,7 @@
 		(fields_autoplaced yes)
 		(uuid "7b7e27f2-31c9-4f9f-ba57-c2c41b5ea372")
 		(property "Reference" "H2"
-			(at 330.2 190.246 0)
+			(at 330.2 220.726 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3402,7 +4209,7 @@
 			)
 		)
 		(property "Value" "MountingScrew"
-			(at 330.2 197.866 0)
+			(at 330.2 228.346 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3413,7 +4220,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 330.2 194.31 0)
+			(at 330.2 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3424,7 +4231,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 330.2 194.31 0)
+			(at 330.2 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3435,7 +4242,7 @@
 			)
 		)
 		(property "Description" "Mounting screw"
-			(at 330.2 194.31 0)
+			(at 330.2 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3709,6 +4516,176 @@
 			(project "CV_DAC"
 				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
 					(reference "#PWR0224")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 336.55 195.58 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8ba8d7bd-d4f7-4a6b-9dec-38dd9a5e7b14")
+		(property "Reference" "#PWR0235"
+			(at 336.55 201.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 336.55 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 336.55 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 336.55 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 336.55 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d1ad76e7-97d4-424d-a994-cc66f0431af5")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "#PWR0235")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small_US")
+		(at 325.12 161.29 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8e59a740-9b1f-475b-86ae-e65d604356a4")
+		(property "Reference" "R82"
+			(at 325.12 154.94 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 325.12 157.48 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 325.12 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small US symbol"
+			(at 325.12 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 325.12 161.29 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "db50212f-897e-4196-9134-026c4b7425ae")
+		)
+		(pin "2"
+			(uuid "04d0de6f-7776-456c-b017-6affd2f0ed8e")
+		)
+		(instances
+			(project "CV_DAC"
+				(path "/00df6202-9ee2-419f-a3d7-d5a7ee6dbf02"
+					(reference "R82")
 					(unit 1)
 				)
 			)
@@ -4228,7 +5205,7 @@
 	)
 	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
-		(at 336.55 194.31 0)
+		(at 336.55 224.79 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4239,7 +5216,7 @@
 		(fields_autoplaced yes)
 		(uuid "d5d913ad-cd1f-4296-9552-153998bea373")
 		(property "Reference" "H3"
-			(at 336.55 190.246 0)
+			(at 336.55 220.726 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4250,7 +5227,7 @@
 			)
 		)
 		(property "Value" "MountingScrew"
-			(at 336.55 197.866 0)
+			(at 336.55 228.346 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4261,7 +5238,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 336.55 194.31 0)
+			(at 336.55 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4272,7 +5249,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 336.55 194.31 0)
+			(at 336.55 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4283,7 +5260,7 @@
 			)
 		)
 		(property "Description" "Mounting screw"
-			(at 336.55 194.31 0)
+			(at 336.55 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4619,7 +5596,7 @@
 	)
 	(symbol
 		(lib_id "Auxiliary_Items:MountingScrew")
-		(at 323.85 194.31 0)
+		(at 323.85 224.79 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4630,7 +5607,7 @@
 		(fields_autoplaced yes)
 		(uuid "f41eaa19-b32b-4cbc-9dfb-7d95821658b3")
 		(property "Reference" "H1"
-			(at 323.85 190.246 0)
+			(at 323.85 220.726 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4641,7 +5618,7 @@
 			)
 		)
 		(property "Value" "MountingScrew"
-			(at 323.85 197.866 0)
+			(at 323.85 228.346 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4652,7 +5629,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 323.85 194.31 0)
+			(at 323.85 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4663,7 +5640,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 323.85 194.31 0)
+			(at 323.85 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4674,7 +5651,7 @@
 			)
 		)
 		(property "Description" "Mounting screw"
-			(at 323.85 194.31 0)
+			(at 323.85 224.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
