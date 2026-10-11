@@ -14,53 +14,6 @@
 	)
 	(lib_symbols)
 	(sheet
-		(at 161.29 36.83)
-		(size 46.99 39.37)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "0470ac74-8718-4bd4-b523-fc97ec3d43bd")
-		(property "Sheetname" "HF"
-			(at 165.608 46.736 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 3.81 3.81)
-					(thickness 0.762)
-					(bold yes)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "hf.kicad_sch"
-			(at 161.29 76.7846 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "EQ"
-				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
-					(page "2")
-				)
-			)
-		)
-	)
-	(sheet
 		(at 160.02 143.51)
 		(size 52.07 45.72)
 		(exclude_from_sim no)
@@ -155,8 +108,8 @@
 		)
 	)
 	(sheet
-		(at 163.83 205.74)
-		(size 46.99 45.72)
+		(at 156.21 20.32)
+		(size 83.82 57.15)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -168,9 +121,9 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "e0afefa7-57e9-4e5b-bcfb-b7d9511ab56b")
-		(property "Sheetname" "LF"
-			(at 165.354 215.392 0)
+		(uuid "a8c49b5c-667e-4f7b-b2e3-a242515ebfd6")
+		(property "Sheetname" "LF_HF"
+			(at 162.56 32.258 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -182,8 +135,8 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "lf.kicad_sch"
-			(at 163.83 252.0446 0)
+		(property "Sheetfile" "lf_hf.kicad_sch"
+			(at 156.21 78.0546 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -196,7 +149,7 @@
 		(instances
 			(project "EQ"
 				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
-					(page "5")
+					(page "2")
 				)
 			)
 		)

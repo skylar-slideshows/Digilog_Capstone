@@ -564,7 +564,7 @@
           "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Value",
           "name": "Value",
           "show": true
@@ -588,7 +588,7 @@
           "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -657,6 +657,18 @@
           "group_by": true,
           "label": "LCSC",
           "name": "LCSC",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "MPN",
+          "name": "MPN",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Note",
+          "name": "Note",
           "show": false
         }
       ],
@@ -708,7 +720,7 @@
         "uuid": "a379ffa5-dfb1-4f56-af77-387c7dfe3dba"
       }
     ],
-    "used_designators": "TH1-3,TH101-103,R1-41,R101-114,R116-117,R120-137,R139,C1-28,C101-114,C117,C120-125,C127-128,#PWR1-69,#PWR201-248,U1-11",
+    "used_designators": "TH1-3,TH101-103,TH201-204,R1-42,R101-114,R116-117,R120-137,R139-140,R201-265,C1-28,C101-114,C117,C120-125,C127-128,C201-236,#PWR1-70,#PWR201-249,#PWR301-381,U1-19",
     "variants": []
   },
   "sheets": [
@@ -717,8 +729,8 @@
       "Root"
     ],
     [
-      "0470ac74-8718-4bd4-b523-fc97ec3d43bd",
-      "HF"
+      "a8c49b5c-667e-4f7b-b2e3-a242515ebfd6",
+      "LF_HF"
     ],
     [
       "a72d46b7-4023-4263-80e6-7f970a92ee09",
@@ -727,10 +739,6 @@
     [
       "19ac4027-12ee-4e8d-9629-324ed9c55b9f",
       "LMF"
-    ],
-    [
-      "e0afefa7-57e9-4e5b-bcfb-b7d9511ab56b",
-      "LF"
     ]
   ],
   "text_variables": {},
