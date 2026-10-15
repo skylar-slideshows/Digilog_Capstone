@@ -2877,18 +2877,6 @@
 		)
 		(uuid "cadc579c-1f95-4d7f-af76-c5345a601b37")
 	)
-	(rectangle
-		(start 41.91 179.07)
-		(end 127 220.98)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid "f8db3475-49dc-4e8f-b4fb-d5e89b8b967f")
-	)
 	(text "State Variable Filter - Voltage Controlled"
 		(exclude_from_sim no)
 		(at 276.606 46.736 0)
@@ -2900,18 +2888,6 @@
 			)
 		)
 		(uuid "307fc4c3-f124-49ab-9a9d-db6133303e8c")
-	)
-	(text "Spare Op-Amp"
-		(exclude_from_sim no)
-		(at 83.058 186.944 0)
-		(effects
-			(font
-				(size 3.81 3.81)
-				(thickness 0.762)
-				(bold yes)
-			)
-		)
-		(uuid "3d27d568-8e25-45e9-a543-62a6787426d4")
 	)
 	(text "CV Buffers\n"
 		(exclude_from_sim no)
@@ -3793,7 +3769,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 210.82) (xy 87.63 210.82)
+			(xy 224.79 266.7) (xy 204.47 266.7)
 		)
 		(stroke
 			(width 0)
@@ -4153,7 +4129,7 @@
 	)
 	(wire
 		(pts
-			(xy 90.17 200.66) (xy 85.09 200.66)
+			(xy 207.01 256.54) (xy 201.93 256.54)
 		)
 		(stroke
 			(width 0)
@@ -4363,7 +4339,7 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 210.82) (xy 87.63 205.74)
+			(xy 204.47 266.7) (xy 204.47 261.62)
 		)
 		(stroke
 			(width 0)
@@ -4553,7 +4529,7 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 203.2) (xy 107.95 203.2)
+			(xy 222.25 259.08) (xy 224.79 259.08)
 		)
 		(stroke
 			(width 0)
@@ -4693,7 +4669,7 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 205.74) (xy 90.17 205.74)
+			(xy 204.47 261.62) (xy 207.01 261.62)
 		)
 		(stroke
 			(width 0)
@@ -5013,7 +4989,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 203.2) (xy 107.95 210.82)
+			(xy 224.79 259.08) (xy 224.79 266.7)
 		)
 		(stroke
 			(width 0)
@@ -7647,7 +7623,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 111.76 69.85 0)
 			(hide yes)
 			(show_name no)
@@ -11264,7 +11240,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 85.09 146.05 0)
 			(hide yes)
 			(show_name no)
@@ -11629,7 +11605,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 111.76 107.95 0)
 			(hide yes)
 			(show_name no)
@@ -13686,7 +13662,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 85.09 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -13837,7 +13813,7 @@
 	)
 	(symbol
 		(lib_id "power:+16.6V")
-		(at 209.55 259.08 0)
+		(at 167.64 259.08 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -13847,7 +13823,7 @@
 		(dnp no)
 		(uuid "b42d02ca-63c8-4611-aac7-3ad4d5c09008")
 		(property "Reference" "#PWR0215"
-			(at 209.55 262.89 0)
+			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13858,7 +13834,7 @@
 			)
 		)
 		(property "Value" "+15V"
-			(at 209.55 255.524 0)
+			(at 167.64 255.524 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13868,7 +13844,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 209.55 259.08 0)
+			(at 167.64 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13879,7 +13855,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 209.55 259.08 0)
+			(at 167.64 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13890,7 +13866,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+15V\""
-			(at 209.55 259.08 0)
+			(at 167.64 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14096,7 +14072,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:OPA4197xD")
-		(at 97.79 203.2 0)
+		(at 214.63 259.08 0)
 		(unit 4)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -14106,7 +14082,7 @@
 		(dnp no)
 		(uuid "c170d8fd-a135-4d0e-a7ce-ffc9b40ea014")
 		(property "Reference" "U11"
-			(at 99.06 193.04 0)
+			(at 215.9 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14116,7 +14092,7 @@
 			)
 		)
 		(property "Value" "OPA4197"
-			(at 99.06 195.58 0)
+			(at 215.9 251.46 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14126,7 +14102,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
-			(at 97.79 203.2 0)
+			(at 214.63 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14137,7 +14113,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/opa4197.pdf"
-			(at 97.79 203.2 0)
+			(at 214.63 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14148,7 +14124,7 @@
 			)
 		)
 		(property "Description" "Quad 36V, Precision, Rail-to-Rail Input/Output, Low Offset Voltage, Operational Amplifier, SOIC-14"
-			(at 97.79 203.2 0)
+			(at 214.63 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14159,7 +14135,7 @@
 			)
 		)
 		(property "LCSC" "C2058532"
-			(at 97.79 203.2 0)
+			(at 214.63 259.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14329,7 +14305,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 111.76 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -15273,7 +15249,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm"
 			(at 85.09 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -16028,7 +16004,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 209.55 262.89 0)
+		(at 167.64 262.89 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16038,7 +16014,7 @@
 		(dnp no)
 		(uuid "eba2f126-841f-4c24-be52-0ff586898a98")
 		(property "Reference" "C117"
-			(at 212.598 261.62 0)
+			(at 170.688 261.62 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16049,7 +16025,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 212.598 264.16 0)
+			(at 170.688 264.16 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16060,7 +16036,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 209.55 262.89 0)
+			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16071,7 +16047,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 209.55 262.89 0)
+			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16082,7 +16058,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 209.55 262.89 0)
+			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16093,7 +16069,7 @@
 			)
 		)
 		(property "LCSC" "C1591"
-			(at 209.55 262.89 0)
+			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16487,7 +16463,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 209.55 266.7 0)
+		(at 167.64 266.7 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16497,7 +16473,7 @@
 		(dnp no)
 		(uuid "f325b471-1144-468e-a0f2-7abdb0a1620b")
 		(property "Reference" "#PWR0224"
-			(at 209.55 273.05 0)
+			(at 167.64 273.05 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16508,7 +16484,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 209.55 271.78 0)
+			(at 167.64 271.78 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16519,7 +16495,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 209.55 266.7 0)
+			(at 167.64 266.7 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16530,7 +16506,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 209.55 266.7 0)
+			(at 167.64 266.7 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16541,7 +16517,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 209.55 266.7 0)
+			(at 167.64 266.7 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16890,7 +16866,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 85.09 200.66 0)
+		(at 201.93 256.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16900,7 +16876,7 @@
 		(dnp no)
 		(uuid "ffb78e50-7f97-4498-a700-f4c8ae63af32")
 		(property "Reference" "#PWR0248"
-			(at 85.09 207.01 0)
+			(at 201.93 262.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16911,7 +16887,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 85.09 205.74 0)
+			(at 201.93 261.62 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16922,7 +16898,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 85.09 200.66 0)
+			(at 201.93 256.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16933,7 +16909,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 85.09 200.66 0)
+			(at 201.93 256.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16944,7 +16920,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 85.09 200.66 0)
+			(at 201.93 256.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
