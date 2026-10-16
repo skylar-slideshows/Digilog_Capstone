@@ -468,6 +468,6 @@ uint8_t mcp4728_init_settings (
 )
 {
     const uint8_t vref_res = mcp4728_vrefSelect(bus, addr, MCP4728_ALL_VREF_INTERNAL);
-    const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_1X);
+    const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_2X);
     return vref_res | gain_res;
 }

@@ -19,18 +19,18 @@
 #include <stdio.h>
 
 // note: this code only exists when developer_mode is defined (see the ifdef)
-static const char* I2CBusToStr(I2C_TypeDef *bus){
-    if(bus == I2C1){
-        return "I2C1";
-    }
-    if(bus == I2C2){
-        return "I2C2";
-    }
-    if(bus == I2C3){
-        return "I2C3";
-    }
-    return "I2C4";
-}
+// static const char* I2CBusToStr(I2C_TypeDef *bus){
+//     if(bus == I2C1){
+//         return "I2C1";
+//     }
+//     if(bus == I2C2){
+//         return "I2C2";
+//     }
+//     if(bus == I2C3){
+//         return "I2C3";
+//     }
+//     return "I2C4";
+// }
 
 #endif
 
@@ -134,9 +134,9 @@ static inline void mcp4728_flush_maybe (
     *retry_counter = frames_until_retry;
 
     #ifdef DEVELOPER_MODE
-    if(bus == I2C1){
-        printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
-    }
+    // if(bus == I2C1){
+    //     printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
+    // }
     #endif
 }
 

@@ -237,10 +237,19 @@ int main(void)
 
 
   // I2C DEVICES INIT
+  const uint8_t mcp23017s_per_channel = sizeof(MCP23017_ADDRS) / sizeof(MCP23017_ADDRS[0]);
+  const uint8_t mcp4728s_per_channel = sizeof(MCP4728_ADDRS) / sizeof(MCP4728_ADDRS[0]);
+
   mcp4728_init_all_addresses();
 
-  mcp23017_init(i2c_channel_bus(0), 0x20);
-  mcp4728_init_settings(i2c_channel_bus(0), 0x61);
+  for(uint8_t ch = 0; ch < CHANNELS; ch++){
+    for(uint8_t mcp23017_idx = 0; mcp23017_idx < mcp23017s_per_channel; mcp23017_idx++){
+      mcp23017_init(i2c_channel_bus(ch), MCP23017_ADDRS[mcp23017_idx]);
+    }
+    for(uint8_t mcp4728_idx = 0; mcp4728_idx < mcp4728s_per_channel; mcp4728_idx++){
+      mcp4728_init_settings(i2c_channel_bus(ch), MCP4728_ADDRS[mcp4728_idx]);
+    }
+  }
 
   if(DEVELOPER_MODE)
   {
