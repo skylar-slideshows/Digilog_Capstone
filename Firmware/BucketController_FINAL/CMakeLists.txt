@@ -7,6 +7,8 @@ cmake_minimum_required(VERSION 3.22)
 # User is free to modify the file as much as necessary
 #
 
+
+
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -63,6 +65,65 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
+    FreeRTOS
 
     # Add user defined libraries
+)
+
+
+# Skylar
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_OBJCOPY} -O binary
+          $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+          $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.bin
+  COMMAND ${CMAKE_SIZE} --format=berkeley
+      $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+  COMMENT "Generating .bin")
+
+find_package(Doxygen QUIET)
+if(DOXYGEN_FOUND)
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+    add_dependencies(docs ${CMAKE_PROJECT_NAME})
+else()
+    message(STATUS "Doxygen not found: 'docs' target will be unavailable")
+endif()
+
+
+# Skylar
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Src/hardware_drivers/74hc595.c
+    Core/Src/hardware_drivers/led_driver.c
+    Core/Src/hardware_drivers/i2c_driver.c
+    Core/Src/hardware_drivers/mcp23017.c
+    Core/Src/hardware_drivers/mcp4728.c
+    Core/Src/hardware_drivers/rotary_encoder.c
+    Core/Src/hardware_drivers/button_driver.c
+    Core/Src/hardware_drivers/mcp4728_cache.c
+    Core/Src/hardware_drivers/fader_driver.c
+    Core/Src/control_voltage.c
+    Core/Src/control_integration/control_interface.c
+    Core/Src/control_integration/button_control.c
+    Core/Src/control_integration/knob_control.c
+    Core/Src/control_integration/fader_control.c
+    Core/Src/FreeRTOS_apps/remote_cmd_handler.c
+    Core/Src/FreeRTOS_apps/led_handler.c
+    Core/Src/FreeRTOS_apps/i2c_scheduler.c
+    Core/Src/FreeRTOS_apps/fader_poller.c
+)
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    Core/Inc
+)
+
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    # -Werror -- Disabled for development but I recommend resolving all warnings if possible
+    # - D. Petrova
 )
