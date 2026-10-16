@@ -1,4 +1,5 @@
 #include "control_integration/control_interface.h"
+#include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/button_driver.h"
 #include "hardware_drivers/led_driver.h"
 #include "hardware_drivers/mcp23017.h"
@@ -11,13 +12,6 @@
 #include <stdbool.h>
 
 /* Functions related to accepting some states and updating control values */
-
-static inline I2C_TypeDef *channel_to_i2c_bus(uint8_t channel){
-    if(channel == 0) return I2C1;
-    if(channel == 1) return I2C2;
-    if(channel == 2) return I2C3;
-    return I2C4;
-}
 
 static void s_update_knob_button (
     SemaphoreHandle_t *out_mutex,
@@ -200,7 +194,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
 {
     // TODO: per-channel config stuff (probably just choosing i2c bus based on channel arg)
 
-    I2C_TypeDef *bus = channel_to_i2c_bus(channel);
+    I2C_TypeDef *bus = i2c_channel_bus(channel);
 
     // INPUT GAIN KNOB CHANNEL 1
     button_info_t input_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy

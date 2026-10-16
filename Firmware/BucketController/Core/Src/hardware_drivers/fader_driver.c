@@ -28,7 +28,9 @@ extern ADC_HandleTypeDef FADER_ADC; // from main.c
 uint32_t adc_buf[CHANNELS] = {UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX};
 
 // TIMER STUFF
+extern TIM_HandleTypeDef FADER0_TIM_HANDLE; // from main.c
 extern TIM_HandleTypeDef FADER1_TIM_HANDLE; // from main.c
+extern TIM_HandleTypeDef FADER2_TIM_HANDLE; // from main.c
 extern TIM_HandleTypeDef FADER3_TIM_HANDLE; // from main.c
 
 
@@ -90,10 +92,10 @@ typedef struct
 } motor_hw_info;
 
 const motor_hw_info motor_hw[CHANNELS] = {
+    (motor_hw_info){.timer = &FADER0_TIM_HANDLE, .timer_a_channel = FADER0_A_TIM_CHAN, .timer_b_channel = FADER0_B_TIM_CHAN},
     (motor_hw_info){.timer = &FADER1_TIM_HANDLE, .timer_a_channel = FADER1_A_TIM_CHAN, .timer_b_channel = FADER1_B_TIM_CHAN},
     (motor_hw_info){.timer = &FADER2_TIM_HANDLE, .timer_a_channel = FADER2_A_TIM_CHAN, .timer_b_channel = FADER2_B_TIM_CHAN},
     (motor_hw_info){.timer = &FADER3_TIM_HANDLE, .timer_a_channel = FADER3_A_TIM_CHAN, .timer_b_channel = FADER3_B_TIM_CHAN},
-    (motor_hw_info){.timer = &FADER4_TIM_HANDLE, .timer_a_channel = FADER4_A_TIM_CHAN, .timer_b_channel = FADER4_B_TIM_CHAN},
 };
 
 uint32_t fader_pwm_period[CHANNELS];

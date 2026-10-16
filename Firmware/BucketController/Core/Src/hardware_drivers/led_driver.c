@@ -76,7 +76,8 @@ static volatile bool frame_dirty = true; // true if the frame buffer is not what
 
 static void oe_duty (uint8_t brightness);
 
-extern SPI_HandleTypeDef hspi2;
+extern SPI_HandleTypeDef LED_SPI_HANDLE;  // from main.c
+extern TIM_HandleTypeDef LED_OE_TIM_HANDLE; // from main.c
 
 static uint8_t       txbuf[LED_FRAME_BYTES];
 // static volatile bool tx_busy = false;
@@ -93,13 +94,11 @@ static uint8_t       load_div   = 0;
 #endif
 
 
-/*=============================== USE SPI2 DMA ================================*/
-
-extern SPI_HandleTypeDef hspi2;
+/*=============================== USE LED SPI DMA ================================*/
 
 void HAL_SPI_TxCpltCallback (SPI_HandleTypeDef *hspi)
 {
-    if (hspi->Instance == SPI2) // prevents interference if using DMA for SPI1 (master) and SPI2 same time
+    if (hspi->Instance == LED_SPI_INSTANCE) // prevents interference if using DMA for another SPI at the same time
     {
         latch_out(true);
         // tx_busy = false;
@@ -424,7 +423,7 @@ static void render_dirty (void)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief frame_out : shift the whole frame out (serial data), then latch. USING DMA for fast (SPI2's DMA).
+  @brief frame_out : shift the whole frame out (serial data), then latch. USING DMA for fast (the LED SPI's DMA).
  ----------------------------------------------------------------------------------
 */
 static void frame_out (void)
@@ -434,7 +433,7 @@ static void frame_out (void)
     memcpy(txbuf, frame, LED_FRAME_BYTES);
     // tx_busy = true;
 
-    if (HAL_SPI_Transmit_DMA(&hspi2, txbuf, LED_FRAME_BYTES) != HAL_OK)
+    if (HAL_SPI_Transmit_DMA(&LED_SPI_HANDLE, txbuf, LED_FRAME_BYTES) != HAL_OK)
     {
         // tx_busy = false;
         frame_dirty = true;
@@ -492,14 +491,16 @@ led_device_t *led_device_at (uint8_t idx)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief oe_duty : brightness 0-255 -> PWM duty cycle. CCR2 holds the number of
-  CPU cycles per PWM cycle to keep the OE pin high, and OE high blanks the display,
-  so a higher CCR2 is dimmer.
+  @brief oe_duty : brightness 0-255 -> PWM duty cycle. The compare register holds the number of
+  timer ticks per PWM cycle to keep the OE pin high, and OE high blanks the display,
+  so a higher compare value is dimmer.
  ----------------------------------------------------------------------------------
 */
 static void oe_duty (uint8_t brightness)
 {
-    LED_OE_TIM->CCR2 = ((uint32_t)(255U - brightness) * (LED_OE_TIM->ARR + 1U)) / 255U;
+    TIM_HandleTypeDef *oe = &LED_OE_TIM_HANDLE;
+    __HAL_TIM_SET_COMPARE(oe, LED_OE_TIM_CHAN,
+                          ((uint32_t)(255U - brightness) * (__HAL_TIM_GET_AUTORELOAD(oe) + 1U)) / 255U);
 }
 
 
@@ -532,43 +533,21 @@ void led_init (void)
     led_shiftreg_init();
     led_clear();
 
-    /* Brightness is OE pin PWM on timer 1 channel 2. */
+    /* Brightness is a PWM on the OE pin. CubeMX owns the timer mode, preload and pin alternate
+       function; here we only set the period from SystemCoreClock and start it. */
+    TIM_HandleTypeDef *oe = &LED_OE_TIM_HANDLE;
 
-    // prescale 0, so the counter runs at the full 170MHz CPU clock
-    LED_OE_TIM->PSC = 0;
-
-    // auto reload: 170MHz / 24kHz = 7,083 CPU cycles per PWM cycle
-    LED_OE_TIM->ARR = ((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ) - 1U;
-
-    // capture/compare mode: 110 at bit[14:12] is PWM mode 1 (high while count < CCR2),
-    // and bit[11] enables the preload register, which holds a mid-cycle change until
-    // the next cycle instead of corrupting the current waveform
-    LED_OE_TIM->CCMR1 = (6U << 12) | (1U << 11);
-
-    // capture/compare enable: route the compare output to pin OC2
-    LED_OE_TIM->CCER |= (1U << 4);
+    // period: e.g. 170MHz / 24kHz = 7,083 timer ticks per PWM cycle (assumes timer clock = CPU clock)
+    __HAL_TIM_SET_AUTORELOAD(oe, ((uint64_t)SystemCoreClock / (uint64_t)BRIGHTNESS_PWM_HZ) - 1U);
 
     // start blanked (PWM always high = 0 brightness) until led_brightness runs
-    LED_OE_TIM->CCR2 = LED_OE_TIM->ARR + 1U;
+    __HAL_TIM_SET_COMPARE(oe, LED_OE_TIM_CHAN, __HAL_TIM_GET_AUTORELOAD(oe) + 1U);
 
-    // ARPE, so a brightness change mid-cycle cannot produce a bright flash
-    LED_OE_TIM->CR1 |= (1U << 7);
+    // force an update event so the new period and compare take effect, then clear the flag it sets
+    HAL_TIM_GenerateEvent(oe, TIM_EVENTSOURCE_UPDATE);
+    __HAL_TIM_CLEAR_FLAG(oe, TIM_FLAG_UPDATE);
 
-    // force an update event so the new ARR and CCR2 take effect, then clear the flag it sets
-    LED_OE_TIM->EGR = 1U;
-    LED_OE_TIM->SR  = 0;
-
-    // main output enable, the master switch for the PWM pin
-    LED_OE_TIM->BDTR |= (1U << 15);
-
-    // start the counter
-    LED_OE_TIM->CR1 |= 1U;
-
-    // hand the OE pin over to the timer (alternate function, not plain GPIO)
-    LED_OE_PORT->AFR[LED_OE_PIN >> 3] =
-        (LED_OE_PORT->AFR[LED_OE_PIN >> 3] & ~(0xFU << ((LED_OE_PIN & 7) * 4)))
-      | (LED_OE_TIM_AF << ((LED_OE_PIN & 7) * 4));
-    LED_OE_PORT->MODER = (LED_OE_PORT->MODER & ~(3U << (LED_OE_PIN * 2))) | (2U << (LED_OE_PIN * 2));
+    HAL_TIM_PWM_Start(oe, LED_OE_TIM_CHAN);
 
     led_brightness(bright);
 
@@ -596,7 +575,7 @@ void led_print_config (void)
            (unsigned)LED_CHAIN_BITS, (unsigned)LED_FRAME_BYTES);
     printf("\r\n  OE PWM %lu Hz, ARR %lu",
            (unsigned long)BRIGHTNESS_PWM_HZ,
-           (unsigned long)((uint64_t)CPU_HZ / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));
+           (unsigned long)((uint64_t)SystemCoreClock / (uint64_t)BRIGHTNESS_PWM_HZ - (uint64_t)1));
 
     for (uint16_t i = 0; i < device_count; i++)
     {

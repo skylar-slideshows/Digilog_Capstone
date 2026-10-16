@@ -4,6 +4,7 @@
 #include "control_integration/control_interface.h"
 #include "task.h"
 #include "cmsis_os2.h"
+#include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728_cache.h"
 #include "portmacro.h"
@@ -66,7 +67,6 @@ static const i2c_scheduler_state_t default_scheduler_state = {
     .mcp23017_retry_counter = {0} //
 };
 
-static I2C_TypeDef *i2c_busses[CHANNELS] = {I2C1, I2C2, I2C3, I2C4};
 static i2c_scheduler_state_t scheduler_states[CHANNELS] = {default_scheduler_state};
 
 static inline void mcp23017_poll_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter, uint16_t frames_until_retry)
@@ -90,7 +90,7 @@ static inline void mcp23017_poll_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t
 static void read_mcp23017s (uint8_t channel)
 {
     i2c_scheduler_state_t *state = &(scheduler_states[channel]);
-    I2C_TypeDef *i2c_bus = i2c_busses[channel];
+    I2C_TypeDef *i2c_bus = i2c_channel_bus(channel);
 
     mcp23017_poll_maybe(i2c_bus, MCP23017_1_ADDR, &(state->mcp23017_retry_counter[0]), MCP23017_FRAMES_UNTIL_RETRY);
     mcp23017_poll_maybe(i2c_bus, MCP23017_2_ADDR, &(state->mcp23017_retry_counter[1]), MCP23017_FRAMES_UNTIL_RETRY);
@@ -141,7 +141,7 @@ static inline void mcp4728_flush_maybe (
 static void write_mcp4728s (uint8_t channel)
 {
     i2c_scheduler_state_t *state = &(scheduler_states[channel]);
-    I2C_TypeDef *i2c_bus = i2c_busses[channel];
+    I2C_TypeDef *i2c_bus = i2c_channel_bus(channel);
 
     for (uint8_t i = 0; i < MCP4728S_PER_FRAME; i++)
     {

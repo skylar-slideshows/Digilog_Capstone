@@ -280,11 +280,11 @@ uint8_t mcp4728_singleWrite (
  */
 uint8_t mcp4728_init_single_address (
     GPIO_TypeDef *dac_scl_port, //!< GPIO port of the i2c clock to which the chip is connected
-    uint8_t dac_scl_pin,        //!< GPIO pin of the i2c clock to which the chip is connected
+    uint32_t dac_scl_pin,       //!< GPIO_PIN_x bitmask of the i2c clock to which the chip is connected
     GPIO_TypeDef *dac_sda_port, //!< GPIO port of the i2c data line to which the chip is connected
-    uint8_t dac_sda_pin,        //!< GPIO pin of the i2c data line to which the chip is connected
+    uint32_t dac_sda_pin,       //!< GPIO_PIN_x bitmask of the i2c data line to which the chip is connected
     GPIO_TypeDef *ldac_port,    //!< GPIO port to which the DAC's ldac pin is connected
-    uint8_t ldac_pin,           //!< GPIO port to which the DAC's ldac pin is connected
+    uint32_t ldac_pin,          //!< GPIO_PIN_x bitmask of the DAC's ldac pin
     uint8_t new_addr,           //!< new 3-bit address of the selected DAC
     uint8_t old_addr            //!< old 3-bit address of the selected DAC
 );
@@ -298,11 +298,11 @@ uint8_t mcp4728_init_single_address (
  */
 uint8_t mcp4728_init_address (
     GPIO_TypeDef *dac_scl_port, //!< GPIO port of the i2c clock to which the chip is connected
-    uint8_t dac_scl_pin,        //!< GPIO pin of the i2c clock to which the chip is connected
+    uint32_t dac_scl_pin,       //!< GPIO_PIN_x bitmask of the i2c clock to which the chip is connected
     GPIO_TypeDef *dac_sda_port, //!< GPIO port of the i2c data line to which the chip is connected
-    uint8_t dac_sda_pin,        //!< GPIO pin of the i2c data line to which the chip is connected
+    uint32_t dac_sda_pin,       //!< GPIO_PIN_x bitmask of the i2c data line to which the chip is connected
     GPIO_TypeDef *ldac_port,    //!< GPIO port to which the DAC's ldac pin is connected
-    uint8_t ldac_pin,           //!< GPIO port to which the DAC's ldac pin is connected
+    uint32_t ldac_pin,          //!< GPIO_PIN_x bitmask of the DAC's ldac pin
     uint8_t new_addr            //!< new 3-bit address of the selected DAC
 );
 

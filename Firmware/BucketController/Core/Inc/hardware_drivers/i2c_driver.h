@@ -208,4 +208,28 @@ void bb_claim (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port,
 */
 void bb_release (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port, uint32_t sda_pin, uint8_t af);
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_channel_bus : console channel (0 ... CHANNELS-1) -> I2C bus serving that channel (CONFIG.h)
+ ----------------------------------------------------------------------------------
+*/
+I2C_TypeDef *i2c_channel_bus (uint8_t channel);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_bus_index : I2C bus -> console channel it serves (inverse of i2c_channel_bus),
+  or CHANNELS if the bus is not one of the console's
+ ----------------------------------------------------------------------------------
+*/
+uint8_t i2c_bus_index (I2C_TypeDef *bus);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief i2c_channel_bb_claim / i2c_channel_bb_release : bb_claim / bb_release on the
+  SCL and SDA pins (and alternate function) of a console channel's bus, from CONFIG.h
+ ----------------------------------------------------------------------------------
+*/
+void i2c_channel_bb_claim (uint8_t channel);
+void i2c_channel_bb_release (uint8_t channel);
+
 #endif

@@ -3,6 +3,7 @@
 #include "hardware_drivers/fader_driver.h"
 #include "hardware_state_sets.h"
 #include "hardware_sets.h"
+#include "CONFIG.h"
 #include "main.h"
 #include "portmacro.h"
 #include <stdint.h>
@@ -41,46 +42,28 @@ void update_channel_fader_values (
     xSemaphoreGive(*vals_mutex);
 }
 
+// Hardware connections of each channel's fader (CubeMX labels)
+static const fader_info_t fader_hw[CHANNELS] = {
+    {.touch_sensor_port = F0_Touch_GPIO_Port, .touch_sensor_pin = F0_Touch_Pin,
+     .motor_a_port = F0_MA_GPIO_Port, .motor_a_pin = F0_MA_Pin,
+     .motor_b_port = F0_MB_GPIO_Port, .motor_b_pin = F0_MB_Pin},
+    {.touch_sensor_port = F1_Touch_GPIO_Port, .touch_sensor_pin = F1_Touch_Pin,
+     .motor_a_port = F1_MA_GPIO_Port, .motor_a_pin = F1_MA_Pin,
+     .motor_b_port = F1_MB_GPIO_Port, .motor_b_pin = F1_MB_Pin},
+    {.touch_sensor_port = F2_Touch_GPIO_Port, .touch_sensor_pin = F2_Touch_Pin,
+     .motor_a_port = F2_MA_GPIO_Port, .motor_a_pin = F2_MA_Pin,
+     .motor_b_port = F2_MB_GPIO_Port, .motor_b_pin = F2_MB_Pin},
+    {.touch_sensor_port = F3_Touch_GPIO_Port, .touch_sensor_pin = F3_Touch_Pin,
+     .motor_a_port = F3_MA_GPIO_Port, .motor_a_pin = F3_MA_Pin,
+     .motor_b_port = F3_MB_GPIO_Port, .motor_b_pin = F3_MB_Pin},
+};
+
 void init_fader_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
 {
-    switch (channel)
+    if (channel < CHANNELS)
     {
-    case 0:
-        io->fader = (fader_info_t){.touch_sensor_port = F0_Touch_GPIO_Port,
-                                   .touch_sensor_pin = F0_Touch_Pin,
-                                   .motor_a_port = F0_MA_GPIO_Port,
-                                   .motor_a_pin = F0_MA_Pin,
-                                   .motor_b_port = F0_MB_GPIO_Port,
-                                   .motor_b_pin = F0_MB_Pin,
-                                   .channel = channel};
-        break;
-    case 1:
-        io->fader = (fader_info_t){.touch_sensor_port = F1_Touch_GPIO_Port,
-                                   .touch_sensor_pin = F1_Touch_Pin,
-                                   .motor_a_port = F1_MA_GPIO_Port,
-                                   .motor_a_pin = F1_MA_Pin,
-                                   .motor_b_port = F1_MB_GPIO_Port,
-                                   .motor_b_pin = F1_MB_Pin,
-                                   .channel = channel};
-        break;
-    case 2:
-        io->fader = (fader_info_t){.touch_sensor_port = F2_Touch_GPIO_Port,
-                                   .touch_sensor_pin = F2_Touch_Pin,
-                                   .motor_a_port = F2_MA_GPIO_Port,
-                                   .motor_a_pin = F2_MA_Pin,
-                                   .motor_b_port = F2_MB_GPIO_Port,
-                                   .motor_b_pin = F2_MB_Pin,
-                                   .channel = channel};
-        break;
-    case 3:
-        io->fader = (fader_info_t){.touch_sensor_port = F3_Touch_GPIO_Port,
-                                   .touch_sensor_pin = F3_Touch_Pin,
-                                   .motor_a_port = F3_MA_GPIO_Port,
-                                   .motor_a_pin = F3_MA_Pin,
-                                   .motor_b_port = F3_MB_GPIO_Port,
-                                   .motor_b_pin = F3_MB_Pin,
-                                   .channel = channel};
-        break;
+        io->fader = fader_hw[channel];
+        io->fader.channel = channel;
     }
 
     state->fader_state = DEFAULT_FADER_STATE;

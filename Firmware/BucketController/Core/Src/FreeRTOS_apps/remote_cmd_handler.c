@@ -15,6 +15,7 @@
 
 #include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "main.h"
+#include "CONFIG.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -79,7 +80,7 @@ static bool tx_push (uint8_t b)
 */
 static void tx_start (void)
 {
-    USART2->CR1 |= USART_CR1_TXEIE_TXFNFIE;
+    REMOTE_UART->CR1 |= USART_CR1_TXEIE_TXFNFIE;
 }
 
 
@@ -161,24 +162,24 @@ static void frame_complete (void)
 /**
  ----------------------------------------------------------------------------------
   @brief PUBLIC uart_cmd_rx_isr : void -> void
-  Handles both directions on USART2
+  Handles both directions on the remote UART
  ----------------------------------------------------------------------------------
 */
 void uart_cmd_rx_isr (void)
 {
     /* ---------------- overrun ---------------- */
-    if (USART2->ISR & USART_ISR_ORE)
+    if (REMOTE_UART->ISR & USART_ISR_ORE)
     {
-        USART2->ICR = USART_ICR_ORECF;
+        REMOTE_UART->ICR = USART_ICR_ORECF;
         stat_overruns++;
         in_frame = false; // abandon any partial frame
         rx_len   = 0;
     }
 
     /* ---------------- receive ---------------- */
-    if (USART2->ISR & USART_ISR_RXNE_RXFNE)
+    if (REMOTE_UART->ISR & USART_ISR_RXNE_RXFNE)
     {
-        char c = (char)(USART2->RDR & 0xFF); // this read clears RXNE
+        char c = (char)(REMOTE_UART->RDR & 0xFF); // this read clears RXNE
         stat_bytes++;
 
         if (c == CMD_OPEN && !in_frame)
@@ -209,16 +210,16 @@ void uart_cmd_rx_isr (void)
     }
 
     // TRANSMIT
-    if ((USART2->CR1 & USART_CR1_TXEIE_TXFNFIE) &&
-        (USART2->ISR & USART_ISR_TXE_TXFNF))
+    if ((REMOTE_UART->CR1 & USART_CR1_TXEIE_TXFNFIE) &&
+        (REMOTE_UART->ISR & USART_ISR_TXE_TXFNF))
     {
         if (tx_tail == tx_head)
         {
-            USART2->CR1 &= ~USART_CR1_TXEIE_TXFNFIE; // ring empty -> stop asking to be interrupted
+            REMOTE_UART->CR1 &= ~USART_CR1_TXEIE_TXFNFIE; // ring empty -> stop asking to be interrupted
         }
         else
         {
-            USART2->TDR = tx[tx_tail];
+            REMOTE_UART->TDR = tx[tx_tail];
             tx_tail = (uint16_t)((tx_tail + 1) & (TX_RING_SIZE - 1));
         }
     }
@@ -260,13 +261,13 @@ void uart_cmd_init (void)
     stat_bytes = stat_frames = stat_unknown = stat_overruns = stat_dropped = 0;
 
     // Clear anything stale from before we were listening.
-    USART2->ICR = USART_ICR_ORECF | USART_ICR_FECF | USART_ICR_NECF | USART_ICR_PECF;
-    (void)USART2->RDR;
+    REMOTE_UART->ICR = USART_ICR_ORECF | USART_ICR_FECF | USART_ICR_NECF | USART_ICR_PECF;
+    (void)REMOTE_UART->RDR;
 
-    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(USART2_IRQn);
+    HAL_NVIC_SetPriority(REMOTE_UART_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(REMOTE_UART_IRQn);
 
-    USART2->CR1 |= USART_CR1_RXNEIE_RXFNEIE;
+    REMOTE_UART->CR1 |= USART_CR1_RXNEIE_RXFNEIE;
 
     printf("\r\nUART Command Handler Initialized\n");
     
@@ -275,10 +276,10 @@ void uart_cmd_init (void)
 
 /**
  ----------------------------------------------------------------------------------
-  @brief USART2 interrupt vector
+  @brief Remote UART interrupt vector
  ----------------------------------------------------------------------------------
 */
-void USART2_IRQHandler (void)
+void REMOTE_UART_IRQHandler (void)
 {
     uart_cmd_rx_isr();
 }

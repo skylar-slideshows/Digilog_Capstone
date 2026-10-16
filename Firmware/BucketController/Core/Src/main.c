@@ -131,7 +131,7 @@ int __io_putchar(int ch)
 {
   if (DEVELOPER_MODE)
   {
-    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 100);
+    HAL_UART_Transmit(&REMOTE_UART_HANDLE, (uint8_t *)&ch, 1, 100);
   }
   return ch;
 }
@@ -190,7 +190,7 @@ int main(void)
 
   if(DEVELOPER_MODE)
   {
-    setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear USART2
+    setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear on the remote UART
   }
 
   i2c_init(); // i2c startup
@@ -214,8 +214,8 @@ int main(void)
 
 
   // I2C DEVICES INIT
-  mcp23017_init(I2C1, 0x20);
-  mcp4728_init_settings(I2C1, 0x61);
+  mcp23017_init(i2c_channel_bus(0), 0x20);
+  mcp4728_init_settings(i2c_channel_bus(0), 0x61);
 
   if(DEVELOPER_MODE)
   {
@@ -1215,17 +1215,17 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN 5 */
   
 
-  // bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);  
+  // i2c_channel_bb_claim(0);
   /*mcp4728_init_address(
-    GPIOA, // Clock port
-    15, // Clock pin
-    GPIOB, // Data port
-    9, // Data pin
-    GPIOB, // ldac port
-    6, // ldac pin
+    I2C1_Clock_GPIO_Port, // Clock port
+    I2C1_Clock_Pin, // Clock pin
+    I2C1_Data_GPIO_Port, // Data port
+    I2C1_Data_Pin, // Data pin
+    LDAC0_GPIO_Port, // ldac port
+    LDAC0_Pin, // ldac pin
     0x62 // New addr
   );*/
-  // bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4);
+  // i2c_channel_bb_release(0);
 
   for (;;) // this MUST STAY
   {
