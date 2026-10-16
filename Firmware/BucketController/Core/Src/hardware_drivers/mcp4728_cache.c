@@ -35,24 +35,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "CONFIG.h"
+#include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp4728.h"
 #include "stm32g474xx.h"
 
-static inline uint8_t i2c_to_int (I2C_TypeDef *bus)
-{
-    if (bus == I2C1) return 0;
-    if (bus == I2C2) return 1;
-    if (bus == I2C3) return 2;
-    if (bus == I2C4) return 3;
-    return 4; // indicate failure
-}
-
-mcp4728_output_value_t mcp4728_value_cache[4]  // 4 I2C channels
+mcp4728_output_value_t mcp4728_value_cache[CHANNELS]  // one I2C bus per channel
                                           [8]  // 8 possible addresses per channel
                                           [4]; // 4 12-bit outputs cached per chip
 
 // true when the chip's outputs match the cache. starts false so every chip gets written once at boot
-static volatile bool mcp4728_cache_synced[4][8];
+static volatile bool mcp4728_cache_synced[CHANNELS][8];
 
 /*
  * Writes an output value to the mcp4728 cache
@@ -64,7 +57,7 @@ void mcp4728_cache_write (
     mcp4728_output_value_t val // 12-bit output value
 )
 {
-    const uint8_t bus_idx = i2c_to_int(bus);
+    const uint8_t bus_idx = i2c_bus_index(bus);
     if (mcp4728_value_cache[bus_idx][addr & 0x07][output_channel] == val) return;
 
     mcp4728_value_cache[bus_idx][addr & 0x07][output_channel] = val;
@@ -79,7 +72,7 @@ bool mcp4728_cache_is_synced (
     uint8_t addr      // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
 )
 {
-    return mcp4728_cache_synced[i2c_to_int(bus)][addr & 0x07];
+    return mcp4728_cache_synced[i2c_bus_index(bus)][addr & 0x07];
 }
 
 /*
@@ -97,7 +90,7 @@ uint8_t mcp4728_cache_flush_fastWrite (
     uint8_t addr      // 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
 )
 {
-    const uint8_t bus_idx = i2c_to_int(bus);
+    const uint8_t bus_idx = i2c_bus_index(bus);
     mcp4728_output_value_t *outs = mcp4728_value_cache[bus_idx][addr & 0x07];
 
     // mark synced *before* reading the values: if another task writes the cache mid-flush,

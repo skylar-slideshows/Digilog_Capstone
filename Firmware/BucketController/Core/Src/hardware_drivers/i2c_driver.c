@@ -56,6 +56,42 @@
 static uint32_t timeout_cycles;
 
 
+/*=============================== CHANNEL <-> BUS MAPPING ================================*/
+/* Which bus (CONFIG.h) and which pins (CubeMX labels, for bit-banging) serve each console channel.
+   Keep the pin labels in step with the bus chosen in CONFIG.h */
+
+typedef struct
+{
+    I2C_TypeDef *bus;
+    GPIO_TypeDef *scl_port;
+    uint32_t scl_pin;
+    GPIO_TypeDef *sda_port;
+    uint32_t sda_pin;
+    uint8_t af;
+} channel_i2c_hw_t;
+
+static const channel_i2c_hw_t channel_i2c_hw[CHANNELS] = {
+    {CHANNEL0_I2C_BUS, I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, CHANNEL0_I2C_AF},
+    {CHANNEL1_I2C_BUS, I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin, CHANNEL1_I2C_AF},
+    {CHANNEL2_I2C_BUS, I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin, CHANNEL2_I2C_AF},
+    {CHANNEL3_I2C_BUS, I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin, CHANNEL3_I2C_AF},
+};
+
+I2C_TypeDef *i2c_channel_bus (uint8_t channel)
+{
+    return channel_i2c_hw[channel].bus;
+}
+
+uint8_t i2c_bus_index (I2C_TypeDef *bus)
+{
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
+        if (channel_i2c_hw[i].bus == bus) return i;
+    }
+    return CHANNELS; // indicate failure
+}
+
+
 /*=============================== LOW LEVEL HELPERS ================================*/
 
 /**
@@ -291,19 +327,17 @@ bool i2c_probe (I2C_TypeDef *bus, uint8_t addr)
 */
 void i2c_probeall (void)
 {
-    uint8_t bus_ct = sizeof(I2C_BUSES) / sizeof(I2C_BUSES[0]);
-
-    for (uint8_t b = 0; b < bus_ct; b++)
+    for (uint8_t b = 0; b < CHANNELS; b++)
     {
         for (uint8_t a = 0; a < sizeof(MCP23017_ADDRS); a++)
         {
-            bool succ = i2c_probe(I2C_BUSES[b], MCP23017_ADDRS[a]);
+            bool succ = i2c_probe(i2c_channel_bus(b), MCP23017_ADDRS[a]);
             printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP23017_ADDRS[a], b + 1, succ ? "GOOD" : "FAILED or not present");
         }
 
         for (uint8_t a = 0; a < sizeof(MCP4728_ADDRS); a++)
         {
-            bool succ = i2c_probe(I2C_BUSES[b], MCP4728_ADDRS[a]);
+            bool succ = i2c_probe(i2c_channel_bus(b), MCP4728_ADDRS[a]);
             printf("\r\n    Probing 0x%x @ I2C %d %s\r", MCP4728_ADDRS[a], b + 1, succ ? "GOOD" : "FAILED or not present");
         }
 
@@ -326,26 +360,6 @@ void bb_claim (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_port,
     HAL_GPIO_Init(scl_port, &g);
     g.Pin = sda_pin;
     HAL_GPIO_Init(sda_port, &g);
-
-    /*GPIOA->MODER &= ~(3U << (15 * 2));
-    GPIOA->MODER |=  (1U << (15 * 2));
-
-    // 3. OTYPER: pin 6 -> bit 6 = 1 (open drain)
-    GPIOA->OTYPER |= (1U << 15);
-
-    GPIOA->PUPDR &= ~(3U << (15 * 2));
-    GPIOA->PUPDR |=  (1U << (15 * 2));
-
-    GPIOA->MODER &= ~(3U << (15 * 2));
-    GPIOA->MODER |=  (1U << (15 * 2));
-
-    // 3. OTYPER: pin 6 -> bit 6 = 1 (open drain)
-    GPIOA->OTYPER |= (1U << 15);
-
-    GPIOA->PUPDR &= ~(3U << (15 * 2));
-    GPIOA->PUPDR |=  (1U << (15 * 2));*/
-
-
 }
 
 
@@ -361,4 +375,18 @@ void bb_release (GPIO_TypeDef *scl_port, uint32_t scl_pin, GPIO_TypeDef *sda_por
     HAL_GPIO_Init(scl_port, &g);
     g.Pin = sda_pin;
     HAL_GPIO_Init(sda_port, &g);
+}
+
+
+void i2c_channel_bb_claim (uint8_t channel)
+{
+    const channel_i2c_hw_t *hw = &channel_i2c_hw[channel];
+    bb_claim(hw->scl_port, hw->scl_pin, hw->sda_port, hw->sda_pin);
+}
+
+
+void i2c_channel_bb_release (uint8_t channel)
+{
+    const channel_i2c_hw_t *hw = &channel_i2c_hw[channel];
+    bb_release(hw->scl_port, hw->scl_pin, hw->sda_port, hw->sda_pin, hw->af);
 }

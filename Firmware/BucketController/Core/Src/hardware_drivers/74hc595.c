@@ -34,29 +34,28 @@
 
 #include "stm32g4xx.h"
 #include "CONFIG.h"
+#include "main.h"
 #include "hardware_drivers/74hc595.h"
 
 
 // BSRR register: reset[15:0]set[15:0]. A 1 in the lower 16 bits will set the
 // corresponding pin to high. A 1 in the upper 16 bits will set the corresponding
-// pin to low.
-#define RCLK_SET  (1U << LED_RCLK_PIN)
-#define RCLK_RST  (1U << (LED_RCLK_PIN + 16))
-
-#define SHIFTREG_SER_SET   (1U << SHIFTREG_SER_PIN)
-#define SHIFTREG_SER_RST   (1U << (SHIFTREG_SER_PIN + 16))
-#define SHIFTREG_SRCLK_SET (1U << SHIFTREG_SRCLK_PIN)
-#define SHIFTREG_SRCLK_RST (1U << (SHIFTREG_SRCLK_PIN + 16))
-#define SHIFTREG_RCLK_SET  (1U << SHIFTREG_RCLK_PIN)
-#define SHIFTREG_RCLK_RST  (1U << (SHIFTREG_RCLK_PIN + 16))
+// pin to low. The CubeMX *_Pin labels are GPIO_PIN_x bitmasks, so they drop straight in.
+#define PIN_SET(pin)  ((uint32_t)(pin))
+#define PIN_RST(pin)  ((uint32_t)(pin) << 16)
 
 static uint32_t half_cyc; // 177 cycles at 170MHz/480kHz
 
-#define BOYMODER MODER
-#define MODE_OUT(port, pin) do { \
-    (port)->BOYMODER = ((port)->BOYMODER & ~(3U << ((pin) * 2))) | (1U << ((pin) * 2)); \
-    (port)->OSPEEDR |= (3U << ((pin) * 2)); \
-} while (0)
+// Push-pull output at the fastest slew; CubeMX already enabled the port clock and set the pin low
+static void pin_out_fast (GPIO_TypeDef *port, uint32_t pin)
+{
+    GPIO_InitTypeDef g = {0};
+    g.Pin = pin;
+    g.Mode = GPIO_MODE_OUTPUT_PP;
+    g.Pull = GPIO_NOPULL;
+    g.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    HAL_GPIO_Init(port, &g);
+}
 
 
 /**
@@ -78,9 +77,10 @@ static inline void wait_half(void)
 */
 void shift_bit(uint32_t bit)
 {
-    SHIFTREG_DATA_PORT->BSRR = (bit ? SHIFTREG_SER_SET : SHIFTREG_SER_RST) | SHIFTREG_SRCLK_RST;
+    SHIFTREG_Clock_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Clock_Pin);
+    SHIFTREG_Data_GPIO_Port->BSRR = bit ? PIN_SET(SHIFTREG_Data_Pin) : PIN_RST(SHIFTREG_Data_Pin);
         wait_half();
-        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_SET;
+        SHIFTREG_Clock_GPIO_Port->BSRR = PIN_SET(SHIFTREG_Clock_Pin);
         wait_half();
 }
 
@@ -107,43 +107,36 @@ void latch_out(bool led)
 {
     if(led)
     {
-        LED_DATA_PORT->BSRR = RCLK_SET;
+        LED_Latch_GPIO_Port->BSRR = PIN_SET(LED_Latch_Pin);
         __NOP(); __NOP(); // very short delay lol
-        LED_DATA_PORT->BSRR = RCLK_RST;
+        LED_Latch_GPIO_Port->BSRR = PIN_RST(LED_Latch_Pin);
     } else {
-        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SRCLK_RST;
+        SHIFTREG_Clock_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Clock_Pin);
         wait_half();
-        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_SET;
+        SHIFTREG_Latch_GPIO_Port->BSRR = PIN_SET(SHIFTREG_Latch_Pin);
         wait_half();
-        SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_RST;
+        SHIFTREG_Latch_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Latch_Pin);
     }
 }
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief PUBLIC led_shiftreg_init : Set up pins for the shift registers for leds (serial, clock, latch)
+  @brief PUBLIC led_shiftreg_init : Set up the LED latch pin (data and clock go out over SPI)
  ----------------------------------------------------------------------------------
 */
 void led_shiftreg_init(void)
 {
 
-    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
+    half_cyc = ((uint64_t)SystemCoreClock / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
     DWT->CYCCNT = 0; // cycle counter for PWM speed
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycles
 
-    RCC->AHB2ENR |= LED_DATA_PORT_EN | LED_OE_PORT_EN; // enables GPIO pins
-    RCC->APB2ENR |= LED_OE_TIM_EN; // enables Timer 1
+    pin_out_fast(LED_Latch_GPIO_Port, LED_Latch_Pin); // latch pin
+    LED_Latch_GPIO_Port->BSRR = PIN_RST(LED_Latch_Pin);
 
-    LED_OE_PORT->BSRR = (1U << LED_OE_PIN); // set OE high (OE active low so hide all LEDs first)
-    MODE_OUT(LED_OE_PORT, LED_OE_PIN);
-
-    MODE_OUT(LED_DATA_PORT, LED_RCLK_PIN);
-    LED_DATA_PORT->BSRR = RCLK_RST;
-    MODE_OUT(LED_DATA_PORT, LED_RCLK_PIN); // latch pin
-    
 }
 
 
@@ -155,16 +148,17 @@ void led_shiftreg_init(void)
 void shiftreg_init(void)
 {
 
-    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
+    half_cyc = ((uint64_t)SystemCoreClock / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Debug exception & monitor ctrl register setup, trace enable
     DWT->CYCCNT = 0; // cycle counter for PWM speed
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // enable cycle counter. PWM period based on number of CPU clock cycle
 
-    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_SER_PIN); // initialize the pins needed - serial data
-    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_SRCLK_PIN); // serial clock
-    MODE_OUT(SHIFTREG_DATA_PORT, SHIFTREG_RCLK_PIN); // latch pin
-    SHIFTREG_DATA_PORT->BSRR = SHIFTREG_SER_RST | SHIFTREG_SRCLK_RST;
-    SHIFTREG_DATA_PORT->BSRR = SHIFTREG_RCLK_RST;
-    
+    pin_out_fast(SHIFTREG_Data_GPIO_Port, SHIFTREG_Data_Pin); // initialize the pins needed - serial data
+    pin_out_fast(SHIFTREG_Clock_GPIO_Port, SHIFTREG_Clock_Pin); // serial clock
+    pin_out_fast(SHIFTREG_Latch_GPIO_Port, SHIFTREG_Latch_Pin); // latch pin
+    SHIFTREG_Data_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Data_Pin);
+    SHIFTREG_Clock_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Clock_Pin);
+    SHIFTREG_Latch_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Latch_Pin);
+
 }

@@ -34,10 +34,11 @@
 
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/i2c_driver.h"
+#include "CONFIG.h"
 #include <stdbool.h>
 #include "stm32g474xx.h"
 
-uint8_t mcp23017_value_cache[4]  // 4 I2C channels
+uint8_t mcp23017_value_cache[CHANNELS]  // one I2C bus per channel
                             [8]  // 8 possible addresses per channel
                             [2]; // 2 bytes cached per chip
 
@@ -65,15 +66,6 @@ bool mcp23017_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
     return i2c_read(bus, addr, out, 2); //A, B
 }
 
-static uint8_t i2c_to_int (I2C_TypeDef *bus)
-{
-    if (bus == I2C1) return 0;
-    if (bus == I2C2) return 1;
-    if (bus == I2C3) return 2;
-    if (bus == I2C4) return 3;
-    return 4; // indicate failure
-}
-
 /**
  ----------------------------------------------------------------------------------
   @brief mcp23017_poll_to_cache: I2C bus, chip's address (0x20, 0x21, 0x22) -> bool
@@ -83,7 +75,7 @@ static uint8_t i2c_to_int (I2C_TypeDef *bus)
 */
 bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
 {
-    uint8_t *out_dest = mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07];
+    uint8_t *out_dest = mcp23017_value_cache[i2c_bus_index(bus)][addr & 0x07];
     return mcp23017_read(bus, addr, out_dest);
 }
 
@@ -95,7 +87,7 @@ bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
 */
 void mcp23017_read_from_cache (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
 {
-    uint8_t *from = mcp23017_value_cache[i2c_to_int(bus)][addr & 0x07];
+    uint8_t *from = mcp23017_value_cache[i2c_bus_index(bus)][addr & 0x07];
     out[0] = from[0];
     out[1] = from[1];
 }

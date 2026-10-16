@@ -276,18 +276,18 @@ uint8_t mcp4728_singleWrite (
  * returns uint8_t Error code (0 for success)
  */
 static void pin_set (
-    GPIO_TypeDef *gpio_port, // GPIOA, GPIOB, ...
-    uint8_t pin,             // 0-15
+    GPIO_TypeDef *gpio_port, // e.g. LDAC0_GPIO_Port
+    uint32_t pin,            // GPIO_PIN_x bitmask, e.g. LDAC0_Pin
     bool high
 )
 {
     if (high)
     {
-        gpio_port->BSRR = (1U << pin);
+        gpio_port->BSRR = pin;
     }
     else
     { // set low
-        gpio_port->BSRR = ((1U << pin) << 16);
+        gpio_port->BSRR = (pin << 16);
     }
 }
 
@@ -310,17 +310,17 @@ static inline void wait_quarter (void)
 }
 
 uint8_t mcp4728_init_single_address (
-    GPIO_TypeDef *dac_scl_port, // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-    uint8_t dac_scl_pin,
+    GPIO_TypeDef *dac_scl_port, // port of the i2c clock line
+    uint32_t dac_scl_pin,       // GPIO_PIN_x bitmask of the i2c clock line
     GPIO_TypeDef *dac_sda_port,
-    uint8_t dac_sda_pin,
+    uint32_t dac_sda_pin,
     GPIO_TypeDef *ldac_port, // GPIO port to which the DAC's ldac pin is connected
-    uint8_t ldac_pin,        // GPIO port to which the DAC's ldac pin is connected
+    uint32_t ldac_pin,       // GPIO_PIN_x bitmask of the DAC's ldac pin
     uint8_t new_addr,        // new 3-bit address of the selected DAC
     uint8_t old_addr         // old 3-bit address of the selected DAC
 )
 {
-    half_cyc = ((uint64_t)(CPU_HZ) / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
+    half_cyc = ((uint64_t)SystemCoreClock / ((uint64_t)2UL * (uint64_t)SHIFT_REG_SERIAL_HZ));
 
 
     // TODO: double check that CHANNELS matches the number of shift registers connected to the DACs
@@ -380,12 +380,12 @@ uint8_t mcp4728_init_single_address (
 }
 
 uint8_t mcp4728_init_address (
-    GPIO_TypeDef *dac_scl_port, // I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
-    uint8_t dac_scl_pin,
+    GPIO_TypeDef *dac_scl_port, // port of the i2c clock line
+    uint32_t dac_scl_pin,       // GPIO_PIN_x bitmask of the i2c clock line
     GPIO_TypeDef *dac_sda_port,
-    uint8_t dac_sda_pin,
+    uint32_t dac_sda_pin,
     GPIO_TypeDef *ldac_port, //!< GPIO port to which the DAC's ldac pin is connected
-    uint8_t ldac_pin,        //!< GPIO port to which the DAC's ldac pin is connected
+    uint32_t ldac_pin,       //!< GPIO_PIN_x bitmask of the DAC's ldac pin
     uint8_t new_addr         // new 3-bit address of the selected DAC
 )
 {
@@ -412,17 +412,11 @@ uint8_t mcp4728_init_all_addresses (void)
 {
     uint8_t folded_result = 1;
 
-    bb_claim(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin);
-    bb_claim(I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin);
-    bb_claim(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin);
-    bb_claim(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin);
+    for (uint8_t ch = 0; ch < CHANNELS; ch++) i2c_channel_bb_claim(ch);
 
     // init all addresses one
 
-    bb_release(I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, 4); // alternate function id
-    bb_release(I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin, 4);
-    bb_release(I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin, 8);
-    bb_release(I2C4_Clock_GPIO_Port, I2C4_Clock_Pin, I2C4_Data_GPIO_Port, I2C4_Data_Pin, 8);
+    for (uint8_t ch = 0; ch < CHANNELS; ch++) i2c_channel_bb_release(ch);
 
     return folded_result;
 }

@@ -52,7 +52,7 @@ void uart_cmd_init(void);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief USART2 interrupt vector
+  @brief Remote UART interrupt vector
  ----------------------------------------------------------------------------------
 */
 void uart_cmd_rx_isr(void);
