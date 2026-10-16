@@ -60,17 +60,7 @@ static uint32_t timeout_cycles;
 /* Which bus (CONFIG.h) and which pins (CubeMX labels, for bit-banging) serve each console channel.
    Keep the pin labels in step with the bus chosen in CONFIG.h */
 
-typedef struct
-{
-    I2C_TypeDef *bus;
-    GPIO_TypeDef *scl_port;
-    uint32_t scl_pin;
-    GPIO_TypeDef *sda_port;
-    uint32_t sda_pin;
-    uint8_t af;
-} channel_i2c_hw_t;
-
-static const channel_i2c_hw_t channel_i2c_hw[CHANNELS] = {
+const channel_i2c_hw_t channel_i2c_hw[CHANNELS] = {
     {CHANNEL0_I2C_BUS, I2C1_Clock_GPIO_Port, I2C1_Clock_Pin, I2C1_Data_GPIO_Port, I2C1_Data_Pin, CHANNEL0_I2C_AF},
     {CHANNEL1_I2C_BUS, I2C2_Clock_GPIO_Port, I2C2_Clock_Pin, I2C2_Data_GPIO_Port, I2C2_Data_Pin, CHANNEL1_I2C_AF},
     {CHANNEL2_I2C_BUS, I2C3_Clock_GPIO_Port, I2C3_Clock_Pin, I2C3_Data_GPIO_Port, I2C3_Data_Pin, CHANNEL2_I2C_AF},
@@ -160,7 +150,7 @@ static void abort_transfer (I2C_TypeDef *bus)
     if (bus->ISR & I2C_ISR_BUSY)
     {
         bus->CR2 |= I2C_CR2_STOP;
-        uint32_t t0 = DWT->CYCCNT;
+        // uint32_t t0 = DWT->CYCCNT;
         /*while ((bus->ISR & I2C_ISR_BUSY) && (DWT->CYCCNT - t0) < timeout_cycles)
         {
         }*/

@@ -117,8 +117,6 @@ typedef uint8_t mcp4728_command_code;
 #define MCP4728_GAIN_WRITE ((mcp4728_command_code)0xC0)
 #define MCP4728_PWRDOWN_WRITE ((mcp4728_command_code)0xA0)
 
-#define MCP4728_BASE_ADDR 0x60
-
 #define MCP4728_GAIN_1 0x0
 #define MCP4728_GAIN_2 0x1
 
@@ -305,6 +303,13 @@ uint8_t mcp4728_init_address (
     uint32_t ldac_pin,          //!< GPIO_PIN_x bitmask of the DAC's ldac pin
     uint8_t new_addr            //!< new 3-bit address of the selected DAC
 );
+
+/**
+ * @brief use bit-banging to set every address of every mcp4728 on all four i2c channels
+ *
+ * @return uint8_t Error code (0 for success)
+ */
+uint8_t mcp4728_init_all_addresses (void);
 
 /**
  * @brief Initialize our default (vref and gain) settings on the MCP4728

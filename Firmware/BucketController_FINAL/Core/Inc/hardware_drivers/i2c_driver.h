@@ -131,6 +131,20 @@
 #ifndef I2C_DRIVER_H
 #define I2C_DRIVER_H
 
+#include "CONFIG.h"
+
+typedef struct
+{
+    I2C_TypeDef *bus;
+    GPIO_TypeDef *scl_port;
+    uint32_t scl_pin;
+    GPIO_TypeDef *sda_port;
+    uint32_t sda_pin;
+    uint8_t af;
+} channel_i2c_hw_t;
+
+extern const channel_i2c_hw_t channel_i2c_hw[CHANNELS];
+
 /**
  ----------------------------------------------------------------------------------
   @brief  i2c_read : I2C bus, chip address, data pointer, number of bytes to write -> bool

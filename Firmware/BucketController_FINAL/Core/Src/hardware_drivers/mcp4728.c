@@ -38,6 +38,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "main.h"
 #include "stm32g474xx.h"
+#include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -357,12 +358,15 @@ uint8_t mcp4728_init_single_address (
             pin_set(dac_scl_port, dac_scl_pin, true);
             wait_half();
         }
-            pin_set(dac_scl_port, dac_scl_pin, false);
-            wait_quarter();
-            if (byte_idx == 1) {pin_set(ldac_port, ldac_pin, false);}
-            wait_quarter();
-            pin_set(dac_scl_port, dac_scl_pin, true);
-            wait_half();
+        pin_set(dac_scl_port, dac_scl_pin, false);
+        wait_quarter();
+        if (byte_idx == 1)
+        {
+            pin_set(ldac_port, ldac_pin, false);
+        }
+        wait_quarter();
+        pin_set(dac_scl_port, dac_scl_pin, true);
+        wait_half();
     }
     pin_set(dac_scl_port, dac_scl_pin, false);
     wait_half();
@@ -392,7 +396,10 @@ uint8_t mcp4728_init_address (
     uint8_t folded_result = 1;
     for (uint8_t target_addr = 0x60; target_addr < 0x68; target_addr++)
     {
-        if(target_addr == new_addr) {continue;}
+        if (target_addr == new_addr)
+        {
+            continue;
+        }
         folded_result &= mcp4728_init_single_address(
             dac_scl_port,
             dac_scl_pin,
@@ -408,13 +415,47 @@ uint8_t mcp4728_init_address (
     return folded_result;
 }
 
+typedef struct
+{
+    GPIO_TypeDef *LDAC_Port;
+    uint32_t LDAC_Pin;
+} mcp4728_ldac_hw_t;
+
+static const mcp4728_ldac_hw_t MCP4728_LDAC_HW[] = {
+    {LDAC0_GPIO_Port, LDAC0_Pin},
+    {LDAC1_GPIO_Port, LDAC1_Pin},
+    {LDAC2_GPIO_Port, LDAC2_Pin},
+    {LDAC3_GPIO_Port, LDAC3_Pin},
+    {LDAC4_GPIO_Port, LDAC4_Pin}
+};
+static_assert(
+    sizeof(MCP4728_LDAC_HW) / sizeof(MCP4728_LDAC_HW[0]) == sizeof(MCP4728_ADDRS) / sizeof(MCP4728_ADDRS[0]),
+    "MCP4728 LDAC config is a different length from the number of addresses"
+);
+
 uint8_t mcp4728_init_all_addresses (void)
 {
+    const uint8_t mcp4728_count = sizeof(MCP4728_ADDRS) / sizeof(MCP4728_ADDRS[0]);
     uint8_t folded_result = 1;
 
     for (uint8_t ch = 0; ch < CHANNELS; ch++) i2c_channel_bb_claim(ch);
 
-    // init all addresses one
+    for (uint8_t ch = 0; ch < CHANNELS; ch++)
+    {
+        const channel_i2c_hw_t *ch_i2c = &(channel_i2c_hw[ch]);
+        for (uint8_t chip_idx = 0; chip_idx < mcp4728_count; chip_idx++)
+        {
+            folded_result &= mcp4728_init_address(
+                ch_i2c->scl_port,                    // Clock port
+                ch_i2c->scl_pin,                     // Clock pin
+                ch_i2c->sda_port,                    // Data port
+                ch_i2c->sda_pin,                     // Data pin
+                MCP4728_LDAC_HW[chip_idx].LDAC_Port, // ldac port
+                MCP4728_LDAC_HW[chip_idx].LDAC_Pin,  // ldac pin
+                MCP4728_ADDRS[chip_idx]              // New addr
+            );
+        }
+    }
 
     for (uint8_t ch = 0; ch < CHANNELS; ch++) i2c_channel_bb_release(ch);
 
@@ -424,7 +465,8 @@ uint8_t mcp4728_init_all_addresses (void)
 uint8_t mcp4728_init_settings (
     I2C_TypeDef *bus, //!< I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
     uint8_t addr      //!< 7-bit addr of the DAC e.g 0x60, 0x61 ... 0x64
-){
+)
+{
     const uint8_t vref_res = mcp4728_vrefSelect(bus, addr, MCP4728_ALL_VREF_INTERNAL);
     const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_1X);
     return vref_res | gain_res;

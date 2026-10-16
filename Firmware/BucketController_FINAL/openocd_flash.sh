@@ -3,4 +3,4 @@
 openocd \
   -f interface/stlink.cfg \
   -f target/stm32g4x.cfg \
-  -c "program build/Debug/BucketController.elf verify reset exit"
+  -c "program build/Debug/BucketController_FINAL.elf verify reset exit"

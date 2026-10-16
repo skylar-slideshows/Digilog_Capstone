@@ -19,28 +19,30 @@
 #include <stdio.h>
 
 // note: this code only exists when developer_mode is defined (see the ifdef)
-// static const char* I2CBusToStr(I2C_TypeDef *bus){
-//     if(bus == I2C1){
-//         return "I2C1";
-//     }
-//     if(bus == I2C2){
-//         return "I2C2";
-//     }
-//     if(bus == I2C3){
-//         return "I2C3";
-//     }
-//     return "I2C4";
-// }
+static const char* I2CBusToStr(I2C_TypeDef *bus){
+    if(bus == I2C1){
+        return "I2C1";
+    }
+    if(bus == I2C2){
+        return "I2C2";
+    }
+    if(bus == I2C3){
+        return "I2C3";
+    }
+    return "I2C4";
+}
 
 #endif
 
-#define MCP23017_1_ADDR 0x20
-#define MCP23017_2_ADDR 0x21
-#define MCP23017_BUTTON_ADDR 0x22
+#define MCP23017S_PER_CHANNEL sizeof(MCP23017_ADDRS) / sizeof(MCP23017_ADDRS[0])
+
+#define MCP23017_1_ADDR MCP23017_ADDRS[0]
+#define MCP23017_2_ADDR MCP23017_ADDRS[1]
+#define MCP23017_BUTTON_ADDR MCP23017_ADDRS[2]
 #define MCP23017_FRAMES_UNTIL_RETRY 2000
 
-#define MCP4728_BASE_ADDR 0x60
-#define MCP4728S_PER_CHANNEL 5
+#define MCP4728S_PER_CHANNEL sizeof(MCP4728_ADDRS) / sizeof(MCP4728_ADDRS[0])
+
 #define MCP4728S_PER_FRAME 2
 #define MCP4728_CALLS_UNTIL_RETRY 800
 #define MCP4728_CALLS_UNTIL_REFRESH 60 // rewrite an unchanged DAC every 100ms in case it was reset/replugged
@@ -56,7 +58,7 @@ typedef struct
     uint16_t mcp4728_fail_retry_counter[MCP4728S_PER_CHANNEL]; //!< Countdown until we retry polling after fails an i2c call
     uint8_t mcp4728_refresh_counter[MCP4728S_PER_CHANNEL];     //!< Countdown until we rewrite a DAC even if its cache is unchanged
 
-    uint16_t mcp23017_retry_counter[3]; //!< Countdown until we retry polling after a GPIO expander fails an i2c call
+    uint16_t mcp23017_retry_counter[MCP23017S_PER_CHANNEL]; //!< Countdown until we retry polling after a GPIO expander fails an i2c call
 } i2c_scheduler_state_t;
 
 static const i2c_scheduler_state_t default_scheduler_state = {
@@ -132,9 +134,9 @@ static inline void mcp4728_flush_maybe (
     *retry_counter = frames_until_retry;
 
     #ifdef DEVELOPER_MODE
-    // if(bus == I2C1){
-    //     printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
-    // }
+    if(bus == I2C1){
+        printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
+    }
     #endif
 }
 
@@ -147,7 +149,7 @@ static void write_mcp4728s (uint8_t channel)
     {
         mcp4728_flush_maybe(
             i2c_bus,
-            MCP4728_BASE_ADDR + state->last_written_mcp4728_idx,
+            MCP4728_ADDRS[state->last_written_mcp4728_idx],
             &(state->mcp4728_fail_retry_counter[state->last_written_mcp4728_idx]),
             MCP4728_CALLS_UNTIL_RETRY,
             &(state->mcp4728_refresh_counter[state->last_written_mcp4728_idx])

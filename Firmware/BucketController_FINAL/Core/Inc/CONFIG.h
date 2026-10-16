@@ -48,7 +48,6 @@
 
 #include "stm32g474xx.h"
 #include "main.h" // CubeMX labels (<Name>_Pin, <Name>_GPIO_Port) and peripheral names
-#include "hardware_drivers/i2c_driver.h"
 
 #ifndef DEVELOPER_MODE
     /************************************************************************************/

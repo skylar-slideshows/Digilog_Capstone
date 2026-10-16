@@ -237,6 +237,8 @@ int main(void)
 
 
   // I2C DEVICES INIT
+  mcp4728_init_all_addresses();
+
   mcp23017_init(i2c_channel_bus(0), 0x20);
   mcp4728_init_settings(i2c_channel_bus(0), 0x61);
 
