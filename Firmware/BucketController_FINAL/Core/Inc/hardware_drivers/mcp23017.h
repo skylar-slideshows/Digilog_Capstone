@@ -1,0 +1,135 @@
+/**
+  **********************************************************************************
+  * MCP23017 REGISTER CONSTRAINTS AND FUNCTIONS HEADER - DIGILOG CONSOLE
+  **********************************************************************************
+  * @file mcp23017.h
+  * @brief MCP23017s and MCP4728s are scanned at constant rate on I2C, and no interrupt
+  *        pins are used, for simplicity. Only the necessary parts for this case are included.
+  *
+  * Transcribed from MCP23017/MCP23S17 DS20001952C and MCP4728 DS22187E.
+  * This file is the transcription boundary: every number below was copied
+  * from a PDF by hand. Re-check it against the datasheet revision for the
+  * silicon actually being purchased before a production run.
+  *
+  * @author Skylar Denno (denno.o@northeastern.edu), Darya Petrova (petrov.da@northeastern.edu)
+  * @date 2026-08-22
+  * @version 1.0
+  *
+  * @attention
+  *  Copyright (C) 2026 Skylar Denno
+  *
+  *  MIT License:
+  *  Permission is hereby granted, free of charge, to any person obtaining a copy
+  *  of this software and associated documentation files (the “Software”), to deal
+  *  in the Software without restriction, including without limitation the rights
+  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+  *  of the Software, and to permit persons to whom the Software is furnished to do so,
+  *  subject to the following conditions:
+  *
+  *  The above copyright notice and this permission notice shall be included in all
+  *  copies or substantial portions of the Software.
+  *  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  *  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  *  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+  *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  *  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  **********************************************************************************
+*/
+
+#ifndef MCP23017_DRIVER_H
+#define MCP23017_DRIVER_H
+#include <stdint.h>
+#include <stdbool.h>
+#include "stm32g474xx.h"
+
+
+/*=============================== REGISTER DEFINITIONS ================================*/
+/** @brief Addresses below are for IOCON.BANK = 0 (POR default), where the A and B
+   registers of each pair are interleaved. We never change BANK to keep fixed addresses. */
+
+typedef uint8_t MCP23017_Reg;
+
+#define MCP_IODIRA ((MCP23017_Reg)0x00) // direction, port A: 1 = input, POR 0xFF, we will write 0xFF (all inputs)
+#define MCP_IODIRB ((MCP23017_Reg)0x01) // same as above, B
+#define MCP_IPOLA  ((MCP23017_Reg)0x02) // input polarity, port A. 1 = invert the value read from GPIO. we use 0
+#define MCP_IPOLB  ((MCP23017_Reg)0x03) // same as above, B
+#define MCP_IOCONA ((MCP23017_Reg)0x0A) // config; written FIRST, while still sequential, so it can be one 3-byte write
+#define MCP_IOCONB ((MCP23017_Reg)0x0B) // same as above, B
+#define MCP_GPPUA  ((MCP23017_Reg)0x0C) // pull-up enable, port A: 1 = internal ~100k on, we will write 0xFF to use internal
+#define MCP_GPPUB  ((MCP23017_Reg)0x0D) // same as above, B
+#define MCP_GPIOA  ((MCP23017_Reg)0x12) // read = live pin state. WRITE lands in OLAT, not here, pointer is parked here
+#define MCP_GPIOB  ((MCP23017_Reg)0x13) // never addressed directly at runtime: the A/B toggle reaches it from 0x12
+#define IOCON_BANK ((MCP23017_Reg)0x80) // input output command (IOCON) - do not write this bit!
+
+/** @brief 0 on reset - address pointer increments after each byte
+1 = byte mode (what we want) no increment so we can access the same address repeatedly
+ w/o sending control bytes (reduces traffic on the bus) */
+#define IOCON_SEQOP  0x20
+
+#define MCP_POR_IODIR 0xFF // keep power-on reset states
+#define MCP_POR_OTHER 0x00
+
+
+/*=============================== FUNCTIONS ================================*/
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_read : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Reads both GPIOA and GOIPB registers in one transaction ALWAYS EXACTLY TWO BYTES.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+  @param out pointer to output bytes [2]
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_read(I2C_TypeDef *bus, uint8_t addr, uint8_t *out);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_poll_to_cache: I2C bus, chip's address (0x20, 0x21, 0x22) -> bool
+  Reads both GPIOA and GOIPB registers in one transaction, and caches them for async
+  reading later
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_poll_to_cache(I2C_TypeDef *bus, uint8_t addr);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_read_from_cache : I2C bus, chip's address (0x20, 0x21, 0x22) -> 16bit (GPIOB, GPIOA)
+  Reads cached values on GPIOA and GOIPB without running an i2c transaction
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+  @param out pointer to output bytes [2; GPIOA, GPIOB]
+ ----------------------------------------------------------------------------------
+*/
+void mcp23017_read_from_cache(I2C_TypeDef *bus, uint8_t addr, uint8_t *out);
+
+bool mcp23017_init_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg,uint8_t *out);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_write : I2C bus, chip's address (0x20, 0x21, 0x22), register, value -> bool
+  Writes one register ALWAYS EXACTLY TWO BYTES.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+  @param reg what register to write to (MCP_GPIOA/B)
+  @param value ptr to data to write every pin state concurrently (full byte)
+               (since not using 23017s for write, no helper to abstract this)
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_write(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg, uint8_t value);
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief mcp23017_init : I2C bus, chip's address (0x20, 0x21, 0x22) -> bool
+  Initializes a single MCP23017 chip with no interrupt pin setup.
+  @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
+  @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
+ ----------------------------------------------------------------------------------
+*/
+bool mcp23017_init(I2C_TypeDef *bus, uint8_t addr);
+
+#endif

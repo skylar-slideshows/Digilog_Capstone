@@ -23,6 +23,29 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include <stdio.h>
+
+// Skylar
+#include "CONFIG.h"
+#include "cmsis_os2.h"
+#include "control_integration/control_interface.h"
+#include "hardware_drivers/fader_driver.h"
+#include "hardware_drivers/i2c_driver.h"
+#include "hardware_drivers/mcp23017.h"
+#include "hardware_drivers/mcp4728.h"
+#include "hardware_drivers/mcp4728_cache.h"
+#include "hardware_drivers/rotary_encoder.h"
+#include "hardware_drivers/led_driver.h"
+#include "hardware_drivers/74hc595.h"
+#include "portmacro.h"
+#include "projdefs.h"
+#include "stm32g474xx.h"
+#include "FreeRTOS_apps/remote_cmd_handler.h"
+#include "FreeRTOS_apps/led_handler.h"
+#include "FreeRTOS_apps/i2c_scheduler.h"
+#include "FreeRTOS_apps/fader_poller.h"
+#include "stm32g4xx_hal.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +65,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc2;
-ADC_HandleTypeDef hadc5;
+ADC_HandleTypeDef hadc4;
 
 DAC_HandleTypeDef hdac1;
 DAC_HandleTypeDef hdac3;
@@ -100,21 +123,34 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_ADC5_Init(void);
-static void MX_DAC1_Init(void);
 static void MX_DAC4_Init(void);
 static void MX_FMC_Init(void);
 static void MX_OPAMP3_Init(void);
 static void MX_OPAMP4_Init(void);
 static void MX_OPAMP6_Init(void);
+static void MX_ADC4_Init(void);
+static void MX_DAC1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
+
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
+// start usart2 usb debug
+// picocom -b 115200 /dev/cu.usbmodem#####
+int __io_putchar(int ch)
+{
+  if (DEVELOPER_MODE)
+  {
+    HAL_UART_Transmit(&REMOTE_UART_HANDLE, (uint8_t *)&ch, 1, 100);
+  }
+  return ch;
+}
 
 /* USER CODE END 0 */
 
@@ -126,6 +162,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+
+  
 
   /* USER CODE END 1 */
 
@@ -162,14 +200,57 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM5_Init();
   MX_USART2_UART_Init();
-  MX_ADC5_Init();
-  MX_DAC1_Init();
   MX_DAC4_Init();
   MX_FMC_Init();
   MX_OPAMP3_Init();
   MX_OPAMP4_Init();
   MX_OPAMP6_Init();
+  MX_ADC4_Init();
+  MX_DAC1_Init();
   /* USER CODE BEGIN 2 */
+
+  /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
+
+  if(DEVELOPER_MODE)
+  {
+    setvbuf(stdout, NULL, _IONBF, 0); // make lines never disappear on the remote UART
+  }
+
+  i2c_init(); // i2c startup
+
+  if(DEVELOPER_MODE)
+  {
+    printf("\r\n\n\n\n\n\n\n\n\n*******************************************************\r\n");
+    printf("Initializing Bucket Controller...\r\n    Build %s %s \r\n\nBEGIN debug log:\r\n", __DATE__, __TIME__);
+    printf("*******************************************************\r\n");
+
+    i2c_probeall();
+  }
+
+  uart_cmd_init(); // uart2 startup for comms w/ remote app
+
+  led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
+  init_control_interface();
+  shiftreg_init();
+
+  led_brightness(10);
+
+
+  // I2C DEVICES INIT
+  mcp23017_init(i2c_channel_bus(0), 0x20);
+  mcp4728_init_settings(i2c_channel_bus(0), 0x61);
+
+  if(DEVELOPER_MODE)
+  {
+  led_print_config();
+
+  printf("\r\n*******************************************************\n");
+  }
+
+
+
+  /*=============================== END STARTUP HARDWARE INITIALIZATION ================================*/
+
 
   /* USER CODE END 2 */
 
@@ -197,7 +278,12 @@ int main(void)
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+
+  init_led_handler(); // start LED frame renderer
+  init_i2c_scheduler();
+  init_fader_poller();
+  init_faders();
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -352,42 +438,64 @@ static void MX_ADC2_Init(void)
 }
 
 /**
-  * @brief ADC5 Initialization Function
+  * @brief ADC4 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_ADC5_Init(void)
+static void MX_ADC4_Init(void)
 {
 
-  /* USER CODE BEGIN ADC5_Init 0 */
+  /* USER CODE BEGIN ADC4_Init 0 */
 
-  /* USER CODE END ADC5_Init 0 */
+  /* USER CODE END ADC4_Init 0 */
 
   ADC_ChannelConfTypeDef sConfig = {0};
 
-  /* USER CODE BEGIN ADC5_Init 1 */
+  /* USER CODE BEGIN ADC4_Init 1 */
 
-  /* USER CODE END ADC5_Init 1 */
+  /* USER CODE END ADC4_Init 1 */
 
   /** Common config
   */
-  hadc5.Instance = ADC5;
-  hadc5.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc5.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc5.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc5.Init.GainCompensation = 0;
-  hadc5.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc5.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  hadc5.Init.LowPowerAutoWait = DISABLE;
-  hadc5.Init.ContinuousConvMode = DISABLE;
-  hadc5.Init.NbrOfConversion = 1;
-  hadc5.Init.DiscontinuousConvMode = DISABLE;
-  hadc5.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc5.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc5.Init.DMAContinuousRequests = DISABLE;
-  hadc5.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-  hadc5.Init.OversamplingMode = DISABLE;
-  if (HAL_ADC_Init(&hadc5) != HAL_OK)
+  hadc4.Instance = ADC4;
+  hadc4.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc4.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc4.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc4.Init.GainCompensation = 0;
+  hadc4.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc4.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc4.Init.LowPowerAutoWait = DISABLE;
+  hadc4.Init.ContinuousConvMode = DISABLE;
+  hadc4.Init.NbrOfConversion = 4;
+  hadc4.Init.DiscontinuousConvMode = DISABLE;
+  hadc4.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc4.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc4.Init.DMAContinuousRequests = DISABLE;
+  hadc4.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc4.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc4, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  if (HAL_ADC_ConfigChannel(&hadc4, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
@@ -395,18 +503,23 @@ static void MX_ADC5_Init(void)
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_9;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
-  sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.OffsetNumber = ADC_OFFSET_NONE;
-  sConfig.Offset = 0;
-  if (HAL_ADC_ConfigChannel(&hadc5, &sConfig) != HAL_OK)
+  sConfig.Rank = ADC_REGULAR_RANK_3;
+  if (HAL_ADC_ConfigChannel(&hadc4, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN ADC5_Init 2 */
 
-  /* USER CODE END ADC5_Init 2 */
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = ADC_REGULAR_RANK_4;
+  if (HAL_ADC_ConfigChannel(&hadc4, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC4_Init 2 */
+
+  /* USER CODE END ADC4_Init 2 */
 
 }
 
@@ -989,6 +1102,10 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
@@ -1391,16 +1508,22 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, DISP_RST_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, DISP_CS3_Pin|DISP_CS2_Pin|DISP_CS1_Pin|DISP_CS0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_Latch_GPIO_Port, LED_Latch_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2|LDAC1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LDAC0_Pin|LDAC1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PE5 F3_Touch_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|F3_Touch_Pin;
+  /*Configure GPIO pins : F0_Touch_Pin F3_Touch_Pin */
+  GPIO_InitStruct.Pin = F0_Touch_Pin|F3_Touch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -1411,6 +1534,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_TEST_Pin */
+  GPIO_InitStruct.Pin = LED_TEST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_TEST_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
   GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
@@ -1431,6 +1561,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : DISP_CS3_Pin DISP_CS2_Pin DISP_CS1_Pin DISP_CS0_Pin */
+  GPIO_InitStruct.Pin = DISP_CS3_Pin|DISP_CS2_Pin|DISP_CS1_Pin|DISP_CS0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
   /*Configure GPIO pin : LED_Latch_Pin */
   GPIO_InitStruct.Pin = LED_Latch_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1438,8 +1575,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_Latch_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PD2 LDAC1_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|LDAC1_Pin;
+  /*Configure GPIO pins : LDAC0_Pin LDAC1_Pin */
+  GPIO_InitStruct.Pin = LDAC0_Pin|LDAC1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1464,11 +1601,27 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
+  
+
+  // i2c_channel_bb_claim(0);
+  /*mcp4728_init_address(
+    I2C1_Clock_GPIO_Port, // Clock port
+    I2C1_Clock_Pin, // Clock pin
+    I2C1_Data_GPIO_Port, // Data port
+    I2C1_Data_Pin, // Data pin
+    LDAC0_GPIO_Port, // ldac port
+    LDAC0_Pin, // ldac pin
+    0x62 // New addr
+  );*/
+  // i2c_channel_bb_release(0);
+
+  for (;;) // this MUST STAY
   {
-    osDelay(1);
+    vTaskDelay(portMAX_DELAY);
   }
+  
+
+
   /* USER CODE END 5 */
 }
 
@@ -1491,6 +1644,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   /* USER CODE BEGIN Callback 1 */
 
+  // I2C Scheduler
+  else if (htim->Instance == TIM4){
+    i2c_scheduler_trigger_frame();
+    fader_poller_trigger_frame();
+  }
+
+  // skylar (adding the ISR for LED handler)
+  else if (htim->Instance == TIM5)
+  {
+    led_handler_notify_from_isr();
+  }
+
   /* USER CODE END Callback 1 */
 }
 
@@ -1501,7 +1666,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  printf("\r\nError!!!!!!!!!!\n");
   __disable_irq();
   while (1)
   {
