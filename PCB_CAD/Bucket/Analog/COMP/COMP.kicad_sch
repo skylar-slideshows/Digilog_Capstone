@@ -2259,6 +2259,17 @@
 		)
 		(uuid "934ddd73-baa1-4a4c-9d80-635cef068ba8")
 	)
+	(text "this is a hybrid compressor:\n--------------------------------\nthe envelope of the audio that is used to calculate gain reduction\nis created by analog components. then that envelope is read into\na ADC on the STM32, and digitally, the gain reduction is calculated\nfrom the audio dyanmic envelope and the user's attack, release,\nthreshold and ratio settings. then, that gain reduction is turned\ninto a control voltage and sent back to analog with a DAC on the\nSTM32, and that gain reduction / compression is actually applied\nin analog with VCAs. (this is a vca compressor with a hybrid\ndigital/analog sidechain)"
+		(exclude_from_sim no)
+		(at 203.454 120.65 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "a465fc80-dcbe-45ea-a4c8-cd97e7ba7575")
+	)
 	(text "U1"
 		(exclude_from_sim no)
 		(at 48.26 180.34 0)
@@ -2270,7 +2281,7 @@
 		)
 		(uuid "ab01bfc1-007e-4e48-b0eb-d39e903a1e50")
 	)
-	(text "FIRMWARE INTERFACE (STM32, VREF+ = 3.3 V)\n\nADC (ENV_ADC), sample >= 20 kHz:\n  level_dBu = 20 log10( V / 0.2421 )   (sine peak)\n  Linear to ~-35 dBu after attack/release smoothing.\n\nDAC (GR_DAC), output buffer ON:\n  V = (0.2685 + 0.0061 x G_dB) / 0.1271\n  G = -40...+20 dB (cut and make-up), 0 dB = 2.113 V.\n\nOther VREF+: R7 = 78.7k x VREF/3.3, R5 = 22.1k x VREF/3.3\n  (3.0 V: R7 71.5k, R5 20.0k).\n\nNot temperature-compensated: GR depth drifts ~0.33 %/C\n  (inaudible). +/-1 % VREF+ error = +/-0.44 dB at 0 dB;\n  calibrate the 0 dB code once if VREF+ is not precise.\n\nPAN/FADER BOARD: add 10k from E-SEL to GND so an\n  unplugged or unpowered compressor leaves E- at 0 V.\n  Its 100R + 2.2n snubbers are allowed for (R12)."
+	(text "ADC (ENV_ADC), sample >= 20 kHz:\n  level_dBu = 20 log10( V / 0.2421 )\n\nDAC (GR_DAC), output buffer ON:\n  V = (0.2685 + 0.0061 x G_dB) / 0.1271\n  G = -40...+20 dB (cut and make-up), 0 dB = 2.113 V\n\nVREF+: R7 = 78.7k x VREF/3.3, R5\n  = 22.1k x VREF/3.3(3.0 V: R7 71.5k, R5 20.0k)"
 		(exclude_from_sim no)
 		(at 213.36 27.94 0)
 		(effects
