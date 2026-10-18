@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "CONFIG.h"
 #include "fader_control.h"
 
@@ -93,6 +94,7 @@ void init_control_interface (void)
  * Updates control values based on current/previous (cached) input (e.g button/rotary-encoder) states
  * Gpio expanders should have been polled to cache before running this
  */
+uint16_t p = 0;
 void update_control_values (uint8_t channel)
 {
     update_channel_knob_values(
@@ -113,6 +115,11 @@ void update_control_values (uint8_t channel)
         &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
+
+    if(channel == 0){
+        printf("\r%d\n", channel_control_vals[0].hf_control.gain);
+    }
+
 
     // TODO: non-button/encoder inputs maybe?
 }
