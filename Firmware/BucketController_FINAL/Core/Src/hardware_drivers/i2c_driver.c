@@ -81,6 +81,15 @@ uint8_t i2c_bus_index (I2C_TypeDef *bus)
     return CHANNELS; // indicate failure
 }
 
+volatile uint32_t i2c_fail_isr[CHANNELS];  // ISR register when the last transfer failed
+volatile uint8_t  i2c_fail_step[CHANNELS]; // 1 busy before start, 2 data, 3 waiting for STOP, 4 NACK at end
+
+static inline void note_fail (I2C_TypeDef *bus, uint8_t step)
+{
+    const uint8_t i = i2c_bus_index(bus);
+    if (i < CHANNELS) { i2c_fail_isr[i] = bus->ISR; i2c_fail_step[i] = step; }
+}
+
 
 /*=============================== LOW LEVEL HELPERS ================================*/
 
@@ -92,22 +101,23 @@ uint8_t i2c_bus_index (I2C_TypeDef *bus)
 */
 static bool wait_flag (I2C_TypeDef *bus, uint32_t flag, bool abort_on_nack)
 {
-    uint32_t time0 = DWT->CYCCNT;
+    const uint32_t time0 = DWT->CYCCNT;
     uint32_t spins = 0;
 
     for (;;)
     {
-        uint32_t isr = bus->ISR;
+        const bool timed_out = (DWT->CYCCNT - time0) > timeout_cycles;
+        const uint32_t isr = bus->ISR;
+
         if (isr & flag) return true;
-        if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false; // flag will never reach with NACK
+        if (abort_on_nack && (isr & I2C_ISR_NACKF)) return false;
         if (isr & (I2C_ISR_BERR | I2C_ISR_ARLO)) return false;
-        if ((DWT->CYCCNT - time0) > timeout_cycles) return false;
+        if (timed_out) return false;
 
         if ((++spins & 0xFF) == 0 && xTaskGetSchedulerState() == taskSCHEDULER_RUNNING)
         {
             taskYIELD();
         }
-
     }
 }
 
@@ -199,6 +209,7 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     if (nbytes > I2C_MAX_TRANSFER_LEN || (nbytes && !data) || nbytes == 0) return false;
     if (!bus_idle(bus)) // idle timeout 1000us
     {
+        note_fail(bus, 1);
         abort_transfer(bus);
         return false;
     } // bus is idle
@@ -218,6 +229,7 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
     {
         if (!wait_flag(bus, I2C_ISR_RXNE, true))
         {
+            note_fail(bus, 2);
             abort_transfer(bus);
             return false;
         }
@@ -227,12 +239,14 @@ bool i2c_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *data, uint8_t nbytes)
 
     if (!wait_flag(bus, I2C_ISR_STOPF, false))
     {
+        note_fail(bus, 3);
         abort_transfer(bus);
         return false;
     }
 
     if (bus->ISR & I2C_ISR_NACKF)
     {
+        note_fail(bus, 4);
         abort_transfer(bus);
         return false;
     }

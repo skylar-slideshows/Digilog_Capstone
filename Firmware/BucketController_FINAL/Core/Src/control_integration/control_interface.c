@@ -116,11 +116,6 @@ void update_control_values (uint8_t channel)
         &(channel_controls_io[channel]) //
     );
 
-    if(channel == 0){
-        printf("\r%d\n", channel_control_vals[0].hf_control.gain);
-    }
-
-
     // TODO: non-button/encoder inputs maybe?
 }
 

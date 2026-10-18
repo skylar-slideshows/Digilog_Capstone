@@ -246,4 +246,9 @@ uint8_t i2c_bus_index (I2C_TypeDef *bus);
 void i2c_channel_bb_claim (uint8_t channel);
 void i2c_channel_bb_release (uint8_t channel);
 
+extern volatile uint32_t i2c_fail_isr[CHANNELS];
+extern volatile uint8_t  i2c_fail_step[CHANNELS];
+
+
+
 #endif

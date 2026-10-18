@@ -18,20 +18,6 @@
 
 #include <stdio.h>
 
-// note: this code only exists when developer_mode is defined (see the ifdef)
-// static const char* I2CBusToStr(I2C_TypeDef *bus){
-//     if(bus == I2C1){
-//         return "I2C1";
-//     }
-//     if(bus == I2C2){
-//         return "I2C2";
-//     }
-//     if(bus == I2C3){
-//         return "I2C3";
-//     }
-//     return "I2C4";
-// }
-
 #endif
 
 #define MCP23017S_PER_CHANNEL sizeof(MCP23017_ADDRS) / sizeof(MCP23017_ADDRS[0])
@@ -59,7 +45,14 @@ typedef struct
     uint8_t mcp4728_refresh_counter[MCP4728S_PER_CHANNEL];     //!< Countdown until we rewrite a DAC even if its cache is unchanged
 
     uint16_t mcp23017_retry_counter[MCP23017S_PER_CHANNEL]; //!< Countdown until we retry polling after a GPIO expander fails an i2c call
+
+    bool mcp23017_seen[MCP23017S_PER_CHANNEL]; //!< Has answered at least once, so a failure is worth reporting
+    bool mcp4728_seen[MCP4728S_PER_CHANNEL];
+
+    uint8_t mcp23017_fail_streak[MCP23017S_PER_CHANNEL]; //!< Consecutive failures from a chip that is plugged in
+    uint8_t mcp4728_fail_streak[MCP4728S_PER_CHANNEL];
 } i2c_scheduler_state_t;
+
 
 static const i2c_scheduler_state_t default_scheduler_state = {
     .frame_counter = 0,
@@ -71,38 +64,74 @@ static const i2c_scheduler_state_t default_scheduler_state = {
 
 static i2c_scheduler_state_t scheduler_states[CHANNELS] = {default_scheduler_state};
 
-static inline void mcp23017_poll_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter, uint16_t frames_until_retry)
+
+
+#define FAILS_BEFORE_BACKOFF 20 // consecutive failures before a present chip is treated as gone
+
+static inline void mcp23017_poll_maybe (I2C_TypeDef *bus, uint8_t addr, uint16_t *retry_counter,
+                                        uint16_t frames_until_retry, bool *seen, uint8_t *fail_streak)
 {
     if (*retry_counter > 0)
     {
         *retry_counter = *retry_counter - 1;
         return;
     }
-    const bool succ = mcp23017_poll_to_cache(bus, addr);
-    if (succ) return;
 
-    *retry_counter = frames_until_retry;
-#ifdef DEVELOPER_MODE
-    // if(bus == I2C1){
-    //     printf("\r\n%s addr %#x (GPIO exp.) failed an i2c poll; waiting %d frames to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
-    // }
+    if (mcp23017_poll_to_cache(bus, addr))
+    {
+        *seen = true;
+        *fail_streak = 0;
+        return;
+    }
+
+#if DEVELOPER_MODE
+    if (*seen)
+    {
+        const uint8_t b = i2c_bus_index(bus);
+        printf("\r\n%lu ms  I2C%u expander 0x%02X failed  step %u  ISR 0x%08lX  streak %u\n",
+               (unsigned long)HAL_GetTick(), b + 1, addr, i2c_fail_step[b],
+               (unsigned long)i2c_fail_isr[b], *fail_streak + 1);
+    }
 #endif
+
+    // 
+    if (*seen && ++(*fail_streak) < FAILS_BEFORE_BACKOFF) return;
+
+    *fail_streak = 0;
+    *retry_counter = frames_until_retry;
 }
+
 
 static void read_mcp23017s (uint8_t channel)
 {
     i2c_scheduler_state_t *state = &(scheduler_states[channel]);
     I2C_TypeDef *i2c_bus = i2c_channel_bus(channel);
 
-    mcp23017_poll_maybe(i2c_bus, MCP23017_1_ADDR, &(state->mcp23017_retry_counter[0]), MCP23017_FRAMES_UNTIL_RETRY);
-    mcp23017_poll_maybe(i2c_bus, MCP23017_2_ADDR, &(state->mcp23017_retry_counter[1]), MCP23017_FRAMES_UNTIL_RETRY);
+    mcp23017_poll_maybe(
+        i2c_bus,
+        MCP23017_1_ADDR,
+        &(state->mcp23017_retry_counter[0]),
+        MCP23017_FRAMES_UNTIL_RETRY,
+        &(state->mcp23017_seen[0]),
+        &(state->mcp23017_fail_streak[0])
+    );
+    mcp23017_poll_maybe(
+        i2c_bus,
+        MCP23017_2_ADDR,
+        &(state->mcp23017_retry_counter[1]),
+        MCP23017_FRAMES_UNTIL_RETRY,
+        &(state->mcp23017_seen[1]),
+        &(state->mcp23017_fail_streak[1])
+    );
     if (state->frame_counter == SUPERFRAME_SIZE - 1)
     {
         mcp23017_poll_maybe(
             i2c_bus,
             MCP23017_BUTTON_ADDR,
             &(state->mcp23017_retry_counter[2]),
-            MCP23017_FRAMES_UNTIL_RETRY / SUPERFRAME_SIZE
+            MCP23017_FRAMES_UNTIL_RETRY / SUPERFRAME_SIZE,
+            &(state->mcp23017_seen[2]),
+            &(state->mcp23017_fail_streak[2])
         );
     }
 }
@@ -112,7 +141,9 @@ static inline void mcp4728_flush_maybe (
     uint8_t addr,
     uint16_t *retry_counter,
     uint16_t frames_until_retry,
-    uint8_t *refresh_counter
+    uint8_t *refresh_counter,
+    bool *seen,
+    uint8_t *fail_streak
 )
 {
     if (*retry_counter > 0)
@@ -128,16 +159,28 @@ static inline void mcp4728_flush_maybe (
     }
     *refresh_counter = MCP4728_CALLS_UNTIL_REFRESH;
 
-    const bool code = mcp4728_cache_flush_fastWrite(bus, addr);
-    if (code == 0) return;
+    const uint8_t code = mcp4728_cache_flush_fastWrite(bus, addr);
+    if (code == 0)
+    {
+        *seen = true;
+        *fail_streak = 0;
+        return;
+    }
 
+#if DEVELOPER_MODE
+    if (*seen)
+    {
+        const uint8_t b = i2c_bus_index(bus);
+        printf("\r\n%lu ms  I2C%u DAC 0x%02X failed  step %u  ISR 0x%08lX  streak %u\n",
+               (unsigned long)HAL_GetTick(), b + 1, addr, i2c_fail_step[b],
+               (unsigned long)i2c_fail_isr[b], *fail_streak + 1);
+    }
+#endif
+
+    if (*seen && ++(*fail_streak) < FAILS_BEFORE_BACKOFF) return;
+
+    *fail_streak = 0;
     *retry_counter = frames_until_retry;
-
-    #ifdef DEVELOPER_MODE
-    // if(bus == I2C1){
-    //     printf("\r\n%s addr %#x (DAC) failed an i2c poll; waiting %d calls to retry\n", I2CBusToStr(bus), addr, frames_until_retry);
-    // }
-    #endif
 }
 
 static void write_mcp4728s (uint8_t channel)
@@ -152,7 +195,9 @@ static void write_mcp4728s (uint8_t channel)
             MCP4728_ADDRS[state->last_written_mcp4728_idx],
             &(state->mcp4728_fail_retry_counter[state->last_written_mcp4728_idx]),
             MCP4728_CALLS_UNTIL_RETRY,
-            &(state->mcp4728_refresh_counter[state->last_written_mcp4728_idx])
+            &(state->mcp4728_refresh_counter[state->last_written_mcp4728_idx]),
+            &(state->mcp4728_seen[state->last_written_mcp4728_idx]),
+            &(state->mcp4728_fail_streak[state->last_written_mcp4728_idx])
         );
         state->last_written_mcp4728_idx = (state->last_written_mcp4728_idx + 1) % MCP4728S_PER_CHANNEL;
     }
