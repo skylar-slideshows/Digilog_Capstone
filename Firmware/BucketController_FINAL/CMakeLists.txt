@@ -105,6 +105,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/button_driver.c
     Core/Src/hardware_drivers/mcp4728_cache.c
     Core/Src/hardware_drivers/fader_driver.c
+    Core/Src/hardware_drivers/driver_st7789.c
     Core/Src/control_voltage.c
     Core/Src/control_integration/control_interface.c
     Core/Src/control_integration/button_control.c
@@ -114,6 +115,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/FreeRTOS_apps/led_handler.c
     Core/Src/FreeRTOS_apps/i2c_scheduler.c
     Core/Src/FreeRTOS_apps/fader_poller.c
+    Core/Src/FreeRTOS_apps/displays.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE

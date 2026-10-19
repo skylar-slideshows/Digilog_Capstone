@@ -44,6 +44,7 @@
 #include "FreeRTOS_apps/led_handler.h"
 #include "FreeRTOS_apps/i2c_scheduler.h"
 #include "FreeRTOS_apps/fader_poller.h"
+#include "FreeRTOS_apps/displays.h"
 #include "stm32g4xx_hal.h"
 
 /* USER CODE END Includes */
@@ -257,6 +258,8 @@ int main(void)
 
   printf("\r\n*******************************************************\n");
   }
+
+  displays_init();
 
 
 
@@ -1612,6 +1615,7 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
+  displays_test_pattern();
   
 
   // i2c_channel_bb_claim(0);

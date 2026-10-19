@@ -75,8 +75,13 @@ bool mcp23017_read (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
 */
 bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
 {
+    uint8_t fresh[2];
+    if (!mcp23017_read(bus, addr, fresh)) return false; // on failure, keep the last good snapshot
+
     uint8_t *out_dest = mcp23017_value_cache[i2c_bus_index(bus)][addr & 0x07];
-    return mcp23017_read(bus, addr, out_dest);
+    out_dest[0] = fresh[0];
+    out_dest[1] = fresh[1];
+    return true;
 }
 
 /**
