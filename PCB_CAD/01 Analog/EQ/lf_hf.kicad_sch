@@ -7340,16 +7340,6 @@
 		)
 		(uuid "0b668c11-b361-4b5a-a275-43e02bf479eb")
 	)
-	(label "HF_IN"
-		(at 283.21 171.45 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "11bc0486-998e-4f2c-a2e2-33b08c7d03d7")
-	)
 	(label "HF_G_CV"
 		(at 236.22 251.46 0)
 		(effects
@@ -7480,16 +7470,6 @@
 		)
 		(uuid "5b936af4-f280-4e8d-bc46-8e9910698100")
 	)
-	(label "LF_IN"
-		(at 345.44 53.34 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "5cbd8583-bcc3-4d91-8f33-bd6131123812")
-	)
 	(label "LF_NBP"
 		(at 86.36 80.01 180)
 		(effects
@@ -7499,16 +7479,6 @@
 			(justify right bottom)
 		)
 		(uuid "5f5619da-2192-4e7e-b570-6c960b5aec7f")
-	)
-	(label "HF_CUT_LCV"
-		(at 389.89 66.04 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "64822a85-e231-43d4-a663-efb5830d6591")
 	)
 	(label "HF_NBP"
 		(at 345.44 88.9 180)
@@ -7529,56 +7499,6 @@
 			(justify right bottom)
 		)
 		(uuid "7b545f8e-26e1-428a-9e7e-cd4cd44d725e")
-	)
-	(label "HF_OUT"
-		(at 311.15 138.43 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "89220b56-dfed-4e3f-8ba3-f0db1143ec8d")
-	)
-	(label "HF_OUT"
-		(at 345.44 63.5 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "8fa307b3-0b83-469f-af73-54fe1630125e")
-	)
-	(label "HF_MODE_LCV"
-		(at 389.89 91.44 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "90564743-be83-4769-b480-173d41fdebf8")
-	)
-	(label "LF_MODE_LCV"
-		(at 389.89 78.74 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "91fa3799-87b5-41c7-a604-a411a0af5f94")
-	)
-	(label "LF_OUT"
-		(at 345.44 50.8 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9fa9ed72-6dc7-4fd6-af59-3e1a6f4bf8ab")
 	)
 	(label "LF_V"
 		(at 29.21 52.07 180)
@@ -7620,16 +7540,6 @@
 		)
 		(uuid "be6d4aa1-eb7b-4030-80d9-39f695a0d9f6")
 	)
-	(label "LF_OUT"
-		(at 313.69 54.61 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c1b83c0f-f608-4949-a1fc-088645b5193d")
-	)
 	(label "LF_F_CV"
 		(at 148.59 62.23 0)
 		(effects
@@ -7639,26 +7549,6 @@
 			(justify left bottom)
 		)
 		(uuid "c3b7bb07-7360-4d85-a61e-2a84e9eedfe8")
-	)
-	(label "LF_IN"
-		(at 285.75 87.63 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "c8385156-505f-46a2-8172-24a79e82bac6")
-	)
-	(label "HF_IN"
-		(at 345.44 66.04 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "d168270b-9a7a-4ad3-bc8d-df39a186838b")
 	)
 	(label "HF_V"
 		(at 29.21 137.16 180)
@@ -7709,16 +7599,6 @@
 			(justify left bottom)
 		)
 		(uuid "eb4f4e4f-242c-4bc6-b610-121781e92ec4")
-	)
-	(label "LF_CUT_LCV"
-		(at 389.89 53.34 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f8caeee5-3639-4e3e-8129-6999fefffdb2")
 	)
 	(label "LF_F_CV"
 		(at 125.73 215.9 0)
@@ -7833,6 +7713,138 @@
 				(justify right)
 			)
 		)
+	)
+	(hierarchical_label "HF_IN"
+		(shape input)
+		(at 283.21 171.45 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "11bc0486-998e-4f2c-a2e2-33b08c7d03d7")
+	)
+	(hierarchical_label "LF_IN"
+		(shape input)
+		(at 345.44 53.34 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5cbd8583-bcc3-4d91-8f33-bd6131123812")
+	)
+	(hierarchical_label "HF_CUT_LCV"
+		(shape input)
+		(at 389.89 66.04 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "64822a85-e231-43d4-a663-efb5830d6591")
+	)
+	(hierarchical_label "HF_OUT"
+		(shape output)
+		(at 311.15 138.43 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "89220b56-dfed-4e3f-8ba3-f0db1143ec8d")
+	)
+	(hierarchical_label "HF_OUT"
+		(shape output)
+		(at 345.44 63.5 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8fa307b3-0b83-469f-af73-54fe1630125e")
+	)
+	(hierarchical_label "HF_MODE_LCV"
+		(shape input)
+		(at 389.89 91.44 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "90564743-be83-4769-b480-173d41fdebf8")
+	)
+	(hierarchical_label "LF_MODE_LCV"
+		(shape input)
+		(at 389.89 78.74 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "91fa3799-87b5-41c7-a604-a411a0af5f94")
+	)
+	(hierarchical_label "LF_OUT"
+		(shape output)
+		(at 345.44 50.8 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9fa9ed72-6dc7-4fd6-af59-3e1a6f4bf8ab")
+	)
+	(hierarchical_label "LF_OUT"
+		(shape output)
+		(at 313.69 54.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c1b83c0f-f608-4949-a1fc-088645b5193d")
+	)
+	(hierarchical_label "LF_IN"
+		(shape input)
+		(at 285.75 87.63 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c8385156-505f-46a2-8172-24a79e82bac6")
+	)
+	(hierarchical_label "HF_IN"
+		(shape input)
+		(at 345.44 66.04 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d168270b-9a7a-4ad3-bc8d-df39a186838b")
+	)
+	(hierarchical_label "LF_CUT_LCV"
+		(shape input)
+		(at 389.89 53.34 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f8caeee5-3639-4e3e-8129-6999fefffdb2")
 	)
 	(symbol
 		(lib_id "power:GND")
@@ -8740,7 +8752,7 @@
 				)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "14.0k"
 			(at 172.72 220.98 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10730,7 +10742,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 49.53 223.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11597,7 +11609,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 160.02 220.98 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12540,7 +12552,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "95.3k"
+		(property "Value" "130k"
 			(at 59.69 251.46 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14338,7 +14350,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 166.37 256.794 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14858,7 +14870,7 @@
 				)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "14.0k"
 			(at 62.23 223.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15038,7 +15050,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 260.35 57.15 0)
 			(hide yes)
 			(show_name no)
@@ -15553,7 +15565,7 @@
 				)
 			)
 		)
-		(property "Value" "14.0k"
+		(property "Value" "29.4k"
 			(at 107.95 203.2 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15924,7 +15936,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 257.81 140.97 0)
 			(hide yes)
 			(show_name no)
@@ -16825,7 +16837,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "88.7k"
+		(property "Value" "130k"
 			(at 170.18 210.82 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19522,7 +19534,7 @@
 				)
 			)
 		)
-		(property "Value" "22.1k"
+		(property "Value" "30.5k"
 			(at 101.6 246.634 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19565,7 +19577,7 @@
 				)
 			)
 		)
-		(property "Note" "1%"
+		(property "Note" "0.1% thin film"
 			(at 101.6 243.84 0)
 			(hide yes)
 			(show_name no)
@@ -21071,7 +21083,7 @@
 				)
 			)
 		)
-		(property "Value" "14.0k"
+		(property "Value" "29.4k"
 			(at 218.44 200.66 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21576,7 +21588,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 55.88 259.334 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -25911,7 +25923,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "95.3k"
+		(property "Value" "130k"
 			(at 170.18 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26273,7 +26285,7 @@
 				)
 			)
 		)
-		(property "Value" "22.1k"
+		(property "Value" "30.5k"
 			(at 212.09 244.094 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26316,7 +26328,7 @@
 				)
 			)
 		)
-		(property "Note" "1%"
+		(property "Note" "0.1% thin film"
 			(at 212.09 241.3 0)
 			(hide yes)
 			(show_name no)
@@ -27382,7 +27394,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "88.7k"
+		(property "Value" "130k"
 			(at 59.69 213.36 0)
 			(show_name no)
 			(do_not_autoplace no)

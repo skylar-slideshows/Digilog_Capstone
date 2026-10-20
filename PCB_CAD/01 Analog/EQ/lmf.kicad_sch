@@ -6737,26 +6737,6 @@
 		)
 		(uuid "fdb5ad64-60fb-46d5-beca-64f330f4f5fe")
 	)
-	(label "LMF_OUT"
-		(at 313.69 186.69 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "114e7b38-dfde-443d-ba7c-6e28f892008c")
-	)
-	(label "LMF_CUT_LCV"
-		(at 377.19 191.77 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "42912610-08b8-441c-a4ea-ac16f5ef88fc")
-	)
 	(label "LMF_NBP"
 		(at 180.34 189.23 180)
 		(effects
@@ -6766,16 +6746,6 @@
 			(justify right bottom)
 		)
 		(uuid "45d530df-3ad3-40c9-b746-037c52af8bbb")
-	)
-	(label "LMF_OUT"
-		(at 264.16 186.69 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "47b6a425-16e7-4530-96f7-6df2cd38ccd3")
 	)
 	(label "LMF_NBP"
 		(at 274.32 96.52 180)
@@ -6797,26 +6767,6 @@
 		)
 		(uuid "5f36606d-915d-425e-bf75-82632958de20")
 	)
-	(label "HMF_CUT_LCV"
-		(at 374.65 217.17 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "655bad70-5db6-4d5d-b6a8-5dc947ae0e18")
-	)
-	(label "LMF_IN"
-		(at 313.69 191.77 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "7e5f978b-fc93-435d-b1db-30dd48649450")
-	)
 	(label "LMF_F_CV"
 		(at 264.16 82.55 0)
 		(effects
@@ -6836,16 +6786,6 @@
 			(justify left bottom)
 		)
 		(uuid "8917c2e1-9546-4842-839b-139e47929d8a")
-	)
-	(label "LMF_IN"
-		(at 236.22 219.71 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "940d6f7a-402e-4351-8981-0b61cdfb9001")
 	)
 	(label "LMF_G_CV"
 		(at 129.54 137.16 0)
@@ -7072,6 +7012,72 @@
 				(justify right)
 			)
 		)
+	)
+	(hierarchical_label "LMF_OUT"
+		(shape output)
+		(at 313.69 186.69 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "114e7b38-dfde-443d-ba7c-6e28f892008c")
+	)
+	(hierarchical_label "LMF_CUT_LCV"
+		(shape input)
+		(at 377.19 191.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "42912610-08b8-441c-a4ea-ac16f5ef88fc")
+	)
+	(hierarchical_label "LMF_OUT"
+		(shape output)
+		(at 264.16 186.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "47b6a425-16e7-4530-96f7-6df2cd38ccd3")
+	)
+	(hierarchical_label "HMF_CUT_LCV"
+		(shape input)
+		(at 374.65 217.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "655bad70-5db6-4d5d-b6a8-5dc947ae0e18")
+	)
+	(hierarchical_label "LMF_IN"
+		(shape input)
+		(at 313.69 191.77 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7e5f978b-fc93-435d-b1db-30dd48649450")
+	)
+	(hierarchical_label "LMF_IN"
+		(shape input)
+		(at 236.22 219.71 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "940d6f7a-402e-4351-8981-0b61cdfb9001")
 	)
 	(symbol
 		(lib_id "power:-16.6V")
@@ -7327,7 +7333,7 @@
 				)
 			)
 		)
-		(property "Value" "22.1k"
+		(property "Value" "30.5k"
 			(at 105.41 129.794 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7370,7 +7376,7 @@
 				)
 			)
 		)
-		(property "Note" "1%"
+		(property "Note" "0.1% thin film"
 			(at 105.41 127 0)
 			(hide yes)
 			(show_name no)
@@ -7777,7 +7783,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "88.7k"
+		(property "Value" "130k"
 			(at 63.5 95.25 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7868,7 +7874,7 @@
 				)
 			)
 		)
-		(property "Value" "30.1k"
+		(property "Value" "43.7k"
 			(at 105.41 90.424 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7911,7 +7917,7 @@
 				)
 			)
 		)
-		(property "Note" "1%"
+		(property "Note" "0.1% thin film"
 			(at 105.41 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -12183,7 +12189,7 @@
 				)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "14.0k"
 			(at 66.04 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12273,7 +12279,7 @@
 				)
 			)
 		)
-		(property "Value" "14.0k"
+		(property "Value" "29.4k"
 			(at 111.76 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12678,7 +12684,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "88.7k"
+		(property "Value" "130k"
 			(at 63.5 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15413,7 +15419,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 59.69 142.494 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15618,7 +15624,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 210.82 189.23 0)
 			(hide yes)
 			(show_name no)
@@ -16367,7 +16373,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "95.3k"
+		(property "Value" "130k"
 			(at 63.5 134.62 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16664,7 +16670,7 @@
 				)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "14.0k"
 			(at 66.04 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17608,7 +17614,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 53.34 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21085,7 +21091,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "88.7k"
 			(at 53.34 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)

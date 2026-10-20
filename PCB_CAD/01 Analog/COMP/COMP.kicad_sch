@@ -2281,7 +2281,7 @@
 		)
 		(uuid "ab01bfc1-007e-4e48-b0eb-d39e903a1e50")
 	)
-	(text "ADC (ENV_ADC), sample >= 20 kHz:\n  level_dBu = 20 log10( V / 0.2421 )\n\nDAC (GR_DAC), output buffer ON:\n  V = (0.2685 + 0.0061 x G_dB) / 0.1271\n  G = -40...+20 dB (cut and make-up), 0 dB = 2.113 V\n\nVREF+: R7 = 78.7k x VREF/3.3, R5\n  = 22.1k x VREF/3.3(3.0 V: R7 71.5k, R5 20.0k)"
+	(text "ADC (ENV_ADC), sample >= 20 kHz:\n  level_dBu = 20 log10( V / 0.2421 )\n\nDAC (GR_DAC), output buffer ON:\n  V = (0.2685 + 0.0061 x G_dB) / 0.2053\n  G = -40...+20 dB (cut and make-up), 0 dB = 1.308 V\n\nVREF+: R7 = 78.7k x VREF/3.3, R5\n  = 22.1k x VREF/3.3(3.0 V: R7 71.5k, R5 20.0k)"
 		(exclude_from_sim no)
 		(at 213.36 27.94 0)
 		(effects
@@ -2303,7 +2303,7 @@
 		)
 		(uuid "c37902db-04a3-42ee-aa0d-eb8a7af97644")
 	)
-	(text "COMP_CV = 0.2685 - 0.1271 x GR_DAC  (VREF+ = 3.3 V, 6.1 mV/dB)\nDAC 0.193 V = -40 dB, 2.113 V = 0 dB, 3.073 V = +20 dB; 16.8 mdB/LSB.\nDAC 0 V (reset, R11) = -44 dB: a failure always cuts, never boosts.\nMFB: 8.0 kHz, Q 0.74."
+	(text "COMP_CV = 0.2685 - 0.2053 x GR_DAC  (DAC FS 2.048 V, 6.1 mV/dB)\nDAC 0.119 V = -40 dB, 1.308 V = 0 dB, 1.902 V = +20 dB; 16.8 mdB/LSB.\nDAC 0 V (reset, R11) = -44 dB: a failure always cuts, never boosts.\nMFB: 8.0 kHz, Q 0.72."
 		(exclude_from_sim no)
 		(at 34.29 143.51 0)
 		(effects
@@ -4132,7 +4132,7 @@
 				)
 			)
 		)
-		(property "Value" "78.7k 0.1%"
+		(property "Value" "48.7k 0.1%"
 			(at 56.896 132.588 90)
 			(show_name no)
 			(do_not_autoplace no)

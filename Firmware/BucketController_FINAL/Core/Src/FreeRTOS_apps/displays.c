@@ -4,7 +4,7 @@
   **********************************************************************************
   * @file FreeRTOS_apps/displays.c
   * @brief Runs the four ST7789 screens over the 8-bit FMC bus, using LibDriver's
-  *        st7789 driver for the drawing.
+  *        st7789 driver for the drawing. Pictures come from st7789_imagegen.py.
   *
   * All four panels share the data bus, the read/write strobes, A0 and reset; only their
   * chip selects differ. So one driver handle serves all four: pick a panel by pulling its
@@ -36,11 +36,28 @@
 #define DISP_CMD  ((volatile uint8_t *)(DISP_FMC_BASE))      // A0 low:  command
 #define DISP_DATA ((volatile uint8_t *)(DISP_FMC_BASE + 1U)) // A0 high: data
 
-#define COLOR_BLACK 0x0000U // RGB565
-#define COLOR_WHITE 0xFFFFU
-#define COLOR_RED   0xF800U
-#define COLOR_GREEN 0x07E0U
-#define COLOR_BLUE  0x001FU
+// Colours are written as 8-bit red, green, blue and converted to the screens' colour depth
+#if DISPLAY_COLOR_BITS == 16
+#define PIXEL_FORMAT ST7789_CONTROL_INTERFACE_COLOR_FORMAT_16_BIT
+#define RGB(r, g, b) ((((r) >> 3) << 11) | (((g) >> 2) << 5) | ((b) >> 3)) // RGB565
+#define IMAGE_BYTES(pixels) ((uint32_t)(pixels) * 2U)
+#elif DISPLAY_COLOR_BITS == 12
+#define PIXEL_FORMAT ST7789_CONTROL_INTERFACE_COLOR_FORMAT_12_BIT
+#define RGB(r, g, b) ((((r) >> 4) << 8) | (((g) >> 4) << 4) | ((b) >> 4))   // RGB444
+#define IMAGE_BYTES(pixels) (((uint32_t)(pixels) * 3U + 1U) / 2U)            // 3 bytes per 2 pixels
+#else
+#error "DISPLAY_COLOR_BITS must be 16 or 12"
+#endif
+
+#define COLOR_BLACK RGB(0, 0, 0)
+#define COLOR_WHITE RGB(255, 255, 255)
+#define COLOR_RED   RGB(255, 0, 0)
+#define COLOR_GREEN RGB(0, 255, 0)
+#define COLOR_BLUE  RGB(0, 0, 255)
+
+// The driver sends at most 65,535 bytes per call. This is the largest size that is always a whole
+// number of pixels at both depths (2 bytes each, or 3 bytes per 2), so each call ends on a pixel.
+#define IMAGE_CHUNK 65532U
 
 extern TIM_HandleTypeDef htim1; // from main.c; channel 3 is DISP_PWM
 
@@ -196,7 +213,7 @@ uint8_t displays_init (void)
         res |= st7789_sleep_out(&s_st7789); // waits the 200 ms the panel needs, inside the driver
         res |= st7789_set_interface_pixel_format(&s_st7789,
                                                  ST7789_RGB_INTERFACE_COLOR_FORMAT_65K,
-                                                 ST7789_CONTROL_INTERFACE_COLOR_FORMAT_16_BIT); // RGB565
+                                                 PIXEL_FORMAT); // DISPLAY_COLOR_BITS
         res |= st7789_set_memory_data_access_control(&s_st7789, ST7789_ORDER_COLOR_RGB); // red and blue swapped? use ST7789_ORDER_COLOR_BGR
         res |= st7789_display_inversion_on(&s_st7789); // IPS panels need this; black shows as white? use st7789_display_inversion_off
         res |= st7789_normal_display_mode_on(&s_st7789);
@@ -258,6 +275,38 @@ uint8_t displays_draw_text (uint8_t display, uint16_t x, uint16_t y, uint8_t siz
     select_display(display);
     uint8_t res = st7789_fill_rect(&s_st7789, x, y, (uint16_t)right, y + size - 1U, COLOR_BLACK);
     res |= st7789_write_string(&s_st7789, x, y, (char *)text, len, COLOR_WHITE, (st7789_font_t)size);
+    release_display(display);
+    unlock();
+
+    return res ? 1 : 0;
+}
+
+
+uint8_t displays_draw_image (uint8_t display, uint16_t x, uint16_t y, const display_image_t *image)
+{
+    if (display >= DISPLAY_COUNT || image == NULL || image->pixels == NULL) return 1;
+    if (image->bits != DISPLAY_COLOR_BITS) return 1; // made for the other colour depth
+    if (image->width == 0 || image->height == 0) return 1;
+    if ((uint32_t)x + image->width > DISPLAY_SIZE_PX || (uint32_t)y + image->height > DISPLAY_SIZE_PX) return 1;
+
+    // The bytes are already in the screens' format, so they go straight onto the bus. This is
+    // deliberately not st7789_draw_picture_12bits(), which garbles every picture: its loop writes
+    // its buffer at the wrong index and treats each pixel as two.
+    const uint8_t *next = image->pixels;
+    uint32_t remaining = IMAGE_BYTES((uint32_t)image->width * image->height);
+
+    lock();
+    select_display(display);
+    uint8_t res = st7789_set_column_address(&s_st7789, x, x + image->width - 1U);
+    res |= st7789_set_row_address(&s_st7789, y, y + image->height - 1U);
+    for (uint8_t first = 1; remaining > 0 && res == 0; first = 0)
+    {
+        const uint16_t n = (uint16_t)(remaining > IMAGE_CHUNK ? IMAGE_CHUNK : remaining);
+        res |= first ? st7789_memory_write(&s_st7789, (uint8_t *)next, n)
+                     : st7789_memory_continue_write(&s_st7789, (uint8_t *)next, n);
+        next += n;
+        remaining -= n;
+    }
     release_display(display);
     unlock();
 
