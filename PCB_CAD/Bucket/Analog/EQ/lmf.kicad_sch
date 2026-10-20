@@ -4719,6 +4719,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.88 107.95) (xy 63.5 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2165883a-71b3-4843-bca5-3b3f3b8735cb")
+	)
+	(wire
+		(pts
 			(xy 383.54 78.74) (xy 383.54 129.54)
 		)
 		(stroke
@@ -5939,6 +5949,16 @@
 	)
 	(wire
 		(pts
+			(xy 101.6 41.91) (xy 109.22 41.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9b6d35c6-b6a7-4cda-ace8-d83670844bcd")
+	)
+	(wire
+		(pts
 			(xy 86.36 139.7) (xy 88.9 139.7)
 		)
 		(stroke
@@ -6126,6 +6146,16 @@
 			(type default)
 		)
 		(uuid "af2d2836-844c-460a-8bca-3da2cbc920db")
+	)
+	(wire
+		(pts
+			(xy 91.44 69.85) (xy 99.06 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b063ba13-94c2-4c9f-81ac-57986bf7649d")
 	)
 	(wire
 		(pts
@@ -6416,6 +6446,16 @@
 			(type default)
 		)
 		(uuid "dad3f832-fc89-4418-ad47-a7aaceea8787")
+	)
+	(wire
+		(pts
+			(xy 55.88 69.85) (xy 63.5 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db092a99-6494-4b2f-bb32-95731c3d205b")
 	)
 	(wire
 		(pts
@@ -7431,6 +7471,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 113.03 69.85 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "24fd811f-51a9-4938-b511-06a04c98cb25")
 		)
@@ -8038,6 +8089,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C105620"
+			(at 247.65 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "530d26c2-7d1b-4084-8901-351034d10fd6")
 		)
@@ -8349,6 +8411,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C2057264"
+			(at 248.92 186.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "173c91ff-2fb2-4b11-8ed7-d2868fb93d82")
 		)
@@ -8433,7 +8506,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 185.42 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -8467,6 +8540,17 @@
 			)
 		)
 		(property "Note" "C0G"
+			(at 185.42 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C527278"
 			(at 185.42 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -8698,6 +8782,96 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_US")
+		(at 99.06 66.04 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1c9a316f-2415-4af4-b04b-c9559ae309f0")
+		(property "Reference" "R46"
+			(at 101.6 64.77 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "14.0k"
+			(at 101.6 67.31 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 99.06 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 99.06 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 99.06 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "94f3cc22-27e6-470a-9f71-bf8f5f6b4a5b")
+		)
+		(pin "2"
+			(uuid "bedd6158-4ece-474c-8f01-64ed78d8d158")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R46")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 86.36 68.58 0)
 		(unit 1)
@@ -8764,6 +8938,17 @@
 			)
 		)
 		(property "Note" "C0G/film"
+			(at 86.36 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 86.36 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -9011,6 +9196,17 @@
 			)
 		)
 		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-14/TSSOP-14"
+			(at 373.38 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2057264"
 			(at 373.38 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -9711,6 +9907,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C2057264"
+			(at 302.26 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "11"
 			(uuid "13e1b899-b1e4-43cf-9781-ebfd7fcc23fa")
 		)
@@ -10016,6 +10223,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 74.93 149.86 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "684a678b-29f7-4e96-9c38-7f42a0f87fa2")
 		)
@@ -10270,6 +10488,17 @@
 		)
 		(property "Note" "C0G 1%, match C2"
 			(at 372.11 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C107048"
+			(at 372.11 78.74 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10574,7 +10803,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "120k"
+		(property "Value" "100k"
 			(at 361.95 196.85 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10719,6 +10948,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 113.03 147.32 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "105d4356-b6f8-4b3a-93ba-46bfcfe5f322")
 		)
@@ -10729,6 +10969,98 @@
 			(project "EQ"
 				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
 					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 368.3 199.39 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "461be846-c722-4615-b6e4-db03592bbd53")
+		(property "Reference" "R47"
+			(at 368.3 196.596 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "20k"
+			(at 368.3 202.184 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 368.3 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 368.3 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 368.3 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 368.3 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fbd15bed-bcc7-4340-bb9f-9bf3a01fdc88")
+		)
+		(pin "2"
+			(uuid "128cab22-9a23-436b-a0c9-7031224a2916")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R47")
 					(unit 1)
 				)
 			)
@@ -11183,7 +11515,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 256.54 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -11217,6 +11549,17 @@
 			)
 		)
 		(property "Note" "C0G"
+			(at 256.54 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C527278"
 			(at 256.54 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -11468,6 +11811,17 @@
 			)
 		)
 		(property "Description" "V2164 Quad VCA"
+			(at 33.02 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 33.02 262.89 0)
 			(hide yes)
 			(show_name no)
@@ -11739,7 +12093,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2k"
+		(property "Value" "10k"
 			(at 370.84 194.564 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11782,6 +12136,17 @@
 				)
 			)
 		)
+		(property "Note" "0.1% thin film"
+			(at 370.84 191.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b7e27311-9ce2-48f0-873f-9f0c9a7a715c")
 		)
@@ -11792,6 +12157,186 @@
 			(project "EQ"
 				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
 					(reference "R18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 63.5 66.04 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "59d0251e-98a6-4f9f-8f1b-263f3f731188")
+		(property "Reference" "R43"
+			(at 66.04 64.77 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 66.04 67.31 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 63.5 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 63.5 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 63.5 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5da69b66-22df-45cb-9dc8-5ebf26fe18d2")
+		)
+		(pin "2"
+			(uuid "24372ca3-38c3-4fcf-b318-237c9b9e7b07")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R43")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 109.22 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5a37f6a7-ad1b-4be8-81f8-6040711074c1")
+		(property "Reference" "R45"
+			(at 111.76 44.45 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "14.0k"
+			(at 111.76 46.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 109.22 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 109.22 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 109.22 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 109.22 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f8dc13c0-8c9f-4105-a1c0-5cb5e1419544")
+		)
+		(pin "2"
+			(uuid "68b782be-c586-43d9-9042-64d2755c4ace")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R45")
 					(unit 1)
 				)
 			)
@@ -11872,6 +12417,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C282071"
+			(at 229.87 88.9 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "4f296ff7-d87c-4b7a-96d0-6c2e57a3e66b")
 		)
@@ -11941,6 +12497,17 @@
 			)
 		)
 		(property "Description" "V2164 Quad VCA"
+			(at 205.74 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 205.74 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -12338,6 +12905,17 @@
 			)
 		)
 		(property "Note" "C0G/film"
+			(at 86.36 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 86.36 146.05 0)
 			(hide yes)
 			(show_name no)
@@ -13135,7 +13713,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 327.66 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -13169,6 +13747,17 @@
 			)
 		)
 		(property "Note" "C0G"
+			(at 327.66 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C527278"
 			(at 327.66 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -13370,7 +13959,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "56.2k"
+		(property "Value" "46.4k"
 			(at 71.12 208.28 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13414,7 +14003,7 @@
 				)
 			)
 		)
-		(property "Note" "ADR5041 bias ~0.22 mA"
+		(property "Note" "0.1% thin film; ADR5041 bias ~0.27 mA"
 			(at 73.66 207.01 0)
 			(hide yes)
 			(show_name no)
@@ -14402,6 +14991,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 347.98 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "14"
 			(uuid "50775012-7ab2-45ee-938e-d2e7b805f6cf")
 		)
@@ -14515,6 +15115,17 @@
 			)
 		)
 		(property "Description" "Dual audio op-amp (OPA1678), SOIC-8"
+			(at 167.64 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2057264"
 			(at 167.64 262.89 0)
 			(hide yes)
 			(show_name no)
@@ -14709,6 +15320,17 @@
 			)
 		)
 		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-14/TSSOP-14"
+			(at 287.02 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2057264"
 			(at 287.02 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -14937,6 +15559,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 86.36 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "8818abdb-8ece-4934-815d-85ac830ade8a")
 		)
@@ -15008,6 +15641,17 @@
 			)
 		)
 		(property "Description" "Blackmer Pre-Trimmed IC Voltage Controlled Amplifiers, SIP-8"
+			(at 210.82 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 210.82 189.23 0)
 			(hide yes)
 			(show_name no)
@@ -15117,6 +15761,17 @@
 		)
 		(property "Note" "C0G/film"
 			(at 113.03 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 113.03 107.95 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15989,6 +16644,96 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_US")
+		(at 63.5 104.14 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a1682413-b2d8-4c33-863b-5187d6c6c3cc")
+		(property "Reference" "R44"
+			(at 66.04 102.87 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 66.04 105.41 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 63.5 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 63.5 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 63.5 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f086def2-480b-4fa1-82d8-12e22569dcb3")
+		)
+		(pin "2"
+			(uuid "a1326e2d-d697-4e45-9c90-0c891031b487")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R44")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Amplifier_Operational:OPA4197xD")
 		(at 111.76 137.16 0)
 		(unit 3)
@@ -16274,6 +17019,98 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
+		(at 361.95 228.6 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a4908829-1187-4a29-a428-df11b0c35f4e")
+		(property "Reference" "R48"
+			(at 359.41 227.33 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "20k"
+			(at 359.41 229.87 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 361.95 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 361.95 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 361.95 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 361.95 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9c17358f-b2c7-4d1d-bbd7-bfad4b3376fd")
+		)
+		(pin "2"
+			(uuid "052a8a07-186b-4e8c-b2c1-3ae9456c5cbb")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R48")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
 		(at 261.62 107.95 0)
 		(unit 1)
 		(body_style 1)
@@ -16407,6 +17244,17 @@
 			)
 		)
 		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-14/TSSOP-14"
+			(at 231.14 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2057264"
 			(at 231.14 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -16669,7 +17517,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 213.36 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -16713,6 +17561,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C107103"
+			(at 213.36 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "48995fa0-6756-42bc-a9bc-906d510408f1")
 		)
@@ -16730,7 +17589,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 59.69 62.23 90)
+		(at 55.88 66.04 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16740,7 +17599,7 @@
 		(dnp no)
 		(uuid "aee0c362-4fa4-4c00-a489-5c070a9b4aa4")
 		(property "Reference" "R21"
-			(at 59.69 59.436 90)
+			(at 53.34 64.77 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16749,8 +17608,8 @@
 				)
 			)
 		)
-		(property "Value" "140k"
-			(at 59.69 65.024 90)
+		(property "Value" "130k"
+			(at 53.34 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16760,7 +17619,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 59.69 62.23 0)
+			(at 55.88 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16771,7 +17630,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 59.69 62.23 0)
+			(at 55.88 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16782,7 +17641,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 59.69 62.23 0)
+			(at 55.88 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16793,7 +17652,7 @@
 			)
 		)
 		(property "Note" "0.1% thin film"
-			(at 59.69 62.23 0)
+			(at 55.88 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16874,6 +17733,17 @@
 			)
 		)
 		(property "Description" "Low-Distortion Audio Operational Amplifiers, SOIC-14/TSSOP-14"
+			(at 78.74 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2057264"
 			(at 78.74 262.89 0)
 			(hide yes)
 			(show_name no)
@@ -17349,6 +18219,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C107048"
+			(at 300.99 78.74 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "80e5e532-504b-43dc-8f6a-1fa38e862876")
 		)
@@ -17474,7 +18355,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 261.62 118.11 0)
 			(hide yes)
 			(show_name no)
@@ -17508,6 +18389,17 @@
 			)
 		)
 		(property "Note" "C0G"
+			(at 261.62 118.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C527278"
 			(at 261.62 118.11 0)
 			(hide yes)
 			(show_name no)
@@ -17679,6 +18571,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 83.82 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C1590"
 			(at 83.82 207.01 0)
 			(hide yes)
 			(show_name no)
@@ -18049,7 +18952,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "120k"
+		(property "Value" "100k"
 			(at 359.41 222.25 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18369,7 +19272,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 95.25 62.23 90)
+		(at 91.44 66.04 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18379,7 +19282,7 @@
 		(dnp no)
 		(uuid "d14b57e8-c120-4d5f-8015-507d0d82f7ad")
 		(property "Reference" "R25"
-			(at 95.25 59.436 90)
+			(at 88.9 64.77 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18388,8 +19291,8 @@
 				)
 			)
 		)
-		(property "Value" "34.0k"
-			(at 95.25 65.024 90)
+		(property "Value" "20k"
+			(at 88.9 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18399,7 +19302,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 95.25 62.23 0)
+			(at 91.44 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18410,7 +19313,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 95.25 62.23 0)
+			(at 91.44 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18421,7 +19324,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 95.25 62.23 0)
+			(at 91.44 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18431,8 +19334,8 @@
 				)
 			)
 		)
-		(property "Note" "1%"
-			(at 95.25 62.23 0)
+		(property "Note" "0.1% thin film"
+			(at 91.44 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19332,6 +20235,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 74.93 72.39 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "7c6a78f9-019b-4640-98b4-de6e05876cc4")
 		)
@@ -19911,7 +20825,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2k"
+		(property "Value" "10k"
 			(at 368.3 219.964 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19944,6 +20858,17 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
+			(at 368.3 217.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
 			(at 368.3 217.17 0)
 			(hide yes)
 			(show_name no)
@@ -20141,7 +21066,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 59.69 100.33 90)
+		(at 55.88 104.14 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20151,7 +21076,7 @@
 		(dnp no)
 		(uuid "e741eb45-5f3d-4e11-bffe-8445018be3c0")
 		(property "Reference" "R27"
-			(at 59.69 97.536 90)
+			(at 53.34 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20160,8 +21085,8 @@
 				)
 			)
 		)
-		(property "Value" "140k"
-			(at 59.69 103.124 90)
+		(property "Value" "130k"
+			(at 53.34 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20171,7 +21096,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 59.69 100.33 0)
+			(at 55.88 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20182,7 +21107,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 59.69 100.33 0)
+			(at 55.88 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20193,7 +21118,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 59.69 100.33 0)
+			(at 55.88 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20204,7 +21129,7 @@
 			)
 		)
 		(property "Note" "0.1% thin film"
-			(at 59.69 100.33 0)
+			(at 55.88 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20231,7 +21156,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 105.41 49.53 90)
+		(at 101.6 45.72 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20241,7 +21166,7 @@
 		(dnp no)
 		(uuid "e8c792eb-e8e2-41a5-af9b-42adeb4f060e")
 		(property "Reference" "R24"
-			(at 105.41 46.736 90)
+			(at 99.06 44.45 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20250,8 +21175,8 @@
 				)
 			)
 		)
-		(property "Value" "34.0k"
-			(at 105.41 52.324 90)
+		(property "Value" "20k"
+			(at 99.06 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20261,7 +21186,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 105.41 49.53 0)
+			(at 101.6 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20272,7 +21197,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 105.41 49.53 0)
+			(at 101.6 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20283,7 +21208,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 105.41 49.53 0)
+			(at 101.6 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20293,8 +21218,8 @@
 				)
 			)
 		)
-		(property "Note" "1%"
-			(at 105.41 49.53 0)
+		(property "Note" "0.1% thin film"
+			(at 101.6 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20405,6 +21330,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 74.93 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "741a1b9a-5a3c-47ce-83e3-13ebba9f7754")
 		)
@@ -20475,6 +21411,17 @@
 			)
 		)
 		(property "Description" "V2164 Quad VCA"
+			(at 241.3 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 241.3 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -20699,7 +21646,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 364.49 199.39 0)
+		(at 372.11 199.39 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20709,7 +21656,7 @@
 		(dnp no)
 		(uuid "f103c6e6-64f6-4b02-92d4-bb3002d7dfb6")
 		(property "Reference" "#PWR032"
-			(at 364.49 205.74 0)
+			(at 372.11 205.74 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20720,7 +21667,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 364.49 204.47 0)
+			(at 372.11 204.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20731,7 +21678,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 364.49 199.39 0)
+			(at 372.11 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20742,7 +21689,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 364.49 199.39 0)
+			(at 372.11 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20753,7 +21700,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 364.49 199.39 0)
+			(at 372.11 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20855,7 +21802,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 361.95 224.79 0)
+		(at 361.95 232.41 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20865,7 +21812,7 @@
 		(dnp no)
 		(uuid "f894d60e-714d-4a18-bd4c-0cecc35a67b0")
 		(property "Reference" "#PWR069"
-			(at 361.95 231.14 0)
+			(at 361.95 238.76 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20876,7 +21823,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 361.95 229.87 0)
+			(at 361.95 237.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20887,7 +21834,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 361.95 224.79 0)
+			(at 361.95 232.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20898,7 +21845,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 361.95 224.79 0)
+			(at 361.95 232.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20909,7 +21856,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 361.95 224.79 0)
+			(at 361.95 232.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21219,6 +22166,17 @@
 			)
 		)
 		(property "Description" "V2164 Quad VCA"
+			(at 276.86 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 276.86 71.12 0)
 			(hide yes)
 			(show_name no)
