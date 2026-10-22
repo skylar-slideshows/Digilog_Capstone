@@ -1,0 +1,10 @@
+(version 1)
+(rule "Minimum thermal relief spoke count 1"
+	(constraint min_resolved_spokes 1)
+)
+(rule "Minimum clearance 1"
+	(constraint clearance (min 0.2mm))
+)
+(rule "Copper to edge clearance 1"
+	(constraint edge_clearance (min 0.3mm))
+)

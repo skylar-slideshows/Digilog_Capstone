@@ -358,7 +358,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "My Symbols:EC11_Rotary_Encoder_Board"
+		(symbol "My Symbols:EC11_Rotary_Encoder"
 			(pin_names
 				(offset 1.016)
 				(hide yes)
@@ -378,7 +378,7 @@
 					)
 				)
 			)
-			(property "Value" "EC11_Rotary_Encoder_Board"
+			(property "Value" "EC11_Rotary_Encoder"
 				(at 1.27 -5.08 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -443,7 +443,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_Board_0_0"
+			(symbol "EC11_Rotary_Encoder_0_0"
 				(circle
 					(center 2.54 2.54)
 					(radius 0.2032)
@@ -479,7 +479,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_Board_0_1"
+			(symbol "EC11_Rotary_Encoder_0_1"
 				(polyline
 					(pts
 						(xy 2.54 2.54) (xy 0 0)
@@ -505,7 +505,7 @@
 					)
 				)
 			)
-			(symbol "EC11_Rotary_Encoder_Board_1_1"
+			(symbol "EC11_Rotary_Encoder_1_1"
 				(rectangle
 					(start -1.27 3.81)
 					(end 3.81 -3.81)
@@ -612,6 +612,42 @@
 						)
 					)
 					(number "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 2.54 180)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "D"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -6350,7 +6386,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 81.28 147.32 180)
 		(unit 1)
 		(body_style 1)
@@ -6382,7 +6418,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 81.28 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -6437,6 +6473,12 @@
 		)
 		(pin "B"
 			(uuid "37db285f-f434-41e6-b5d1-8417ba5a341c")
+		)
+		(pin "C"
+			(uuid "dd70effa-24aa-4de8-a380-141e6443efee")
+		)
+		(pin "D"
+			(uuid "c7ec6b3b-c824-493d-b199-26f3e1ecc44b")
 		)
 		(instances
 			(project "bucket_controls"
@@ -6723,7 +6765,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 201.93 248.92 180)
 		(unit 1)
 		(body_style 1)
@@ -6755,7 +6797,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 201.93 248.92 0)
 			(hide yes)
 			(show_name no)
@@ -6810,6 +6852,12 @@
 		)
 		(pin "B"
 			(uuid "d0831d30-483f-4f5d-9dc5-e204e6ce0e3d")
+		)
+		(pin "C"
+			(uuid "e2eb8592-e7fc-428c-9091-cbdfc6ff1426")
+		)
+		(pin "D"
+			(uuid "734d75db-b1fb-4efa-840a-f85ca5ea73a9")
 		)
 		(instances
 			(project "bucket_controls"
@@ -6989,7 +7037,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 201.93 96.52 180)
 		(unit 1)
 		(body_style 1)
@@ -7021,7 +7069,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 201.93 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -7076,6 +7124,12 @@
 		)
 		(pin "B"
 			(uuid "51b181b6-8f83-4856-865b-996c4e1dbb9e")
+		)
+		(pin "C"
+			(uuid "f9c04777-7596-4021-8826-abf8cffb9eaf")
+		)
+		(pin "D"
+			(uuid "2c06c75c-fd03-4069-a6dd-d42f8961a5e2")
 		)
 		(instances
 			(project "bucket_controls"
@@ -9817,7 +9871,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 81.28 96.52 180)
 		(unit 1)
 		(body_style 1)
@@ -9849,7 +9903,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 81.28 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -9904,6 +9958,12 @@
 		)
 		(pin "B"
 			(uuid "14e733db-d6bd-400e-a830-9d0da39a56af")
+		)
+		(pin "C"
+			(uuid "6d1968f7-2d14-46eb-ae84-8f3305220215")
+		)
+		(pin "D"
+			(uuid "d496ba12-a34d-4970-9275-051bd4c4dfa0")
 		)
 		(instances
 			(project "bucket_controls"
@@ -11858,7 +11918,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 201.93 147.32 180)
 		(unit 1)
 		(body_style 1)
@@ -11890,7 +11950,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 201.93 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -11945,6 +12005,12 @@
 		)
 		(pin "B"
 			(uuid "0c517528-b06b-4fdb-8791-8d367cf71972")
+		)
+		(pin "C"
+			(uuid "bfbafef0-2fb8-48d4-98e3-0b4f63df06f2")
+		)
+		(pin "D"
+			(uuid "a8b7247e-5dc5-4dd6-9d9a-9ac2d0871e81")
 		)
 		(instances
 			(project "bucket_controls"
@@ -12034,7 +12100,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 81.28 198.12 180)
 		(unit 1)
 		(body_style 1)
@@ -12066,7 +12132,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 81.28 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -12121,6 +12187,12 @@
 		)
 		(pin "B"
 			(uuid "5dc9075b-21c1-4fc3-98ca-52434c62451b")
+		)
+		(pin "C"
+			(uuid "f8c88804-f2dc-4ce4-b23d-148510c71104")
+		)
+		(pin "D"
+			(uuid "a09f6293-2c75-428e-adbd-94cd6e0c3093")
 		)
 		(instances
 			(project "bucket_controls"
@@ -12718,7 +12790,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 201.93 45.72 180)
 		(unit 1)
 		(body_style 1)
@@ -12750,7 +12822,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 201.93 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -12805,6 +12877,12 @@
 		)
 		(pin "B"
 			(uuid "c8155883-1533-4127-9966-c7cb39f2b69a")
+		)
+		(pin "C"
+			(uuid "cedf2efb-c0bd-4f2f-9a54-1651c1af533b")
+		)
+		(pin "D"
+			(uuid "67827030-58aa-4599-b730-f53628061794")
 		)
 		(instances
 			(project "bucket_controls"
@@ -14465,7 +14543,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 201.93 198.12 180)
 		(unit 1)
 		(body_style 1)
@@ -14497,7 +14575,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 201.93 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -14552,6 +14630,12 @@
 		)
 		(pin "B"
 			(uuid "dccea434-73cf-4408-92e1-0c55f3ea382e")
+		)
+		(pin "C"
+			(uuid "d7a87e53-6d14-4e05-b9d1-d9254ee57e62")
+		)
+		(pin "D"
+			(uuid "fc95c0d7-a6de-4ad6-a389-10549f6ef96b")
 		)
 		(instances
 			(project "bucket_controls"
@@ -15427,7 +15511,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 81.28 45.72 180)
 		(unit 1)
 		(body_style 1)
@@ -15459,7 +15543,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 81.28 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -15514,6 +15598,12 @@
 		)
 		(pin "B"
 			(uuid "db87bfe4-8106-493e-af88-d7ab1f1b06cc")
+		)
+		(pin "C"
+			(uuid "20bf3b9d-678b-438d-b550-6dd5afbf2155")
+		)
+		(pin "D"
+			(uuid "0726802e-e172-44f4-bff5-b1e5e04d7fc6")
 		)
 		(instances
 			(project "bucket_controls"
@@ -15941,7 +16031,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:EC11_Rotary_Encoder_Board")
+		(lib_id "My Symbols:EC11_Rotary_Encoder")
 		(at 81.28 248.92 180)
 		(unit 1)
 		(body_style 1)
@@ -15973,7 +16063,7 @@
 				)
 			)
 		)
-		(property "Footprint" "My Footprints:EC11_miniboard_castellated"
+		(property "Footprint" "My Footprints:EC11J0924411"
 			(at 81.28 248.92 0)
 			(hide yes)
 			(show_name no)
@@ -16028,6 +16118,12 @@
 		)
 		(pin "B"
 			(uuid "745137de-41d2-4a0e-a445-2e3779cf141c")
+		)
+		(pin "C"
+			(uuid "d67df703-2d0c-48c5-ae8a-3ed64c01b774")
+		)
+		(pin "D"
+			(uuid "cd47a32e-f606-4aaf-abe2-a59a0fad80a7")
 		)
 		(instances
 			(project "bucket_controls"
