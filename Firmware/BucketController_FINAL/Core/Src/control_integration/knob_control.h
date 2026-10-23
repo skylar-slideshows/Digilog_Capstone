@@ -3,7 +3,6 @@
 
 #include "control_integration/control_interface.h"
 #include "hardware_sets.h"
-#include "hardware_state_sets.h"
 
 /*
  * This header file is internal to control_integration, separated for organization.
@@ -14,13 +13,11 @@ void init_knob_controls (uint8_t channel, channel_control_io_t *io);
 void update_channel_knob_values (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,
-    channel_control_io_state *state,
     channel_control_io_t *io
 );
 void update_channel_knob_leds (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,
-    channel_control_io_state *state,
     channel_control_io_t *io
 );
 

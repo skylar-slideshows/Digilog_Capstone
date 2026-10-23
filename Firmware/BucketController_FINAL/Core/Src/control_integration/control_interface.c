@@ -8,7 +8,6 @@
 
 #include "button_control.h"
 #include "hardware_sets.h"
-#include "hardware_state_sets.h"
 #include "knob_control.h"
 #include "portmacro.h"
 
@@ -26,13 +25,12 @@ SemaphoreHandle_t channel_control_mutexes[CHANNELS];
  * @brief Holds info on all control interface IO for all 4 channels in the bucket
  */
 channel_control_io_t channel_controls_io[CHANNELS];
-channel_control_io_state channel_states[CHANNELS];
 
 static void init_control_io (uint8_t channel)
 {
     init_button_controls(channel, &(channel_controls_io[channel]));
     init_knob_controls(channel, &(channel_controls_io[channel]));
-    init_fader_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
+    init_fader_controls(channel, &(channel_controls_io[channel]));
 }
 
 static void init_control_vals (uint8_t channel)
@@ -42,6 +40,7 @@ static void init_control_vals (uint8_t channel)
     channel_controls *vals = &(channel_control_vals[channel]);
 
     vals->input_type_selection = LINE_INPUT;
+    vals->control_set_selection = SENDS_CONTROL;
     vals->input_gain = 0;
     vals->output_gain = 0;
     vals->output_pan = 0;
@@ -100,19 +99,16 @@ void update_control_values (uint8_t channel)
     update_channel_knob_values(
         &(channel_control_mutexes[channel]),
         &(channel_control_vals[channel]),
-        &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
     update_channel_button_values(
         &(channel_control_mutexes[channel]),
         &(channel_control_vals[channel]),
-        &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
     update_channel_fader_values(
         &(channel_control_mutexes[channel]),
         &(channel_control_vals[channel]),
-        &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
 
@@ -129,18 +125,13 @@ void update_control_leds (uint8_t channel)
     update_channel_knob_leds(
         &(channel_control_mutexes[channel]),
         &(channel_control_vals[channel]),
-        &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
     update_channel_button_leds(
         &(channel_control_mutexes[channel]),
         &(channel_control_vals[channel]),
-        &(channel_states[channel]),
         &(channel_controls_io[channel]) //
     );
-    update_channel_fader_hardware(
-        &(channel_states[channel]),
-        &(channel_controls_io[channel]) //
-    );
+    update_channel_fader_hardware(&(channel_controls_io[channel]));
     // TODO: non-button/encoder inputs maybe?
 }

@@ -6,7 +6,6 @@
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_sets.h"
-#include "hardware_state_sets.h"
 #include "hardware_structs.h"
 #include "portmacro.h"
 #include "stm32g474xx.h"
@@ -121,7 +120,6 @@ static void update_s_value_from_encoder (
 void update_channel_knob_values (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,
-    channel_control_io_state *state,
     channel_control_io_t *io
 )
 {
@@ -141,7 +139,6 @@ void update_channel_knob_values (
 void update_channel_knob_leds (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,
-    channel_control_io_state *state,
     channel_control_io_t *io
 )
 {
@@ -159,8 +156,7 @@ void update_channel_knob_leds (
 }
 
 
-static const button_info_t KNOB_BUTTONS[10] =
-{
+static const button_info_t KNOB_BUTTONS[10] = {
     {.addr = 0x20, .port = MCP_GPIOA, .pin = 5},
     {.addr = 0x20, .port = MCP_GPIOA, .pin = 6},
     {.addr = 0x20, .port = MCP_GPIOB, .pin = 5},
@@ -173,37 +169,76 @@ static const button_info_t KNOB_BUTTONS[10] =
     {.addr = 0x22, .port = MCP_GPIOA, .pin = 1}
 };
 
-static encoder_info_t KNOB_ENCODERS[10] =
-{
-    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 0,
-                    .b_register = MCP_GPIOB, .b_pin = 0, .button_info = KNOB_BUTTONS[0]},
+static const encoder_info_t KNOB_ENCODERS[10] = {
+    {.i2c_addr = 0x20,
+     .a_register = MCP_GPIOA,
+     .a_pin = 0,
+     .b_register = MCP_GPIOB,
+     .b_pin = 0,
+     .button_info = KNOB_BUTTONS[0]},
 
-    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 1,
-                    .b_register = MCP_GPIOB, .b_pin = 1, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x20,
+     .a_register = MCP_GPIOA,
+     .a_pin = 1,
+     .b_register = MCP_GPIOB,
+     .b_pin = 1,
+     .button_info = KNOB_BUTTONS[1]},
 
-    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 2,
-                    .b_register = MCP_GPIOB, .b_pin = 2, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x20,
+     .a_register = MCP_GPIOA,
+     .a_pin = 2,
+     .b_register = MCP_GPIOB,
+     .b_pin = 2,
+     .button_info = KNOB_BUTTONS[2]},
 
-    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 3,
-                    .b_register = MCP_GPIOB, .b_pin = 3, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x20,
+     .a_register = MCP_GPIOA,
+     .a_pin = 3,
+     .b_register = MCP_GPIOB,
+     .b_pin = 3,
+     .button_info = KNOB_BUTTONS[3]},
 
-    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 4,
-                    .b_register = MCP_GPIOB, .b_pin = 4, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x20,
+     .a_register = MCP_GPIOA,
+     .a_pin = 4,
+     .b_register = MCP_GPIOB,
+     .b_pin = 4,
+     .button_info = KNOB_BUTTONS[4]},
 
-    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 0,
-                    .b_register = MCP_GPIOB, .b_pin = 0, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x21,
+     .a_register = MCP_GPIOA,
+     .a_pin = 0,
+     .b_register = MCP_GPIOB,
+     .b_pin = 0,
+     .button_info = KNOB_BUTTONS[5]},
 
-    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 1,
-                    .b_register = MCP_GPIOB, .b_pin = 1, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x21,
+     .a_register = MCP_GPIOA,
+     .a_pin = 1,
+     .b_register = MCP_GPIOB,
+     .b_pin = 1,
+     .button_info = KNOB_BUTTONS[6]},
 
-    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 2,
-                    .b_register = MCP_GPIOB, .b_pin = 2, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x21,
+     .a_register = MCP_GPIOA,
+     .a_pin = 2,
+     .b_register = MCP_GPIOB,
+     .b_pin = 2,
+     .button_info = KNOB_BUTTONS[7]},
 
-    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 3,
-                    .b_register = MCP_GPIOB, .b_pin = 3, .button_info = KNOB_BUTTONS[0]},
+    {.i2c_addr = 0x21,
+     .a_register = MCP_GPIOA,
+     .a_pin = 3,
+     .b_register = MCP_GPIOB,
+     .b_pin = 3,
+     .button_info = KNOB_BUTTONS[8]},
 
-    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 4,
-                    .b_register = MCP_GPIOB, .b_pin = 4, .button_info = KNOB_BUTTONS[0]}
+    {.i2c_addr = 0x21,
+     .a_register = MCP_GPIOA,
+     .a_pin = 4,
+     .b_register = MCP_GPIOB,
+     .b_pin = 4, //
+     .button_info = KNOB_BUTTONS[9]}
 };
 
 
@@ -218,7 +253,6 @@ void init_knob (I2C_TypeDef *bus, knob_info_t *knob, uint8_t index)
 
 void init_knob_controls (uint8_t channel, channel_control_io_t *io)
 {
-
     I2C_TypeDef *bus = i2c_channel_bus(channel);
 
     // INPUT AND PAN KNOB
@@ -240,7 +274,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_t *io)
     // EQ HF
     init_knob(bus, &(io->hf_interface.gain_knob), 1);
     init_knob(bus, &(io->hf_interface.gain_knob), 2);
-    
+
     // EQ HMF
     init_knob(bus, &(io->hmf_interface.gain_knob), 3);
     init_knob(bus, &(io->hmf_interface.freq_knob), 4);
@@ -250,7 +284,7 @@ void init_knob_controls (uint8_t channel, channel_control_io_t *io)
     init_knob(bus, &(io->lmf_interface.gain_knob), 5);
     init_knob(bus, &(io->lmf_interface.freq_knob), 6);
     init_knob(bus, &(io->lmf_interface.q_knob), 5);
-    
+
     // EQ LF
     init_knob(bus, &(io->lf_interface.gain_knob), 7);
     init_knob(bus, &(io->lf_interface.freq_knob), 8);
@@ -264,33 +298,29 @@ void init_knob_controls (uint8_t channel, channel_control_io_t *io)
     init_knob(bus, &(io->comp_interface.out_gain_knob), 6);
 
 
-    
-    
-    
-    if(channel == 0)
+    if (channel == 0)
     {
         // CHANNEL 0 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
         io->input_gain_knob.led_ring = led_device_at(4);
         io->hf_interface.gain_knob.led_ring = led_device_at(5);
     }
-    
-    if(channel == 1)
+
+    if (channel == 1)
     {
         // CHANNEL 1 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
     }
 
-    if(channel == 2)
+    if (channel == 2)
     {
         // CHANNEL 2 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
     }
 
-    if(channel == 3)
+    if (channel == 3)
     {
         // CHANNEL 3 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES
     }
     // this is how to link the button info objects with the led devices
 
-    
 
     //end skylar [edit 1/2]
 }

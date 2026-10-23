@@ -36,7 +36,7 @@ extern TIM_HandleTypeDef FADER3_TIM_HANDLE; // from main.c
 
 uint32_t fader_touched_countdown[CHANNELS] = {0};
 
-static bool is_fader_touched (fader_info_t *info)
+static bool is_fader_touched (const fader_info_t *info)
 {
     bool hw_touched = HAL_GPIO_ReadPin(info->touch_sensor_port, info->touch_sensor_pin) == GPIO_PIN_SET;
     if (hw_touched)
@@ -82,7 +82,7 @@ void poll_faders (void)
     HAL_ADC_Stop(&FADER_ADC);
 }
 
-static uint16_t get_physical_fader_position (fader_info_t *info) { return adc_buf[info->channel]; }
+static uint16_t get_physical_fader_position (const fader_info_t *info) { return adc_buf[info->channel]; }
 
 typedef struct
 {
@@ -109,6 +109,8 @@ typedef struct
 
 motor_piv_info motor_pivs[CHANNELS]; //!< Control loop info for each fader
 
+static fader_state_t fader_cache[CHANNELS]; //!< Last state of each fader, indexed by channel
+
 void init_faders (void)
 {
     poll_faders();
@@ -120,12 +122,13 @@ void init_faders (void)
         fader_pwm_period[i] = __HAL_TIM_GET_AUTORELOAD(motor_hw[i].timer);
 
         motor_pivs[i] = (motor_piv_info){.deviation_integral = 0, .last_pos = adc_buf[i]};
+        fader_cache[i] = DEFAULT_FADER_STATE;
     }
 }
 
 
 static void update_motor_power (
-    fader_info_t *info,
+    const fader_info_t *info,
     bool powered, //!< Whether the motor should be powered at all (disable for free motion)
     int32_t power_pwm_period
 )
@@ -155,7 +158,7 @@ static void update_motor_power (
  * Feedback control to move the motor towards a target position;
  * currently just uses proportional deviation with no derivative or integral
  */
-static int32_t get_motor_power (fader_info_t *info, fader_state_t *state)
+static int32_t get_motor_power (const fader_info_t *info, const fader_state_t *state)
 {
     motor_piv_info *chan = &(motor_pivs[info->channel]);
     const int32_t where_it_is = get_physical_fader_position(info);
@@ -232,21 +235,23 @@ static int32_t get_motor_power (fader_info_t *info, fader_state_t *state)
     return product;
 }
 
-void update_fader (fader_info_t *info, fader_state_t *old_state, fader_state_t *new_state)
+void update_fader (const fader_info_t *info)
 {
-    fader_state_t new_state_i = *old_state;
+    fader_state_t *state = &(fader_cache[info->channel]);
     if (is_fader_touched(info))
     {
-        new_state_i.movement_mode = FADER_UNPOWERED;
-        new_state_i.position = get_physical_fader_position(info);
-        get_motor_power(info, &new_state_i); // for jitter fixes or whatever
+        state->movement_mode = FADER_UNPOWERED;
+        state->position = get_physical_fader_position(info);
+        get_motor_power(info, state); // for jitter fixes or whatever
         update_motor_power(info, false, 0);
     }
     else
     {
-        new_state_i.movement_mode = FADER_MOVE_OR_HOLD_TARGET;
-        update_motor_power(info, true, get_motor_power(info, &new_state_i));
+        state->movement_mode = FADER_MOVE_OR_HOLD_TARGET;
+        update_motor_power(info, true, get_motor_power(info, state));
     }
-
-    *new_state = new_state_i;
 }
+
+fader_state_t get_fader_state (const fader_info_t *info) { return fader_cache[info->channel]; }
+
+void set_fader_target (const fader_info_t *info, uint16_t position) { fader_cache[info->channel].position = position; }
