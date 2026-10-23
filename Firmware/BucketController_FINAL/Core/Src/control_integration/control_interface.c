@@ -30,8 +30,8 @@ channel_control_io_state channel_states[CHANNELS];
 
 static void init_control_io (uint8_t channel)
 {
-    init_button_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
-    init_knob_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
+    init_button_controls(channel, &(channel_controls_io[channel]));
+    init_knob_controls(channel, &(channel_controls_io[channel]));
     init_fader_controls(channel, &(channel_states[channel]), &(channel_controls_io[channel]));
 }
 

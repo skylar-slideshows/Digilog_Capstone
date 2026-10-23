@@ -1,78 +1,22 @@
 #ifndef HARDWARE_STATE_SETS_H
 #define HARDWARE_STATE_SETS_H
 
-#include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/fader_driver.h"
 #include "control_integration/control_interface.h"
 
 /**
  * This header file is internal to control_integration, separated for organization.
  * It should not have to be included anywhere outside of control_integration; it is not a public header
+ *
+ * Per-device state of knobs and buttons (previous pin states, press timing) is cached in their drivers.
  */
 
-/*=============================== HARDWARE STATE SETS FOR SECTIONS OF A CHANNEL ================================*/
-
-typedef struct
-{
-    encoder_state_t gain_encoder_state;
-    encoder_state_t q_encoder_state;
-    encoder_state_t freq_encoder_state;
-} eq_band_interface_state_t;
-
-typedef struct
-{
-    encoder_state_t gain_encoder;
-    encoder_state_t pan_encoder; //!< Note that pan is not used for send channel 4
-} send_channel_interface_state_t;
-
-typedef struct
-{
-    encoder_state_t in_gain_encoder_state;
-    encoder_state_t out_gain_encoder_state;
-    encoder_state_t attack_time_encoder_state;
-    encoder_state_t release_time_encoder_state;
-    encoder_state_t threshold_encoder_state;
-    encoder_state_t ratio_encoder_state;
-    encoder_state_t de_ess_amt_encoder_state;
-} comp_interface_state_t;
-
 /**
- * @brief struct containing a snapshot of input states on one channel
+ * @brief struct containing the control-level state of one channel's inputs
  */
 typedef struct
 {
     channel_control_set_selection_t control_set_selection; //!< SENDS/EQ/COMP control type
-
-    button_state_t mic_input_button_state;
-    button_state_t line_input_button_state;
-    button_state_t hiz_input_button_state;
-
-    encoder_state_t input_gain_encoder_state;
-
-    button_state_t phantom_48v_button_state;
-    button_state_t phase_flip_button_state;
-    button_state_t high_pass_filter_button_state;
-
-    button_state_t send_button_state;
-    button_state_t eq_button_state;
-    button_state_t comp_button_state;
-
-    send_channel_interface_state_t send_channel_interface_states[SEND_CHANNELS];
-
-    eq_band_interface_state_t hf_interface_state;
-    eq_band_interface_state_t hmf_interface_state;
-    eq_band_interface_state_t lmf_interface_state;
-    eq_band_interface_state_t lf_interface_state;
-
-    comp_interface_state_t comp_interface_state;
-
-    button_state_t solo_button_state;
-    button_state_t mute_button_state;
-    button_state_t sel_button_state;
-
-    button_state_t ins_button_state;
-    button_state_t pre_button_state;
-    button_state_t rec_button_state;
 
     fader_state_t fader_state;
 

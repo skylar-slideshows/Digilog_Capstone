@@ -35,28 +35,22 @@
 #include <stdbool.h>
 #include "hardware_drivers/rotary_encoder.h"
 #include "hardware_drivers/mcp23017.h"
+#include "hardware_drivers/i2c_driver.h"
+#include "CONFIG.h"
 
 
-/**
- ----------------------------------------------------------------------------------
-  @brief INTERNAL poll_encoder_state : encoder, encoder state -> bool
-  reads cached state of the associated mcp23017 and gets the encoder state from the pins
-  @param encoder 
-  @param out
- ----------------------------------------------------------------------------------
-*/
-static bool poll_encoder_state (
-    encoder_info_t *encoder, //!< A pointer to location information of the encoder that should be polled
-    encoder_state_t *out     //!< A pointer to a struct where the encoder's pin states will be stored
-)
+/** Last polled pin states of one physical encoder, so motion can be detected between updates */
+typedef struct
 {
-    uint8_t ports[2];   // [0] = GPIOA, [1] = GPIOB
-    mcp23017_read_from_cache(encoder->i2c_bus, encoder->i2c_addr, ports);
+    bool seeded; //!< False until the first update, which only records the pin states
+    bool a;
+    bool b;
+} encoder_cache_t;
 
-    out->a = (ports[encoder->a_register - MCP_GPIOA] >> encoder->a_pin) & 1; // subtracts the base to
-    out->b = (ports[encoder->b_register - MCP_GPIOA] >> encoder->b_pin) & 1; // MCP_GPIOA both not a typo
-    return true;
-}
+static encoder_cache_t encoder_cache[CHANNELS]  // one I2C bus per channel
+                                    [8]         // 8 possible expander addresses per channel
+                                    [2]         // GPIOA / GPIOB of the encoder's A pin
+                                    [8];        // 8 pins per port, indexed by the encoder's A pin
 
 
 /**
@@ -65,8 +59,8 @@ static bool poll_encoder_state (
  ----------------------------------------------------------------------------------
 */
 static encoder_turn_action_t get_encoder_turn_action (
-    encoder_state_t *from, //!< The starting state of the rotary encoder
-    encoder_state_t *to    //!< The ending state of the rotary encoder
+    const encoder_cache_t *from, //!< The starting state of the rotary encoder
+    const encoder_cache_t *to    //!< The ending state of the rotary encoder
 )
 {
     bool a_change = from->a ^ to->a;
@@ -92,22 +86,27 @@ static encoder_turn_action_t get_encoder_turn_action (
 }
 
 
-encoder_turn_action_t get_encoder_motion (
-    encoder_info_t encoder,         // address/location of encoder to poll
-    encoder_state_t previous_state, // previous polled state of the encoder
-    encoder_state_t *new_state      // pointer to location for saving new polled state of encoder
-)
+encoder_turn_action_t update_encoder (const encoder_info_t *encoder)
 {
-    encoder_state_t new_polled_state;
-    bool poll_succeeded = poll_encoder_state(&encoder, &new_polled_state);
-
-    if (!poll_succeeded)
+    const uint8_t channel = i2c_bus_index(encoder->i2c_bus);
+    if (channel >= CHANNELS || encoder->a_pin >= 8 || (uint8_t)(encoder->a_register - MCP_GPIOA) >= 2)
     {
         return ENCODER_TURN_ERROR;
     }
+    encoder_cache_t *cache = &encoder_cache[channel][encoder->i2c_addr & 0x07][encoder->a_register - MCP_GPIOA][encoder->a_pin];
 
-    encoder_turn_action_t turn_action = get_encoder_turn_action(&previous_state, &new_polled_state);
+    uint8_t ports[2]; // [0] = GPIOA, [1] = GPIOB
+    mcp23017_read_from_cache(encoder->i2c_bus, encoder->i2c_addr, ports);
 
-    *new_state = new_polled_state;
+    // subtracts the base to MCP_GPIOA both not a typo
+    const encoder_cache_t polled = {
+        .seeded = true,
+        .a = (ports[encoder->a_register - MCP_GPIOA] >> encoder->a_pin) & 1,
+        .b = (ports[encoder->b_register - MCP_GPIOA] >> encoder->b_pin) & 1,
+    };
+
+    const encoder_turn_action_t turn_action = cache->seeded ? get_encoder_turn_action(cache, &polled) : ENCODER_NO_TURN;
+
+    *cache = polled;
     return turn_action;
 }

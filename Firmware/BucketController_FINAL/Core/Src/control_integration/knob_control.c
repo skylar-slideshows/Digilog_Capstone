@@ -13,80 +13,56 @@
 
 /* Functions related to accepting some states and updating control values */
 
-static void s_update_knob_button (
-    SemaphoreHandle_t *out_mutex,
-    encoder_state_t *state,
-    encoder_info_t *info,
-    s_scalar_control_t *out //
-)
+typedef struct
 {
-    const bool held = !get_button_held(&(info->button_info));
-    const bool pressed = held & !(state->button_state.held);
+    int8_t direction; //!< +1 turned toward A, -1 turned toward B, 0 not turned
+    bool held;        //!< Push button is held (fine adjustment)
+    bool reset;       //!< Push button was double pressed (reset value)
+} knob_input_t;
 
-    state->button_state.held = held;
+static knob_input_t read_knob (const encoder_info_t *info)
+{
+    knob_input_t input = {0};
 
-    if (state->button_state.press_countdown > 0)
+    input.reset = update_button(&(info->button_info)) == BUTTON_DOUBLE_PRESSED;
+    input.held = get_button_held(&(info->button_info));
+
+    const encoder_turn_action_t motion = update_encoder(info);
+    if (motion == ENCODER_TURN_A)
     {
-        state->button_state.press_countdown--;
+        input.direction = 1;
     }
-
-    if (!pressed)
+    else if (motion == ENCODER_TURN_B)
     {
-        return;
+        input.direction = -1;
     }
-
-    if (state->button_state.press_countdown == 0)
-    {
-        // single press
-        state->button_state.press_countdown = DOUBLE_PRESS_TIME;
-        return;
-    }
-
-    // Double press
-    xSemaphoreTake(*out_mutex, portMAX_DELAY);
-    *out = 0;
-    xSemaphoreGive(*out_mutex);
+    return input;
 }
 
-static void u_update_knob_button (
-    SemaphoreHandle_t *out_mutex,
-    encoder_state_t *state,
-    encoder_info_t *info,
-    u_scalar_control_t *out //
-)
-{
-    // Should be fine to pass it as a pointer like this; 0 is the same signed vs unsigned
-    s_update_knob_button(out_mutex, state, info, (s_scalar_control_t *)out);
-}
-
-
-// Use negative sensitivity for backwards turning
 static void update_u_value_from_encoder (
     SemaphoreHandle_t *out_mutex,
-    encoder_state_t *state,
-    encoder_info_t *info,
+    const encoder_info_t *info,
     u_scalar_control_t *out,
     s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
 )
 {
-    u_update_knob_button(out_mutex, state, info, out);
-
-    if (state->button_state.held)
-    {
-        sensitivity /= 2;
-    }
-
-    encoder_turn_action_t motion = get_encoder_motion(*info, *state, state);
-    if (motion == ENCODER_TURN_B)
-    {
-        sensitivity = -sensitivity;
-    }
-    else if (motion != ENCODER_TURN_A)
+    const knob_input_t input = read_knob(info);
+    if (!input.reset && input.direction == 0)
     {
         return;
     }
 
+    if (input.held)
+    {
+        sensitivity /= 2;
+    }
+    sensitivity *= input.direction;
+
     xSemaphoreTake(*out_mutex, portMAX_DELAY);
+    if (input.reset)
+    {
+        *out = 0;
+    }
     if (sensitivity > 0 && U_SCALAR_CONTROL_MAX - *out < (u_scalar_control_t)sensitivity)
     {
         *out = U_SCALAR_CONTROL_MAX;
@@ -104,30 +80,28 @@ static void update_u_value_from_encoder (
 
 static void update_s_value_from_encoder (
     SemaphoreHandle_t *out_mutex,
-    encoder_state_t *state,
-    encoder_info_t *info,
+    const encoder_info_t *info,
     s_scalar_control_t *out,
     s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
 )
 {
-    s_update_knob_button(out_mutex, state, info, out);
-
-    if (state->button_state.held)
-    {
-        sensitivity /= 2;
-    }
-
-    encoder_turn_action_t motion = get_encoder_motion(*info, *state, state);
-    if (motion == ENCODER_TURN_B)
-    {
-        sensitivity = -sensitivity;
-    }
-    else if (motion != ENCODER_TURN_A)
+    const knob_input_t input = read_knob(info);
+    if (!input.reset && input.direction == 0)
     {
         return;
     }
 
+    if (input.held)
+    {
+        sensitivity /= 2;
+    }
+    sensitivity *= input.direction;
+
     xSemaphoreTake(*out_mutex, portMAX_DELAY);
+    if (input.reset)
+    {
+        *out = 0;
+    }
     if (sensitivity > 0 && *out > S_SCALAR_CONTROL_MAX - sensitivity)
     {
         *out = S_SCALAR_CONTROL_MAX;
@@ -152,16 +126,9 @@ void update_channel_knob_values (
 {
     s_scalar_control_t default_sensitivity = S_SCALAR_CONTROL_MAX / 32;
 
-    update_u_value_from_encoder(
-        vals_mutex,
-        &(state->input_gain_encoder_state),
-        &(io->input_gain_knob.encoder),
-        &(vals->input_gain),
-        default_sensitivity
-    );
+    update_u_value_from_encoder(vals_mutex, &(io->input_gain_knob.encoder), &(vals->input_gain), default_sensitivity);
     update_s_value_from_encoder(
         vals_mutex,
-        &(state->hf_interface_state.gain_encoder_state),
         &(io->hf_interface.gain_knob.encoder),
         &(vals->hf_control.gain),
         default_sensitivity
@@ -190,14 +157,14 @@ void update_channel_knob_leds (
     // end skylar [edit 2/2]
 }
 
-void init_knob_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
+void init_knob_controls (uint8_t channel, channel_control_io_t *io)
 {
     // TODO: per-channel config stuff (probably just choosing i2c bus based on channel arg)
 
     I2C_TypeDef *bus = i2c_channel_bus(channel);
 
     // INPUT GAIN KNOB CHANNEL 1
-    button_info_t input_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy
+    button_info_t input_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 2, .active_low = true}; // dummy
     io->input_gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
                                                    .i2c_addr = 0x20,
                                                    .a_register = MCP_GPIOB,
@@ -205,11 +172,9 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
                                                    .b_register = MCP_GPIOB,
                                                    .b_pin = 0,
                                                    .button_info = input_gain_button};
-    get_encoder_motion(io->input_gain_knob.encoder, state->input_gain_encoder_state, &(state->input_gain_encoder_state));
-    state->input_gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
 
     // HF GAIN KNOB CHANNEL 1
-    button_info_t hf_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 5}; // dummy
+    button_info_t hf_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 5, .active_low = true}; // dummy
     io->hf_interface.gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
                                                           .i2c_addr = 0x20,
                                                           .a_register = MCP_GPIOB,
@@ -217,12 +182,6 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
                                                           .b_register = MCP_GPIOB,
                                                           .b_pin = 3,
                                                           .button_info = hf_gain_button};
-    get_encoder_motion(
-        io->hf_interface.gain_knob.encoder,
-        state->hf_interface_state.gain_encoder_state,
-        &(state->hf_interface_state.gain_encoder_state)
-    );
-    state->hf_interface_state.gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
 
     if(channel == 0)
     {
