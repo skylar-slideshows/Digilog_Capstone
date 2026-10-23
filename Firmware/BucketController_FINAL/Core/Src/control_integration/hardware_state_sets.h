@@ -41,6 +41,8 @@ typedef struct
  */
 typedef struct
 {
+    channel_control_set_selection_t control_set_selection; //!< SENDS/EQ/COMP control type
+
     button_state_t mic_input_button_state;
     button_state_t line_input_button_state;
     button_state_t hiz_input_button_state;

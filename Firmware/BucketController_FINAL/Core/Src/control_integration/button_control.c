@@ -35,6 +35,30 @@ static inline void update_button_timer (button_state_t *btn_state)
     btn_state->press_countdown--;
 }
 
+static void update_radio_buttons (channel_control_io_state *state, channel_control_io_t *io)
+{
+    update_button_timer(&(state->send_button_state));
+    update_button_timer(&(state->eq_button_state));
+    update_button_timer(&(state->comp_button_state));
+
+    bool send_button_held = get_button_held(&(io->send_button.button));
+    bool eq_button_held = get_button_held(&(io->eq_button.button));
+    bool comp_button_held = get_button_held(&(io->comp_button.button));
+
+    if (send_button_held)
+    {
+        state->control_set_selection = SENDS_CONTROL;
+    }
+    else if (eq_button_held)
+    {
+        state->control_set_selection = EQ_CONTROL;
+    }
+    else if (comp_button_held)
+    {
+        state->control_set_selection = COMP_CONTROL;
+    }
+}
+
 void init_button_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
 {
     // TODO: Fill channel_controls_io to match the hardware, and set initial states
@@ -47,6 +71,8 @@ void update_channel_button_leds (
     channel_control_io_t *io
 )
 {
+    // NOTE: check state->control_set_selection (sends, eq, or comp enum) to check what control set is selected by the radio buttons
+    // (see update_radio_buttons)
 }
 
 void update_channel_button_values (
@@ -56,9 +82,14 @@ void update_channel_button_values (
     channel_control_io_t *io
 )
 {
+    update_radio_buttons(state, io);
+
     update_button_timer(&(state->mute_button_state));
     update_toggle_button_val_from_info(vals_mutex, &(state->mute_button_state), &(io->mute_button.button), &(vals->muted));
 
+    // NOTE: check state->control_set_selection (sends, eq, or comp enum) to check what control set is selected by the radio buttons
+    // (see update_radio_buttons)
+
     // TODO: Do this for the rest of the toggle-buttons on the channel
-    // TODO: handle non-toggle (e.g radio) buttons
+    // TODO: handle non-toggle (e.g held) buttons
 }

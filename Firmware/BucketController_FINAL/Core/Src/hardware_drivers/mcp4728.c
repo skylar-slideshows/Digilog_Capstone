@@ -378,7 +378,7 @@ uint8_t mcp4728_init_single_address (
     wait_half();
     wait_half();
 
-    pin_set(ldac_port, ldac_pin, true);
+    pin_set(ldac_port, ldac_pin, false);
 
     return 0; // TODO consider returning error codes or a void
 }
@@ -468,6 +468,6 @@ uint8_t mcp4728_init_settings (
 )
 {
     const uint8_t vref_res = mcp4728_vrefSelect(bus, addr, MCP4728_ALL_VREF_INTERNAL);
-    const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_2X);
+    const uint8_t gain_res = mcp4728_gainSelect(bus, addr, MCP4728_ALL_GAINS_1X);
     return vref_res | gain_res;
 }
