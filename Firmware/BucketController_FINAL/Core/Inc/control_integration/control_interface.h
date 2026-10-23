@@ -11,11 +11,6 @@
 
 #define SEND_CHANNELS 4
 
-/**
- * Number of update cycles (at 1.5kHz) during which a second press will count as a double click
- */
-#define DOUBLE_PRESS_TIME 750
-
 typedef uint16_t u_scalar_control_t;
 typedef int16_t s_scalar_control_t;
 
@@ -73,7 +68,8 @@ typedef struct
 {
     /* OTHER CHANNEL STUFF */
 
-    channel_input_selection_t input_type_selection; //!< Mic/Line/Hi-Z input type
+    channel_input_selection_t input_type_selection;         //!< Mic/Line/Hi-Z input type
+    channel_control_set_selection_t control_set_selection; //!< Which control set (sends/EQ/comp) the knobs currently control
 
     u_scalar_control_t input_gain;  //!< TODO desc / gain range (dB-like)
     s_scalar_control_t output_gain; //!< TODO desc / gain range (dB-like)

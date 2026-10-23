@@ -43,20 +43,6 @@
 
 /**
  ----------------------------------------------------------------------------------
-  @brief High/Low states of the encoder's A/B pins
- ----------------------------------------------------------------------------------
-*/
-typedef struct
-{
-    bool a; //!< High/Low state of the encoder's A pin
-    bool b; //!< High/Low state of the encoder's B pin
-
-    button_state_t button_state; //!< State related to the attached button
-} encoder_state_t;
-
-
-/**
- ----------------------------------------------------------------------------------
   @brief I2C / pin information on how to reach the rotary encoder
 
   An I2C bus/address to the GPIO expander that the encoder is on, and the pin information on that GPIO expander
@@ -71,7 +57,7 @@ typedef struct
     MCP23017_Reg b_register; //!< MCP_GPIOA or MCP_GPIOB
     uint8_t b_pin;           //!< Pin on MCP23017 which encoder output B is connected to
 
-    button_info_t button_info;
+    button_info_t button_info; //!< The encoder's push button
 } encoder_info_t;
 
 
@@ -85,19 +71,18 @@ typedef enum
     ENCODER_TURN_A,     //!< Encoder turned in direction of A contact
     ENCODER_TURN_B,     //!< Encoder turned in direction of B contact
     ENCODER_NO_TURN,    //!< Encoder has not turned
-    ENCODER_TURN_ERROR, //!< Encoder turned too quickly or couldn't be read
+    ENCODER_TURN_ERROR, //!< Encoder turned too quickly to tell direction, or doesn't exist
 } encoder_turn_action_t;
 
 
 /**
  ----------------------------------------------------------------------------------
-  @brief Get the direction of a rotary encoder's turn. Must poll/cache the associated mcp23017 first.
+  @brief Get the direction of a rotary encoder's turn since its last update, from cached mcp23017 values.
+  The driver keeps the previous pin states of each physical encoder, so call this exactly once per update cycle per encoder.
  ----------------------------------------------------------------------------------
 */
-encoder_turn_action_t get_encoder_motion (
-    encoder_info_t encoder,         //!< connection configuration of the rotary encoder to read
-    encoder_state_t previous_state, //!< last polled state of the rotary encoder
-    encoder_state_t *new_state      //!< pointer to an encoder_state in which to store the polled state of the rotary encoder
+encoder_turn_action_t update_encoder (
+    const encoder_info_t *encoder //!< connection configuration of the rotary encoder to read
 );
 
 #endif

@@ -38,13 +38,24 @@ typedef struct
 // TODO: maybe add calibration options to state (i.e lower and upper values)
 
 /**
- * @brief Updates a fader state based on physical behavior, or a fader's physical behavior based on its state
+ * @brief Runs one update of a fader's physical behavior using its cached state: reads the physical position
+ * while it is touched, or drives the motor toward the target position otherwise.
+ * The driver caches the state of each fader, so call this exactly once per update cycle per fader.
  */
 void update_fader (
-    fader_info_t *info,       //!< Hardware connection info of the fader
-    fader_state_t *old_state, //!< Pointer to the old fader state containing its last polled values
-    fader_state_t *new_state  //!< Pointer in which to store the new fader state
+    const fader_info_t *info //!< Hardware connection info of the fader
 );
+
+/**
+ * @brief Get a snapshot of a fader's cached state. While the mode is FADER_UNPOWERED, position is the physical position;
+ * otherwise it is the target position.
+ */
+fader_state_t get_fader_state (const fader_info_t *info);
+
+/**
+ * @brief Set the position the fader will move to and hold when it is not touched
+ */
+void set_fader_target (const fader_info_t *info, uint16_t position);
 
 /**
  * @brief Poll fader values into the cache/buffer
