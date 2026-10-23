@@ -53,12 +53,148 @@
 /*=============================== LED DEVICE CHAIN DEFN ================================*/
 // THIS IS WHERE THE PHYSICAL GEOMETRY / HARDWARE LAYOUT IS DEFINED IN SOFTWARE
 led_device_init_t init_devices[] = {
-    {.width = 1, .scale = SCALE_CENTER}, // test button 0
-    {.width = 1, .scale = SCALE_CENTER}, // test button 1
-    {.width = 1, .scale = SCALE_CENTER}, // test button 2
-    {.width = 5, .scale = SCALE_CENTER}, // null device filling remainder of shift reg
-    {.width = 32, .scale = SCALE_LEFT},  // test knob 0
-    {.width = 32, .scale = SCALE_CENTER} // test knob 1
+
+    {.width = 32, .scale = SCALE_LEFT}, // ch 0 input knob
+    
+    // external shiftreg 1
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 input line btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 input mic btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 input hi-z btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 input switch btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 phase
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 phantom
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 HPF
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 eq
+
+    //external shiftreg 2
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 input line btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 input mic btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 input hi-z btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 input switch btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 phase
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 phantom
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 HPF
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 eq
+
+    {.width = 32, .scale = SCALE_LEFT}, // ch 1 input knob
+    {.width = 32, .scale = SCALE_LEFT}, // ch 2 input knob
+
+    // external shiftreg 3
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 input line btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 input mic btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 input hi-z btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 input switch btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 phase
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 phantom
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 HPF
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 eq
+
+    //external shiftreg 4
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 input line btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 input mic btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 input hi-z btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 input switch btn
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 phase
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 phantom
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 HPF
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 eq
+
+    {.width = 32, .scale = SCALE_LEFT}, // ch 3 input knob
+
+    // FX SECTION KNOBS, ROW 1A
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+
+    // FX SECTION KNOBS, ROW 1B
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+
+    // FX SECTION KNOBS, ROW 2A
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+
+    // FX SECTION KNOBS, ROW 2B
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+
+    // FX SECTION KNOBS, ROW 3A
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+
+    // FX SECTION KNOBS, ROW 3B
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3 FX 4A
+    
+    // external shiftreg 5
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 comp
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 sends
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 SOLO
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 MUTE
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 SEL
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 insert
+    {.width = 1, .scale = SCALE_CENTER}, // ch 2 insert pre
+    {.width = 1, .scale = SCALE_CENTER}, // EMPTY N/C
+
+    //external shiftreg 6
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 comp
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 sends
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 SOLO
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 MUTE
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 SEL
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 insert
+    {.width = 1, .scale = SCALE_CENTER}, // ch 3 insert pre
+    {.width = 1, .scale = SCALE_CENTER}, // EMPTY N/C
+
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2 FX 4A
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1 FX 4A
+
+    // external shiftreg 7
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 comp
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 sends
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 SOLO
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 MUTE
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 SEL
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 insert
+    {.width = 1, .scale = SCALE_CENTER}, // ch 0 insert pre
+    {.width = 1, .scale = SCALE_CENTER}, // EMPTY N/C
+
+    //external shiftreg 8
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 comp
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 sends
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 SOLO
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 MUTE
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 SEL
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 insert
+    {.width = 1, .scale = SCALE_CENTER}, // ch 1 insert pre
+    {.width = 1, .scale = SCALE_CENTER}, // EMPTY N/C
+
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0 FX 4A
+
+    // FX SECTION KNOBS, ROW 4B
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3
+
+    // PANS
+    {.width = 32, .scale = SCALE_CENTER}, // ch 0 pan
+    {.width = 32, .scale = SCALE_CENTER}, // ch 1 pan
+    {.width = 32, .scale = SCALE_CENTER}, // ch 2 pan
+    {.width = 32, .scale = SCALE_CENTER}, // ch 3 pan
 
 };
 

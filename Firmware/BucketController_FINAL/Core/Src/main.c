@@ -1618,19 +1618,8 @@ void StartDefaultTask(void *argument)
   displays_test_pattern();
   
 
-  // i2c_channel_bb_claim(0);
-  /*mcp4728_init_address(
-    I2C1_Clock_GPIO_Port, // Clock port
-    I2C1_Clock_Pin, // Clock pin
-    I2C1_Data_GPIO_Port, // Data port
-    I2C1_Data_Pin, // Data pin
-    LDAC0_GPIO_Port, // ldac port
-    LDAC0_Pin, // ldac pin
-    0x62 // New addr
-  );*/
-  // i2c_channel_bb_release(0);
 
-  led_test_all_on(10);
+  led_update();
 
   for (;;) // this MUST STAY
   {
