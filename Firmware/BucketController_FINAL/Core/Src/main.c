@@ -1630,8 +1630,11 @@ void StartDefaultTask(void *argument)
   );*/
   // i2c_channel_bb_release(0);
 
+  led_test_all_on(10);
+
   for (;;) // this MUST STAY
   {
+    
     vTaskDelay(portMAX_DELAY);
   }
   

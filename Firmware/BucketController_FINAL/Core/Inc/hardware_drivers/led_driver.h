@@ -344,4 +344,7 @@ void anim_breathe (uint8_t mode);
 */
 void led_loading (bool on);
 
+
+void led_test_all_on (uint8_t brightness);
+
 #endif
