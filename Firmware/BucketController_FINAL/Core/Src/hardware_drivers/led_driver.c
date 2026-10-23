@@ -719,3 +719,25 @@ void anim_breathe (uint8_t mode)
     oe_duty(lvl); // not led_brightness, this must not overwrite the real setting
     anim_bphase++;
 }
+
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief led_test_all_on : TEST ONLY. Lights every output of every 595 in the chain
+  and keeps them lit, for spotting dead LEDs. Includes outputs no device is registered
+  for, so it doesn't depend on the layout table being right. Reset to go back to normal.
+ ----------------------------------------------------------------------------------
+*/
+void led_test_all_on (uint8_t brightness)
+{
+    led_loading(false); // the loading animation redraws every device, even held ones
+    anim_stop();        // and any other animation
+
+    for (uint16_t i = 0; i < device_count; i++)
+    {
+        devices[i].raw = true; // held: the renderer skips it, so knob changes can't redraw it
+    }
+    memset(frame, 0xFF, LED_FRAME_BYTES); // every output of every 595 on
+    led_brightness(brightness);
+    frame_dirty = true; // the LED task's next led_update() shifts it out
+}

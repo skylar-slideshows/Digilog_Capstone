@@ -176,7 +176,7 @@ static const uint32_t LED_ANIM_BREATHE_STEPS =  64U; // num steps between these 
 /** @brief The only settings that differ between the two modes. Please avoid changing the release value. */
 
 #if DEVELOPER_MODE
-    #define LED_CHAIN_BITS       72 // 9x 74HC595 populated on the test board (macro: array size)
+    #define LED_CHAIN_BITS       1344 // 9x 74HC595 populated on the test board (macro: array size)
 #else
     #define LED_CHAIN_BITS     1344
 #endif

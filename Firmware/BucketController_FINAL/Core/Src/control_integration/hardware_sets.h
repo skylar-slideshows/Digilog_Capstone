@@ -34,12 +34,11 @@ typedef struct
 typedef struct
 {
     knob_info_t in_gain_knob;
-    knob_info_t out_gain_knob;
+    knob_info_t threshold_knob;
     knob_info_t attack_time_knob;
     knob_info_t release_time_knob;
-    knob_info_t threshold_knob;
     knob_info_t ratio_knob;
-    knob_info_t de_ess_amt_knob;
+    knob_info_t out_gain_knob;
 } comp_interface_t;
 
 
@@ -72,6 +71,8 @@ typedef struct
     lit_button_info_t ins_button;
     lit_button_info_t pre_button;
     lit_button_info_t rec_button;
+
+    knob_info_t pan;
 
     fader_info_t fader;
 } channel_control_io_t;
