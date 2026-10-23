@@ -224,10 +224,6 @@ void init_knob_controls (uint8_t channel, channel_control_io_state *state, chann
     );
     state->hf_interface_state.gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
 
-    // TODO: Fill channel_controls_io to match the hardware, and set initial states
-
-    //begin skylar [edit 1/2]
-
     if(channel == 0)
     {
         // CHANNEL 0 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES

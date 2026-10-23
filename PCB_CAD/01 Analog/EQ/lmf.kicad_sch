@@ -4609,6 +4609,16 @@
 	)
 	(wire
 		(pts
+			(xy 101.6 80.01) (xy 109.22 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "14c9e0ae-26e6-4210-a3b6-e24f4747a060")
+	)
+	(wire
+		(pts
 			(xy 88.9 100.33) (xy 88.9 87.63)
 		)
 		(stroke
@@ -6139,6 +6149,16 @@
 	)
 	(wire
 		(pts
+			(xy 101.6 119.38) (xy 109.22 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b05b9e1d-eed4-4fa7-ae37-330ab313bb43")
+	)
+	(wire
+		(pts
 			(xy 91.44 69.85) (xy 99.06 69.85)
 		)
 		(stroke
@@ -7392,107 +7412,6 @@
 			)
 		)
 	)
-(symbol
-		(lib_id "Device:R_US")
-		(at 109.22 123.19 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "62f5ae6f-afa6-4dfd-a96c-b49901ed1fc1")
-		(property "Reference" "R50"
-			(at 111.76 121.92 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 111.76 124.46 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 109.22 123.19 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 109.22 123.19 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 109.22 123.19 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Note" "0.1% thin film"
-			(at 109.22 123.19 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4cb4de18-8d78-422f-a129-56fac7fdd1be")
-		)
-		(pin "2"
-			(uuid "861fa197-5915-44ba-93b8-7c9b469431aa")
-		)
-		(instances
-			(project "EQ"
-				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
-					(reference "R50")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 101.6 119.38) (xy 109.22 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b05b9e1d-eed4-4fa7-ae37-330ab313bb43")
-	)
-
 	(symbol
 		(lib_id "Device:C")
 		(at 113.03 69.85 90)
@@ -8034,107 +7953,6 @@
 			)
 		)
 	)
-(symbol
-		(lib_id "Device:R_US")
-		(at 109.22 83.82 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a04f7f8b-83a7-4e56-89fa-c707b293cc83")
-		(property "Reference" "R49"
-			(at 111.76 82.55 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "14.0k"
-			(at 111.76 85.09 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 109.22 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 109.22 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 109.22 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Note" "0.1% thin film"
-			(at 109.22 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "be98f30d-34c8-4cf5-aa5b-e80146e87d85")
-		)
-		(pin "2"
-			(uuid "9dc4814e-11f9-4456-8852-558fbd897b8d")
-		)
-		(instances
-			(project "EQ"
-				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
-					(reference "R49")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 101.6 80.01) (xy 109.22 80.01)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "14c9e0ae-26e6-4210-a3b6-e24f4747a060")
-	)
-
 	(symbol
 		(lib_id "power:-16.6V")
 		(at 203.2 207.01 180)
@@ -13167,6 +12985,96 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
+		(at 109.22 123.19 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "62f5ae6f-afa6-4dfd-a96c-b49901ed1fc1")
+		(property "Reference" "R50"
+			(at 111.76 121.92 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 111.76 124.46 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 109.22 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 109.22 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 109.22 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 109.22 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4cb4de18-8d78-422f-a129-56fac7fdd1be")
+		)
+		(pin "2"
+			(uuid "861fa197-5915-44ba-93b8-7c9b469431aa")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R50")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
 		(at 35.56 251.46 0)
 		(unit 1)
 		(body_style 1)
@@ -16192,6 +16100,96 @@
 			(project "EQ"
 				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
 					(reference "R34")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 109.22 83.82 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a04f7f8b-83a7-4e56-89fa-c707b293cc83")
+		(property "Reference" "R49"
+			(at 111.76 82.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "14.0k"
+			(at 111.76 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 109.22 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 109.22 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 109.22 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "0.1% thin film"
+			(at 109.22 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "be98f30d-34c8-4cf5-aa5b-e80146e87d85")
+		)
+		(pin "2"
+			(uuid "9dc4814e-11f9-4456-8852-558fbd897b8d")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "R49")
 					(unit 1)
 				)
 			)
