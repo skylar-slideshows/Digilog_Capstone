@@ -390,10 +390,10 @@ void led_render_bool (led_device_t *device)
 */
 void led_add (uint8_t width, knob_scale_t scale)
 {
-
     if (device_count >= LED_MAX_DEVICES)
     {
         LED_LOG("LED ERR: device table full (%u), raise LED_MAX_DEVICES\n", (unsigned)LED_MAX_DEVICES);
+        return; // writing past devices[] would corrupt memory
     }
 
     if ((uint32_t)used_bits + width > (uint32_t)LED_CHAIN_BITS)
@@ -401,6 +401,7 @@ void led_add (uint8_t width, knob_scale_t scale)
         LED_LOG("LED ERR: chain overflow at device %u (%u + %u > %u bits)\n",
                 (unsigned)device_count, (unsigned)used_bits,
                 (unsigned)width, (unsigned)LED_CHAIN_BITS);
+        return; // its bits would land outside the frame buffer
     }
 
     led_device_t *device = &devices[device_count++];
@@ -409,10 +410,11 @@ void led_add (uint8_t width, knob_scale_t scale)
     device->width     = width;
     device->center    = 16;
     device->value     = 0U; // initial value to display is 0
-    device->disp_mode = 0; // default display mode is bar right now
+    device->disp_mode = 0;  // default display mode is bar right now
     device->scale     = scale;
     device->raw       = false;
     device->dirty     = true;
+    frame_dirty       = true; // so the next led_update() draws it
 
     used_bits = (uint16_t)(used_bits + width);
 }
