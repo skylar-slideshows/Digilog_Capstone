@@ -1,3 +1,4 @@
+#include "CONFIG.h"
 #include "control_integration/control_interface.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/button_driver.h"
@@ -190,40 +191,115 @@ void update_channel_knob_leds (
     // end skylar [edit 2/2]
 }
 
+
+static const button_info_t KNOB_BUTTONS[10] =
+{
+    {.addr = 0x20, .port = MCP_GPIOA, .pin = 5},
+    {.addr = 0x20, .port = MCP_GPIOA, .pin = 6},
+    {.addr = 0x20, .port = MCP_GPIOB, .pin = 5},
+    {.addr = 0x20, .port = MCP_GPIOB, .pin = 6},
+    {.addr = 0x21, .port = MCP_GPIOA, .pin = 5},
+    {.addr = 0x21, .port = MCP_GPIOA, .pin = 6},
+    {.addr = 0x21, .port = MCP_GPIOB, .pin = 5},
+    {.addr = 0x21, .port = MCP_GPIOB, .pin = 6},
+    {.addr = 0x22, .port = MCP_GPIOA, .pin = 0},
+    {.addr = 0x22, .port = MCP_GPIOA, .pin = 1}
+};
+
+static encoder_info_t KNOB_ENCODERS[10] =
+{
+    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 0,
+                    .b_register = MCP_GPIOB, .b_pin = 0, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 1,
+                    .b_register = MCP_GPIOB, .b_pin = 1, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 2,
+                    .b_register = MCP_GPIOB, .b_pin = 2, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 3,
+                    .b_register = MCP_GPIOB, .b_pin = 3, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x20, .a_register = MCP_GPIOA, .a_pin = 4,
+                    .b_register = MCP_GPIOB, .b_pin = 4, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 0,
+                    .b_register = MCP_GPIOB, .b_pin = 0, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 1,
+                    .b_register = MCP_GPIOB, .b_pin = 1, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 2,
+                    .b_register = MCP_GPIOB, .b_pin = 2, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 3,
+                    .b_register = MCP_GPIOB, .b_pin = 3, .button_info = KNOB_BUTTONS[0]},
+
+    {.i2c_addr = 0x21, .a_register = MCP_GPIOA, .a_pin = 4,
+                    .b_register = MCP_GPIOB, .b_pin = 4, .button_info = KNOB_BUTTONS[0]}
+};
+
+
+void init_knob (I2C_TypeDef *bus, knob_info_t *knob, encoder_state_t *state, uint8_t index)
+{
+    knob->encoder = KNOB_ENCODERS[index];
+    knob->encoder.i2c_bus = bus;
+    get_encoder_motion(knob->encoder, *state, state);
+    state->button_state = (button_state_t){.held = false, .press_countdown = 0};
+}
+
+
 void init_knob_controls (uint8_t channel, channel_control_io_state *state, channel_control_io_t *io)
 {
-    // TODO: per-channel config stuff (probably just choosing i2c bus based on channel arg)
 
     I2C_TypeDef *bus = i2c_channel_bus(channel);
 
-    // INPUT GAIN KNOB CHANNEL 1
-    button_info_t input_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 2}; // dummy
-    io->input_gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
-                                                   .i2c_addr = 0x20,
-                                                   .a_register = MCP_GPIOB,
-                                                   .a_pin = 1,
-                                                   .b_register = MCP_GPIOB,
-                                                   .b_pin = 0,
-                                                   .button_info = input_gain_button};
-    get_encoder_motion(io->input_gain_knob.encoder, state->input_gain_encoder_state, &(state->input_gain_encoder_state));
-    state->input_gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
+    // INPUT AND PAN KNOB
+    init_knob(bus, &(io->input_gain_knob), &(state->input_gain_encoder_state), 0);
+    init_knob(bus, &(io->pan), &(state->pan_knob_state), 9);
 
-    // HF GAIN KNOB CHANNEL 1
-    button_info_t hf_gain_button = {.bus = bus, .addr = 0x20, .port = MCP_GPIOB, .pin = 5}; // dummy
-    io->hf_interface.gain_knob.encoder = (encoder_info_t){.i2c_bus = bus,
-                                                          .i2c_addr = 0x20,
-                                                          .a_register = MCP_GPIOB,
-                                                          .a_pin = 4,
-                                                          .b_register = MCP_GPIOB,
-                                                          .b_pin = 3,
-                                                          .button_info = hf_gain_button};
-    get_encoder_motion(
-        io->hf_interface.gain_knob.encoder,
-        state->hf_interface_state.gain_encoder_state,
-        &(state->hf_interface_state.gain_encoder_state)
-    );
-    state->hf_interface_state.gain_encoder_state.button_state = (button_state_t){.held = false, .press_countdown = 0};
+    // SENDS
+    init_knob(bus, &(io->send_channel_interfaces[0].gain_knob), &(state->send_channel_interface_states[0].gain_encoder), 1);
+    init_knob(bus, &(io->send_channel_interfaces[0].pan_knob), &(state->send_channel_interface_states[0].pan_encoder), 2);
 
+    init_knob(bus, &(io->send_channel_interfaces[1].gain_knob), &(state->send_channel_interface_states[1].gain_encoder), 3);
+    init_knob(bus, &(io->send_channel_interfaces[1].pan_knob), &(state->send_channel_interface_states[1].pan_encoder), 4);
+
+    init_knob(bus, &(io->send_channel_interfaces[2].gain_knob), &(state->send_channel_interface_states[2].gain_encoder), 5);
+    init_knob(bus, &(io->send_channel_interfaces[2].pan_knob), &(state->send_channel_interface_states[2].pan_encoder), 6);
+
+    init_knob(bus, &(io->send_channel_interfaces[3].gain_knob), &(state->send_channel_interface_states[3].gain_encoder), 7);
+
+    // EQ HF
+    init_knob(bus, &(io->hf_interface.gain_knob), &(state->hf_interface_state.gain_encoder_state), 1);
+    init_knob(bus, &(io->hf_interface.gain_knob), &(state->hf_interface_state.freq_encoder_state), 2);
+    
+    // EQ HMF
+    init_knob(bus, &(io->hmf_interface.gain_knob), &(state->hmf_interface_state.gain_encoder_state), 3);
+    init_knob(bus, &(io->hmf_interface.freq_knob), &(state->hmf_interface_state.freq_encoder_state), 4);
+    init_knob(bus, &(io->hmf_interface.q_knob), &(state->hmf_interface_state.q_encoder_state), 3);
+
+    // EQ LMF
+    init_knob(bus, &(io->lmf_interface.gain_knob), &(state->lmf_interface_state.gain_encoder_state), 5);
+    init_knob(bus, &(io->lmf_interface.freq_knob), &(state->lmf_interface_state.freq_encoder_state), 6);
+    init_knob(bus, &(io->lmf_interface.q_knob), &(state->lmf_interface_state.q_encoder_state), 5);
+    
+    // EQ LF
+    init_knob(bus, &(io->lf_interface.gain_knob), &(state->lf_interface_state.gain_encoder_state), 7);
+    init_knob(bus, &(io->lf_interface.freq_knob), &(state->lf_interface_state.freq_encoder_state), 8);
+
+    // COMP
+    init_knob(bus, &(io->comp_interface.in_gain_knob), &(state->comp_interface_state.in_gain_encoder_state), 1);
+    init_knob(bus, &(io->comp_interface.threshold_knob), &(state->comp_interface_state.threshold_encoder_state), 2);
+    init_knob(bus, &(io->comp_interface.attack_time_knob), &(state->comp_interface_state.attack_time_encoder_state), 3);
+    init_knob(bus, &(io->comp_interface.release_time_knob), &(state->comp_interface_state.release_time_encoder_state), 4);
+    init_knob(bus, &(io->comp_interface.ratio_knob), &(state->comp_interface_state.ratio_encoder_state), 5);
+    init_knob(bus, &(io->comp_interface.out_gain_knob), &(state->comp_interface_state.out_gain_encoder_state), 6);
+
+
+    
+    
+    
     if(channel == 0)
     {
         // CHANNEL 0 KNOB LED RINGS - LINK BUTTON INFO OBJECTS w/ LED DEVICES

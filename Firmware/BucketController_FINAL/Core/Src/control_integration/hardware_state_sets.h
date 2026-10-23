@@ -28,12 +28,11 @@ typedef struct
 typedef struct
 {
     encoder_state_t in_gain_encoder_state;
-    encoder_state_t out_gain_encoder_state;
+    encoder_state_t threshold_encoder_state;
     encoder_state_t attack_time_encoder_state;
     encoder_state_t release_time_encoder_state;
-    encoder_state_t threshold_encoder_state;
     encoder_state_t ratio_encoder_state;
-    encoder_state_t de_ess_amt_encoder_state;
+    encoder_state_t out_gain_encoder_state;
 } comp_interface_state_t;
 
 /**
@@ -73,6 +72,8 @@ typedef struct
     button_state_t ins_button_state;
     button_state_t pre_button_state;
     button_state_t rec_button_state;
+
+    encoder_state_t pan_knob_state;
 
     fader_state_t fader_state;
 

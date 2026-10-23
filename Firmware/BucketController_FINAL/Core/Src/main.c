@@ -1634,7 +1634,6 @@ void StartDefaultTask(void *argument)
 
   for (;;) // this MUST STAY
   {
-    
     vTaskDelay(portMAX_DELAY);
   }
   
