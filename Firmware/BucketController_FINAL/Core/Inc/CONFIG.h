@@ -17,7 +17,7 @@
   *        Macros below are only kept where a compile-time constant is required (array sizes,
   *        #if, static initializers); everything else is a typed const.
   *
-  * @author Skylar Denno (denno.o@northeastern.edu)
+  * @author Skylar Denno (denno.o@northeastern.edu) Darya Petrova (petrov.da@northeastern.edu)
   * @date 2026-08-25
   * @version 1.0
   *
