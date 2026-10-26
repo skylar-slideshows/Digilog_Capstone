@@ -226,17 +226,27 @@ static volatile bool loading    = false;
 static uint8_t       load_div   = 0;
 
 #ifndef LED_ANIM_LOAD_DIV
-#define LED_ANIM_LOAD_DIV 3U // 40 FPS / 3 = 16.7 updates per sec loading anim
+#define LED_ANIM_LOAD_DIV 7U // frame divider to slow the load animation
 #endif
 
 
 /*=============================== USE LED SPI DMA ================================*/
+
+static inline void oe_hold_dark (bool dark)
+{
+    TIM_TypeDef *t = LED_OE_TIM_HANDLE.Instance;
+    uint32_t ccmr = t->CCMR1 & ~TIM_CCMR1_OC2M;
+    ccmr |= dark ? (TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_0)   // forced active: OE high, LEDs dark
+                 : (TIM_CCMR1_OC2M_2 | TIM_CCMR1_OC2M_1);  // back to PWM mode 1
+    t->CCMR1 = ccmr;
+}
 
 void HAL_SPI_TxCpltCallback (SPI_HandleTypeDef *hspi)
 {
     if (hspi->Instance == LED_SPI_INSTANCE) // prevents interference if using DMA for another SPI at the same time
     {
         latch_out(true);
+        oe_hold_dark(false); // LEDs back on, showing the new frame
         // tx_busy = false;
     }
 }
@@ -559,6 +569,26 @@ static void render_dirty (void)
 }
 
 
+/*=============================== REV0 HARDWARE WORKAROUNDS LMAO ================================*/
+// Bits never sent lit on rev0 hardware: lit, they trigger extra clock pulses from the chain's
+// own switching on a marginal clock edge. Applied to the transmit copy only, so the frame and
+// every device's state stay correct. Delete once the clock line is fixed in hardware.
+static const struct { uint8_t device; uint8_t led; } TX_NEVER_LIT[] = {
+    {78, 31}, // ch1 4A rightmost LED: when lit, LEDs 16-19 of the same ring go dark
+};
+
+static void tx_apply_workarounds (void)
+{
+    for (uint8_t i = 0; i < sizeof(TX_NEVER_LIT) / sizeof(TX_NEVER_LIT[0]); i++)
+    {
+        if (TX_NEVER_LIT[i].device >= device_count) continue;
+        const led_device_t *d = &devices[TX_NEVER_LIT[i].device];
+        if (TX_NEVER_LIT[i].led >= d->width) continue;
+        buf_bit(txbuf, (uint16_t)(d->offset + TX_NEVER_LIT[i].led), false);
+    }
+}
+
+
 /**
  ----------------------------------------------------------------------------------
   @brief frame_out : shift the whole frame out (serial data), then latch. USING DMA for fast (the LED SPI's DMA).
@@ -569,11 +599,12 @@ static void frame_out (void)
     // if (tx_busy) { frame_dirty = true; return; } // retry next tick
 
     memcpy(txbuf, frame, LED_FRAME_BYTES);
-    // tx_busy = true;
+    tx_apply_workarounds();
+    oe_hold_dark(true); // nothing switches while bits shift
 
     if (HAL_SPI_Transmit_DMA(&LED_SPI_HANDLE, txbuf, LED_FRAME_BYTES) != HAL_OK)
     {
-        // tx_busy = false;
+        oe_hold_dark(false);
         frame_dirty = true;
     }
 }
@@ -600,6 +631,7 @@ void led_update (void)
 
     if (!work) return;
     render_dirty();
+
     frame_out();
 }
 
@@ -774,7 +806,7 @@ void anim_stop (void)
 void anim_loading (void)
 {
     anim_claim(ANIM_LOAD);
-    anim_bits = (anim_bits >> 1) | (anim_bits << 31); // rotate the pattern one step
+    anim_bits = (anim_bits << 1) | (anim_bits >> 31); // rotate the pattern one step
 
     for (uint16_t i = 0; i < device_count; i++)
     {
