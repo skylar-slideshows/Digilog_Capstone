@@ -346,73 +346,73 @@ static const button_info_t KNOB_BUTTONS[10] = {
 
 static const encoder_info_t KNOB_ENCODERS[10] = {
     {.i2c_addr = 0x20,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 0,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 0,
      .button_info = KNOB_BUTTONS[0]},
 
     {.i2c_addr = 0x20,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 1,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 1,
      .button_info = KNOB_BUTTONS[1]},
 
     {.i2c_addr = 0x20,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 2,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 2,
      .button_info = KNOB_BUTTONS[2]},
 
     {.i2c_addr = 0x20,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 3,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 3,
      .button_info = KNOB_BUTTONS[3]},
 
     {.i2c_addr = 0x20,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 4,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 4,
      .button_info = KNOB_BUTTONS[4]},
 
     {.i2c_addr = 0x21,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 0,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 0,
      .button_info = KNOB_BUTTONS[5]},
 
     {.i2c_addr = 0x21,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 1,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 1,
      .button_info = KNOB_BUTTONS[6]},
 
     {.i2c_addr = 0x21,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 2,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 2,
      .button_info = KNOB_BUTTONS[7]},
 
     {.i2c_addr = 0x21,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 3,
-     .b_register = MCP_GPIOB,
+     .b_register = MCP_GPIOA,
      .b_pin = 3,
      .button_info = KNOB_BUTTONS[8]},
 
     {.i2c_addr = 0x21,
-     .a_register = MCP_GPIOA,
+     .a_register = MCP_GPIOB,
      .a_pin = 4,
-     .b_register = MCP_GPIOB,
-     .b_pin = 4, //
+     .b_register = MCP_GPIOA,
+     .b_pin = 4,
      .button_info = KNOB_BUTTONS[9]}
 };
 
@@ -420,10 +420,10 @@ static const encoder_info_t KNOB_ENCODERS[10] = {
 // Index in led_driver.c's init_devices of the ring around each knob, by [channel][knob index in KNOB_ENCODERS].
 // Knob 0 is input gain, 1-8 are the FX section rows 1A, 1B, 2A, 2B, 3A, 3B, 4A, 4B, and 9 is pan.
 static const uint8_t KNOB_LED_RINGS[CHANNELS][10] = {
-    {0, 39, 40, 47, 48, 55, 56, 95, 96, 100},
-    {17, 38, 41, 46, 49, 54, 57, 78, 97, 101},
-    {18, 37, 42, 45, 50, 53, 58, 77, 98, 102},
-    {35, 36, 43, 44, 51, 52, 59, 60, 99, 103},
+    {0, 39, 40, 47, 48, 55, 56, 95, 96, 103},
+    {17, 38, 41, 46, 49, 54, 57, 78, 97, 102},
+    {18, 37, 42, 45, 50, 53, 58, 77, 98, 101},
+    {35, 36, 43, 44, 51, 52, 59, 60, 99, 100},
 };
 
 static void init_knob (uint8_t channel, knob_info_t *knob, uint8_t index)
