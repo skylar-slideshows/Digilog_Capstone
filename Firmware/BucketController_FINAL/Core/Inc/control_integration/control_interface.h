@@ -44,7 +44,7 @@ typedef struct
 
 typedef struct
 {
-    s_scalar_control_t gain; //!< TODO desc / gain range
+    u_scalar_control_t gain; //!< TODO desc / gain range
     s_scalar_control_t pan;  //!< TODO desc / pan range; note only applies to sends 1-3
 } send_channel_control_t;
 

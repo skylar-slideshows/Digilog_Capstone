@@ -150,7 +150,7 @@ static void update_send_knob_values (
         send_channel_interface_t *send_io = &(io->send_channel_interfaces[i]);
         send_channel_control_t *send_vals = &(vals->send_controls[i]);
 
-        update_s_value_from_encoder(vals_mutex, &(send_io->gain_knob.encoder), &(send_vals->gain), sensitivity);
+        update_u_value_from_encoder(vals_mutex, &(send_io->gain_knob.encoder), &(send_vals->gain), sensitivity);
         if (i < SEND_CHANNELS - 1) // pan is not used for the last send channel
         {
             update_s_value_from_encoder(vals_mutex, &(send_io->pan_knob.encoder), &(send_vals->pan), sensitivity);
@@ -303,7 +303,7 @@ void update_channel_knob_leds (
         case SENDS_CONTROL:
             for (uint8_t i = 0; i < SEND_CHANNELS; i++)
             {
-                show_signed(io->send_channel_interfaces[i].gain_knob.led_ring, v.send_controls[i].gain);
+                show_unsigned(io->send_channel_interfaces[i].gain_knob.led_ring, v.send_controls[i].gain);
                 if (i < SEND_CHANNELS - 1) // pan is not used for the last send channel
                 {
                     show_signed(io->send_channel_interfaces[i].pan_knob.led_ring, v.send_controls[i].pan);

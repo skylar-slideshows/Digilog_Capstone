@@ -18,6 +18,11 @@
 #include "CONFIG.h"
 #include <string.h>
 #include <stdio.h>
+#include <stddef.h>
+#include "FreeRTOS.h"
+#include "message_buffer.h"
+#include "cmsis_os2.h"
+#include "control_integration/control_interface.h"
 
 extern UART_HandleTypeDef huart2;
 
@@ -51,6 +56,13 @@ static volatile uint32_t stat_frames;
 static volatile uint32_t stat_unknown;
 static volatile uint32_t stat_overruns;
 static volatile uint32_t stat_dropped;
+
+// ud frames, handed from the ISR to ud_task (which can take the control mutexes)
+static uint8_t               ud_storage[512 + 1];
+static StaticMessageBuffer_t ud_buffer;
+static MessageBufferHandle_t ud_frames;
+static uint32_t              ud_stack[512];
+static StaticTask_t          ud_tcb;
 
 
 /*=============================== TRANSMIT ================================*/
@@ -146,7 +158,8 @@ static void frame_complete (void)
 
     if (rx_len == 0) return;
 
-    if (verb_of(rx) == CMD_UNKNOWN)
+    const cmd_verb_t verb = verb_of(rx);
+    if (verb == CMD_UNKNOWN)
     {
         stat_unknown++;
         return;
@@ -154,6 +167,8 @@ static void frame_complete (void)
 
     stat_frames++;
     send_ack(rx, rx_len);
+
+    if (verb == CMD_UD) xMessageBufferSendFromISR(ud_frames, rx, rx_len, NULL);
 }
 
 
@@ -191,8 +206,18 @@ void uart_cmd_rx_isr (void)
         {
             if (c == CMD_CLOSE)
             {
-                in_frame = false;
-                frame_complete();
+                rx[rx_len] = '\0';
+                if (verb_of(rx) == CMD_UNKNOWN)
+                {
+                    // Not a command, so we are out of step (a lost byte): treat this % as the next frame's opening
+                    if (rx_len) stat_unknown++;
+                    rx_len = 0;
+                }
+                else
+                {
+                    in_frame = false;
+                    frame_complete();
+                }
             }
             else if (rx_len >= CMD_MAX)
             {
@@ -222,6 +247,64 @@ void uart_cmd_rx_isr (void)
             REMOTE_UART->TDR = tx[tx_tail];
             tx_tail = (uint16_t)((tx_tail + 1) & (TX_RING_SIZE - 1));
         }
+    }
+}
+
+
+/*=============================== UD: SET A KNOB VALUE ================================*/
+// %ud <channel> <ctrl_id> <value>% from the remote app: ctrl_id as numbered in its CONFIG.yaml, and value
+// is the knob's position across its whole range as 0-65535 (so a centred knob arrives as 32768)
+
+static const struct { uint16_t offset; bool is_signed; } KNOB_VALUES[] = {
+    {offsetof(channel_controls, input_gain),                false}, //  0 input
+    {offsetof(channel_controls, send_controls[0].gain),     false},  //  1 send_1
+    {offsetof(channel_controls, send_controls[0].pan),      true},  //  2 send_1_pan
+    {offsetof(channel_controls, send_controls[1].gain),     false},  //  3 send_2
+    {offsetof(channel_controls, send_controls[1].pan),      true},  //  4 send_2_pan
+    {offsetof(channel_controls, send_controls[2].gain),     false},  //  5 send_3
+    {offsetof(channel_controls, send_controls[2].pan),      true},  //  6 send_3_pan
+    {offsetof(channel_controls, send_controls[3].gain),     false},  //  7 send_4
+    {offsetof(channel_controls, hf_control.gain),           true},  //  8 eq_1_gain (HF)
+    {offsetof(channel_controls, hf_control.freq),           false}, //  9 eq_1_freq
+    {offsetof(channel_controls, hmf_control.gain),          true},  // 10 eq_2_gain (HMF)
+    {offsetof(channel_controls, hmf_control.freq),          false}, // 11 eq_2_freq
+    {offsetof(channel_controls, hmf_control.q),             false}, // 12 eq_2_q
+    {offsetof(channel_controls, lmf_control.gain),          true},  // 13 eq_3_gain (LMF)
+    {offsetof(channel_controls, lmf_control.freq),          false}, // 14 eq_3_freq
+    {offsetof(channel_controls, lmf_control.q),             false}, // 15 eq_3_q
+    {offsetof(channel_controls, lf_control.gain),           true},  // 16 eq_4_gain (LF)
+    {offsetof(channel_controls, lf_control.freq),           false}, // 17 eq_4_freq
+    {offsetof(channel_controls, comp_control.in_gain),      true},  // 18 comp_input
+    {offsetof(channel_controls, comp_control.attack_time),  false}, // 19 comp_atk
+    {offsetof(channel_controls, comp_control.threshold),    true},  // 20 comp_thresh
+    {offsetof(channel_controls, comp_control.release_time), false}, // 21 comp_rel
+    {offsetof(channel_controls, comp_control.de_ess_amt),   false}, // 22 comp_deess
+    {offsetof(channel_controls, comp_control.ratio),        false}, // 23 comp_ratio
+    {offsetof(channel_controls, comp_control.out_gain),     false}, // 24 comp_output
+    {offsetof(channel_controls, output_pan),                true},  // 25 pan (26, the fader, is not handled yet)
+};
+#define KNOB_VALUE_COUNT ((long)(sizeof(KNOB_VALUES) / sizeof(KNOB_VALUES[0])))
+#define CLAMP(v, lo, hi) ((v) < (lo) ? (lo) : (v) > (hi) ? (hi) : (v))
+
+static void ud_task (void *argument)
+{
+    static char frame[CMD_MAX + 1];
+    (void)argument;
+
+    for (;;)
+    {
+        frame[xMessageBufferReceive(ud_frames, frame, CMD_MAX, portMAX_DELAY)] = '\0';
+
+        long ch, id, val;
+        if (sscanf(frame, "ud %ld %ld %ld", &ch, &id, &val) != 3) continue;
+        if (ch < 0 || ch >= CHANNELS || id < 0 || id >= KNOB_VALUE_COUNT) continue;
+
+        uint8_t *field = (uint8_t *)&channel_control_vals[ch] + KNOB_VALUES[id].offset;
+        xSemaphoreTake(channel_control_mutexes[ch], portMAX_DELAY);
+        val = CLAMP(val, 0, UINT16_MAX);
+        if (KNOB_VALUES[id].is_signed) *(s_scalar_control_t *)field = (s_scalar_control_t)(val - 32768); // centre = 0
+        else                           *(u_scalar_control_t *)field = (u_scalar_control_t)val;
+        xSemaphoreGive(channel_control_mutexes[ch]);
     }
 }
 
@@ -260,9 +343,20 @@ void uart_cmd_init (void)
 
     stat_bytes = stat_frames = stat_unknown = stat_overruns = stat_dropped = 0;
 
+    // 8-byte receive FIFO: at 921600 baud a byte lasts ~11 us, too short to never miss with no FIFO
+    HAL_UARTEx_EnableFifoMode(&huart2);
+
     // Clear anything stale from before we were listening.
     REMOTE_UART->ICR = USART_ICR_ORECF | USART_ICR_FECF | USART_ICR_NECF | USART_ICR_PECF;
     (void)REMOTE_UART->RDR;
+
+    ud_frames = xMessageBufferCreateStatic(sizeof(ud_storage) - 1, ud_storage, &ud_buffer);
+    static const osThreadAttr_t ud_attr = {
+        .name = "uart_cmd", .priority = osPriorityBelowNormal,
+        .stack_mem = ud_stack, .stack_size = sizeof(ud_stack),
+        .cb_mem = &ud_tcb,     .cb_size = sizeof(ud_tcb),
+    };
+    osThreadNew(ud_task, NULL, &ud_attr);
 
     HAL_NVIC_SetPriority(REMOTE_UART_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(REMOTE_UART_IRQn);
