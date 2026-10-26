@@ -115,8 +115,8 @@
         "pth_inside_courtyard": "error",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
-        "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_over_copper": "ignore",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
@@ -240,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "0"
+      "sch_revision": "1"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -666,13 +666,17 @@
         "uuid": "d7f6c350-e8d9-47a5-bbdf-1bbb2ca5b736"
       }
     ],
-    "used_designators": "#PWR1-3,J1-24,H1-30",
+    "used_designators": "H1-30,J1-24,#PWR1-3",
     "variants": []
   },
   "sheets": [
     [
       "d7f6c350-e8d9-47a5-bbdf-1bbb2ca5b736",
       "Root"
+    ],
+    [
+      "fcbe0d1c-3e0c-4a1b-bdad-2a49ebba29e6",
+      "LOGIC SHIFT REGISTERS"
     ]
   ],
   "text_variables": {},
