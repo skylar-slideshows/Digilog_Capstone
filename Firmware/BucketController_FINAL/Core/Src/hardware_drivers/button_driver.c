@@ -14,10 +14,10 @@ typedef struct
     uint32_t last_press_ms;
 } button_cache_t;
 
-static button_cache_t button_cache[CHANNELS]  // one I2C bus per channel
-                                  [8]         // 8 possible expander addresses per channel
-                                  [2]         // GPIOA / GPIOB
-                                  [8];        // 8 pins per port
+static button_cache_t button_cache[CHANNELS] // one I2C bus per channel
+                                  [8]        // 8 possible expander addresses per channel
+                                  [2]        // GPIOA / GPIOB
+                                  [8] = {0}; // 8 pins per port
 
 static bool button_exists (const button_info_t *info)
 {
@@ -32,7 +32,12 @@ bool get_button_held (const button_info_t *info)
     }
 
     uint8_t gpio_bits[2];
-    mcp23017_read_from_cache(info->bus, info->addr, gpio_bits);
+
+    if (mcp23017_read_from_cache(info->bus, info->addr, gpio_bits) == 1)
+    {
+        return false; // GPIO expander hasn't been polled yet
+    }
+
     const bool pin_high = (gpio_bits[info->port - MCP_GPIOA] >> info->pin) & 1;
     return pin_high != info->active_low;
 }

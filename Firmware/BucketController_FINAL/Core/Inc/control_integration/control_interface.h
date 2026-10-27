@@ -80,6 +80,8 @@ typedef struct
     bool high_pass_filter; //!< TODO
 
     bool muted; //!< Whether all output from this channel is muted
+    bool solo;  //!< TODO
+    bool sel;   //!< TODO
 
     bool ins;       //!< TODO
     bool pre_fader; //!< TODO

@@ -40,7 +40,7 @@ static void init_control_vals (uint8_t channel)
     channel_controls *vals = &(channel_control_vals[channel]);
 
     vals->input_type_selection = LINE_INPUT;
-    vals->control_set_selection = SENDS_CONTROL;
+    vals->control_set_selection = EQ_CONTROL;
     vals->input_gain = 0;
     vals->output_gain = 0;
     vals->output_pan = 0;
@@ -50,6 +50,8 @@ static void init_control_vals (uint8_t channel)
     vals->high_pass_filter = false;
 
     vals->muted = false;
+    vals->solo = false;
+    vals->sel = false;
 
     vals->ins = false;
     vals->pre_fader = false;

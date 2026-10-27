@@ -231,7 +231,6 @@ int main(void)
   uart_cmd_init(); // uart2 startup for comms w/ remote app
 
   led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
-  init_control_interface();
   shiftreg_init();
 
   led_brightness(10);
@@ -251,6 +250,7 @@ int main(void)
       mcp4728_init_settings(i2c_channel_bus(ch), MCP4728_ADDRS[mcp4728_idx]);
     }
   }
+  init_control_interface();
 
   if(DEVELOPER_MODE)
   {

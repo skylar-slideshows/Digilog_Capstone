@@ -38,9 +38,9 @@
 #include <stdbool.h>
 #include "stm32g474xx.h"
 
-uint8_t mcp23017_value_cache[CHANNELS]  // one I2C bus per channel
-                            [8]  // 8 possible addresses per channel
-                            [2]; // 2 bytes cached per chip
+uint8_t mcp23017_value_cache[CHANNELS] // one I2C bus per channel
+                            [8]        // 8 possible addresses per channel
+                            [3] = {0}; // 2 bytes cached per chip, third byte indicates whether it has yet been polled
 
 /**
  ----------------------------------------------------------------------------------
@@ -81,6 +81,7 @@ bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
     uint8_t *out_dest = mcp23017_value_cache[i2c_bus_index(bus)][addr & 0x07];
     out_dest[0] = fresh[0];
     out_dest[1] = fresh[1];
+    out_dest[2] = 1;
     return true;
 }
 
@@ -88,13 +89,21 @@ bool mcp23017_poll_to_cache (I2C_TypeDef *bus, uint8_t addr)
  ----------------------------------------------------------------------------------
   @brief mcp23017_read_from_cache : I2C bus, chip's address (0x20, 0x21, 0x22) -> 16bit (GPIOB, GPIOA)
   Reads cached values on GPIOA and GOIPB without running an i2c transaction
+  Returns an error flag; 1 means it has not yet been polled
  ----------------------------------------------------------------------------------
 */
-void mcp23017_read_from_cache (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
+uint8_t mcp23017_read_from_cache (I2C_TypeDef *bus, uint8_t addr, uint8_t *out)
 {
     uint8_t *from = mcp23017_value_cache[i2c_bus_index(bus)][addr & 0x07];
     out[0] = from[0];
     out[1] = from[1];
+
+    if (from[2] == 1)
+    {
+        return 0;
+    }
+
+    return 1;
 }
 
 

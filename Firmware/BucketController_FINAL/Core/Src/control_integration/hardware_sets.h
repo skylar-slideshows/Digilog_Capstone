@@ -4,6 +4,8 @@
 #include "CONFIG.h"
 #include "control_integration/control_interface.h"
 
+#include "hardware_drivers/button_driver.h"
+#include "hardware_drivers/led_driver.h"
 #include "hardware_structs.h" // Only to be included for control_interface related code
 #include "hardware_drivers/fader_driver.h"
 
@@ -41,12 +43,18 @@ typedef struct
     knob_info_t out_gain_knob;
 } comp_interface_t;
 
+typedef struct
+{
+    button_info_t input_select_button;
+    led_device_t *mic_input_led;
+    led_device_t *line_input_led;
+    led_device_t *hiz_input_led;
+} input_selection_t;
+
 
 typedef struct
 {
-    lit_button_info_t mic_input_button;
-    lit_button_info_t line_input_button;
-    lit_button_info_t hiz_input_button;
+    input_selection_t input_selection;
     knob_info_t input_gain_knob;
     lit_button_info_t phantom_48v_button;
     lit_button_info_t phase_flip_button;

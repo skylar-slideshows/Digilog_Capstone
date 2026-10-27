@@ -96,7 +96,10 @@ encoder_turn_action_t update_encoder (const encoder_info_t *encoder)
     encoder_cache_t *cache = &encoder_cache[channel][encoder->i2c_addr & 0x07][encoder->a_register - MCP_GPIOA][encoder->a_pin];
 
     uint8_t ports[2]; // [0] = GPIOA, [1] = GPIOB
-    mcp23017_read_from_cache(encoder->i2c_bus, encoder->i2c_addr, ports);
+
+    if(mcp23017_read_from_cache(encoder->i2c_bus, encoder->i2c_addr, ports) == 1){
+        return ENCODER_NO_TURN; // In case the GPIO expander hasn't yet been polled
+    }
 
     // subtracts the base to MCP_GPIOA both not a typo
     const encoder_cache_t polled = {

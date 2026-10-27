@@ -97,14 +97,16 @@ bool mcp23017_poll_to_cache(I2C_TypeDef *bus, uint8_t addr);
 
 /**
  ----------------------------------------------------------------------------------
-  @brief mcp23017_read_from_cache : I2C bus, chip's address (0x20, 0x21, 0x22) -> 16bit (GPIOB, GPIOA)
+  @brief mcp23017_read_from_cache : I2C bus, chip's address (0x20, 0x21, 0x22) -> 16bit (GPIOB, GPIOA), error flag
   Reads cached values on GPIOA and GOIPB without running an i2c transaction
   @param bus I2C bus (I2C1 ... I2C4 of I2C_TypeDef)
   @param addr 0x20 = MCP23017 #1, 0x21 = MCP23017 #2, 0x22 = MCP23017 #3
   @param out pointer to output bytes [2; GPIOA, GPIOB]
+
+  @returns an error flag, 0 indicates success and 1 indicates that the connected gpio expander hasn't yet been polled
  ----------------------------------------------------------------------------------
 */
-void mcp23017_read_from_cache(I2C_TypeDef *bus, uint8_t addr, uint8_t *out);
+uint8_t mcp23017_read_from_cache(I2C_TypeDef *bus, uint8_t addr, uint8_t *out);
 
 bool mcp23017_init_read(I2C_TypeDef *bus, uint8_t addr, MCP23017_Reg reg,uint8_t *out);
 

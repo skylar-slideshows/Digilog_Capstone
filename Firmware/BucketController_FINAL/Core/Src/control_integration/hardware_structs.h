@@ -13,15 +13,6 @@
 #include "hardware_drivers/led_driver.h"
 
 /**
- * @brief Info on the location of a single button LED
- */
-typedef struct
-{
-    // TODO
-} button_led_info_t;
-
-
-/**
  * @brief Info on the rotary encoder and led ring of one knob
  */
 typedef struct
@@ -36,7 +27,7 @@ typedef struct
 typedef struct
 {
     button_info_t button;
-    button_led_info_t led;
+    led_device_t *led;
 } lit_button_info_t;
 
 #endif
