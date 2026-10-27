@@ -37,6 +37,30 @@ add_executable(${CMAKE_PROJECT_NAME})
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
+
+# TINY USB SOURCE
+set(TINYUSB_DIR ${CMAKE_SOURCE_DIR}/Core/Src/TinyUSB)
+include(${TINYUSB_DIR}/CMakeLists.txt)
+
+# The stack plus every class. Classes that tusb_config.h doesn't enable compile to nothing.
+tinyusb_sources_get(TINYUSB_SRC)
+
+# TinyUSB's list leaves out the hardware driver. These two are the driver for the G4's USB block.
+list(APPEND TINYUSB_SRC
+    ${TINYUSB_DIR}/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
+    ${TINYUSB_DIR}/portable/st/stm32_fsdev/fsdev_common.c
+)
+
+
+# ADD THESE FOLDERS!
+file(GLOB APP_SRC CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/Core/Src/FreeRTOS_apps/*.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/hardware_drivers/*.c   # for drivers like the bucket's, when you add them
+)
+# macOS leaves "._name.c" metadata files on drives that aren't Mac-formatted; they aren't C
+list(FILTER APP_SRC EXCLUDE REGEX "/\\._[^/]*$")
+
+
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
@@ -45,11 +69,14 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    ${APP_SRC}
+    ${TINYUSB_SRC}
 )
 
-# Add include paths
+# Add include paths (Core/Inc, which holds tusb_config.h, already comes from cmake/stm32cubemx)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ${TINYUSB_DIR}
 )
 
 # Add project symbols (macros)
