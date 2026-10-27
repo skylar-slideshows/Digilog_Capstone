@@ -13,8 +13,8 @@ Bucket Controller
 - [control_voltage.h](@ref control_voltage.h) - Control voltage generation engine header
 - [console_state_bucket.h](@ref console_state_bucket.h) - Header file for console parameter data saving and reporting code (for the bucket controller)
 - LCD DISPLAY DRIVER (need)
-- [main.c](@ref Firmware/BucketController/Core/Src/main.c) - Main C file
-- [main.h](@ref Firmware/BucketController/Core/Inc/main.h) - Main header
+- [main.c](@ref Firmware/BucketController_FINAL/Core/Src/main.c) - Main C file
+- [main.h](@ref Firmware/BucketController_FINAL/Core/Inc/main.h) - Main header
 
 
 Master Controller
