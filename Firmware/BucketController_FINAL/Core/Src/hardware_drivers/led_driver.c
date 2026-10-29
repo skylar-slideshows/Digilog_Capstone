@@ -226,7 +226,7 @@ static volatile bool loading    = false;
 static uint8_t       load_div   = 0;
 
 #ifndef LED_ANIM_LOAD_DIV
-#define LED_ANIM_LOAD_DIV 7U // frame divider to slow the load animation
+#define LED_ANIM_LOAD_DIV 8U // frame divider to slow the load animation
 #endif
 
 
