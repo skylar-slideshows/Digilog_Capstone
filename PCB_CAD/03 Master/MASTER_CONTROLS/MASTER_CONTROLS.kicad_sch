@@ -59,7 +59,7 @@
 		)
 	)
 	(sheet
-		(at 114.3 88.9)
+		(at 25.4 88.9)
 		(size 76.2 50.8)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -75,52 +75,6 @@
 		)
 		(uuid "41421e66-c784-44d0-8e35-2fd0525b732f")
 		(property "Sheetname" "leds"
-			(at 114.3 88.1884 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "leds.kicad_sch"
-			(at 114.3 140.2846 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "MASTER_CONTROLS"
-				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39"
-					(page "6")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 25.4 88.9)
-		(size 76.2 50.8)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "96f731ac-c18e-402e-b765-c385749a6ff2")
-		(property "Sheetname" "controls"
 			(at 25.4 88.1884 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -131,7 +85,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "controls.kicad_sch"
+		(property "Sheetfile" "leds.kicad_sch"
 			(at 25.4 140.2846 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -151,7 +105,53 @@
 		)
 	)
 	(sheet
-		(at 203.2 88.9)
+		(at 114.3 25.4)
+		(size 76.2 50.8)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "96f731ac-c18e-402e-b765-c385749a6ff2")
+		(property "Sheetname" "controls"
+			(at 114.3 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "controls.kicad_sch"
+			(at 114.3 76.7846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MASTER_CONTROLS"
+				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 114.3 88.9)
 		(size 76.2 50.8)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -167,7 +167,7 @@
 		)
 		(uuid "a5c9b7c4-e289-4ee8-862e-548ee652a8f0")
 		(property "Sheetname" "meters"
-			(at 203.2 88.1884 0)
+			(at 114.3 88.1884 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -178,7 +178,7 @@
 			)
 		)
 		(property "Sheetfile" "meters.kicad_sch"
-			(at 203.2 140.2846 0)
+			(at 114.3 140.2846 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -191,53 +191,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39"
-					(page "7")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 114.3 25.4)
-		(size 76.2 50.8)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "e83ac5de-91c1-4be1-a982-9ef8163517c7")
-		(property "Sheetname" "disp"
-			(at 114.3 24.6884 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "disp.kicad_sch"
-			(at 114.3 76.7846 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "MASTER_CONTROLS"
-				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39"
-					(page "3")
+					(page "6")
 				)
 			)
 		)
