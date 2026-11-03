@@ -240,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -636,7 +636,7 @@
     "meta": {
       "version": 1
     },
-    "page_layout_descr_file": "",
+    "page_layout_descr_file": "kicad-embed://default_sheet.kicad_wks",
     "plot_directory": "",
     "reuse_designators": true,
     "subpart_first_id": 65,
@@ -645,13 +645,42 @@
       {
         "filename": "MASTER_CONTROLS.kicad_sch",
         "name": "MASTER_CONTROLS",
-        "uuid": "00000000-0000-0000-0000-000000000000"
+        "uuid": "ff88e25e-6a0c-47b4-be5a-f4f2468daa39"
       }
     ],
-    "used_designators": "",
+    "used_designators": "X1,U1-5,U9-10,SW1-7,SW11-24,R1-42,R61-104,R409,R411,JP3-4,#PWR1-118,#PWR140,#PWR144,#PWR147-153,#PWR168,#PWR371-372,#PWR379,#PWR381,#PWR383,#PWR385,#PWR388-391,#PWR525-528,#PWR550-555,#PWR576,#PWR578,#PWR588-589,#PWR636-637,FB1,D1-17,C1-51,C59-65,C71-72,C83,C85,C91,J1-16",
     "variants": []
   },
-  "sheets": [],
+  "sheets": [
+    [
+      "ff88e25e-6a0c-47b4-be5a-f4f2468daa39",
+      "MASTER_CONTROLS"
+    ],
+    [
+      "ec20c59b-d323-42fa-a49b-111853642e80",
+      "MCU"
+    ],
+    [
+      "e83ac5de-91c1-4be1-a982-9ef8163517c7",
+      "disp"
+    ],
+    [
+      "96f731ac-c18e-402e-b765-c385749a6ff2",
+      "controls"
+    ],
+    [
+      "0b66fe02-aad2-42b8-98a8-0d6a1616eaa9",
+      "i2c"
+    ],
+    [
+      "41421e66-c784-44d0-8e35-2fd0525b732f",
+      "leds"
+    ],
+    [
+      "a5c9b7c4-e289-4ee8-862e-548ee652a8f0",
+      "meters"
+    ]
+  ],
   "text_variables": {},
   "tuning_profiles": {
     "meta": {

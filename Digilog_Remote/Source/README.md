@@ -1,3 +1,22 @@
+## Digilog Remote 1.1
+
+### Connecting
+The remote talks to the console's master controller over USB. Leave COM Port empty and press Connect
+(or press Find Console) and the app finds the console by its USB IDs: console_usb_vid and
+console_usb_pid in config/CONFIG.yaml. The baud rate only matters when connecting straight to a bucket
+controller's UART; USB ignores it. Channels are numbered 0-31 across the whole console, and the master
+controller forwards each command to the bucket that owns the channel.
+
+### What changed in 1.1
+- Connects to the master controller's USB serial port, which the app can find by itself.
+- Replies are picked up the moment they arrive. 1.0 checked for them every 10 ms, which added up to
+  10 ms to every acknowledged command (switches, final knob positions, loading a .dgl file).
+- Unplugging the console is noticed: the status shows the connection was lost.
+- Messages from the console are read as $...^ frames (they carry no newline), ready for
+  console-to-remote updates.
+- Starts with 32 channels, the master controller's full range (8 buckets of 4).
+
+###________________________________________________________________
 ### $chct [N]^
 STM32 -> Remote. Reports the number of physical channels present in the console to the remote program.
 ### $chnm [n] [name]^

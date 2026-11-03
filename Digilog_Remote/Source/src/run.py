@@ -1,6 +1,7 @@
 """
 Digilog Remote Orchestrator
-Entry point that coordinates GUI (window.py) and STM32 Serial USART (stm32_serial.py).
+Entry point that coordinates GUI (window.py) and the console's serial link (stm32_serial.py):
+the master controller's USB serial port, or a bucket controller's USART.
 """
 import queue
 import sys
@@ -20,7 +21,8 @@ def knob_value_to_uint16(value: float, minimum: float, maximum: float) -> int:
     return round(max(0.0, min(1.0, normalized)) * 0xFFFF)
 
 def handle_incoming_command(command_text: str):
-    """Parse a $sw/$ud/$chnm/$chct line echoed back by the STM32 and mirror it in the GUI."""
+    """Parse a $sw/$ud/$chnm/$chct frame sent by the STM32 (without its $ and ^) and mirror it
+    in the GUI. "$ack ...^" replies arrive here too and are ignored: STM32Serial matches those."""
     parts = command_text.split(" ")
     if len(parts) < 2:
         return
@@ -97,12 +99,11 @@ def main():
             console_monitor_window.append_console_log(msg, color=rx_color)
         except Exception:
             return
-        rx_buffer[0] += msg
-        while "\n" in rx_buffer[0]:
-            line, rx_buffer[0] = rx_buffer[0].split("\n", 1)
-            line = line.strip("\r").strip()
-            if line.startswith("$"):
-                handle_incoming_command(line[1:])
+        # The console frames everything as "$<command>^" with no newline; a frame can also
+        # arrive split across reads, so the unfinished end is kept for next time.
+        frames, rx_buffer[0] = STM32Serial.extract_frames(rx_buffer[0] + msg)
+        for frame in frames:
+            handle_incoming_command(frame.strip())
 
     def on_serial_error(err_msg: str):
         app_state.update_status(f"Status: {err_msg}")
@@ -113,13 +114,28 @@ def main():
     def on_serial_debug_log(text: str, color: tuple):
         console_monitor_window.append_console_log(text, color=color)
 
+    def on_serial_disconnect(status_msg: str):
+        # e.g. the console's USB cable was pulled: the port is gone, so stop treating it as connected
+        rx_buffer[0] = ""
+        app_state.set_stm32_connected(False)
+        app_state.update_status(f"Status: {status_msg}")
+
     stm32.on_receive = on_serial_receive
     stm32.on_error = on_serial_error
     stm32.on_status_change = on_serial_status
     stm32.on_debug_log = on_serial_debug_log
+    stm32.on_disconnect = on_serial_disconnect
 
     # Define handlers for UI events
     def handle_connect(port: str, baud: int):
+        if not port.strip():
+            # an empty port field means: find the console's USB port
+            port = STM32Serial.find_console_port() or ""
+            if not port:
+                app_state.set_stm32_connected(False)
+                app_state.update_status("Status: No Digilog console found - is it plugged in?")
+                return
+        rx_buffer[0] = ""
         success, msg = stm32.connect(port=port, baudrate=baud)
         app_state.set_stm32_connected(success)
         app_state.update_status(f"Status: {msg}")

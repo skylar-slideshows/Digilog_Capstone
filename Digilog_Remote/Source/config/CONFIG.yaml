@@ -5,14 +5,22 @@
 # color tints the knob face/track, indicator_color tints the pointer/grab handle.
 # Omit either field to use the default theme.
 font: "assets/EnterCommand.ttf"
-app_version: "1.0"
-num_channels: 16
+app_version: "1.1"
+# Channels shown at start-up. The master controller handles 8 buckets of 4 channels (0-31) and
+# forwards each command to the right bucket; a loaded .dgl file sets its own channel count.
+num_channels: 32
 num_inserts: 16
 insert_dropdown_pos: [45, 450]
 group_label_size: 30
 knob_label_size: 12
 button_label_size: 14
 state_file_extension: ".dgl"
+# The console's USB serial port (the master controller), found automatically by these USB IDs,
+# or failing that by the product name. 0xCAFE/0x4011 are the firmware's test IDs: change both
+# here and in the firmware's usb_descriptors.c if real ones are assigned.
+console_usb_vid: 0xCAFE
+console_usb_pid: 0x4011
+console_usb_product: "Digilog Console Master"
 # How long to wait for a "$ack ..." reply from the STM32 before resending, in milliseconds.
 # Only used while a .dgl save file is being loaded and its commands are streamed to the device.
 ack_timeout_ms: 100

@@ -31,11 +31,15 @@ else:
 group_label_size = int(CONFIG.get("group_label_size", 30))
 knob_label_size = int(CONFIG.get("knob_label_size", 12))
 button_label_size = int(CONFIG.get("button_label_size", 14))
-app_version = str(CONFIG.get("app_version", "1.0"))
+app_version = str(CONFIG.get("app_version", "1.1"))
 state_file_extension = CONFIG.get("state_file_extension", ".dgl")
 if not state_file_extension.startswith("."):
     state_file_extension = f".{state_file_extension}"
 ack_timeout_ms = int(CONFIG.get("ack_timeout_ms", 100))
+# How the console's USB serial port is recognised (see STM32Serial.find_console_port)
+console_usb_vid = int(CONFIG.get("console_usb_vid", 0xCAFE))
+console_usb_pid = int(CONFIG.get("console_usb_pid", 0x4011))
+console_usb_product = str(CONFIG.get("console_usb_product", "Digilog Console Master") or "")
 debug_no_serial_timeout = bool(CONFIG.get("debug_no_serial_timeout", False))
 num_inserts = int(CONFIG.get("num_inserts", 16))
 insert_dropdown_pos = tuple(CONFIG.get("insert_dropdown_pos", [612, 150]))
