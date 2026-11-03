@@ -2859,6 +2859,16 @@
 	)
 	(wire
 		(pts
+			(xy 359.41 222.25) (xy 367.03 222.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1b0cb189-5efd-4710-ae36-10328e1a3f76")
+	)
+	(wire
+		(pts
 			(xy 231.14 264.16) (xy 234.95 264.16)
 		)
 		(stroke
@@ -4606,6 +4616,16 @@
 			(type default)
 		)
 		(uuid "95d8a8bb-b3eb-4a23-bd1d-8f7b022613ae")
+	)
+	(wire
+		(pts
+			(xy 367.03 222.25) (xy 367.03 223.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "97297702-35d9-4c84-a79a-acceffa8e490")
 	)
 	(wire
 		(pts
@@ -22462,6 +22482,85 @@
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/96f731ac-c18e-402e-b765-c385749a6ff2"
 					(reference "C20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 367.03 223.52 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e1c43b5c-ec85-4160-b77c-42cecf6b9a66")
+		(property "Reference" "#PWR0113"
+			(at 367.03 229.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 367.03 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 367.03 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 367.03 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 367.03 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "601598b7-db25-4d2b-9088-0462143c7bd2")
+		)
+		(instances
+			(project "MASTER_CONTROLS"
+				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/96f731ac-c18e-402e-b765-c385749a6ff2"
+					(reference "#PWR0113")
 					(unit 1)
 				)
 			)

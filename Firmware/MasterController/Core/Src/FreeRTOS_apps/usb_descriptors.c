@@ -121,7 +121,7 @@ uint8_t const *tud_descriptor_configuration_cb (uint8_t index)
 
 static const char *const STRINGS[] = {
     [STRID_MANUFACTURER] = "Digilog",
-    [STRID_PRODUCT]      = "Digilog Console",
+    [STRID_PRODUCT]      = "Digilog Console Master",
     [STRID_CDC]          = "Digilog Remote",
     [STRID_CABLE_MCU]    = "Mackie Control",
     [STRID_CABLE_MTC]    = "Timecode",

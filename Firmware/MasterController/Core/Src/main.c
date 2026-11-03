@@ -118,7 +118,21 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  // The USB clock (HSI48) has to be within 0.25% of 48 MHz. SystemClock_Config() sets the
+  // CRS trim to 32, but on the G4 the trim is 7 bits with its middle at 64
+  // (RCC_CRS_HSI48CALIBRATION_DEFAULT, about 67 kHz per step): 32 runs HSI48 about 2.1 MHz
+  // (4.5%) slow, so USB can't receive a single packet, and the CRS never gets the
+  // start-of-frame packets it would use to correct it. Start from the middle instead; the
+  // CRS then fine-tunes it from the computer's start-of-frame packets once USB is running.
+  // (Kept here because CubeMX regenerates SystemClock_Config with 32.)
+  RCC_CRSInitTypeDef crs = {0};
+  crs.Prescaler             = RCC_CRS_SYNC_DIV1;
+  crs.Source                = RCC_CRS_SYNC_SOURCE_USB;
+  crs.Polarity              = RCC_CRS_SYNC_POLARITY_RISING;
+  crs.ReloadValue           = __HAL_RCC_CRS_RELOADVALUE_CALCULATE(48000000, 1000);
+  crs.ErrorLimitValue       = RCC_CRS_ERRORLIMIT_DEFAULT;
+  crs.HSI48CalibrationValue = RCC_CRS_HSI48CALIBRATION_DEFAULT;
+  HAL_RCCEx_CRSConfig(&crs);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
