@@ -5,9 +5,9 @@
 	(uuid "917e9f4c-d65e-4a12-a42e-c0538bc1b1dd")
 	(paper "A3")
 	(title_block
-		(title "BUCKET ROUTING")
-		(date "2026-10-26")
-		(rev "1")
+		(title "ANALOG ROUTING MOTHERBOARD")
+		(date "2026-11-03")
+		(rev "0")
 		(company "EECE CAPSTONE")
 		(comment 1 "LOGIC CV SHIFT REGISTERS")
 		(comment 3 "S.E.D.")
@@ -1284,28 +1284,6 @@
 			)
 			(embedded_fonts no)
 		)
-	)
-	(text "BIT MAP  (QA..QH of each chip; data shifts CH1 chip0 -> CH1 chip1 -> CH2 chip0 -> ... -> CH4 chip1)\nchip 0: QA P48 | QB PAD | QC PHASE | QD HPF | QE MIC_SEL | QF LINE_SEL | QG HIZ_SEL | QH PRE (fader pre/post-EQ)\nchip 1: QA LF_CUT | QB LF_MODE | QC LMF_CUT | QD HMF_CUT | QE HF_CUT | QF HF_MODE | QG INSERT | QH MIX_ON (1 = on mix bus)\nSend 64 bits MSB-first: the first bit clocked in ends at CH4 chip1 QH (CH4 MIX_ON), the last at CH1 chip0 QA (CH1 P48),\nthen pulse LAT. Read-back: the 64 bits come out again on SR_DOUT (connector pin 8) on the next 64 clocks."
-		(exclude_from_sim no)
-		(at 25 330 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left top)
-		)
-		(uuid "145eb279-7f00-402b-9b10-08ee68e15936")
-	)
-	(text "/OE power-up hold-off: 1u to +3V3 + 1M to GND keeps all\n64 logic outputs Hi-Z (cards default via their pull-downs,\nchannels muted) for ~1.2 s while the controller loads the\nchain. Pin 7 may drive /OE directly instead (optional)."
-		(exclude_from_sim no)
-		(at 158.242 250.444 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "392db4d1-052e-4296-8802-a55300d31683")
 	)
 	(text "CH1 chip 0"
 		(exclude_from_sim no)
@@ -5145,7 +5123,7 @@
 		(dnp no)
 		(uuid "00b0d019-c4ee-4aec-b084-687ce80ba192")
 		(property "Reference" "U12"
-			(at 335.28 166.36 0)
+			(at 334.264 171.958 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5156,7 +5134,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 332.232 204.724 0)
+			(at 345.948 173.482 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5189,6 +5167,17 @@
 			)
 		)
 		(property "Description" "CH4 logic chip 1 (chain position 8 of 8)"
+			(at 342.9 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 342.9 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -5632,6 +5621,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 160.73 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6472453a-9784-4310-bf1e-1dcb1d832af0")
 		)
@@ -5670,7 +5670,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 172.974 203.962 0)
+			(at 186.69 172.72 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5703,6 +5703,17 @@
 			)
 		)
 		(property "Description" "CH2 logic chip 1 (chain position 4 of 8)"
+			(at 183.59 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 183.59 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -5936,7 +5947,7 @@
 		(dnp no)
 		(uuid "2b3662cb-ff82-4c73-b8a6-c85f5e4a7497")
 		(property "Reference" "U9"
-			(at 254.68 64.76 0)
+			(at 255.778 71.374 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5947,7 +5958,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 254.68 107.96 0)
+			(at 267.208 71.12 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5980,6 +5991,17 @@
 			)
 		)
 		(property "Description" "CH3 logic chip 0 (chain position 5 of 8)"
+			(at 262.3 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 262.3 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -6049,7 +6071,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 247.06 88.9 90)
+		(at 247.06 88.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6070,7 +6092,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 243.86 88.9 0)
+			(at 247.06 85.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6190,6 +6212,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 124.46 257.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "a87e500a-1bcb-4452-b4ab-aa52ca721238")
 		)
@@ -6271,6 +6304,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 160.73 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "8f194bc6-c686-44db-a3e7-cb79a5f991cc")
 		)
@@ -6309,7 +6353,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 251.968 203.708 0)
+			(at 265.684 172.466 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6342,6 +6386,17 @@
 			)
 		)
 		(property "Description" "CH3 logic chip 1 (chain position 6 of 8)"
+			(at 262.3 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 262.3 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -6475,6 +6530,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 239.44 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "bdba0442-dea9-4dcb-b8ec-93d2731800b9")
 		)
@@ -6546,6 +6612,17 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
+			(at 111.76 257.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 111.76 257.81 0)
 			(hide yes)
 			(show_name no)
@@ -6791,6 +6868,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 77.56 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "deb06797-f8dd-4b6a-bc20-ab3f55426ada")
 		)
@@ -6896,7 +6984,7 @@
 		(dnp no)
 		(uuid "58d0f8d8-a27d-4ba0-8b44-5ed86703f40a")
 		(property "Reference" "U5"
-			(at 92.8 64.76 0)
+			(at 92.456 69.85 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6907,7 +6995,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 90.17 103.378 0)
+			(at 103.886 72.136 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6940,6 +7028,17 @@
 			)
 		)
 		(property "Description" "CH1 logic chip 0 (chain position 1 of 8)"
+			(at 100.42 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 100.42 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -7009,7 +7108,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 168.35 88.9 90)
+		(at 168.35 88.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7030,7 +7129,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 165.15 88.9 0)
+			(at 168.35 85.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7163,7 +7262,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 247.06 190.5 90)
+		(at 247.06 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7184,7 +7283,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 243.86 190.5 0)
+			(at 247.06 187.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7262,6 +7361,7 @@
 		)
 		(property "Value" "GND"
 			(at 262.3 109.88 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7395,7 +7495,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 85.18 88.9 90)
+		(at 85.18 88.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7416,7 +7516,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 81.98 88.9 0)
+			(at 85.18 85.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7472,7 +7572,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 85.18 190.5 90)
+		(at 85.18 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7493,7 +7593,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 81.98 190.5 0)
+			(at 85.18 187.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7549,7 +7649,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 327.66 88.9 90)
+		(at 327.66 88.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7570,7 +7670,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 324.46 88.9 0)
+			(at 327.66 85.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7767,6 +7867,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 320.04 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "9203b6c1-a122-4662-81c0-b5c61da0b368")
 		)
@@ -7806,6 +7917,7 @@
 		)
 		(property "Value" "GND"
 			(at 239.44 128.93 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7883,6 +7995,7 @@
 		)
 		(property "Value" "GND"
 			(at 320.04 128.93 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8015,7 +8128,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 327.66 190.5 90)
+		(at 327.66 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -8036,7 +8149,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 324.46 190.5 0)
+			(at 327.66 187.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8179,7 +8292,7 @@
 		(dnp no)
 		(uuid "94549aae-ebcc-4cc6-bd24-9041c72e9237")
 		(property "Reference" "U11"
-			(at 335.28 64.76 0)
+			(at 334.264 70.612 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8190,7 +8303,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 335.28 107.96 0)
+			(at 347.98 71.628 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8223,6 +8336,17 @@
 			)
 		)
 		(property "Description" "CH4 logic chip 0 (chain position 7 of 8)"
+			(at 342.9 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 342.9 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -8356,6 +8480,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 77.56 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "befc49cf-7e2d-4db2-85db-63bc32c96dd6")
 		)
@@ -8472,6 +8607,7 @@
 		)
 		(property "Value" "GND"
 			(at 160.73 128.93 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8692,7 +8828,7 @@
 		(dnp no)
 		(uuid "ae26d0ab-e71d-4b7f-baf2-43ce172afac1")
 		(property "Reference" "U7"
-			(at 175.97 64.76 0)
+			(at 175.768 71.12 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8703,7 +8839,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 175.97 107.96 0)
+			(at 187.452 70.866 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8736,6 +8872,17 @@
 			)
 		)
 		(property "Description" "CH2 logic chip 0 (chain position 3 of 8)"
+			(at 183.59 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 183.59 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -8827,6 +8974,7 @@
 		)
 		(property "Value" "GND"
 			(at 342.9 109.88 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8904,6 +9052,7 @@
 		)
 		(property "Value" "GND"
 			(at 100.42 109.88 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9213,6 +9362,7 @@
 		)
 		(property "Value" "GND"
 			(at 183.59 109.88 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9289,7 +9439,7 @@
 			)
 		)
 		(property "Value" "74HC595"
-			(at 89.662 203.962 0)
+			(at 103.378 172.72 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9322,6 +9472,17 @@
 			)
 		)
 		(property "Description" "CH1 logic chip 1 (chain position 2 of 8)"
+			(at 100.42 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" ""
 			(at 100.42 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -9611,6 +9772,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 62.23 255.27 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "42027d06-85df-4374-965d-8789542e8924")
 		)
@@ -9788,6 +9960,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 239.44 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "d28bc03e-c74d-4df7-8388-49bdd05db7fe")
 		)
@@ -9946,6 +10129,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" ""
+			(at 320.04 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e74ef9e2-c4d1-42a2-844b-eaee784dffb3")
 		)
@@ -9963,7 +10157,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 168.35 190.5 90)
+		(at 168.35 190.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -9984,7 +10178,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 165.15 190.5 0)
+			(at 168.35 187.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10140,6 +10334,7 @@
 		)
 		(property "Value" "GND"
 			(at 77.56 128.93 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

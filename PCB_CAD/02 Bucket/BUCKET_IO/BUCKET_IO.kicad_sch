@@ -1773,12 +1773,6 @@
 		(uuid "534e78c0-1852-48ee-813e-4e8199dc9d94")
 	)
 	(junction
-		(at 86.36 132.08)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5d5697d7-994e-434e-bf67-27980b914916")
-	)
-	(junction
 		(at 59.69 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1790,6 +1784,12 @@
 		(color 0 0 0 0)
 		(uuid "d0f503e3-0c8f-436e-87ac-5635d8e70d12")
 	)
+	(junction
+		(at 80.01 102.87)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e52dbeff-06d1-40a6-851e-bb29ec666823")
+	)
 	(wire
 		(pts
 			(xy 59.69 83.82) (xy 59.69 78.74)
@@ -1799,16 +1799,6 @@
 			(type default)
 		)
 		(uuid "079c1061-74dc-4bb0-a373-7127b0cbb331")
-	)
-	(wire
-		(pts
-			(xy 86.36 132.08) (xy 86.36 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0c49128c-798b-47aa-a1af-cbcd9a9dbe7a")
 	)
 	(wire
 		(pts
@@ -2002,13 +1992,23 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 132.08) (xy 80.01 132.08)
+			(xy 80.01 132.08) (xy 88.9 132.08)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "bf1cd652-bef7-4c83-93f1-539d3995975f")
+	)
+	(wire
+		(pts
+			(xy 80.01 107.95) (xy 85.09 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c2915cdf-ed8a-4b81-8e54-f88deae26914")
 	)
 	(wire
 		(pts
@@ -2019,16 +2019,6 @@
 			(type default)
 		)
 		(uuid "d7c17bad-00e8-410e-9eef-33889c3ed5f6")
-	)
-	(wire
-		(pts
-			(xy 88.9 132.08) (xy 86.36 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "db7931d1-e71b-4612-94c8-a5321a968fde")
 	)
 	(wire
 		(pts
@@ -2059,6 +2049,26 @@
 			(type default)
 		)
 		(uuid "e605ff8f-7632-4c91-8a1f-9b4e61c3b5ac")
+	)
+	(wire
+		(pts
+			(xy 80.01 102.87) (xy 80.01 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eae5fa4e-b6bc-448f-b601-0c51ba673fd5")
+	)
+	(wire
+		(pts
+			(xy 92.71 102.87) (xy 80.01 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f461e594-7ec4-4008-876e-977362771433")
 	)
 	(wire
 		(pts
@@ -2110,6 +2120,16 @@
 		)
 		(uuid "493a7937-8f56-4d8a-a14e-7c5e4827e7b8")
 	)
+	(label "HIZ_IN"
+		(at 85.09 107.95 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "49cbb7ae-6c79-49be-a62e-8f3ca2c93330")
+	)
 	(label "INS_SEND+"
 		(at 53.34 168.91 0)
 		(effects
@@ -2129,16 +2149,6 @@
 			(justify right bottom)
 		)
 		(uuid "63bc9592-97c5-4ef1-a591-bdfa4679629b")
-	)
-	(label "HIZ_IN"
-		(at 86.36 135.89 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "763bf293-ee4c-460f-8597-d6ade7df5612")
 	)
 	(label "INS_SEND-"
 		(at 53.34 166.37 0)
@@ -2745,6 +2755,84 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 92.71 102.87 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "635c925a-7e5e-4ab3-ab2e-0d2e2633fd11")
+		(property "Reference" "#PWR016"
+			(at 92.71 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 92.71 106.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 92.71 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 92.71 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\""
+			(at 92.71 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ad28d2d8-ac68-4a48-9a87-96410bf35e17")
+		)
+		(instances
+			(project "BUCKET_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "#PWR016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Audio:XLR3_AudioJack3_Combo")
 		(at 74.93 129.54 0)
 		(unit 2)
@@ -3188,6 +3276,89 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Audio:AudioJack3")
+		(at 74.93 105.41 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "da30002d-5d15-4b29-a8a9-f7e1cbe357d2")
+		(property "Reference" "J6"
+			(at 73.025 96.52 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "HI-Z"
+			(at 73.025 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_Audio:Jack_6.35mm_Neutrik_NJ5FD-V_Vertical"
+			(at 74.93 105.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 74.93 105.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Audio Jack, 3 Poles (Stereo / TRS)"
+			(at 74.93 105.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "T"
+			(uuid "e5de53f8-3862-47e4-a731-0dfd742301d8")
+		)
+		(pin "S"
+			(uuid "3317ddb2-0924-44ab-8cd4-3241d49b8b67")
+		)
+		(pin "R"
+			(uuid "a204d186-ad64-4e76-8c8d-3e9786e349ec")
+		)
+		(instances
+			(project "BUCKET_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 59.69 57.15 0)
 		(unit 1)
@@ -3331,22 +3502,22 @@
 			)
 		)
 		(pin "3"
-			(uuid "1781ac3c-5014-48c8-8ca5-eb9f81620aa6")
+			(uuid "1781ac3c-5014-48c8-8ca5-eb9f81620aa7")
 		)
 		(pin "R"
-			(uuid "fc146ba6-e7dd-4882-b503-7fda6d0a68eb")
+			(uuid "fc146ba6-e7dd-4882-b503-7fda6d0a68ec")
 		)
 		(pin "T"
-			(uuid "395076a1-9d83-4fa4-b6cf-de41d4d51516")
+			(uuid "395076a1-9d83-4fa4-b6cf-de41d4d51517")
 		)
 		(pin "S"
-			(uuid "b3fa0c75-ad5f-46d0-8fa4-ccc70602390a")
+			(uuid "b3fa0c75-ad5f-46d0-8fa4-ccc70602390b")
 		)
 		(pin "1"
-			(uuid "7138dd32-c2e1-4026-bd33-7ecd48c5682d")
+			(uuid "7138dd32-c2e1-4026-bd33-7ecd48c5682e")
 		)
 		(pin "2"
-			(uuid "57646e8a-bbe0-47b3-a28d-0bf740c32be9")
+			(uuid "57646e8a-bbe0-47b3-a28d-0bf740c32bea")
 		)
 		(pin "G"
 			(uuid "236717e8-7da6-4d7c-801e-96b3d375b93b")
