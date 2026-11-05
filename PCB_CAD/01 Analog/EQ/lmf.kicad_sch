@@ -1692,7 +1692,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "My Symbols:ADG1436"
+		(symbol "My Symbols:ADG1436_LF"
 			(pin_names
 				(offset 1.016)
 			)
@@ -1712,7 +1712,7 @@
 					(justify left bottom)
 				)
 			)
-			(property "Value" "ADG1436"
+			(property "Value" "ADG1436_LF"
 				(at 8.128 21.336 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1842,7 +1842,7 @@
 					(justify bottom)
 				)
 			)
-			(symbol "ADG1436_0_0"
+			(symbol "ADG1436_LF_0_0"
 				(rectangle
 					(start -11.43 19.05)
 					(end 11.43 -3.81)
@@ -2333,43 +2333,7 @@
 					)
 				)
 			)
-			(symbol "ADG1436_1_0"
-				(pin bidirectional line
-					(at -16.51 10.16 0)
-					(length 5.08)
-					(name "IN1"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 16.51 15.24 180)
-					(length 5.08)
-					(name "S1A"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.016 1.016)
-							)
-						)
-					)
-				)
+			(symbol "ADG1436_LF_1_0"
 				(pin bidirectional line
 					(at -16.51 12.7 0)
 					(length 5.08)
@@ -2380,7 +2344,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "1"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2398,7 +2362,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "2"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2416,7 +2380,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "3"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2434,7 +2398,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "4"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2452,7 +2416,7 @@
 							)
 						)
 					)
-					(number "9"
+					(number "6"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2470,7 +2434,7 @@
 							)
 						)
 					)
-					(number "10"
+					(number "8"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2488,7 +2452,7 @@
 							)
 						)
 					)
-					(number "11"
+					(number "9"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2506,7 +2470,7 @@
 							)
 						)
 					)
-					(number "12"
+					(number "10"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2524,7 +2488,61 @@
 							)
 						)
 					)
-					(number "13"
+					(number "11"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -5.08 24.13 270)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -16.51 10.16 0)
+					(length 5.08)
+					(name "IN1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "15"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 16.51 15.24 180)
+					(length 5.08)
+					(name "S1A"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "16"
 						(effects
 							(font
 								(size 1.016 1.016)
@@ -2533,7 +2551,7 @@
 					)
 				)
 			)
-			(symbol "ADG1436_1_1"
+			(symbol "ADG1436_LF_1_1"
 				(polyline
 					(pts
 						(xy 9.889 -0.1408) (xy 9.889 -2.0005) (xy 8.1042 -1.1285) (xy 9.8822 -0.1476) (xy 9.8456 -0.3468)
@@ -4226,6 +4244,12 @@
 		(uuid "51e0ee76-7919-46fd-aca1-581cbbeffd13")
 	)
 	(junction
+		(at 335.28 177.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "531ccca1-8c2d-450c-8d9b-1c8b33bd5711")
+	)
+	(junction
 		(at 259.08 186.69)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4906,6 +4930,16 @@
 			(type default)
 		)
 		(uuid "343ab670-c246-4a19-8634-d46bbb4dd188")
+	)
+	(wire
+		(pts
+			(xy 335.28 177.8) (xy 340.36 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34db3982-6850-4268-93d7-6fb2eaee3a08")
 	)
 	(wire
 		(pts
@@ -6376,6 +6410,16 @@
 			(type default)
 		)
 		(uuid "d0e301b5-d1c2-4c04-b39b-827af7e399b3")
+	)
+	(wire
+		(pts
+			(xy 365.76 199.39) (xy 364.49 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d1def52b-2284-4d16-9a04-febd0a30b430")
 	)
 	(wire
 		(pts
@@ -9768,6 +9812,98 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 245.11 262.89 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "36b625a1-aa0e-42e5-adf5-a3b05f9b19c0")
+		(property "Reference" "C29"
+			(at 248.158 261.62 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100n"
+			(at 248.158 264.16 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 245.11 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 245.11 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 245.11 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C1591"
+			(at 245.11 262.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2ee22a06-639c-4efb-8da6-24c538b92e1d")
+		)
+		(pin "2"
+			(uuid "e4796a01-9ada-461d-a441-9d8cc5370992")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "C29")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_US")
 		(at 53.34 146.05 0)
 		(unit 1)
@@ -10540,6 +10676,84 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 245.11 266.7 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "40cb6771-bccc-44f7-9dfd-9b31d1433030")
+		(property "Reference" "#PWR071"
+			(at 245.11 273.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 245.11 271.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 266.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 245.11 266.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 245.11 266.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0b2acea3-bea0-480b-b72b-094a24ef9529")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "#PWR071")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_US")
 		(at 229.87 78.74 90)
 		(unit 1)
@@ -10914,7 +11128,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 368.3 199.39 90)
+		(at 369.57 199.39 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -10924,7 +11138,7 @@
 		(dnp no)
 		(uuid "461be846-c722-4615-b6e4-db03592bbd53")
 		(property "Reference" "R47"
-			(at 368.3 196.596 90)
+			(at 369.57 196.596 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10935,7 +11149,7 @@
 			)
 		)
 		(property "Value" "20k"
-			(at 368.3 202.184 90)
+			(at 369.57 202.184 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10946,7 +11160,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 368.3 199.39 0)
+			(at 369.57 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10957,7 +11171,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 368.3 199.39 0)
+			(at 369.57 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10968,7 +11182,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 368.3 199.39 0)
+			(at 369.57 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10979,7 +11193,7 @@
 			)
 		)
 		(property "Note" "0.1% thin film"
-			(at 368.3 199.39 0)
+			(at 369.57 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16196,7 +16410,7 @@
 		)
 	)
 	(symbol
-		(lib_id "My Symbols:ADG1436")
+		(lib_id "My Symbols:ADG1436_LF")
 		(at 335.28 201.93 0)
 		(mirror y)
 		(unit 1)
@@ -16229,7 +16443,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_CSP:LFCSP-16-1EP_4x4mm_P0.65mm_EP2.6x2.6mm"
+		(property "Footprint" "Package_CSP:Analog_LFCSP-16-1EP_4x4mm_P0.65mm_EP2.1x2.1mm"
 			(at 322.9504 201.7408 0)
 			(hide yes)
 			(show_name no)
@@ -16359,7 +16573,7 @@
 				)
 			)
 		)
-		(pin "12"
+		(pin "6"
 			(uuid "a5015e1a-4245-4645-8335-83c81594b15b")
 		)
 		(pin "11"
@@ -16371,13 +16585,13 @@
 		(pin "9"
 			(uuid "ad831aa6-a616-4445-a9cb-b00a074cf520")
 		)
-		(pin "6"
+		(pin "4"
 			(uuid "b889094b-3a1b-447a-899b-8ba30b09c50e")
 		)
-		(pin "5"
+		(pin "8"
 			(uuid "723778fd-b0d2-4051-ab3e-a240d0bcbd29")
 		)
-		(pin "4"
+		(pin "15"
 			(uuid "a1946ca5-9432-47b5-9e1d-a5fb4dc63f7d")
 		)
 		(pin "3"
@@ -16389,8 +16603,11 @@
 		(pin "1"
 			(uuid "dbcb43b6-f322-4d72-9bde-15b205a363d2")
 		)
-		(pin "13"
+		(pin "16"
 			(uuid "6ea8bb88-02f6-4e8c-a51b-839f7c0d21c8")
+		)
+		(pin "12"
+			(uuid "1b5f0143-ed9e-49ba-8446-bb4f13eda6c0")
 		)
 		(instances
 			(project "EQ"
@@ -20021,6 +20238,83 @@
 		)
 	)
 	(symbol
+		(lib_id "power:-16.6V")
+		(at 245.11 259.08 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "db9eac3b-46ab-4606-8f68-cabe0862431a")
+		(property "Reference" "#PWR064"
+			(at 245.11 255.27 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "-15V"
+			(at 245.11 255.524 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 245.11 259.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 245.11 259.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"-15V\""
+			(at 245.11 259.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "dc9c5470-2cb4-4bcb-9fc7-f9242d150c20")
+		)
+		(instances
+			(project "EQ"
+				(path "/a379ffa5-dfb1-4f56-af77-387c7dfe3dba/19ac4027-12ee-4e8d-9629-324ed9c55b9f"
+					(reference "#PWR064")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_US")
 		(at 247.65 196.85 90)
 		(unit 1)
@@ -21066,7 +21360,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 372.11 199.39 0)
+		(at 373.38 199.39 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -21076,7 +21370,7 @@
 		(dnp no)
 		(uuid "f103c6e6-64f6-4b02-92d4-bb3002d7dfb6")
 		(property "Reference" "#PWR032"
-			(at 372.11 205.74 0)
+			(at 373.38 205.74 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21087,7 +21381,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 372.11 204.47 0)
+			(at 373.38 204.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21098,7 +21392,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 372.11 199.39 0)
+			(at 373.38 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21109,7 +21403,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 372.11 199.39 0)
+			(at 373.38 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21120,7 +21414,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 372.11 199.39 0)
+			(at 373.38 199.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
