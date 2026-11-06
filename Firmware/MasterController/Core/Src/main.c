@@ -53,6 +53,7 @@ SPI_HandleTypeDef hspi3;
 DMA_HandleTypeDef hdma_spi2_tx;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
 
@@ -83,6 +84,7 @@ static void MX_TIM1_Init(void);
 static void MX_USB_PCD_Init(void);
 static void MX_FMC_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_TIM2_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -149,6 +151,7 @@ int main(void)
   }
   MX_FMC_Init();
   MX_USART2_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -510,6 +513,55 @@ static void MX_TIM1_Init(void)
 }
 
 /**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_Encoder_InitTypeDef sConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC1Filter = 0;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC2Filter = 0;
+  if (HAL_TIM_Encoder_Init(&htim2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -660,6 +712,18 @@ static void MX_FMC_Init(void)
   }
 
   /* USER CODE BEGIN FMC_Init 2 */
+  // The display's WAIT output on PD6 (FMC_NWAIT): the FMC holds each transfer while the LT7683
+  // pulls it low. CubeMX's LCD Interface mode has no wait option, so it's set up here.
+  GPIO_InitTypeDef nwait = {0};
+  nwait.Pin       = GPIO_PIN_6;
+  nwait.Mode      = GPIO_MODE_AF_PP;
+  nwait.Pull      = GPIO_PULLUP;            // with no display attached, never wait forever
+  nwait.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+  nwait.Alternate = GPIO_AF12_FMC;
+  HAL_GPIO_Init(GPIOD, &nwait);
+
+  hsram1.Init.AsynchronousWait = FMC_ASYNCHRONOUS_WAIT_ENABLE; // kept if HAL_SRAM_Init runs again
+  FMC_Bank1_R->BTCR[0] |= FMC_BCRx_ASYNCWAIT;                  // bank 1 (NE1): honour NWAIT now
 
   /* USER CODE END FMC_Init 2 */
 }
@@ -685,13 +749,19 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_LAT_GPIO_Port, LED_LAT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, Disp_CS_Pin|Disp_DC_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LDAC_GPIO_Port, LDAC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DISK_CS_GPIO_Port, DISK_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(DISK_CS_GPIO_Port, DISK_CS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DISP_RESET_GPIO_Port, DISP_RESET_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, CS_Bucket7_Pin|CS_Bucket6_Pin|CS_Bucket5_Pin|CS_Bucket4_Pin
@@ -699,6 +769,19 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, CS_Bucket1_Pin|CS_Bucket0_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin : LED_TEST_Pin */
+  GPIO_InitStruct.Pin = LED_TEST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_TEST_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DISP_INT_Pin */
+  GPIO_InitStruct.Pin = DISP_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DISP_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED_LAT_Pin CS_Bucket7_Pin CS_Bucket6_Pin CS_Bucket5_Pin
                            CS_Bucket4_Pin CS_Bucket3_Pin CS_Bucket2_Pin */
@@ -709,19 +792,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Disp_CS_Pin Disp_DC_Pin */
-  GPIO_InitStruct.Pin = Disp_CS_Pin|Disp_DC_Pin;
+  /*Configure GPIO pins : LDAC_Pin DISK_CS_Pin */
+  GPIO_InitStruct.Pin = LDAC_Pin|DISK_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DISK_CS_Pin */
-  GPIO_InitStruct.Pin = DISK_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : DISP_RESET_Pin */
+  GPIO_InitStruct.Pin = DISP_RESET_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DISK_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(DISP_RESET_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : CS_Bucket1_Pin CS_Bucket0_Pin */
   GPIO_InitStruct.Pin = CS_Bucket1_Pin|CS_Bucket0_Pin;

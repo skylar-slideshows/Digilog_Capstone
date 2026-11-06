@@ -1580,6 +1580,12 @@
 		(uuid "7d7f178f-10ec-4f26-807f-f514f2bbab90")
 	)
 	(junction
+		(at 40.64 105.41)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "81767ecb-b491-4018-80a4-a3037845ec57")
+	)
+	(junction
 		(at 123.19 107.95)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1604,6 +1610,12 @@
 		(uuid "aaf7cc55-a7ba-4132-834c-4ed3554ff598")
 	)
 	(junction
+		(at 52.07 130.81)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ad5fa5cb-d97e-41ac-b465-c03237e926b2")
+	)
+	(junction
 		(at 40.64 130.81)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1614,12 +1626,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b2be4853-a735-4350-bf94-108aa69ef6ce")
-	)
-	(junction
-		(at 52.07 130.81)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b8e7a1e5-079a-48b9-84bd-99a1bfb29c45")
 	)
 	(junction
 		(at 52.07 163.83)
@@ -1652,8 +1658,24 @@
 		(uuid "df9d5bb3-35f6-42e5-a844-b3fa4ecc470f")
 	)
 	(no_connect
+		(at 133.35 158.75)
+		(uuid "464b67eb-9d4a-4ab7-93aa-f7ea5804667e")
+	)
+	(no_connect
+		(at 133.35 156.21)
+		(uuid "5ca4b1ed-bc10-4064-9f26-50cd25eb4860")
+	)
+	(no_connect
 		(at 133.35 163.83)
 		(uuid "88786063-d336-497b-9557-dc1ce37d3346")
+	)
+	(no_connect
+		(at 133.35 151.13)
+		(uuid "b43ac702-6337-4d26-b584-711074f3de1f")
+	)
+	(no_connect
+		(at 133.35 153.67)
+		(uuid "c1f835a2-a7f9-4e73-9649-5950647f8127")
 	)
 	(wire
 		(pts
@@ -1664,6 +1686,16 @@
 			(type default)
 		)
 		(uuid "0243f98f-e71d-4786-aa1d-461033938cc5")
+	)
+	(wire
+		(pts
+			(xy 40.64 105.41) (xy 40.64 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "06639a16-4050-4bbc-8ff6-40f571d41164")
 	)
 	(wire
 		(pts
@@ -1714,6 +1746,16 @@
 			(type default)
 		)
 		(uuid "13cfc128-4674-4354-a38f-f7c3c6d47660")
+	)
+	(wire
+		(pts
+			(xy 52.07 130.81) (xy 52.07 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "14878c7b-7b86-42d0-a80b-7c857c5ae77b")
 	)
 	(wire
 		(pts
@@ -1807,23 +1849,13 @@
 	)
 	(wire
 		(pts
-			(xy 52.07 130.81) (xy 52.07 147.32)
+			(xy 52.07 114.3) (xy 52.07 130.81)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "4e99bad9-4fe5-42c1-ad70-23b7388f5bd2")
-	)
-	(wire
-		(pts
-			(xy 113.03 95.25) (xy 113.03 107.95)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "50ecaf4d-4c93-4973-8b21-b4d7fab8488b")
 	)
 	(wire
 		(pts
@@ -1847,7 +1879,7 @@
 	)
 	(wire
 		(pts
-			(xy 40.64 100.33) (xy 40.64 114.3)
+			(xy 40.64 100.33) (xy 40.64 105.41)
 		)
 		(stroke
 			(width 0)
@@ -1907,16 +1939,6 @@
 	)
 	(wire
 		(pts
-			(xy 52.07 114.3) (xy 52.07 130.81)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "66f718e5-acf2-479e-9ec1-81f147a03aec")
-	)
-	(wire
-		(pts
 			(xy 54.61 102.87) (xy 54.61 114.3)
 		)
 		(stroke
@@ -1957,6 +1979,16 @@
 	)
 	(wire
 		(pts
+			(xy 49.53 165.1) (xy 49.53 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "706a90c4-ac46-4b07-bbec-480e0ac9367a")
+	)
+	(wire
+		(pts
 			(xy 49.53 135.89) (xy 33.02 135.89)
 		)
 		(stroke
@@ -1977,7 +2009,17 @@
 	)
 	(wire
 		(pts
-			(xy 48.26 163.83) (xy 49.53 163.83)
+			(xy 46.99 101.6) (xy 46.99 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80d6c4a5-de1e-4c23-bac2-8208d4d2e5b0")
+	)
+	(wire
+		(pts
+			(xy 48.26 165.1) (xy 49.53 165.1)
 		)
 		(stroke
 			(width 0)
@@ -2097,6 +2139,16 @@
 	)
 	(wire
 		(pts
+			(xy 113.03 95.25) (xy 113.03 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb656c0e-a6de-4e54-a19b-3d112f232d34")
+	)
+	(wire
+		(pts
 			(xy 40.64 114.3) (xy 40.64 130.81)
 		)
 		(stroke
@@ -2197,6 +2249,16 @@
 	)
 	(wire
 		(pts
+			(xy 46.99 105.41) (xy 40.64 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc09d4e8-bf64-48ec-86bb-fbb46301e805")
+	)
+	(wire
+		(pts
 			(xy 57.15 147.32) (xy 57.15 163.83)
 		)
 		(stroke
@@ -2236,7 +2298,7 @@
 		(uuid "63fdfbf1-f14a-4d92-a5a0-a527b67e4694")
 	)
 	(label "SR_IN"
-		(at 48.26 163.83 180)
+		(at 48.26 165.1 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2247,7 +2309,7 @@
 	)
 	(global_label "B1_L"
 		(shape input)
-		(at 269.24 62.23 0)
+		(at 133.35 82.55 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2258,7 +2320,7 @@
 		)
 		(uuid "0849c6c8-be2e-4d18-8d27-0db5f149ad48")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 62.23 0)
+			(at 140.8104 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2272,7 +2334,7 @@
 	)
 	(global_label "B2_L"
 		(shape input)
-		(at 269.24 64.77 0)
+		(at 133.35 85.09 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2283,7 +2345,7 @@
 		)
 		(uuid "0c8b5cc3-5539-48c6-857f-0f4846e74d19")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 64.77 0)
+			(at 140.8104 85.09 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2295,20 +2357,20 @@
 			)
 		)
 	)
-	(global_label "LED_CLOCK"
+	(global_label "LED_Latch"
 		(shape input)
-		(at 113.03 146.05 180)
+		(at 113.03 153.67 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
-				(color 84 255 109 1)
+				(color 109 255 92 1)
 			)
 			(justify right)
 		)
-		(uuid "105a3f30-82b1-40f3-80d8-4ee9b26edc77")
+		(uuid "13a52d25-fb63-4836-a428-4d87ab1e4834")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.4615 146.05 0)
+			(at 100.4897 153.67 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2322,7 +2384,7 @@
 	)
 	(global_label "B10_L"
 		(shape input)
-		(at 270.51 105.41 0)
+		(at 133.35 146.05 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2333,7 +2395,7 @@
 		)
 		(uuid "2619dd36-122c-4377-805c-824b47f02378")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.1799 105.41 0)
+			(at 142.0199 146.05 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2347,7 +2409,7 @@
 	)
 	(global_label "B9_L"
 		(shape input)
-		(at 270.51 102.87 0)
+		(at 133.35 143.51 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2358,7 +2420,7 @@
 		)
 		(uuid "2774803a-cb8b-41ac-882c-21b9b69dd915")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 277.9704 102.87 0)
+			(at 140.8104 143.51 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2370,9 +2432,34 @@
 			)
 		)
 	)
+	(global_label "LED_Latch"
+		(shape input)
+		(at 113.03 92.71 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 109 255 92 1)
+			)
+			(justify right)
+		)
+		(uuid "32baf7cd-cbf8-4e5b-bc71-135a9f9d48cf")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 100.4897 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "B11_L"
 		(shape input)
-		(at 270.51 107.95 0)
+		(at 133.35 148.59 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2383,7 +2470,7 @@
 		)
 		(uuid "404aaffc-1c15-4c76-a3d3-182666baafe7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.1799 107.95 0)
+			(at 142.0199 148.59 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2397,7 +2484,7 @@
 	)
 	(global_label "B8_L"
 		(shape input)
-		(at 270.51 100.33 0)
+		(at 133.35 140.97 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2408,7 +2495,7 @@
 		)
 		(uuid "44c71c87-11b0-4e83-a5a9-533662e48640")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 277.9704 100.33 0)
+			(at 140.8104 140.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2445,34 +2532,9 @@
 			)
 		)
 	)
-	(global_label "LED_LATCH"
-		(shape input)
-		(at 113.03 153.67 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 84 255 109 1)
-			)
-			(justify right)
-		)
-		(uuid "7c2753f4-9ae7-4210-b806-2e23d0fb9a86")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.9453 153.67 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "B0_L"
 		(shape input)
-		(at 269.24 59.69 0)
+		(at 133.35 80.01 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2483,7 +2545,7 @@
 		)
 		(uuid "90c11e70-a35a-4d33-bac7-bd9075226f44")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 59.69 0)
+			(at 140.8104 80.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2522,7 +2584,7 @@
 	)
 	(global_label "B7_L"
 		(shape input)
-		(at 269.24 77.47 0)
+		(at 133.35 97.79 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2533,7 +2595,7 @@
 		)
 		(uuid "ad5f93ea-c0bf-4d5a-b33e-9b81adfad1ff")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 77.47 0)
+			(at 140.8104 97.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2572,7 +2634,7 @@
 	)
 	(global_label "B4_L"
 		(shape input)
-		(at 269.24 69.85 0)
+		(at 133.35 90.17 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2583,7 +2645,7 @@
 		)
 		(uuid "bdc93fed-6d94-472f-b380-dbbc5390a8cc")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 69.85 0)
+			(at 140.8104 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2595,20 +2657,20 @@
 			)
 		)
 	)
-	(global_label "LED_CLOCK"
+	(global_label "LED_Clock"
 		(shape input)
 		(at 113.03 85.09 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
-				(color 84 255 109 1)
+				(color 109 255 92 1)
 			)
 			(justify right)
 		)
-		(uuid "c5645597-8002-469e-b129-13641a747ef4")
+		(uuid "c80b6de1-1d4b-46a1-b527-b34068338da8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.4615 85.09 0)
+			(at 100.4292 85.09 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2622,7 +2684,7 @@
 	)
 	(global_label "B3_L"
 		(shape input)
-		(at 269.24 67.31 0)
+		(at 133.35 87.63 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2633,7 +2695,7 @@
 		)
 		(uuid "cb801fec-7c0f-4d6c-812d-01d63edef333")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 67.31 0)
+			(at 140.8104 87.63 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2647,7 +2709,7 @@
 	)
 	(global_label "B5_L"
 		(shape input)
-		(at 269.24 72.39 0)
+		(at 133.35 92.71 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2658,7 +2720,7 @@
 		)
 		(uuid "ccd60681-7a2d-4b43-adfe-74a24ce1c440")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 72.39 0)
+			(at 140.8104 92.71 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2670,34 +2732,9 @@
 			)
 		)
 	)
-	(global_label "LED_LATCH"
-		(shape input)
-		(at 113.03 92.71 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(color 84 255 109 1)
-			)
-			(justify right)
-		)
-		(uuid "e2393633-f0e5-44b3-a640-586ffb437229")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.9453 92.71 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "B6_L"
 		(shape input)
-		(at 269.24 74.93 0)
+		(at 133.35 95.25 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2708,7 +2745,7 @@
 		)
 		(uuid "e5346cfc-1043-4ae0-935f-3a580f6181e8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 276.7004 74.93 0)
+			(at 140.8104 95.25 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2717,6 +2754,31 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(global_label "LED_Clock"
+		(shape input)
+		(at 113.03 146.05 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 109 255 92 1)
+			)
+			(justify right)
+		)
+		(uuid "ef7f2102-2cb4-4213-9f2b-1a2812aefb2b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 100.4292 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 			)
 		)
 	)
@@ -2758,7 +2820,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "012f4e64-06bf-4fb5-9abe-c6a00387c610")
-		(property "Reference" "J12"
+		(property "Reference" "J26"
 			(at 53.34 153.67 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2837,7 +2899,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J12")
+					(reference "J26")
 					(unit 1)
 				)
 			)
@@ -2855,7 +2917,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "05c865ed-9a69-4068-ac43-cd3ac56abd2d")
-		(property "Reference" "#PWR0390"
+		(property "Reference" "#PWR0156"
 			(at 123.19 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -2916,7 +2978,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0390")
+					(reference "#PWR0156")
 					(unit 1)
 				)
 			)
@@ -2933,7 +2995,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "088df6cf-8a2a-4975-b0af-ba33e87bc289")
-		(property "Reference" "#PWR0592"
+		(property "Reference" "#PWR0145"
 			(at 156.21 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -2993,7 +3055,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0592")
+					(reference "#PWR0145")
 					(unit 1)
 				)
 			)
@@ -3010,7 +3072,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "0fd3a79c-c352-4631-b398-97667e17907f")
-		(property "Reference" "R409"
+		(property "Reference" "R93"
 			(at 90.678 81.534 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3085,7 +3147,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "R409")
+					(reference "R93")
 					(unit 1)
 				)
 			)
@@ -3104,7 +3166,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "173ab3d7-4f8c-412a-8eef-21f490c91023")
-		(property "Reference" "J7"
+		(property "Reference" "J22"
 			(at 53.34 120.65 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3183,7 +3245,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J7")
+					(reference "J22")
 					(unit 1)
 				)
 			)
@@ -3201,7 +3263,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "17f7621c-8310-4947-a57c-f7eeb7e9f34a")
-		(property "Reference" "#PWR0550"
+		(property "Reference" "#PWR0153"
 			(at 97.79 143.51 0)
 			(hide yes)
 			(show_name no)
@@ -3261,7 +3323,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0550")
+					(reference "#PWR0153")
 					(unit 1)
 				)
 			)
@@ -3280,7 +3342,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1bd09140-7924-4a76-a586-4f7b6df39033")
-		(property "Reference" "J2"
+		(property "Reference" "J20"
 			(at 53.34 104.14 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3359,7 +3421,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J2")
+					(reference "J20")
 					(unit 1)
 				)
 			)
@@ -3378,7 +3440,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2182b8ed-459c-4ad9-8c02-07bf41812431")
-		(property "Reference" "J11"
+		(property "Reference" "J24"
 			(at 53.34 137.16 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3457,7 +3519,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J11")
+					(reference "J24")
 					(unit 1)
 				)
 			)
@@ -3475,7 +3537,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "27c340b8-8a4e-4b14-9413-3423d7614651")
-		(property "Reference" "#PWR0593"
+		(property "Reference" "#PWR0146"
 			(at 156.21 97.79 0)
 			(hide yes)
 			(show_name no)
@@ -3536,7 +3598,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0593")
+					(reference "#PWR0146")
 					(unit 1)
 				)
 			)
@@ -3553,7 +3615,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "3383a48e-8d9e-4d01-99f0-dcd19f907842")
-		(property "Reference" "R411"
+		(property "Reference" "R95"
 			(at 90.678 142.494 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3628,7 +3690,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "R411")
+					(reference "R95")
 					(unit 1)
 				)
 			)
@@ -3646,7 +3708,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "362b4dc7-73e1-4931-a657-92a73557f71a")
-		(property "Reference" "#PWR0576"
+		(property "Reference" "#PWR0148"
 			(at 97.79 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -3707,7 +3769,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0576")
+					(reference "#PWR0148")
 					(unit 1)
 				)
 			)
@@ -3725,7 +3787,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "386d8aa1-a277-435b-b85d-7b48ca3e77e2")
-		(property "Reference" "U4"
+		(property "Reference" "U5"
 			(at 125.3333 72.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3842,7 +3904,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "U4")
+					(reference "U5")
 					(unit 1)
 				)
 			)
@@ -3859,7 +3921,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "4a3d05b5-3167-4eca-be5c-94e1d027acf6")
-		(property "Reference" "C48"
+		(property "Reference" "C56"
 			(at 109.982 127.254 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3881,7 +3943,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 119.0752 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -3914,7 +3976,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C1590"
 			(at 118.11 128.27 0)
 			(hide yes)
 			(show_name no)
@@ -3934,7 +3996,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "C48")
+					(reference "C56")
 					(unit 1)
 				)
 			)
@@ -3951,7 +4013,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "4b1db8ca-58b3-4ff3-be91-8755b2e7761a")
-		(property "Reference" "C85"
+		(property "Reference" "C57"
 			(at 89.662 152.654 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3973,7 +4035,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 98.7552 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -4006,7 +4068,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C1590"
 			(at 97.79 153.67 0)
 			(hide yes)
 			(show_name no)
@@ -4026,7 +4088,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "C85")
+					(reference "C57")
 					(unit 1)
 				)
 			)
@@ -4045,7 +4107,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "4b36f613-6f08-41fb-8a68-a8ded63c3505")
-		(property "Reference" "#PWR0391"
+		(property "Reference" "#PWR0155"
 			(at 52.07 173.99 0)
 			(hide yes)
 			(show_name no)
@@ -4106,7 +4168,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0391")
+					(reference "#PWR0155")
 					(unit 1)
 				)
 			)
@@ -4124,7 +4186,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "4eafb2ba-2257-4742-9027-d99e2620013a")
-		(property "Reference" "#PWR0383"
+		(property "Reference" "#PWR0142"
 			(at 123.19 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -4184,7 +4246,99 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0383")
+					(reference "#PWR0142")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 46.99 97.79 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "52aee97c-9476-4b79-bc8e-2aca0bf33b45")
+		(property "Reference" "R94"
+			(at 48.26 98.298 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 49.53 100.838 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 48.006 98.044 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 46.99 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 46.99 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25804"
+			(at 46.99 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9e16c399-29c0-450b-bd14-b3ba440c0f37")
+		)
+		(pin "2"
+			(uuid "b7709056-3a7f-4d6f-924e-0c43c6dfeced")
+		)
+		(instances
+			(project "MASTER_CONTROLS"
+				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
+					(reference "R94")
 					(unit 1)
 				)
 			)
@@ -4201,7 +4355,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "538af3b1-f9a6-49fd-957b-24728753fff2")
-		(property "Reference" "C83"
+		(property "Reference" "C55"
 			(at 89.662 91.694 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4223,7 +4377,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 98.7552 96.52 0)
 			(hide yes)
 			(show_name no)
@@ -4256,7 +4410,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C1590"
 			(at 97.79 92.71 0)
 			(hide yes)
 			(show_name no)
@@ -4276,7 +4430,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "C83")
+					(reference "C55")
 					(unit 1)
 				)
 			)
@@ -4294,7 +4448,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "58cf9e39-da1f-4d28-8224-c27b16017611")
-		(property "Reference" "#PWR0578"
+		(property "Reference" "#PWR0154"
 			(at 97.79 163.83 0)
 			(hide yes)
 			(show_name no)
@@ -4355,7 +4509,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0578")
+					(reference "#PWR0154")
 					(unit 1)
 				)
 			)
@@ -4374,7 +4528,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "59f9867f-1cb0-48b8-9143-bf4cdceddd89")
-		(property "Reference" "#PWR0371"
+		(property "Reference" "#PWR0149"
 			(at 55.88 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -4434,7 +4588,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0371")
+					(reference "#PWR0149")
 					(unit 1)
 				)
 			)
@@ -4453,7 +4607,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5f55aee3-9d13-4274-ad45-460924f601bd")
-		(property "Reference" "J6"
+		(property "Reference" "J19"
 			(at 36.83 104.14 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4532,7 +4686,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J6")
+					(reference "J19")
 					(unit 1)
 				)
 			)
@@ -4550,7 +4704,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6045ac25-89af-48db-8311-41b6f475e30c")
-		(property "Reference" "C93"
+		(property "Reference" "C54"
 			(at 160.02 86.3599 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4572,7 +4726,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 157.1752 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -4605,7 +4759,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C19702"
+		(property "LCSC" "C1849"
 			(at 156.21 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -4625,7 +4779,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "C93")
+					(reference "C54")
 					(unit 1)
 				)
 			)
@@ -4643,7 +4797,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "69415912-088a-42ea-838e-9f6866335aeb")
-		(property "Reference" "#PWR0388"
+		(property "Reference" "#PWR0152"
 			(at 118.11 138.43 0)
 			(hide yes)
 			(show_name no)
@@ -4704,7 +4858,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0388")
+					(reference "#PWR0152")
 					(unit 1)
 				)
 			)
@@ -4722,7 +4876,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "83240d85-3dd5-4587-ad17-21697d859f14")
-		(property "Reference" "#PWR0379"
+		(property "Reference" "#PWR0143"
 			(at 118.11 77.47 0)
 			(hide yes)
 			(show_name no)
@@ -4783,7 +4937,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0379")
+					(reference "#PWR0143")
 					(unit 1)
 				)
 			)
@@ -4802,7 +4956,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8ccf097c-5f0b-4eed-9a87-b9635688420f")
-		(property "Reference" "J8"
+		(property "Reference" "J21"
 			(at 36.83 120.65 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4881,7 +5035,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J8")
+					(reference "J21")
 					(unit 1)
 				)
 			)
@@ -4900,7 +5054,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "99254ad7-0d3e-4e85-9cff-231a97bceac9")
-		(property "Reference" "J13"
+		(property "Reference" "J23"
 			(at 36.83 137.16 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4979,7 +5133,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J13")
+					(reference "J23")
 					(unit 1)
 				)
 			)
@@ -4997,7 +5151,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b05ad3f9-7faa-494f-bffa-02b6037abadc")
-		(property "Reference" "#PWR0385"
+		(property "Reference" "#PWR0144"
 			(at 97.79 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -5057,7 +5211,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0385")
+					(reference "#PWR0144")
 					(unit 1)
 				)
 			)
@@ -5075,7 +5229,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bbc6ed85-36c7-46d8-84df-540435fbefe2")
-		(property "Reference" "#PWR0389"
+		(property "Reference" "#PWR0151"
 			(at 123.19 128.27 0)
 			(hide yes)
 			(show_name no)
@@ -5135,7 +5289,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0389")
+					(reference "#PWR0151")
 					(unit 1)
 				)
 			)
@@ -5152,7 +5306,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c152cc4d-a481-4f44-a6aa-a4bf3db2ad70")
-		(property "Reference" "C44"
+		(property "Reference" "C53"
 			(at 109.982 66.294 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5174,7 +5328,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 119.0752 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -5207,7 +5361,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C1590"
 			(at 118.11 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -5227,7 +5381,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "C44")
+					(reference "C53")
 					(unit 1)
 				)
 			)
@@ -5245,7 +5399,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "cf668fab-c8c2-47b4-a7fc-c5d332da7f76")
-		(property "Reference" "#PWR0381"
+		(property "Reference" "#PWR0150"
 			(at 123.19 115.57 0)
 			(hide yes)
 			(show_name no)
@@ -5306,7 +5460,86 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "#PWR0381")
+					(reference "#PWR0150")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 46.99 93.98 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d07eb91d-91c5-4174-91b5-64a9d07393e1")
+		(property "Reference" "#PWR0147"
+			(at 46.99 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 49.53 92.7099 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 46.99 93.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 46.99 93.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 46.99 93.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a8f5ee37-1c8c-4e90-82de-8f94ebfd2c02")
+		)
+		(instances
+			(project "MASTER_CONTROLS"
+				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
+					(reference "#PWR0147")
 					(unit 1)
 				)
 			)
@@ -5324,7 +5557,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e3efa0fa-dda2-4c24-908c-c3509ebfb54d")
-		(property "Reference" "U5"
+		(property "Reference" "U6"
 			(at 125.3333 133.35 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5441,7 +5674,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "U5")
+					(reference "U6")
 					(unit 1)
 				)
 			)
@@ -5460,7 +5693,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f1bc1801-afba-4b26-913e-d2401a23ac72")
-		(property "Reference" "J14"
+		(property "Reference" "J25"
 			(at 36.83 153.67 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5539,7 +5772,7 @@
 		(instances
 			(project "MASTER_CONTROLS"
 				(path "/ff88e25e-6a0c-47b4-be5a-f4f2468daa39/41421e66-c784-44d0-8e35-2fd0525b732f"
-					(reference "J14")
+					(reference "J25")
 					(unit 1)
 				)
 			)
