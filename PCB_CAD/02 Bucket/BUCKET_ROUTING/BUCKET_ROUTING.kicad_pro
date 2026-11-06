@@ -69,7 +69,13 @@
           "thermal_relief_spoke_width": 0.3
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -88,7 +94,7 @@
         "duplicate_footprints": "warning",
         "extra_footprint": "warning",
         "footprint": "error",
-        "footprint_filters_mismatch": "ignore",
+        "footprint_filters_mismatch": "warning",
         "footprint_symbol_field_mismatch": "warning",
         "footprint_symbol_mismatch": "warning",
         "footprint_type_mismatch": "error",
@@ -114,7 +120,7 @@
         "padstack": "warning",
         "pth_inside_courtyard": "error",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "ignore",
         "silk_overlap": "ignore",
         "skew_out_of_range": "error",
@@ -203,7 +209,13 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0,
+        0.2,
+        0.3,
+        0.4,
+        0.5
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -230,7 +242,12 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -564,7 +581,7 @@
           "show": false
         },
         {
-          "group_by": false,
+          "group_by": true,
           "label": "Value",
           "name": "Value",
           "show": true
@@ -616,6 +633,12 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": true,
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": true
         }
       ],
       "filter_string": "",
@@ -666,7 +689,7 @@
         "uuid": "d7f6c350-e8d9-47a5-bbdf-1bbb2ca5b736"
       }
     ],
-    "used_designators": "U1-4,R1-4,C1-12,A1-20,#PWR1-25,#PWR38,#PWR43-71,#PWR97-125,#PWR151-179,#PWR203-216,#PWR226,#PWR246-250,#PWR260,#PWR305,#PWR332,#PWR358,#PWR410-411,J1-24,H1-39,H41-69",
+    "used_designators": "U1-4,U21,R1-4,C1-12,A1-20,#PWR1-25,#PWR38,#PWR43-71,#PWR97-125,#PWR151-179,#PWR203-216,#PWR226,#PWR235,#PWR246-250,#PWR260-261,#PWR305,#PWR332,#PWR358,#PWR410-411,J1-24,J74,H1-39,H41-69",
     "variants": []
   },
   "sheets": [
