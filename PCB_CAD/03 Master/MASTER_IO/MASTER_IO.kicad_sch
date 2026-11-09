@@ -4152,7 +4152,7 @@
 		(uuid "07c3d71c-2c65-4ed0-a04b-69ed37f9bca9")
 	)
 	(label "AUX4_IN_R+"
-		(at 137.16 115.57 180)
+		(at 137.16 118.11 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4172,7 +4172,7 @@
 		(uuid "09f8015f-ce70-41e5-895e-7adb99ada067")
 	)
 	(label "AUX3_IN_R+"
-		(at 137.16 107.95 180)
+		(at 137.16 110.49 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4342,7 +4342,7 @@
 		(uuid "455e0062-819b-4683-8d95-dffda38fe806")
 	)
 	(label "AUX3_IN_L-"
-		(at 149.86 113.03 0)
+		(at 149.86 110.49 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4512,12 +4512,12 @@
 		(uuid "8c1dabc5-9d29-47c8-bb35-ef0a6e1cafca")
 	)
 	(label "AUX4_IN_R-"
-		(at 149.86 118.11 0)
+		(at 137.16 115.57 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right bottom)
 		)
 		(uuid "93eba98d-5e23-4072-929b-f08ab42f5c41")
 	)
@@ -4562,12 +4562,12 @@
 		(uuid "a0a6de8b-3c14-4575-9dd0-f94c2315a4e7")
 	)
 	(label "AUX3_IN_L+"
-		(at 137.16 110.49 180)
+		(at 149.86 113.03 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
 		(uuid "a33242c5-c246-4580-87c6-b329ae808acf")
 	)
@@ -4592,7 +4592,7 @@
 		(uuid "a71d0e37-7b27-4994-ac4c-8c27a12f3caf")
 	)
 	(label "AUX4_IN_L-"
-		(at 149.86 120.65 0)
+		(at 149.86 118.11 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4652,12 +4652,12 @@
 		(uuid "c2ea82a5-2e90-4ea8-81e0-12097f9f3f15")
 	)
 	(label "AUX4_IN_L+"
-		(at 137.16 118.11 180)
+		(at 149.86 120.65 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
 		(uuid "c4fdc83c-34e2-4cf1-b97b-d38cb01d2573")
 	)
@@ -4682,12 +4682,12 @@
 		(uuid "cac917de-01a6-453a-a4e7-2689a21ea4c9")
 	)
 	(label "AUX3_IN_R-"
-		(at 149.86 110.49 0)
+		(at 137.16 107.95 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right bottom)
 		)
 		(uuid "cd73cc2c-6998-4b50-898a-f44e6131ab19")
 	)
@@ -4821,7 +4821,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 259.08 36.8113 0)
 			(hide yes)
 			(show_name no)
@@ -5060,7 +5060,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 193.04 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -5221,7 +5221,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 158.75 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -5460,7 +5460,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 63.5 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -5699,7 +5699,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 193.04 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -5937,6 +5937,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Auxiliary_Items:MountingScrew")
+		(at 273.05 107.95 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3189dc1a-3d23-4f34-8a2c-52575c2a04e9")
+		(property "Reference" "H9"
+			(at 273.05 103.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MountingScrew"
+			(at 273.05 111.506 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 273.05 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 273.05 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting screw"
+			(at 273.05 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "H9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "My Symbols:ACJS-MHDC")
 		(at 226.06 36.8113 0)
 		(unit 2)
@@ -6016,7 +6092,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 226.06 36.8113 0)
 			(hide yes)
 			(show_name no)
@@ -6093,6 +6169,158 @@
 				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
 					(reference "J7")
 					(unit 2)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Auxiliary_Items:MountingScrew")
+		(at 201.93 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "372f4d2d-0303-48e2-a708-f0d9fae74a4a")
+		(property "Reference" "H5"
+			(at 201.93 105.156 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MountingScrew"
+			(at 201.93 112.776 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 201.93 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 201.93 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting screw"
+			(at 201.93 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "H5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Auxiliary_Items:MountingScrew")
+		(at 241.3 106.68 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "41a1ec0e-ea51-4d4a-9b68-7069d3126bd2")
+		(property "Reference" "H7"
+			(at 241.3 102.616 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MountingScrew"
+			(at 241.3 110.236 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 241.3 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 241.3 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting screw"
+			(at 241.3 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "H7")
+					(unit 1)
 				)
 			)
 		)
@@ -6333,7 +6561,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 128.27 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -6494,7 +6722,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -6655,7 +6883,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 128.27 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -6807,6 +7035,82 @@
 			(project "MASTER_IO"
 				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
 					(reference "H2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Auxiliary_Items:MountingScrew")
+		(at 220.98 107.95 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "76560965-8506-49b9-a864-b2642c305f1a")
+		(property "Reference" "H6"
+			(at 220.98 103.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MountingScrew"
+			(at 220.98 111.506 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 220.98 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 220.98 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting screw"
+			(at 220.98 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "H6")
 					(unit 1)
 				)
 			)
@@ -7046,7 +7350,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 158.75 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -7441,7 +7745,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 226.06 63.4813 0)
 			(hide yes)
 			(show_name no)
@@ -7602,7 +7906,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 33.02 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -7997,7 +8301,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 259.08 63.4813 0)
 			(hide yes)
 			(show_name no)
@@ -8234,7 +8538,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 100.33 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -8310,6 +8614,82 @@
 			(project "MASTER_IO"
 				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
 					(reference "J3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Auxiliary_Items:MountingScrew")
+		(at 259.08 107.95 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c3ef8672-a5a8-475b-9877-2d7632e2b961")
+		(property "Reference" "H8"
+			(at 259.08 103.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MountingScrew"
+			(at 259.08 111.506 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 259.08 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting screw"
+			(at 259.08 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(reference "H8")
 					(unit 1)
 				)
 			)
@@ -8851,7 +9231,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 63.5 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -9236,7 +9616,7 @@
 				(justify bottom)
 			)
 		)
-		(property "MANUFACTURER" "Amphenol Audio"
+		(property "Manufacturer" "Amphenol Audio"
 			(at 100.33 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -9313,6 +9693,52 @@
 				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
 					(reference "J3")
 					(unit 2)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 147.32)
+		(size 101.6 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "5d05f6a0-5e45-4e4e-a385-607b3a552c11")
+		(property "Sheetname" "POWER INPUT +/-15V"
+			(at 25.4 146.62 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 2.54 2.54)
+					(bold yes)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power_input.kicad_sch"
+			(at 25.4 173.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MASTER_IO"
+				(path "/ab366079-7322-451c-9f1f-d782fbdbb824"
+					(page "2")
 				)
 			)
 		)
