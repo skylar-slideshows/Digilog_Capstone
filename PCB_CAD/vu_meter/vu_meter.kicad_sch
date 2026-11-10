@@ -4032,7 +4032,7 @@
 		)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-000000000066")
 	)
-	(text "U2A trips above +6.0 V (R22/R20 from +15 V), U2B below -6.0 V (R23/R24 from -15 V): ~12 Vpp sine, either polarity.\nThe wired-OR outputs pull C3 low through D1; C3 then recovers through R21 into Q2's base, so the LED fades over ~0.5 s.\nR25 holds the output node high at idle."
+	(text "U2A trips above +6.0 V (R20/R21 from +15 V), U2B below -6.0 V (R23/R22 from -15 V): ~12 Vpp sine, either polarity.\nThe wired-OR outputs pull C3 low through D1; C3 then recovers through R24 into Q2's base, so the LED fades over ~0.5 s.\nR25 holds the output node high at idle."
 		(exclude_from_sim no)
 		(at 167.64 111.76 0)
 		(effects
@@ -10805,7 +10805,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-00000000003b")
-		(property "Reference" "R20"
+		(property "Reference" "R21"
 			(at 172.72 60.96 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10880,7 +10880,7 @@
 		(instances
 			(project "vu_meter"
 				(path "/7246bef8-84a4-467c-818e-10da3f9873cd"
-					(reference "R20")
+					(reference "R21")
 					(unit 1)
 				)
 			)
@@ -11112,7 +11112,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-000000000047")
-		(property "Reference" "R21"
+		(property "Reference" "R24"
 			(at 232.41 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11185,7 +11185,7 @@
 		(instances
 			(project "vu_meter"
 				(path "/7246bef8-84a4-467c-818e-10da3f9873cd"
-					(reference "R21")
+					(reference "R24")
 					(unit 1)
 				)
 			)
@@ -12649,7 +12649,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8b16080d-21d2-421b-94ec-fb7600da8ac8")
-		(property "Reference" "R22"
+		(property "Reference" "R20"
 			(at 172.72 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12735,7 +12735,7 @@
 		(instances
 			(project "vu_meter"
 				(path "/7246bef8-84a4-467c-818e-10da3f9873cd"
-					(reference "R22")
+					(reference "R20")
 					(unit 1)
 				)
 			)
@@ -15307,7 +15307,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "ed41a168-b362-452e-8f7b-10d55aa4017e")
-		(property "Reference" "R24"
+		(property "Reference" "R22"
 			(at 171.196 78.994 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15380,7 +15380,7 @@
 		(instances
 			(project "vu_meter"
 				(path "/7246bef8-84a4-467c-818e-10da3f9873cd"
-					(reference "R24")
+					(reference "R22")
 					(unit 1)
 				)
 			)
