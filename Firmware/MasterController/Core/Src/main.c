@@ -741,12 +741,15 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, LCV_AUX1_Pin|LCV_AUX2_Pin|LCV_AUX3_Pin|LCV_AUX4_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
@@ -769,6 +772,15 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, CS_Bucket1_Pin|CS_Bucket0_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pins : LCV_AUX1_Pin LCV_AUX2_Pin LCV_AUX3_Pin LCV_AUX4_Pin
+                           CS_Bucket1_Pin CS_Bucket0_Pin */
+  GPIO_InitStruct.Pin = LCV_AUX1_Pin|LCV_AUX2_Pin|LCV_AUX3_Pin|LCV_AUX4_Pin
+                          |CS_Bucket1_Pin|CS_Bucket0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED_TEST_Pin */
   GPIO_InitStruct.Pin = LED_TEST_Pin;
@@ -805,13 +817,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DISP_RESET_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : CS_Bucket1_Pin CS_Bucket0_Pin */
-  GPIO_InitStruct.Pin = CS_Bucket1_Pin|CS_Bucket0_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

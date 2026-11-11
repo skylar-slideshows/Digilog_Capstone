@@ -59,6 +59,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LCV_AUX1_Pin GPIO_PIN_2
+#define LCV_AUX1_GPIO_Port GPIOE
+#define LCV_AUX2_Pin GPIO_PIN_3
+#define LCV_AUX2_GPIO_Port GPIOE
+#define LCV_AUX3_Pin GPIO_PIN_4
+#define LCV_AUX3_GPIO_Port GPIOE
+#define LCV_AUX4_Pin GPIO_PIN_5
+#define LCV_AUX4_GPIO_Port GPIOE
 #define _OSC_IN_Pin GPIO_PIN_0
 #define _OSC_IN_GPIO_Port GPIOF
 #define _OSC_OUT_Pin GPIO_PIN_1

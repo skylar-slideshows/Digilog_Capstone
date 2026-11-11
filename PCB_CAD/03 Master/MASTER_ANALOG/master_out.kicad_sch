@@ -3578,26 +3578,6 @@
 		)
 		(uuid "fdc7243d-216c-4ef7-ab29-4d86a6c82a91")
 	)
-	(label "K401_SW"
-		(at 15.24 147.32 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "0241fb56-b9af-471a-a546-a82761c46dbd")
-	)
-	(label "K401_SW"
-		(at 40.64 127.64 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "28e79d2c-399f-4e3f-b728-e8fa858ca6b2")
-	)
 	(label "INS_RET_L_INT"
 		(at 68.58 38.1 0)
 		(effects
@@ -3755,6 +3735,54 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(global_label "K401_SW"
+		(shape bidirectional)
+		(at 15.24 147.32 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "2bfb9f17-baf2-45fd-8215-c752f934fe02")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 15.24 147.32 180)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right bottom)
+			)
+		)
+	)
+	(global_label "K401_SW"
+		(shape bidirectional)
+		(at 40.64 127.64 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "40debe98-abb2-417b-9998-ae22342848bd")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 40.64 127.64 180)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right bottom)
 			)
 		)
 	)
@@ -12015,8 +12043,8 @@
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
+		(in_bom no)
+		(on_board no)
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "b32bd405-ce31-4179-815a-7514f0374385")
@@ -12040,7 +12068,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+		(property "Footprint" ""
 			(at 22.86 147.32 0)
 			(hide yes)
 			(show_name no)
