@@ -107,11 +107,11 @@
         "items_not_allowed": "error",
         "length_out_of_range": "error",
         "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
-        "missing_courtyard": "ignore",
+        "missing_courtyard": "warning",
         "missing_footprint": "warning",
         "missing_tuning_profile": "warning",
         "net_conflict": "warning",
@@ -128,17 +128,17 @@
         "starved_thermal": "error",
         "text_height": "warning",
         "text_on_edge_cuts": "error",
-        "text_thickness": "warning",
+        "text_thickness": "ignore",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
         "track_dangling": "warning",
-        "track_not_centered_on_via": "ignore",
+        "track_not_centered_on_via": "warning",
         "track_on_post_machined_layer": "error",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
-        "tuning_profile_track_geometries": "ignore",
+        "tuning_profile_track_geometries": "warning",
         "unconnected_items": "error",
         "unresolved_variable": "error",
         "via_dangling": "warning",
@@ -162,7 +162,7 @@
         "min_track_width": 0.2,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
-        "solder_mask_to_copper_clearance": 0.0,
+        "solder_mask_to_copper_clearance": 0.005,
         "use_height_for_length_calcs": true
       },
       "teardrop_options": [
@@ -544,7 +544,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "",
+      "specctra_dsn": "../../../../MASTER.dsn",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -641,6 +641,12 @@
           "label": "KiLib_Generator",
           "name": "KiLib_Generator",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Specifications",
+          "name": "Specifications",
+          "show": false
         }
       ],
       "filter_string": "",
@@ -691,7 +697,7 @@
         "uuid": "cbf8dd5d-c38a-4360-87fe-31b66b1199bf"
       }
     ],
-    "used_designators": "SW1-5,TH1-4,U1-44,R1-181,K1-13,D1-13,C1-158,#PWR1-439,#PWR450-453,#PWR463-465,J1-7,J23,J73-74",
+    "used_designators": "H1-8,SW1-5,TH1-4,U1-44,R1-181,K1-13,D1-13,C1-158,#PWR1-439,#PWR450-453,#PWR463-465,J1-7,J23,J73-74",
     "variants": []
   },
   "sheets": [
