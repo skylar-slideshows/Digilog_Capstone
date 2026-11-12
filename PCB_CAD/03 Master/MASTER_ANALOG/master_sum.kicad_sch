@@ -694,6 +694,164 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector_Generic:Conn_01x02"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:C"
 			(pin_numbers
 				(hide yes)
@@ -5174,6 +5332,30 @@
 			)
 		)
 	)
+	(global_label "MIX_INT_R"
+		(shape output)
+		(at 341.63 95.25 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e5f05de9-dfc1-4e26-885f-a085eb692b9b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 329.271 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "AUX4_INT"
 		(shape output)
 		(at 104.14 210.82 0)
@@ -5195,6 +5377,30 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(global_label "MIX_INT_L"
+		(shape output)
+		(at 341.63 82.55 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f17cf35b-b906-488d-bf41-f5b77d64021f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 329.5129 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 			)
 		)
 	)
@@ -5252,6 +5458,17 @@
 			)
 		)
 		(property "Description" "Bus summer feedback: -6 dB internal level"
+			(at 44.45 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190614"
 			(at 44.45 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -5333,6 +5550,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 172.72 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 172.72 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -5432,6 +5660,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 45.72 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 45.72 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -6255,6 +6494,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C95204"
+			(at 213.36 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "0f4c69ea-c505-47e5-82ef-e5850f5161a6")
 		)
@@ -6479,6 +6729,17 @@
 			)
 		)
 		(property "Description" "Bus summer feedback: -6 dB internal level"
+			(at 44.45 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190614"
 			(at 44.45 99.06 0)
 			(hide yes)
 			(show_name no)
@@ -7086,6 +7347,99 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 346.71 95.25 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "21944f88-910b-49a9-9ee4-db210dd7b02e")
+		(property "Reference" "J25"
+			(at 349.25 95.2499 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "METER_MIX_R"
+			(at 349.25 97.7899 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 346.71 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 346.71 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 346.71 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 346.71 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "a6f148ea-62f0-483d-9f32-26565009d60f")
+		)
+		(pin "1"
+			(uuid "b64d21a5-7920-43b8-aef8-d216bbf6e4bc")
+		)
+		(instances
+			(project "MASTER"
+				(path "/cbf8dd5d-c38a-4360-87fe-31b66b1199bf/99bbac99-996a-4ce0-9181-bee3c8a0ad8f"
+					(reference "J25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 81.28 83.82 0)
 		(unit 1)
@@ -7357,6 +7711,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 147.32 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "06414f9b-9174-44b8-8059-35fe43088444")
 		)
@@ -7501,7 +7866,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 172.72 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7624,6 +7989,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 219.71 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C95204"
 			(at 219.71 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -8012,6 +8388,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 185.42 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "0c9c6e85-7cf2-4b12-9e46-ccecc5ef83e4")
 		)
@@ -8111,6 +8498,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 172.72 119.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "832efa6a-f4d6-4b70-870b-e032d2dc3b97")
 		)
@@ -8198,6 +8596,17 @@
 			)
 		)
 		(property "Description" "Difference amp: gain 1/2 = R2/R1, matched to R3/R4 for bus CMRR"
+			(at 194.31 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190611"
 			(at 194.31 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -8742,6 +9151,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 45.72 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 45.72 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -9803,6 +10223,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C95204"
+			(at 219.71 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "a8c2f47d-4d4c-40af-84a1-9e382aec8763")
 		)
@@ -10008,7 +10439,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 210.82 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10310,6 +10741,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C190614"
+			(at 44.45 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e2c63e38-317f-4609-9a1a-a562dcaa6d20")
 		)
@@ -10379,6 +10821,17 @@
 			)
 		)
 		(property "Description" "10k/2.136 (pan/fader OPA1637 gain 4.7k/2.2k)"
+			(at 171.45 33.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C328429"
 			(at 171.45 33.02 0)
 			(hide yes)
 			(show_name no)
@@ -10460,6 +10913,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 198.12 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 198.12 185.42 0)
 			(hide yes)
 			(show_name no)
@@ -10903,6 +11367,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C95204"
+			(at 213.36 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "78eaa1e8-d7c4-44b1-992a-ae4215a0d88f")
 		)
@@ -11016,7 +11491,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 144.78 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11552,6 +12027,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 45.72 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b4433330-cd69-49a8-ab2e-6333eae87cc0")
 		)
@@ -11639,6 +12125,17 @@
 			)
 		)
 		(property "Description" "Difference amp: gain 1/2 = R2/R1, matched to R3/R4 for bus CMRR"
+			(at 194.31 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190611"
 			(at 194.31 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -13256,7 +13753,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 40.64 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13672,6 +14169,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C190611"
+			(at 196.85 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "1e2f489a-9956-446b-8361-c23b449aa293")
 		)
@@ -13933,6 +14441,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C328429"
+			(at 171.45 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "118d76f1-26d6-4b33-a3e1-cccfe6e9979a")
 		)
@@ -14081,6 +14600,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 172.72 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 172.72 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -14355,6 +14885,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C694226"
+			(at 44.45 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "70fb6cf8-1924-4fc9-a57b-8689dde5935b")
 		)
@@ -14511,6 +15052,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C190614"
+			(at 44.45 33.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "620c2920-4d24-4a80-b8d3-cb2751546409")
 		)
@@ -14547,7 +15099,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 45.72 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14976,6 +15528,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C328429"
+			(at 171.45 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "433d8f23-ac88-4a99-bb45-3d5a3e63a1c4")
 		)
@@ -15167,7 +15730,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 73.66 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15392,6 +15955,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 160.02 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "d67a3b08-918a-4a7e-8d9a-d8c294d150e6")
 		)
@@ -15479,6 +16053,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 196.85 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190611"
 			(at 196.85 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -16074,6 +16659,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 45.72 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "5"
 			(uuid "c32fbe62-9ef3-44ab-bb5f-93e2ebd3fa31")
 		)
@@ -16433,6 +17029,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C319797"
+			(at 44.45 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "427c84e3-eafb-4d26-943a-645562c24524")
 		)
@@ -16514,6 +17121,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 45.72 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "5"
 			(uuid "0ef42f29-8519-41dd-adc0-ce954a0a5bfe")
 		)
@@ -16543,6 +17161,177 @@
 				(path "/cbf8dd5d-c38a-4360-87fe-31b66b1199bf/99bbac99-996a-4ce0-9181-bee3c8a0ad8f"
 					(reference "U5")
 					(unit 2)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 341.63 97.79 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "b80221dc-4aa3-4e8a-9d12-77e6ef13aa2c")
+		(property "Reference" "#PWR0466"
+			(at 341.63 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 341.63 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 341.63 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 341.63 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 341.63 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e9c1af84-0a96-4d2f-9eb6-bc5cd73295ca")
+		)
+		(instances
+			(project "MASTER"
+				(path "/cbf8dd5d-c38a-4360-87fe-31b66b1199bf/99bbac99-996a-4ce0-9181-bee3c8a0ad8f"
+					(reference "#PWR0466")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 346.71 82.55 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b9a382e6-d284-40c3-9a68-1aca8c670a0b")
+		(property "Reference" "J24"
+			(at 349.25 82.5499 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "METER_MIX_L"
+			(at 349.25 85.0899 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 346.71 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 346.71 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 346.71 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 346.71 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "3887c3be-277b-47b7-8b7f-8f53fa673121")
+		)
+		(pin "1"
+			(uuid "f169d3bb-370c-4740-8517-1823cd01ff8b")
+		)
+		(instances
+			(project "MASTER"
+				(path "/cbf8dd5d-c38a-4360-87fe-31b66b1199bf/99bbac99-996a-4ce0-9181-bee3c8a0ad8f"
+					(reference "J24")
+					(unit 1)
 				)
 			)
 		)
@@ -16658,7 +17447,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 205.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17568,6 +18357,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C328429"
+			(at 171.45 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "ac0c4f58-6295-460c-8716-e7df71399033")
 		)
@@ -18008,6 +18808,84 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 341.63 85.09 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "d11c0640-d97c-47ea-856e-f74d61631bdd")
+		(property "Reference" "#PWR0469"
+			(at 341.63 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 341.63 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 341.63 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 341.63 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 341.63 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "942c8588-d589-477b-9dfa-7175682b4fc7")
+		)
+		(instances
+			(project "MASTER"
+				(path "/cbf8dd5d-c38a-4360-87fe-31b66b1199bf/99bbac99-996a-4ce0-9181-bee3c8a0ad8f"
+					(reference "#PWR0469")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 175.26 209.55 0)
 		(unit 1)
@@ -18243,6 +19121,17 @@
 			)
 		)
 		(property "Description" "Bus summer feedback: -6 dB internal level"
+			(at 44.45 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C190614"
 			(at 44.45 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -18572,6 +19461,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 172.72 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 172.72 149.86 0)
 			(hide yes)
 			(show_name no)
@@ -18959,7 +19859,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 177.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19049,7 +19949,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 139.7 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19450,7 +20350,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 111.76 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19617,7 +20517,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20162,6 +21062,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C94590"
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "8d4680c5-bfff-4a47-a642-8fe35fbca148")
 		)
@@ -20341,6 +21252,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 172.72 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C94590"
 			(at 172.72 185.42 0)
 			(hide yes)
 			(show_name no)
@@ -20533,7 +21455,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 87.63 106.68 0)
 			(show_name no)
 			(do_not_autoplace no)

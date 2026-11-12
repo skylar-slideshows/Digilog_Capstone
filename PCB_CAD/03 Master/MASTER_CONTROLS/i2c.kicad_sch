@@ -2415,10 +2415,6 @@
 		(uuid "ea5555e1-9596-419d-8ba8-0916c1d52889")
 	)
 	(no_connect
-		(at 82.55 77.47)
-		(uuid "eb8408a8-e649-431d-9539-af0a3cce8e6f")
-	)
-	(no_connect
 		(at 82.55 92.71)
 		(uuid "ec5213d3-39f6-4bfa-9bd0-c174522ce918")
 	)
@@ -3574,6 +3570,30 @@
 			)
 		)
 	)
+	(global_label "INSERT"
+		(shape output)
+		(at 82.55 77.47 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8fd45ade-d177-4593-ab8b-183a13c432fd")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 92.0666 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "I2C2_Data"
 		(shape bidirectional)
 		(at 57.15 77.47 180)
@@ -4340,7 +4360,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22809"
+		(property "LCSC" "C25804"
 			(at 113.03 93.98 0)
 			(hide yes)
 			(show_name no)
@@ -5683,7 +5703,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C22809"
+		(property "LCSC" "C25804"
 			(at 52.07 92.71 0)
 			(hide yes)
 			(show_name no)

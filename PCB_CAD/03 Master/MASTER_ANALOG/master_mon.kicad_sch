@@ -1173,6 +1173,146 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "D_Schottky_1"
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "D_Schottky"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Diode_SMD:D_SMA"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Schottky diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "D_Schottky_1_0_1"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 -1.27) (xy 1.27 0) (xy -1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 0) (xy 1.27 0)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.905 0.635) (xy 1.905 1.27) (xy 1.27 1.27) (xy 1.27 -1.27) (xy 0.635 -1.27) (xy 0.635 -0.635)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "D_Schottky_1_1_1"
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:C"
 			(pin_numbers
 				(hide yes)
@@ -9110,6 +9250,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C15849"
+			(at 269.24 247.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b7940bc6-aade-4f1a-9ceb-da3bd7c54b8b")
 		)
@@ -9697,6 +9848,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C328429"
+			(at 72.39 218.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "320f22ce-ce18-4f7f-a2af-8857811380f1")
 		)
@@ -9980,7 +10142,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 266.7 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10147,7 +10309,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 121.92 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10426,6 +10588,17 @@
 			)
 		)
 		(property "Description" "Phones gain -4 (10k/2.49k): +6 dB re nominal"
+			(at 316.23 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C319797"
 			(at 316.23 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -10776,6 +10949,17 @@
 				)
 			)
 		)
+		(property "LCSC" "dnp"
+			(at 152.4 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "41327bde-0d6e-401f-aad2-d4949ad77ead")
 		)
@@ -10854,6 +11038,17 @@
 			)
 		)
 		(property "Description" "Series R for dim (523R shunt) and mute (short)"
+			(at 72.39 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C328429"
 			(at 72.39 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -11906,7 +12101,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 194.31 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12006,7 +12201,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 330.2 99.06 0)
 			(hide yes)
 			(show_name no)
@@ -12029,6 +12224,17 @@
 			)
 		)
 		(property "Description" "Front panel MONO (latching)"
+			(at 330.2 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 330.2 99.06 0)
 			(hide yes)
 			(show_name no)
@@ -12075,7 +12281,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 194.31 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13578,7 +13784,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 33.02 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13668,7 +13874,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 72.39 190.5 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13850,7 +14056,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 266.7 33.02 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14138,7 +14344,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 330.2 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -14161,6 +14367,17 @@
 			)
 		)
 		(property "Description" "Front panel MUTE (latching)"
+			(at 330.2 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 330.2 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -14517,7 +14734,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 121.92 33.02 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14607,7 +14824,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 339.09 180.34 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14974,6 +15191,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C544663"
+			(at 238.76 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "0a6a1450-ead7-47d1-9b70-798857fedb70")
 		)
@@ -15139,6 +15367,17 @@
 			)
 		)
 		(property "Description" "Headphone output series resistor"
+			(at 359.41 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C136903"
 			(at 359.41 198.12 0)
 			(hide yes)
 			(show_name no)
@@ -15980,6 +16219,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C15849"
+			(at 276.86 247.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "49325157-5fd9-4a0d-839d-8616aba8b4d1")
 		)
@@ -16263,7 +16513,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16396,6 +16646,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C861461"
+			(at 189.23 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "7555ef25-cc1f-464f-aa55-2da25789e459")
 		)
@@ -16432,7 +16693,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 121.92 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16718,7 +16979,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 194.31 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17377,7 +17638,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 330.2 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -17400,6 +17661,17 @@
 			)
 		)
 		(property "Description" "Front panel DIM (latching)"
+			(at 330.2 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 330.2 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -17743,7 +18015,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 339.09 233.68 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17833,7 +18105,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 194.31 33.02 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18430,7 +18702,7 @@
 		(dnp no)
 		(uuid "a1471ec2-c958-48e5-8d29-70342aad7305")
 		(property "Reference" "R173"
-			(at 72.39 205.74 0)
+			(at 72.39 205.74 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18439,8 +18711,8 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
-			(at 72.39 208.28 0)
+		(property "Value" "10.0k 0.1%"
+			(at 71.374 199.39 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18791,7 +19063,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 266.7 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18926,6 +19198,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C544663"
+			(at 238.76 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "d058687c-bd0f-498f-ab03-af534ca8d826")
 		)
@@ -19026,6 +19309,17 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+		(property "LCSC" "dnp"
+			(at 381 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "1"
@@ -19644,6 +19938,17 @@
 			)
 		)
 		(property "Description" "decoupling: DRV135 U503/U504"
+			(at 292.1 247.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C15849"
 			(at 292.1 247.65 0)
 			(hide yes)
 			(show_name no)
@@ -20458,7 +20763,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 330.2 58.42 0)
 			(hide yes)
 			(show_name no)
@@ -20481,6 +20786,17 @@
 			)
 		)
 		(property "Description" "Monitor source: 1 MIX, 2 AUX1, 3 AUX2, 4 AUX3, 5 AUX4, 6-9 RET1-4 (end stop at 9)"
+			(at 330.2 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "dnp"
 			(at 330.2 58.42 0)
 			(hide yes)
 			(show_name no)
@@ -20729,7 +21045,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 31.75 210.82 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21362,6 +21678,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C136903"
+			(at 359.41 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "627bb5c8-251f-4f80-8bed-fd4461c144d1")
 		)
@@ -21398,7 +21725,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22172,6 +22499,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C319797"
+			(at 316.23 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "2aed5f2e-10d0-4b96-a2e5-302078d1c974")
 		)
@@ -22546,7 +22884,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 31.75 177.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22728,7 +23066,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23033,6 +23371,17 @@
 				)
 			)
 		)
+		(property "LCSC" "C15849"
+			(at 284.48 247.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "3e89f805-ebd7-4b8f-ad92-95f58c88f64f")
 		)
@@ -23069,7 +23418,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 121.92 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23139,6 +23488,7 @@
 		)
 	)
 	(symbol
+		(lib_name "D_Schottky_1")
 		(lib_id "Device:D_Schottky")
 		(at 237.49 40.64 90)
 		(unit 1)
@@ -23379,7 +23729,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 124.46 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23580,6 +23930,17 @@
 			)
 		)
 		(property "Description" "Dim: 4.7k series + 523R shunt = -20 dB"
+			(at 189.23 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C861461"
 			(at 189.23 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -24782,7 +25143,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 266.7 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -24964,7 +25325,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 0.1%"
+		(property "Value" "10.0k 0.1%"
 			(at 49.53 142.24 0)
 			(show_name no)
 			(do_not_autoplace no)
