@@ -4032,7 +4032,7 @@
 		)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-000000000066")
 	)
-	(text "U2A trips above +6.0 V (R20/R21 from +15 V), U2B below -6.0 V (R23/R22 from -15 V): ~12 Vpp sine, either polarity.\nThe wired-OR outputs pull C3 low through D1; C3 then recovers through R24 into Q2's base, so the LED fades over ~0.5 s.\nR25 holds the output node high at idle."
+	(text "U2A trips above +6.0 V (R20/R21 from +15 V), U2B below -6.0 V (R23/R22 from -15 V): ~12 Vpp sine, either polarity.\nThe wired-OR outputs pull C3 low through D1; C3 then recovers through R24 into Q2's base and through R25, so the LED fades over ~0.3 s.\nR25 (across C3) returns the D1 node to +5 V at idle, so Q2 turns fully off with no dim tail. The LM393 outputs need no pull-up: they only drive D1."
 		(exclude_from_sim no)
 		(at 167.64 111.76 0)
 		(effects
@@ -4209,6 +4209,12 @@
 		(uuid "5f3a9c2e-1d4b-4e8a-9c7f-000000000145")
 	)
 	(junction
+		(at 223.52 55.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "60b384fc-84ed-432c-b5c8-5a6502a87729")
+	)
+	(junction
 		(at 59.69 214.63)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4239,7 +4245,7 @@
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-00000000006a")
 	)
 	(junction
-		(at 224.79 55.88)
+		(at 233.68 55.88)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-00000000006b")
@@ -4372,6 +4378,16 @@
 	)
 	(wire
 		(pts
+			(xy 223.52 55.88) (xy 233.68 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "157ff20e-d15a-4058-a1da-1c325b1c0bdb")
+	)
+	(wire
+		(pts
 			(xy 59.69 231.14) (xy 59.69 236.22)
 		)
 		(stroke
@@ -4412,7 +4428,7 @@
 	)
 	(wire
 		(pts
-			(xy 246.38 45.72) (xy 246.38 50.8)
+			(xy 255.27 45.72) (xy 255.27 50.8)
 		)
 		(stroke
 			(width 0)
@@ -4532,7 +4548,7 @@
 	)
 	(wire
 		(pts
-			(xy 215.9 55.88) (xy 224.79 55.88)
+			(xy 215.9 55.88) (xy 223.52 55.88)
 		)
 		(stroke
 			(width 0)
@@ -4549,16 +4565,6 @@
 			(type default)
 		)
 		(uuid "4066a269-1b12-4682-b06c-82e1500a5b5e")
-	)
-	(wire
-		(pts
-			(xy 205.74 48.26) (xy 205.74 55.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "46df2b42-98ec-4ef8-9eb1-8c9f99a2153c")
 	)
 	(wire
 		(pts
@@ -5152,7 +5158,7 @@
 	)
 	(wire
 		(pts
-			(xy 246.38 64.77) (xy 254 64.77)
+			(xy 255.27 64.77) (xy 262.89 64.77)
 		)
 		(stroke
 			(width 0)
@@ -5332,7 +5338,7 @@
 	)
 	(wire
 		(pts
-			(xy 224.79 55.88) (xy 228.6 55.88)
+			(xy 233.68 55.88) (xy 237.49 55.88)
 		)
 		(stroke
 			(width 0)
@@ -5342,7 +5348,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 55.88) (xy 238.76 55.88)
+			(xy 245.11 55.88) (xy 247.65 55.88)
 		)
 		(stroke
 			(width 0)
@@ -5352,7 +5358,7 @@
 	)
 	(wire
 		(pts
-			(xy 246.38 60.96) (xy 246.38 64.77)
+			(xy 255.27 60.96) (xy 255.27 64.77)
 		)
 		(stroke
 			(width 0)
@@ -6271,7 +6277,7 @@
 		(uuid "802195b1-f4f8-4040-9f40-c7dbdab5613d")
 	)
 	(label "CLIP_LED_A"
-		(at 254 64.77 0)
+		(at 262.89 64.77 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6816,7 +6822,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 205.74 40.64 0)
+		(at 223.52 48.26 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6826,7 +6832,7 @@
 		(dnp no)
 		(uuid "29c47b40-512c-4476-9ffa-3a6d979eadc2")
 		(property "Reference" "#PWR222"
-			(at 205.74 44.45 0)
+			(at 223.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6837,7 +6843,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 205.74 36.83 0)
+			(at 223.52 44.45 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6847,7 +6853,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 205.74 40.64 0)
+			(at 223.52 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6858,7 +6864,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 205.74 40.64 0)
+			(at 223.52 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6869,7 +6875,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 205.74 40.64 0)
+			(at 223.52 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11000,7 +11006,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 224.79 52.07 0)
+		(at 233.68 52.07 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -11010,7 +11016,7 @@
 		(dnp no)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-000000000042")
 		(property "Reference" "C3"
-			(at 222.25 50.8 0)
+			(at 231.14 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11021,7 +11027,7 @@
 			)
 		)
 		(property "Value" "2.2u"
-			(at 222.25 53.34 0)
+			(at 231.14 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11032,7 +11038,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11043,7 +11049,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11054,7 +11060,7 @@
 			)
 		)
 		(property "Description" "Capacitor"
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11065,7 +11071,7 @@
 			)
 		)
 		(property "MPN" "Samsung CL31B225KBHNNNE"
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11076,7 +11082,7 @@
 			)
 		)
 		(property "LCSC" "C50254"
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11103,7 +11109,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 232.41 55.88 90)
+		(at 241.3 55.88 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -11113,7 +11119,7 @@
 		(dnp no)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-000000000047")
 		(property "Reference" "R24"
-			(at 232.41 53.34 90)
+			(at 241.3 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11123,7 +11129,7 @@
 			)
 		)
 		(property "Value" "150k"
-			(at 232.41 58.42 90)
+			(at 241.3 58.42 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11133,7 +11139,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 232.41 55.88 0)
+			(at 241.3 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11144,7 +11150,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 232.41 55.88 0)
+			(at 241.3 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11155,7 +11161,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 232.41 55.88 0)
+			(at 241.3 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11166,7 +11172,7 @@
 			)
 		)
 		(property "MPN" "UNI-ROYAL 0603WAF1503T5E"
-			(at 232.41 55.88 0)
+			(at 241.3 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11193,7 +11199,7 @@
 	)
 	(symbol
 		(lib_id "Transistor_BJT:MMBT3906")
-		(at 243.84 55.88 0)
+		(at 252.73 55.88 0)
 		(mirror x)
 		(unit 1)
 		(body_style 1)
@@ -11204,7 +11210,7 @@
 		(dnp no)
 		(uuid "6a1d2f4b-77c3-4e19-8b2a-00000000004a")
 		(property "Reference" "Q2"
-			(at 248.92 54.61 0)
+			(at 257.81 54.61 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11215,7 +11221,7 @@
 			)
 		)
 		(property "Value" "MMBT3906"
-			(at 248.92 57.15 0)
+			(at 257.81 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11226,7 +11232,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 248.92 53.975 0)
+			(at 257.81 53.975 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11239,7 +11245,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/pzt3906-d.pdf"
-			(at 243.84 55.88 0)
+			(at 252.73 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11251,7 +11257,7 @@
 			)
 		)
 		(property "Description" "-0.2A Ic, -40V Vce, Small Signal PNP Transistor, SOT-23"
-			(at 243.84 55.88 0)
+			(at 252.73 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11262,7 +11268,7 @@
 			)
 		)
 		(property "Sim.Device" "PNP"
-			(at 243.84 55.88 0)
+			(at 252.73 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11273,7 +11279,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=B 2=E 3=C"
-			(at 243.84 55.88 0)
+			(at 252.73 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13920,7 +13926,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 224.79 48.26 0)
+		(at 233.68 48.26 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -13930,7 +13936,7 @@
 		(dnp no)
 		(uuid "a9761e4a-27b3-4c95-8279-9b01f58b2caa")
 		(property "Reference" "#PWR219"
-			(at 224.79 52.07 0)
+			(at 233.68 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13941,7 +13947,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 224.79 44.45 0)
+			(at 233.68 44.45 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13951,7 +13957,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 224.79 48.26 0)
+			(at 233.68 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13962,7 +13968,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 224.79 48.26 0)
+			(at 233.68 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13973,7 +13979,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 224.79 48.26 0)
+			(at 233.68 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13997,7 +14003,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 205.74 44.45 0)
+		(at 223.52 52.07 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -14007,7 +14013,7 @@
 		(dnp no)
 		(uuid "ac6c43b3-4cd9-48bb-89be-1971bfdf98c2")
 		(property "Reference" "R25"
-			(at 208.28 43.18 0)
+			(at 217.678 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14018,7 +14024,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 208.28 45.72 0)
+			(at 216.916 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14029,7 +14035,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 205.74 44.45 0)
+			(at 223.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14040,7 +14046,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 205.74 44.45 0)
+			(at 223.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14051,7 +14057,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 205.74 44.45 0)
+			(at 223.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14062,7 +14068,7 @@
 			)
 		)
 		(property "MPN" "UNI-ROYAL 0603WAF1003T5E"
-			(at 205.74 44.45 0)
+			(at 223.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14571,7 +14577,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 246.38 45.72 0)
+		(at 255.27 45.72 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -14581,7 +14587,7 @@
 		(dnp no)
 		(uuid "ce3e0bf1-6381-4716-bf49-84b0f30f1a20")
 		(property "Reference" "#PWR220"
-			(at 246.38 49.53 0)
+			(at 255.27 49.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14592,7 +14598,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 246.38 41.91 0)
+			(at 255.27 41.91 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14602,7 +14608,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 246.38 45.72 0)
+			(at 255.27 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14613,7 +14619,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 246.38 45.72 0)
+			(at 255.27 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14624,7 +14630,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 246.38 45.72 0)
+			(at 255.27 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
