@@ -63,7 +63,7 @@ static void init_control_vals (uint8_t channel)
         vals->send_controls[send_channel].pan = 0;
     }
 
-    const eq_band_control_t default_eq_band_control = {.freq = 0, .gain = 0, .q = U_SCALAR_CONTROL_MID};
+    const eq_band_control_t default_eq_band_control = {.freq = U_SCALAR_CONTROL_MID, .gain = 0, .q = U_SCALAR_CONTROL_MID}; // knobs start at 12 o'clock
     vals->hf_control = default_eq_band_control;
     vals->hmf_control = default_eq_band_control;
     vals->lmf_control = default_eq_band_control;

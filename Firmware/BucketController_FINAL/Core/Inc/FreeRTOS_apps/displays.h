@@ -2,6 +2,7 @@
 #define DISPLAYS_H
 
 #include <stdint.h>
+#include "ui/ui_render.h"
 
 /**
  * Colour depth of all four screens: 16 (RGB565, 65,536 colours) or 12 (RGB444, 4,096 colours).
@@ -9,6 +10,9 @@
  * Pictures must be made with the same depth: st7789_imagegen.py --bits.
  */
 #define DISPLAY_COLOR_BITS 12
+
+/** Number of screens on a bucket, numbered 0-3. */
+#define DISPLAY_COUNT 4
 
 /**
  * A picture made by st7789_imagegen.py, ready to draw with displays_draw_image().
@@ -46,5 +50,17 @@ uint8_t displays_draw_text (uint8_t display, uint16_t x, uint16_t y, uint8_t siz
  * Returns 0 on success, or 1 if it doesn't fit on the screen or was made for the other colour depth.
  */
 uint8_t displays_draw_image (uint8_t display, uint16_t x, uint16_t y, const display_image_t *image);
+
+/**
+ * Paints a whole screen black. Returns 0 on success.
+ */
+uint8_t displays_clear (uint8_t display);
+
+/**
+ * Draws one region of a screen (see ui/ui_render.h): its background, rectangles and text, in a single
+ * pass with nothing flashing in between. Only the region's own pixels are sent, so small parts of the
+ * screen can be updated quickly. Returns 0 on success, 1 if the region is off the screen.
+ */
+uint8_t displays_draw_region (uint8_t display, const ui_region_t *region);
 
 #endif

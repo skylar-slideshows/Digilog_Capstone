@@ -45,6 +45,7 @@
 #include "FreeRTOS_apps/i2c_scheduler.h"
 #include "FreeRTOS_apps/fader_poller.h"
 #include "FreeRTOS_apps/displays.h"
+#include "FreeRTOS_apps/channel_display.h"
 #include "stm32g4xx_hal.h"
 
 /* USER CODE END Includes */
@@ -297,6 +298,7 @@ int main(void)
   init_i2c_scheduler();
   init_fader_poller();
   init_faders();
+  init_channel_display(); // channel screens (after displays_init and init_control_interface)
 
   /* USER CODE END RTOS_THREADS */
 
@@ -1473,14 +1475,14 @@ static void MX_FMC_Init(void)
   hsram1.Init.AsynchronousWait = FMC_ASYNCHRONOUS_WAIT_DISABLE;
   hsram1.Init.WriteBurst = FMC_WRITE_BURST_DISABLE;
   hsram1.Init.ContinuousClock = FMC_CONTINUOUS_CLOCK_SYNC_ONLY;
-  hsram1.Init.WriteFifo = FMC_WRITE_FIFO_ENABLE;
+  hsram1.Init.WriteFifo = FMC_WRITE_FIFO_DISABLE;
   hsram1.Init.NBLSetupTime = 0;
   hsram1.Init.PageSize = FMC_PAGE_SIZE_NONE;
   hsram1.Init.MaxChipSelectPulse = DISABLE;
   /* Timing */
-  Timing.AddressSetupTime = 7;
+  Timing.AddressSetupTime = 1;
   Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 255;
+  Timing.DataSetupTime = 4;
   Timing.DataHoldTime = 1;
   Timing.BusTurnAroundDuration = 0;
   Timing.CLKDivision = 16;
@@ -1615,7 +1617,7 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  displays_test_pattern();
+  // displays_test_pattern(); // the channel display task draws the screens now
   
 
   //led_loading(true);

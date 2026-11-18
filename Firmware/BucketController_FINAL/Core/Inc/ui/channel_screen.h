@@ -1,0 +1,199 @@
+/**
+  **********************************************************************************
+  * CHANNEL SCREEN LAYOUT - DIGILOG CONSOLE (Bucket)
+  **********************************************************************************
+  * @file ui/channel_screen.h
+  * @brief What each channel's screen shows, laid out after the index.html mockup:
+  *        - a grey title strip: channel number on the left, input type (MIC, LINE,
+  *          HI-Z) on the right; it flashes lighter while the channel is selected
+  *        - under it, when muted or soloed, a red MUTE or yellow SOLO bar
+  *        - the EQ curve in the middle, when the knobs control the EQ
+  *        - the pan bar along the bottom
+  *        Muted, the rest of the screen turns dim red and the number and curve red;
+  *        soloed, the same in yellow. Muted wins if both.
+  *        Plain C with no hardware calls, so the PC preview runs the same code.
+  **********************************************************************************
+*/
+
+#ifndef CHANNEL_SCREEN_H
+#define CHANNEL_SCREEN_H
+
+#include <stdbool.h>
+#include <stdint.h>
+#include "ui/ui_render.h"
+
+/* Colours, mostly from the mockup's colour table (index.html, const C) */
+#define CH_COLOR_SCREEN        UI_RGB(0x00, 0x00, 0x00) // screen background (mockup bg #08080b, black on the panel)
+#define CH_COLOR_SCREEN_MUTED  UI_RGB(0x38, 0x0E, 0x0E) // background when muted
+#define CH_COLOR_SCREEN_SOLO   UI_RGB(0x3A, 0x32, 0x08) // background when soloed
+#define CH_COLOR_HEADER        UI_RGB(0x2C, 0x2C, 0x38) // title strip (mockup C.edge)
+#define CH_COLOR_HEADER_LIT    UI_RGB(0x60, 0x60, 0x6E) // title strip's lighter flash while selected
+#define CH_COLOR_NUMBER        UI_RGB(0xA0, 0xA0, 0xB4) // channel number and input type
+#define CH_COLOR_NUMBER_MUTED  UI_RGB(0xBE, 0x5A, 0x5A) // channel number when muted
+#define CH_COLOR_NUMBER_SOLO   UI_RGB(0xE6, 0xC8, 0x4A) // channel number when soloed
+#define CH_COLOR_MUTE_BAR      UI_RGB(0xFF, 0x20, 0x20) // MUTE bar
+#define CH_COLOR_SOLO_BAR      UI_RGB(0xFF, 0xD8, 0x20) // SOLO bar
+#define CH_COLOR_BAR_TEXT      UI_RGB(0x00, 0x00, 0x00) // MUTE and SOLO lettering
+#define CH_COLOR_TROUGH        UI_RGB(0x22, 0x22, 0x2A) // empty part of the pan bar (C.trough)
+#define CH_COLOR_PAN           UI_RGB(0xB0, 0xB0, 0xC6) // filled part of the pan bar (C.pan)
+#define CH_COLOR_CENTRE        UI_RGB(0x6E, 0x6E, 0x7E) // centre line of the pan bar (C.dim)
+#define CH_COLOR_EQ            UI_RGB(0xD6, 0x8A, 0x3A) // EQ curve, and markers of bands that boost or cut (C.eq)
+#define CH_COLOR_EQ_FILL       UI_RGB(0x4A, 0x30, 0x14) // between the curve and 0 dB (C.eqFill)
+#define CH_COLOR_EQ_MUTED      UI_RGB(0xD6, 0x3E, 0x3E) // curve when muted (C.mute)
+#define CH_COLOR_EQ_FILL_MUTED UI_RGB(0x6A, 0x1E, 0x1E) // fill when muted: lighter than the dim red screen
+#define CH_COLOR_EQ_SOLO       UI_RGB(0xF0, 0xD0, 0x40) // curve when soloed
+#define CH_COLOR_EQ_FILL_SOLO  UI_RGB(0x5C, 0x4C, 0x12) // fill when soloed: lighter than the dim yellow screen
+#define CH_COLOR_EQ_GRID       UI_RGB(0x1A, 0x1A, 0x22) // 100 Hz, 1 kHz, 10 kHz, +/-10 and +/-20 dB lines
+#define CH_COLOR_EQ_ZERO       UI_RGB(0x3A, 0x3A, 0x48) // 0 dB line, and markers of bands left at 0 dB (C.faint)
+
+/* Title strip across the top: channel number at the left, input type at the right */
+#define CH_HEADER_H    28 // rows 0-27
+#define CH_TEXT_MARGIN 4  // from the left and right edges
+#define CH_TEXT_Y      2  // from the top of a strip or bar
+#define CH_TEXT_SIZE   24 // the 24-pixel font (12 x 24 per character)
+#define CH_INPUT_SIZE  16 // input type (MIC, LINE, HI-Z): the 16-pixel font (8 x 16 per character)
+#define CH_INPUT_Y     ((CH_HEADER_H - CH_INPUT_SIZE) / 2) // centred in the strip: row 6
+
+/* Right under it, when muted or soloed: a bar the same height. Both at once: MUTE left half, SOLO right half. */
+#define CH_BAR_Y       CH_HEADER_H // rows 28-55
+#define CH_BAR_H       CH_HEADER_H
+
+/* EQ graph: full width, 20 Hz to 20 kHz across, below where the bars go. Taller than the mockup's
+   (rows 74-195, +/-15 dB) so a band turned all the way up or down (+/-18 dB) fits with room to spare. */
+#define CH_EQ_Y        60
+#define CH_EQ_H        160                     // rows 60-219
+#define CH_EQ_MID      (CH_EQ_Y + CH_EQ_H / 2) // row 140 is 0 dB
+#define CH_EQ_RANGE_DB 24.0f                   // the curve stops at +/-24 dB
+#define CH_EQ_DB_PX    ((CH_EQ_H / 2) - 3)     // 77 rows for 24 dB, about 3.2 rows per dB
+
+/* Pan bar along the bottom. The centre line is in the middle column; each side has CH_PAN_HALF columns. */
+#define CH_PAN_HALF      112
+#define CH_PAN_X         8
+#define CH_PAN_W         (2 * CH_PAN_HALF + 1) // 225: odd, so both sides are the same width
+#define CH_PAN_H         11
+#define CH_PAN_Y         225 // rows 225-235
+#define CH_PAN_CENTRE_X  (CH_PAN_X + CH_PAN_HALF) // 120
+
+/** Input type, shown at the right of the title strip */
+typedef enum
+{
+    CH_INPUT_MIC,
+    CH_INPUT_LINE,
+    CH_INPUT_HIZ,
+} channel_input_t;
+
+/** Everything on a channel's screen apart from the EQ curve itself */
+typedef struct
+{
+    uint8_t number;        //!< 1-99, shown as two digits
+    channel_input_t input;
+    bool muted;
+    bool soloed;
+    bool title_lit;        //!< the selected channel's flash: title strip lighter right now
+    bool show_eq;          //!< the knobs control the EQ, so the graph shows
+    int16_t pan_fill;      //!< from channel_screen_pan_fill()
+} channel_screen_state_t;
+
+/** The EQ bands, low to high */
+typedef enum
+{
+    CH_EQ_LF,
+    CH_EQ_LMF,
+    CH_EQ_HMF,
+    CH_EQ_HF,
+} channel_eq_band_index_t;
+
+/*
+ * Each band's frequency range, knob fully left to fully right, from the EQ board's analysis
+ * (the "new" values). The knob sweeps logarithmically between them, so 12 o'clock is the middle
+ * of the range on a log scale: about 147 Hz, 669 Hz, 1.84 kHz and 5.66 kHz.
+ */
+#define CH_EQ_LF_MIN_HZ   37.0f
+#define CH_EQ_LF_MAX_HZ   585.4f
+#define CH_EQ_LMF_MIN_HZ  168.2f
+#define CH_EQ_LMF_MAX_HZ  2660.9f
+#define CH_EQ_HMF_MIN_HZ  462.4f
+#define CH_EQ_HMF_MAX_HZ  7317.4f
+#define CH_EQ_HF_MIN_HZ   1422.8f
+#define CH_EQ_HF_MAX_HZ   22515.2f
+
+/** One EQ band as stored in the control values (eq_band_control_t in control_interface.h) */
+typedef struct
+{
+    int16_t gain;
+    uint16_t q;
+    uint16_t freq;
+} channel_eq_band_t;
+
+/** A channel's EQ settings as stored in the control values */
+typedef struct
+{
+    channel_eq_band_t hf, hmf, lmf, lf;
+    bool hpf;
+} channel_eq_t;
+
+/** The EQ graph worked out from the settings, ready to draw. Large, so keep one and reuse it. */
+typedef struct
+{
+    int16_t fill_from[UI_SCREEN_W], fill_to[UI_SCREEN_W]; //!< rows between the curve and 0 dB, per column
+    int16_t line_from[UI_SCREEN_W], line_to[UI_SCREEN_W]; //!< rows the 2-pixel curve covers, per column
+    int16_t marker_x[4];                                   //!< band markers along the bottom: LF, LMF, HMF, HF
+    bool marker_active[4];                                 //!< the band boosts or cuts (more than 0.5 dB)
+    uint32_t curve_rgb, fill_rgb;                          //!< set by the region functions from the screen state
+} channel_eq_view_t;
+
+/** Memory for the shapes of a whole screen; keep it alive until the region has been drawn. */
+typedef struct
+{
+    ui_text_t texts[4];
+    char number[4];
+    ui_rect_t rects[6];
+} channel_screen_parts_t;
+
+/** Memory for the shapes of the title strip on its own. */
+typedef struct
+{
+    ui_text_t texts[2];
+    char number[4];
+    ui_rect_t rects[1];
+} channel_header_parts_t;
+
+/** Memory for the shapes of the pan bar on its own. */
+typedef struct
+{
+    ui_rect_t rects[2];
+} channel_pan_parts_t;
+
+/*
+ * Control values to dB, Hz and Q. The gain and Q units are not settled yet (see the TODOs in
+ * control_interface.h); these follow the mockup's sliders. Change them here when they are decided.
+ */
+float channel_eq_gain_db (int16_t gain);                                 //!< INT16_MIN..INT16_MAX -> -18..+18 dB
+float channel_eq_freq_hz (channel_eq_band_index_t band, uint16_t freq); //!< 0..65535 -> the band's range above
+float channel_eq_q (uint16_t q);                                         //!< 0..65535 -> Q 0.3..10, logarithmic; the middle is 1.7
+
+/** Works out the EQ curve for a channel's settings, the same way as the mockup's eqMagnitude(),
+ *  but limited to +/-CH_EQ_RANGE_DB instead of +/-15 dB. */
+void channel_screen_eq_compute (channel_eq_view_t *view, const channel_eq_t *eq);
+
+/** The whole screen. eq is only used when state->show_eq is true. */
+void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, const channel_screen_state_t *state,
+                          channel_eq_view_t *eq);
+
+/** Just the title strip, for when only the input type or the selection flash changed. */
+void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, const channel_screen_state_t *state);
+
+/** Just the EQ graph's area: the graph when state->show_eq is true, otherwise empty. */
+void channel_screen_eq (ui_region_t *region, channel_eq_view_t *eq, const channel_screen_state_t *state);
+
+/**
+ * Converts a pan control value (INT16_MIN = hard left, 0 = centre, INT16_MAX = hard right) into
+ * how many columns of the bar to fill: -CH_PAN_HALF to +CH_PAN_HALF, negative to the left.
+ * Like the pan knob's LED ring, hard left or right fills one half of the bar and no more.
+ */
+int16_t channel_screen_pan_fill (int16_t pan);
+
+/** Just the pan bar, for when only the pan changed. */
+void channel_screen_pan (ui_region_t *region, channel_pan_parts_t *parts, int16_t fill);
+
+#endif

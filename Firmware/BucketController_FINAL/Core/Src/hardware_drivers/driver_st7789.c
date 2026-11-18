@@ -3716,9 +3716,9 @@ uint8_t st7789_fill_rect(st7789_handle_t *handle, uint16_t left, uint16_t top, u
             handle->buf[i + 2] = (((color >> 4) & 0xF) << 4) |
                                  (((color >> 0) & 0xF) << 0);                      /* set the color */
         }
-        m = ((uint32_t)(right - left + 1) * (bottom - top + 1) * 3 / 2) /
-             ST7789_BUFFER_SIZE;                                                   /* total times */
-        n = ((uint32_t)(right - left + 1) * (bottom - top + 1) * 3 / 2) %
+        m = (((uint32_t)(right - left + 1) * (bottom - top + 1) * 3 + 1) / 2) /
+             ST7789_BUFFER_SIZE;                                                   /* total times (an odd last pixel still gets its second byte) */
+        n = (((uint32_t)(right - left + 1) * (bottom - top + 1) * 3 + 1) / 2) %
              ST7789_BUFFER_SIZE;                                                   /* the last */
         for (i = 0; i < m; i++)
         {

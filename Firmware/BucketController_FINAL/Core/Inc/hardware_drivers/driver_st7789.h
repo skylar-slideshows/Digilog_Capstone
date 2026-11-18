@@ -60,7 +60,15 @@ extern "C"{
  * @brief st7789 buffer size definition
  */
 #ifndef ST7789_BUFFER_SIZE
-    #define ST7789_BUFFER_SIZE    (4096)        /**< 4096 */
+    #define ST7789_BUFFER_SIZE    (4092)        /**< 4092: a multiple of 6, see below */
+#endif
+
+/* Large fills and pictures go out in pieces of ST7789_BUFFER_SIZE bytes. In 12-bit colour two pixels
+ * share three bytes, and in 18-bit colour each pixel takes three, so every piece must be a whole number
+ * of 3-byte groups or the next piece starts mid-pixel and the colours come out rotated (red shows as
+ * blue, then green, in bands about 11 rows tall). A multiple of 6 also suits 16-bit colour. */
+#if (ST7789_BUFFER_SIZE % 6) != 0
+    #error "ST7789_BUFFER_SIZE must be a multiple of 6"
 #endif
 
 /**

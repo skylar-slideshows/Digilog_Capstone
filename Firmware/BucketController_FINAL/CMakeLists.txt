@@ -116,11 +116,25 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/FreeRTOS_apps/i2c_scheduler.c
     Core/Src/FreeRTOS_apps/fader_poller.c
     Core/Src/FreeRTOS_apps/displays.c
+    Core/Src/FreeRTOS_apps/channel_display.c
+    Core/Src/ui/ui_render.c
+    Core/Src/ui/channel_screen.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Inc
 )
+
+# Screen drawing runs a loop for every pixel, so build it optimised even in Debug builds
+# (the last -O option wins). Stepping through these files in the debugger will jump around.
+set_source_files_properties(
+    Core/Src/FreeRTOS_apps/displays.c
+    Core/Src/FreeRTOS_apps/channel_display.c
+    Core/Src/ui/ui_render.c
+    Core/Src/ui/channel_screen.c
+    PROPERTIES COMPILE_OPTIONS "-O2"
+)
+
 
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
     -Wall

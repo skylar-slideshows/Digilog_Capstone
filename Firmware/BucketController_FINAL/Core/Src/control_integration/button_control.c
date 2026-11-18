@@ -47,6 +47,31 @@ static void update_radio_buttons (SemaphoreHandle_t *vals_mutex, channel_control
     xSemaphoreGive(*vals_mutex);
 }
 
+/*
+ * The SEL buttons are one set of radio buttons across the bucket's channels: pressing one selects that
+ * channel and deselects the others. Pressing the selected channel's button again keeps it selected.
+ * s_select_lock makes each change happen in one go, even if two buttons are pressed at the same moment.
+ */
+static StaticSemaphore_t s_select_lock_buffer;
+static SemaphoreHandle_t s_select_lock;
+
+static void update_select_button (const channel_controls *vals, channel_control_io_t *io)
+{
+    if (update_button(&(io->sel_button.button)) == BUTTON_NO_EVENT)
+    {
+        return;
+    }
+
+    xSemaphoreTake(s_select_lock, portMAX_DELAY);
+    for (uint8_t channel = 0; channel < CHANNELS; channel++)
+    {
+        xSemaphoreTake(channel_control_mutexes[channel], portMAX_DELAY);
+        channel_control_vals[channel].sel = (&channel_control_vals[channel] == vals);
+        xSemaphoreGive(channel_control_mutexes[channel]);
+    }
+    xSemaphoreGive(s_select_lock);
+}
+
 static void update_input_select_button (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
 {
     if (update_button(&(io->input_selection.input_select_button)) == BUTTON_NO_EVENT)
@@ -106,6 +131,11 @@ static const button_info_t BUTTONS[12] = {
 
 void init_button_controls (uint8_t channel, channel_control_io_t *io)
 {
+    if (s_select_lock == NULL)
+    {
+        s_select_lock = xSemaphoreCreateMutexStatic(&s_select_lock_buffer);
+    }
+
     I2C_TypeDef *bus = i2c_channel_bus(channel);
 
     io->input_selection.input_select_button = BUTTONS[0];
@@ -198,7 +228,7 @@ void update_channel_button_values (SemaphoreHandle_t *vals_mutex, channel_contro
     update_toggle_button_val_from_info(vals_mutex, &(io->high_pass_filter_button.button), &(vals->high_pass_filter));
     update_toggle_button_val_from_info(vals_mutex, &(io->solo_button.button), &(vals->solo));
     update_toggle_button_val_from_info(vals_mutex, &(io->mute_button.button), &(vals->muted));
-    update_toggle_button_val_from_info(vals_mutex, &(io->sel_button.button), &(vals->sel));
+    update_select_button(vals, io); // radio buttons across all channels, not a toggle
     update_toggle_button_val_from_info(vals_mutex, &(io->ins_button.button), &(vals->ins));
     update_toggle_button_val_from_info(vals_mutex, &(io->pre_button.button), &(vals->pre_fader));
 }
