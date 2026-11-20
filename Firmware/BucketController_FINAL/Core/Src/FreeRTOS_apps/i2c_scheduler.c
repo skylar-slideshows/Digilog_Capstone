@@ -7,6 +7,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp23017.h"
 #include "hardware_drivers/mcp4728_cache.h"
+#include "control_voltage.h"
 #include "portmacro.h"
 #include "projdefs.h"
 #include "stm32g474xx.h"
@@ -208,7 +209,7 @@ static void start_i2c_frame (uint8_t channel)
     read_mcp23017s(channel);
     update_control_values(channel);
     //update_control_leds(channel);
-    // TODO: DAC values
+    control_voltage_update(channel); // DAC codes into the cache, routing switches if they changed
     write_mcp4728s(channel);
     scheduler_states[channel].frame_counter = (scheduler_states[channel].frame_counter + 1) % SUPERFRAME_SIZE;
 }
@@ -243,6 +244,8 @@ void init_i2c_scheduler (void)
         "i2cscheduler3",
         "i2cscheduler4",
     };
+
+    control_voltage_init(); // routing board switches to a safe state before any channel task runs
 
     for (uint8_t i = 0; i < CHANNELS; i++)
     {

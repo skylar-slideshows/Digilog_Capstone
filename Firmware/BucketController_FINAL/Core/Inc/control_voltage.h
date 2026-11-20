@@ -3,7 +3,8 @@
   * CONTROL VOLTAGE GENERATION ENGINE - DIGILOG CONSOLE
   **********************************************************************************
   * @file control_voltage.h
-  * @brief 
+  * @brief Writes each channel's control voltages (MCP4728 codes) and routing board
+  *        switches from its stored control values. The maths is in cv_mapping.c.
   *
   * @author
   * @date
@@ -33,5 +34,27 @@
 
 #ifndef CONTROL_VOLTAGE_H
 #define CONTROL_VOLTAGE_H
+
+#include <stdint.h>
+
+/**
+ * Loads a safe state into the routing board's switches. Call once before the I2C tasks start
+ * (init_i2c_scheduler does).
+ */
+void control_voltage_init (void);
+
+/**
+ * Works out a channel's DAC codes and switch bits from its control values, puts the codes in the
+ * MCP4728 cache (the I2C scheduler flushes them) and sends any switch changes. Call from the
+ * channel's I2C task once per frame, after its control values are updated.
+ */
+void control_voltage_update (uint8_t channel);
+
+/**
+ * Extra attenuation (0 or less, dB) the output VCAs couldn't give at the last update: with the fader
+ * very low the rest has to come from the compressor's VCA (cv_mapping.pdf sections 18-19, "E").
+ * Not applied yet; for the compressor code.
+ */
+float control_voltage_comp_extra_db (uint8_t channel);
 
 #endif

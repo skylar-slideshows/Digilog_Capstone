@@ -107,6 +107,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/hardware_drivers/fader_driver.c
     Core/Src/hardware_drivers/driver_st7789.c
     Core/Src/control_voltage.c
+    Core/Src/cv_mapping.c
+    Core/Src/hardware_drivers/routing_switches.c
     Core/Src/control_integration/control_interface.c
     Core/Src/control_integration/button_control.c
     Core/Src/control_integration/knob_control.c

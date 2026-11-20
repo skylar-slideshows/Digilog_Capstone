@@ -9,6 +9,7 @@
 #include "hardware_structs.h"
 #include "portmacro.h"
 #include "stm32g474xx.h"
+#include "task.h"
 #include <stdbool.h>
 
 /* Functions related to accepting some states and updating control values */
@@ -138,6 +139,80 @@ static void update_s_value_from_encoder (
  * selected control set. Each physical knob must only be read once per update, so only the knobs of the selected set are read.
  */
 
+/*
+ * LF and HF shelf/bell: holding the band's gain knob down for MODE_HOLD_MS (without turning it) switches the band
+ * between shelf and bell. Its ring then flashes fully MODE_FLASHES times to confirm. Turning while held is fine
+ * adjustment, so a hold that turns never switches. One switch per hold; let go and hold again to switch back.
+ */
+#define MODE_HOLD_MS         2000U
+#define MODE_FLASHES         3U
+#define MODE_FLASH_PERIOD_MS 300U // on for half, off for half
+
+enum
+{
+    MODE_LF,
+    MODE_HF,
+    MODE_BANDS
+};
+
+typedef struct
+{
+    TickType_t since; //!< when the current press started
+    bool pressed;     //!< the button was down at the last update
+    bool spent;       //!< this press has turned the knob or already switched: no switch until it's let go
+} mode_hold_t;
+
+typedef struct
+{
+    volatile TickType_t start;
+    volatile bool active;
+} mode_flash_t;
+
+static mode_hold_t s_mode_hold[CHANNELS][MODE_BANDS];   // read and written by the channel's I2C task
+static mode_flash_t s_mode_flash[CHANNELS][MODE_BANDS]; // set by the I2C task, shown by the LED task
+
+static uint8_t channel_of (const channel_controls *vals)
+{
+    return (uint8_t)(vals - channel_control_vals);
+}
+
+static void check_mode_hold (
+    uint8_t channel,
+    uint8_t band,
+    const knob_input_t *input,
+    SemaphoreHandle_t *vals_mutex,
+    bool *bell
+)
+{
+    mode_hold_t *hold = &(s_mode_hold[channel][band]);
+    if (!input->held)
+    {
+        hold->pressed = false;
+        return;
+    }
+
+    const TickType_t now = xTaskGetTickCount();
+    if (!hold->pressed)
+    {
+        hold->pressed = true;
+        hold->since = now;
+        hold->spent = false;
+    }
+    if (input->direction != 0)
+    {
+        hold->spent = true;
+    }
+    if (!hold->spent && (now - hold->since) >= pdMS_TO_TICKS(MODE_HOLD_MS))
+    {
+        xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+        *bell = !*bell;
+        xSemaphoreGive(*vals_mutex);
+        s_mode_flash[channel][band].start = now;
+        s_mode_flash[channel][band].active = true;
+        hold->spent = true;
+    }
+}
+
 static void update_send_knob_values (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,
@@ -161,18 +236,30 @@ static void update_send_knob_values (
 /**
  * @brief Update an EQ band's values. Bands with a q knob share one physical knob between gain and q:
  * turning it adjusts gain, or q while its button is held (so there is no fine adjustment on that knob).
+ * Double clicking the gain knob resets gain, on every band; no click resets q.
+ * mode_band (MODE_LF / MODE_HF) is for the bands without q: holding their gain knob switches shelf/bell.
  */
 static void update_eq_band_knob_values (
     SemaphoreHandle_t *vals_mutex,
     eq_band_control_t *vals,
     eq_band_interface_t *band_io,
     bool has_q,
-    s_scalar_control_t sensitivity
+    s_scalar_control_t sensitivity,
+    uint8_t channel,
+    uint8_t mode_band
 )
 {
+    knob_input_t input = read_knob(&(band_io->gain_knob.encoder)); // q_knob is the same hardware
+
     if (has_q)
     {
-        const knob_input_t input = read_knob(&(band_io->gain_knob.encoder)); // q_knob is the same hardware
+        if (input.reset)
+        {
+            // the second click holds the button, which would otherwise make this a q reset
+            const knob_input_t reset_gain = {.reset = true};
+            apply_s_input(vals_mutex, &reset_gain, &(vals->gain), sensitivity);
+            input.reset = false;
+        }
         if (input.held)
         {
             apply_u_input(vals_mutex, &input, &(vals->q), sensitivity);
@@ -184,7 +271,8 @@ static void update_eq_band_knob_values (
     }
     else
     {
-        update_s_value_from_encoder(vals_mutex, &(band_io->gain_knob.encoder), &(vals->gain), sensitivity);
+        apply_s_input(vals_mutex, &input, &(vals->gain), fine_if_held(&input, sensitivity));
+        check_mode_hold(channel, mode_band, &input, vals_mutex, &(vals->bell));
     }
 
     update_u_value_from_encoder(vals_mutex, &(band_io->freq_knob.encoder), &(vals->freq), sensitivity);
@@ -227,11 +315,14 @@ void update_channel_knob_values (
             update_send_knob_values(vals_mutex, vals, io, sensitivity);
             break;
         case EQ_CONTROL:
-            update_eq_band_knob_values(vals_mutex, &(vals->hf_control), &(io->hf_interface), false, sensitivity);
-            update_eq_band_knob_values(vals_mutex, &(vals->hmf_control), &(io->hmf_interface), true, sensitivity);
-            update_eq_band_knob_values(vals_mutex, &(vals->lmf_control), &(io->lmf_interface), true, sensitivity);
-            update_eq_band_knob_values(vals_mutex, &(vals->lf_control), &(io->lf_interface), false, sensitivity);
+        {
+            const uint8_t channel = channel_of(vals);
+            update_eq_band_knob_values(vals_mutex, &(vals->hf_control), &(io->hf_interface), false, sensitivity, channel, MODE_HF);
+            update_eq_band_knob_values(vals_mutex, &(vals->hmf_control), &(io->hmf_interface), true, sensitivity, channel, 0);
+            update_eq_band_knob_values(vals_mutex, &(vals->lmf_control), &(io->lmf_interface), true, sensitivity, channel, 0);
+            update_eq_band_knob_values(vals_mutex, &(vals->lf_control), &(io->lf_interface), false, sensitivity, channel, MODE_LF);
             break;
+        }
         case COMP_CONTROL:
             update_comp_knob_values(vals_mutex, &(vals->comp_control), &(io->comp_interface), sensitivity);
             break;
@@ -269,6 +360,32 @@ static void show_signed (led_device_t *ring, s_scalar_control_t value)
 }
 
 static void hide (led_device_t *ring) { show_unsigned(ring, 0); }
+
+/** While a band's shelf/bell flash runs, its gain ring blinks fully on and off. Returns false once it's over. */
+static bool show_mode_flash (uint8_t channel, uint8_t band, led_device_t *ring)
+{
+    mode_flash_t *flash = &(s_mode_flash[channel][band]);
+    if (!flash->active)
+    {
+        return false;
+    }
+    const TickType_t elapsed = xTaskGetTickCount() - flash->start;
+    const TickType_t period = pdMS_TO_TICKS(MODE_FLASH_PERIOD_MS);
+    if (elapsed >= MODE_FLASHES * period)
+    {
+        flash->active = false;
+        return false;
+    }
+    if (elapsed % period < period / 2)
+    {
+        show_unsigned(ring, U_SCALAR_CONTROL_MAX);
+    }
+    else
+    {
+        show_unsigned(ring, 0);
+    }
+    return true;
+}
 
 static void show_eq_band (const eq_band_control_t *vals, eq_band_interface_t *band_io, bool has_q)
 {
@@ -312,11 +429,17 @@ void update_channel_knob_leds (
             hide(io->lf_interface.freq_knob.led_ring);
             break;
         case EQ_CONTROL:
+        {
+            const uint8_t channel = channel_of(vals);
             show_eq_band(&(v.hf_control), &(io->hf_interface), false);
             show_eq_band(&(v.hmf_control), &(io->hmf_interface), true);
             show_eq_band(&(v.lmf_control), &(io->lmf_interface), true);
             show_eq_band(&(v.lf_control), &(io->lf_interface), false);
+            // a shelf/bell switch just happened: flash the gain ring over the normal display
+            show_mode_flash(channel, MODE_HF, io->hf_interface.gain_knob.led_ring);
+            show_mode_flash(channel, MODE_LF, io->lf_interface.gain_knob.led_ring);
             break;
+        }
         case COMP_CONTROL:
             show_signed(io->comp_interface.in_gain_knob.led_ring, v.comp_control.in_gain);
             show_signed(io->comp_interface.threshold_knob.led_ring, v.comp_control.threshold);

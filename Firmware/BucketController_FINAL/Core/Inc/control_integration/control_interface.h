@@ -37,9 +37,10 @@ typedef enum
 
 typedef struct
 {
-    s_scalar_control_t gain; //!< TODO gain range
-    u_scalar_control_t q;    //!< TODO q range(s)
-    u_scalar_control_t freq; //!< TODO freq range(s)
+    s_scalar_control_t gain; //!< -15 dB (INT16_MIN) to +15 dB (INT16_MAX), 0 = flat (cv_mapping.pdf 2-5)
+    u_scalar_control_t q;    //!< LMF/HMF only: Q 0.5 (0, wide) to 5 (max, narrow), logarithmic (10-11)
+    u_scalar_control_t freq; //!< logarithmic over the band: LF 65-550 Hz, LMF 180-2500 Hz, HMF 500-7000 Hz, HF 1.5-13 kHz (6-9)
+    bool bell;               //!< LF/HF only: bell instead of shelf
 } eq_band_control_t;
 
 typedef struct

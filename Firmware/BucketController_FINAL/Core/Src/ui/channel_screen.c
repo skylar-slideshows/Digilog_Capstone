@@ -55,8 +55,14 @@ static void set_eq_colours (channel_eq_view_t *eq, const channel_screen_state_t 
 
 /*=============================== EQ CURVE ================================*/
 
-float channel_eq_gain_db (int16_t gain) { return (float)gain * (18.0f / 32768.0f); }
-float channel_eq_q (uint16_t q) { return 0.3f * powf(10.0f / 0.3f, (float)q / 65535.0f); }
+float channel_eq_gain_db (int16_t gain)
+{
+    // B = 15 c dB, with c the centred knob as in cv_mapping.pdf
+    const uint16_t p = (uint16_t)((uint16_t)gain ^ 0x8000U);
+    const float d = (float)p - 32767.0f;
+    return 15.0f * (p <= 32767U ? d / 32767.0f : d / 32768.0f);
+}
+float channel_eq_q (uint16_t q) { return 0.5f * powf(10.0f, (float)q / 65535.0f); }
 
 float channel_eq_freq_hz (channel_eq_band_index_t band, uint16_t freq)
 {
@@ -73,11 +79,18 @@ float channel_eq_freq_hz (channel_eq_band_index_t band, uint16_t freq)
 typedef struct
 {
     float gain_db, freq_hz, q;
+    bool bell;
 } band_t;
 
+/** has_q: LMF/HMF (always bells with a Q knob); otherwise LF/HF, a shelf unless switched to bell */
 static band_t band (const channel_eq_band_t *b, channel_eq_band_index_t index, bool has_q)
 {
-    return (band_t){channel_eq_gain_db(b->gain), channel_eq_freq_hz(index, b->freq), has_q ? channel_eq_q(b->q) : 1.0f};
+    return (band_t){
+        channel_eq_gain_db(b->gain),
+        channel_eq_freq_hz(index, b->freq),
+        has_q ? channel_eq_q(b->q) : CH_EQ_LF_HF_BELL_Q,
+        has_q || b->bell,
+    };
 }
 
 static float bell (const band_t *b, float f)
@@ -101,8 +114,9 @@ static float response_db (const channel_eq_t *eq, const band_t bands[4], float f
         const float x = powf(f / 80.0f, 4.0f);
         db += 10.0f * log10f(x / (1.0f + x));
     }
-    db += shelf(&bands[CH_EQ_HF], f, true) + bell(&bands[CH_EQ_HMF], f) + bell(&bands[CH_EQ_LMF], f) +
-          shelf(&bands[CH_EQ_LF], f, false);
+    db += bands[CH_EQ_HF].bell ? bell(&bands[CH_EQ_HF], f) : shelf(&bands[CH_EQ_HF], f, true);
+    db += bell(&bands[CH_EQ_HMF], f) + bell(&bands[CH_EQ_LMF], f);
+    db += bands[CH_EQ_LF].bell ? bell(&bands[CH_EQ_LF], f) : shelf(&bands[CH_EQ_LF], f, false);
     return clampf(db, -CH_EQ_RANGE_DB, CH_EQ_RANGE_DB);
 }
 

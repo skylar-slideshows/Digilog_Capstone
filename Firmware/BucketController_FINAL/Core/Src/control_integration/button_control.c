@@ -224,11 +224,16 @@ void update_channel_button_values (SemaphoreHandle_t *vals_mutex, channel_contro
     update_input_select_button(vals_mutex, vals, io);
 
     update_toggle_button_val_from_info(vals_mutex, &(io->phase_flip_button.button), &(vals->phase_flip));
-    update_toggle_button_val_from_info(vals_mutex, &(io->phantom_48v_button.button), &(vals->phantom_48v));
+    // For now +48 V stays off (and so does its LED); see CV_ENABLE_PHANTOM in cv_mapping.c
+    // update_toggle_button_val_from_info(vals_mutex, &(io->phantom_48v_button.button), &(vals->phantom_48v));
+    update_button(&(io->phantom_48v_button.button)); // still read, so a press doesn't count later
     update_toggle_button_val_from_info(vals_mutex, &(io->high_pass_filter_button.button), &(vals->high_pass_filter));
     update_toggle_button_val_from_info(vals_mutex, &(io->solo_button.button), &(vals->solo));
     update_toggle_button_val_from_info(vals_mutex, &(io->mute_button.button), &(vals->muted));
     update_select_button(vals, io); // radio buttons across all channels, not a toggle
-    update_toggle_button_val_from_info(vals_mutex, &(io->ins_button.button), &(vals->ins));
-    update_toggle_button_val_from_info(vals_mutex, &(io->pre_button.button), &(vals->pre_fader));
+    // For now the insert is out and its send taps after the EQ (not pre); see CV_ENABLE_INSERT in cv_mapping.c
+    // update_toggle_button_val_from_info(vals_mutex, &(io->ins_button.button), &(vals->ins));
+    // update_toggle_button_val_from_info(vals_mutex, &(io->pre_button.button), &(vals->pre_fader));
+    update_button(&(io->ins_button.button));
+    update_button(&(io->pre_button.button));
 }

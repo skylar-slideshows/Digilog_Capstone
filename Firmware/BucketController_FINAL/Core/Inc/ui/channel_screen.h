@@ -104,18 +104,18 @@ typedef enum
 } channel_eq_band_index_t;
 
 /*
- * Each band's frequency range, knob fully left to fully right, from the EQ board's analysis
- * (the "new" values). The knob sweeps logarithmically between them, so 12 o'clock is the middle
- * of the range on a log scale: about 147 Hz, 669 Hz, 1.84 kHz and 5.66 kHz.
+ * Each band's frequency range, knob fully left to fully right, as the hardware is driven
+ * (cv_mapping.pdf sections 6-9). The knob sweeps logarithmically between them, so 12 o'clock is
+ * the middle of the range on a log scale: about 189 Hz, 671 Hz, 1.87 kHz and 4.42 kHz.
  */
-#define CH_EQ_LF_MIN_HZ   37.0f
-#define CH_EQ_LF_MAX_HZ   585.4f
-#define CH_EQ_LMF_MIN_HZ  168.2f
-#define CH_EQ_LMF_MAX_HZ  2660.9f
-#define CH_EQ_HMF_MIN_HZ  462.4f
-#define CH_EQ_HMF_MAX_HZ  7317.4f
-#define CH_EQ_HF_MIN_HZ   1422.8f
-#define CH_EQ_HF_MAX_HZ   22515.2f
+#define CH_EQ_LF_MIN_HZ   65.0f
+#define CH_EQ_LF_MAX_HZ   550.0f
+#define CH_EQ_LMF_MIN_HZ  180.0f
+#define CH_EQ_LMF_MAX_HZ  2500.0f
+#define CH_EQ_HMF_MIN_HZ  500.0f
+#define CH_EQ_HMF_MAX_HZ  7000.0f
+#define CH_EQ_HF_MIN_HZ   1500.0f
+#define CH_EQ_HF_MAX_HZ   13000.0f
 
 /** One EQ band as stored in the control values (eq_band_control_t in control_interface.h) */
 typedef struct
@@ -123,6 +123,7 @@ typedef struct
     int16_t gain;
     uint16_t q;
     uint16_t freq;
+    bool bell;     //!< LF/HF only: bell instead of shelf
 } channel_eq_band_t;
 
 /** A channel's EQ settings as stored in the control values */
@@ -164,13 +165,11 @@ typedef struct
     ui_rect_t rects[2];
 } channel_pan_parts_t;
 
-/*
- * Control values to dB, Hz and Q. The gain and Q units are not settled yet (see the TODOs in
- * control_interface.h); these follow the mockup's sliders. Change them here when they are decided.
- */
-float channel_eq_gain_db (int16_t gain);                                 //!< INT16_MIN..INT16_MAX -> -18..+18 dB
+/* Control values to dB, Hz and Q, the same as the hardware (cv_mapping.pdf) */
+float channel_eq_gain_db (int16_t gain);                                 //!< INT16_MIN..INT16_MAX -> -15..+15 dB
 float channel_eq_freq_hz (channel_eq_band_index_t band, uint16_t freq); //!< 0..65535 -> the band's range above
-float channel_eq_q (uint16_t q);                                         //!< 0..65535 -> Q 0.3..10, logarithmic; the middle is 1.7
+float channel_eq_q (uint16_t q);                                         //!< 0..65535 -> Q 0.5..5, logarithmic; the middle is 1.58
+#define CH_EQ_LF_HF_BELL_Q 1.0f // LF/HF in bell mode have no Q control; drawn with this Q
 
 /** Works out the EQ curve for a channel's settings, the same way as the mockup's eqMagnitude(),
  *  but limited to +/-CH_EQ_RANGE_DB instead of +/-15 dB. */

@@ -47,12 +47,12 @@ static channel_eq_view_t s_eq_view; // worked-out EQ graph, reused for each scre
 
 static channel_eq_band_t eq_band (const eq_band_control_t *band)
 {
-    return (channel_eq_band_t){.gain = band->gain, .q = band->q, .freq = band->freq};
+    return (channel_eq_band_t){.gain = band->gain, .q = band->q, .freq = band->freq, .bell = band->bell};
 }
 
 static bool same_band (const channel_eq_band_t *a, const channel_eq_band_t *b)
 {
-    return a->gain == b->gain && a->q == b->q && a->freq == b->freq;
+    return a->gain == b->gain && a->q == b->q && a->freq == b->freq && a->bell == b->bell;
 }
 
 static bool same_eq (const channel_eq_t *a, const channel_eq_t *b)

@@ -1524,7 +1524,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, DISP_RST_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, SHIFTREG_OE_Pin|LED_TEST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
@@ -1551,12 +1551,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED_TEST_Pin */
-  GPIO_InitStruct.Pin = LED_TEST_Pin;
+  /*Configure GPIO pins : SHIFTREG_OE_Pin LED_TEST_Pin */
+  GPIO_InitStruct.Pin = SHIFTREG_OE_Pin|LED_TEST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_TEST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
   GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;

@@ -65,6 +65,8 @@ void Error_Handler(void);
 #define F0_Touch_GPIO_Port GPIOE
 #define DISP_RST_Pin GPIO_PIN_13
 #define DISP_RST_GPIO_Port GPIOC
+#define SHIFTREG_OE_Pin GPIO_PIN_9
+#define SHIFTREG_OE_GPIO_Port GPIOF
 #define DISP_A0_FMC_Pin GPIO_PIN_10
 #define DISP_A0_FMC_GPIO_Port GPIOF
 #define __OSC_IN_Pin GPIO_PIN_0
