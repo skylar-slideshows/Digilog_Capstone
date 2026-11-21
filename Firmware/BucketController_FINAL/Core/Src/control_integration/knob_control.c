@@ -503,6 +503,15 @@ void knob_flash_eq_rings (uint8_t channel)
     s_eq_reset_flash[channel].active = true;
 }
 
+static mode_flash_t s_send_reset_flash[CHANNELS];
+
+void knob_flash_send_rings (uint8_t channel)
+{
+    if (channel >= CHANNELS) return;
+    s_send_reset_flash[channel].start = xTaskGetTickCount();
+    s_send_reset_flash[channel].active = true;
+}
+
 /** Where a flash is in its on/off cycle: 1 = lit, 0 = dark, -1 = not flashing (or just finished) */
 static int8_t flash_phase (mode_flash_t *flash)
 {
@@ -574,16 +583,28 @@ void update_channel_knob_leds (
     switch (v.control_set_selection)
     {
         case SENDS_CONTROL:
+        {
+            // the sends were just reset: every sends ring flashes instead
+            const int8_t phase = flash_phase(&s_send_reset_flash[channel_of(vals)]);
             for (uint8_t i = 0; i < SEND_CHANNELS; i++)
             {
-                show_unsigned(io->send_channel_interfaces[i].gain_knob.led_ring, v.send_controls[i].gain);
+                led_device_t *gain_ring = io->send_channel_interfaces[i].gain_knob.led_ring;
+                led_device_t *pan_ring = io->send_channel_interfaces[i].pan_knob.led_ring;
+                if (phase >= 0)
+                {
+                    show_unsigned(gain_ring, phase ? U_SCALAR_CONTROL_MAX : 0);
+                    if (i < SEND_CHANNELS - 1) show_unsigned(pan_ring, phase ? U_SCALAR_CONTROL_MAX : 0);
+                    continue;
+                }
+                show_unsigned(gain_ring, v.send_controls[i].gain);
                 if (i < SEND_CHANNELS - 1) // pan is not used for the last send channel
                 {
-                    show_signed(io->send_channel_interfaces[i].pan_knob.led_ring, v.send_controls[i].pan);
+                    show_signed(pan_ring, v.send_controls[i].pan);
                 }
             }
             hide(io->lf_interface.freq_knob.led_ring);
             break;
+        }
         case EQ_CONTROL:
         {
             const uint8_t channel = channel_of(vals);

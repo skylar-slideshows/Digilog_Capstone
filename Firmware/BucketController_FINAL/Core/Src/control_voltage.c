@@ -111,6 +111,8 @@ void control_voltage_update (uint8_t channel)
     params.muted = v->muted;
     params.soloed = v->solo;
     params.other_soloed = other_soloed; // solo takes the other channels off the mix without setting their mute
+    params.eq_off = v->eq_off;
+    params.sends_off = v->sends_off;
     xSemaphoreGive(channel_control_mutexes[channel]);
 
     // the maths runs only when something changed; this is called every I2C frame

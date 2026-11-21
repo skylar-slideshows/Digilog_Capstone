@@ -26,35 +26,39 @@ static void update_toggle_button_val_from_info (
 }
 
 /*
- * Holding the EQ button for EQ_RESET_HOLD_MS resets every EQ setting (all four bands' gain, frequency
- * and Q, and LF/HF back to shelves) to its startup value, and flashes the EQ rings. Once per hold.
+ * The EQ and SENDS buttons, besides selecting what the knobs control:
+ *  - held for RESET_HOLD_MS: every setting of that section goes back to its startup value (EQ: all
+ *    four bands' gain, frequency and Q, and LF/HF back to shelves; SENDS: all four sends' level and
+ *    pan), and its rings flash. Once per hold.
+ *  - double tapped: that section is bypassed (EQ flat; sends at their lowest gain) without changing
+ *    its settings, and its button flashes until it's double tapped again. The knobs still change the
+ *    settings while it's bypassed; they're heard once the bypass is lifted.
  */
-#define EQ_RESET_HOLD_MS 2000U
+#define RESET_HOLD_MS       2000U
+#define BYPASS_FLASH_MS     250U  // a bypassed section's button: on this long, then off this long
 
 typedef struct
 {
     TickType_t since; //!< when the current press started
     bool pressed;
     bool done;        //!< already reset during this press
-} eq_hold_t;
+} hold_t;
 
-static eq_hold_t s_eq_hold[CHANNELS];
+static hold_t s_eq_hold[CHANNELS];
+static hold_t s_sends_hold[CHANNELS];
 
 static uint8_t channel_of (const channel_controls *vals)
 {
     return (uint8_t)(vals - channel_control_vals);
 }
 
-static void check_eq_reset_hold (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
+/** True once per press, when the button has been held RESET_HOLD_MS */
+static bool held_long_enough (hold_t *hold, const button_info_t *button)
 {
-    const uint8_t channel = channel_of(vals);
-    if (channel >= CHANNELS) return;
-    eq_hold_t *hold = &s_eq_hold[channel];
-
-    if (!get_button_held(&(io->eq_button.button)))
+    if (!get_button_held(button))
     {
         hold->pressed = false;
-        return;
+        return false;
     }
     const TickType_t now = xTaskGetTickCount();
     if (!hold->pressed)
@@ -63,9 +67,22 @@ static void check_eq_reset_hold (SemaphoreHandle_t *vals_mutex, channel_controls
         hold->since = now;
         hold->done = false;
     }
-    if (!hold->done && (now - hold->since) >= pdMS_TO_TICKS(EQ_RESET_HOLD_MS))
+    if (!hold->done && (now - hold->since) >= pdMS_TO_TICKS(RESET_HOLD_MS))
     {
-        const channel_controls *start = control_defaults();
+        hold->done = true;
+        return true;
+    }
+    return false;
+}
+
+static void check_section_buttons (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
+{
+    const uint8_t channel = channel_of(vals);
+    if (channel >= CHANNELS) return;
+    const channel_controls *start = control_defaults();
+
+    if (held_long_enough(&s_eq_hold[channel], &(io->eq_button.button)))
+    {
         xSemaphoreTake(*vals_mutex, portMAX_DELAY);
         vals->hf_control = start->hf_control;
         vals->hmf_control = start->hmf_control;
@@ -73,8 +90,73 @@ static void check_eq_reset_hold (SemaphoreHandle_t *vals_mutex, channel_controls
         vals->lf_control = start->lf_control;
         xSemaphoreGive(*vals_mutex);
         knob_flash_eq_rings(channel);
+    }
+    if (held_long_enough(&s_sends_hold[channel], &(io->send_button.button)))
+    {
+        xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+        for (uint8_t i = 0; i < SEND_CHANNELS; i++) vals->send_controls[i] = start->send_controls[i];
+        xSemaphoreGive(*vals_mutex);
+        knob_flash_send_rings(channel);
+    }
+
+    // double taps toggle the bypasses (each button is read for presses exactly once per update, here)
+    const bool eq_double = update_button(&(io->eq_button.button)) == BUTTON_DOUBLE_PRESSED;
+    const bool sends_double = update_button(&(io->send_button.button)) == BUTTON_DOUBLE_PRESSED;
+    if (eq_double || sends_double)
+    {
+        xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+        if (eq_double) vals->eq_off = !vals->eq_off;
+        if (sends_double) vals->sends_off = !vals->sends_off;
+        xSemaphoreGive(*vals_mutex);
+    }
+}
+
+/*
+ * +48 V: the button must be held PHANTOM_HOLD_MS to turn it on, and only on the mic input. A press turns
+ * it off straight away (and that same press can't turn it back on). It also goes off whenever the input
+ * isn't mic (see update_input_select_button). Whether the routing board actually switches it is up to
+ * CV_ENABLE_PHANTOM in cv_mapping.c.
+ */
+#define PHANTOM_HOLD_MS 2000U
+
+static hold_t s_phantom_hold[CHANNELS];
+
+static void update_phantom_button (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
+{
+    const uint8_t channel = channel_of(vals);
+    if (channel >= CHANNELS) return;
+    hold_t *hold = &s_phantom_hold[channel];
+    const button_info_t *button = &(io->phantom_48v_button.button);
+
+    const bool new_press = update_button(button) != BUTTON_NO_EVENT;
+    const bool held = get_button_held(button);
+    const TickType_t now = xTaskGetTickCount();
+
+    xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+    const bool mic = vals->input_type_selection == MIC_INPUT;
+    if (!mic) vals->phantom_48v = false;
+
+    if (new_press)
+    {
+        hold->pressed = true;
+        hold->since = now;
+        hold->done = false;
+        if (vals->phantom_48v)
+        {
+            vals->phantom_48v = false; // off at once
+            hold->done = true;         // and this press can't turn it on again
+        }
+    }
+    if (!held)
+    {
+        hold->pressed = false;
+    }
+    else if (hold->pressed && !hold->done && mic && (now - hold->since) >= pdMS_TO_TICKS(PHANTOM_HOLD_MS))
+    {
+        vals->phantom_48v = true;
         hold->done = true;
     }
+    xSemaphoreGive(*vals_mutex);
 }
 
 static void update_radio_buttons (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
@@ -147,6 +229,10 @@ static void update_input_select_button (SemaphoreHandle_t *vals_mutex, channel_c
     default:
         vals->input_type_selection = LINE_INPUT;
         break;
+    }
+    if (vals->input_type_selection != MIC_INPUT)
+    {
+        vals->phantom_48v = false; // +48 V only on the mic input
     }
     xSemaphoreGive(*vals_mutex);
 }
@@ -268,9 +354,11 @@ void update_channel_button_leds (
         led_set_bool(s_input_cycle_led[channel], get_button_held(&(io->input_selection.input_select_button)));
     }
 
-    led_set_bool(io->eq_button.led, v.control_set_selection == EQ_CONTROL);
+    // a bypassed section's button flashes, whether or not it's selected
+    const bool flash_lit = ((xTaskGetTickCount() / pdMS_TO_TICKS(BYPASS_FLASH_MS)) & 1U) == 0U;
+    led_set_bool(io->eq_button.led, v.eq_off ? flash_lit : (v.control_set_selection == EQ_CONTROL));
     led_set_bool(io->comp_button.led, v.control_set_selection == COMP_CONTROL);
-    led_set_bool(io->send_button.led, v.control_set_selection == SENDS_CONTROL);
+    led_set_bool(io->send_button.led, v.sends_off ? flash_lit : (v.control_set_selection == SENDS_CONTROL));
 
     led_set_bool(io->phase_flip_button.led, v.phase_flip);
     led_set_bool(io->phantom_48v_button.led, v.phantom_48v);
@@ -285,14 +373,12 @@ void update_channel_button_leds (
 void update_channel_button_values (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
 {
     update_radio_buttons(vals_mutex, vals, io);
-    check_eq_reset_hold(vals_mutex, vals, io);
+    check_section_buttons(vals_mutex, vals, io);
 
     update_input_select_button(vals_mutex, vals, io);
 
     update_toggle_button_val_from_info(vals_mutex, &(io->phase_flip_button.button), &(vals->phase_flip));
-    // For now +48 V stays off (and so does its LED); see CV_ENABLE_PHANTOM in cv_mapping.c
-    // update_toggle_button_val_from_info(vals_mutex, &(io->phantom_48v_button.button), &(vals->phantom_48v));
-    update_button(&(io->phantom_48v_button.button)); // still read, so a press doesn't count later
+    update_phantom_button(vals_mutex, vals, io); // hold 2 s to turn on (mic only); the routing board follows only if CV_ENABLE_PHANTOM
     update_toggle_button_val_from_info(vals_mutex, &(io->high_pass_filter_button.button), &(vals->high_pass_filter));
     update_toggle_button_val_from_info(vals_mutex, &(io->solo_button.button), &(vals->solo));
     update_toggle_button_val_from_info(vals_mutex, &(io->mute_button.button), &(vals->muted));

@@ -10,9 +10,10 @@
   *        (routing board J24: SR_DAT, SR_CLK, SR_LAT). SHIFTREG_OE (PF9) drives SR_OE_EXT
   *        (J24 pin 7): high keeps the board's outputs off, low turns them on.
   *
-  * Chain order from SR_DAT: U5 U6 (channel 1), U7 U8 (2), U9 U10 (3), U11 U12 (4).
-  * Each channel has 16 bits: the low byte is its first register (U5/U7/U9/U11),
-  * the high byte its second (U6/U8/U10/U12); bit 0 of each byte is QA.
+  * Chain order from SR_DAT, as measured on the board: the first pair of registers drives
+  * channel 4, then channel 3, channel 2, and the far end of the chain channel 1. (Channel 1's
+  * mute used to mute channel 4.) Each channel has 16 bits: the low byte is its first register,
+  * the high byte its second; bit 0 of each byte is QA. The order within a channel was right.
   * Every bit is active high (1 = the thing named is on), as the cards are wired.
   **********************************************************************************
 */

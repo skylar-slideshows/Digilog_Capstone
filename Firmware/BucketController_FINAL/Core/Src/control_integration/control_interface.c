@@ -79,6 +79,9 @@ static void fill_defaults (channel_controls *vals)
     vals->comp_control.threshold = 0;
     vals->comp_control.de_ess_amt = 0;
     vals->comp_control.ratio = 0;
+
+    vals->eq_off = false;
+    vals->sends_off = false;
 }
 
 static void init_control_vals (uint8_t channel)

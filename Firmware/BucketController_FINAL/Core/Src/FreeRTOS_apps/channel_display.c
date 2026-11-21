@@ -47,7 +47,7 @@ typedef struct
     int16_t fader;                //!< what the sends window was drawn from: master level...
     uint16_t send_level[4];       //!< ...the four sends...
     int16_t send_pan[2];          //!< ...and the pans of sends 1 and 2
-    char popup[16];               //!< the pop-up text on screen (state.popup_text points here)
+    char popup[48];               //!< the pop-up text on screen (state.popup_text points here)
 } shown_t;
 
 static shown_t s_shown[CHANNELS];
@@ -217,6 +217,11 @@ static void update_display (uint8_t display, bool flash_on)
         .title_lit = v.sel && flash_on,
         .show_eq = (v.control_set_selection == EQ_CONTROL),
         .show_sends = (v.control_set_selection == SENDS_CONTROL),
+        .eq_off = v.eq_off,
+        .sends_off = v.sends_off,
+        .phantom = v.phantom_48v,
+        .phase = v.phase_flip,
+        .hpf = v.high_pass_filter,
         .pan_fill = channel_screen_pan_fill(v.output_pan),
         .popup = where,
         .popup_text = shown->popup, // filled in below once it's known what changed
@@ -284,16 +289,22 @@ static void update_display (uint8_t display, bool flash_on)
     memcpy(shown->popup, popup, sizeof(popup));
     was->popup = now.popup;
     was->popup_rgb = now.popup_rgb;
-    if (popup_changed && (old_where == CH_POPUP_TOP || now.popup == CH_POPUP_TOP))
+    // the badges under the title strip (48V, PHASE, HPF) share the bar slot with the MUTE/SOLO bar
+    const bool badges_changed = now.phantom != was->phantom || now.phase != was->phase || now.hpf != was->hpf;
+    was->phantom = now.phantom;
+    was->phase = now.phase;
+    was->hpf = now.hpf;
+    if (badges_changed || (popup_changed && (old_where == CH_POPUP_TOP || now.popup == CH_POPUP_TOP)))
     {
         channel_bar_parts_t parts;
         channel_screen_bar_slot(&region, &parts, views, &now);
         displays_draw_region(display, &region);
     }
 
-    // switched between EQ, sends and compressor, or what the middle shows changed
-    if (now.show_eq != was->show_eq || now.show_sends != was->show_sends || (now.show_eq && eq_changed) ||
-        (now.show_sends && sends_changed))
+    // switched between EQ, sends and compressor, or what the middle shows changed (including a bypass)
+    if (now.show_eq != was->show_eq || now.show_sends != was->show_sends ||
+        (now.show_eq && (eq_changed || now.eq_off != was->eq_off)) ||
+        (now.show_sends && (sends_changed || now.sends_off != was->sends_off)))
     {
         channel_popup_parts_t parts;
         channel_screen_middle(&region, &parts, views, &now);
@@ -301,6 +312,8 @@ static void update_display (uint8_t display, bool flash_on)
         was->show_eq = now.show_eq;
         was->show_sends = now.show_sends;
     }
+    was->eq_off = now.eq_off;
+    was->sends_off = now.sends_off;
     if (popup_changed && (old_where == CH_POPUP_LOW || now.popup == CH_POPUP_LOW))
     {
         channel_popup_parts_t parts;

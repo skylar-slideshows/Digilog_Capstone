@@ -102,6 +102,11 @@ typedef struct
     /* COMP STUFF */
 
     comp_control_t comp_control; //!< Compressor controls
+
+    /* BYPASSES (double tap the EQ or SENDS button): the stored settings stay as they are */
+
+    bool eq_off;    //!< EQ bypassed: every band flat, as if no gain were set
+    bool sends_off; //!< all four sends at their lowest gain (off)
 } channel_controls;
 
 

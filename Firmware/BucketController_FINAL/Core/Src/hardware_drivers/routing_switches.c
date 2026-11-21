@@ -41,15 +41,20 @@ static uint8_t s_image[CHAIN_BYTES];   // [2*ch] = first register, [2*ch+1] = se
 static StaticSemaphore_t s_lock_buffer;
 static SemaphoreHandle_t s_lock;
 
-/** Sends the image and latches it. The first bit sent ends up furthest down the chain
- *  (U12 QH), so send from the last register's QH back to U5's QA. */
+/** Sends the image and latches it. The first bit sent ends up furthest down the chain, and the far
+ *  end is channel 1 (see routing_switches.h), so channel 1 goes first and channel 4 last. Within a
+ *  channel the second register goes before the first, each from QH down to QA. */
 static void send_chain (void)
 {
-    for (int8_t byte = CHAIN_BYTES - 1; byte >= 0; byte--)
+    for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
-        for (int8_t bit = 7; bit >= 0; bit--)
+        const uint8_t registers[2] = {s_image[2 * channel + 1], s_image[2 * channel]}; // second, then first
+        for (uint8_t r = 0; r < 2; r++)
         {
-            shift_bit((s_image[byte] >> bit) & 1U);
+            for (int8_t bit = 7; bit >= 0; bit--)
+            {
+                shift_bit((registers[r] >> bit) & 1U);
+            }
         }
     }
     latch_out(false);

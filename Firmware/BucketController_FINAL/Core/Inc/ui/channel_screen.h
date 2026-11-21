@@ -39,6 +39,14 @@
 #define CH_COLOR_SEND_MASTER   UI_RGB(0x7F, 0xC8, 0xFF) // sends window: master level bar and its label (light blue)
 #define CH_COLOR_SEND_AUX      UI_RGB(0x8C, 0xFF, 0x8C) // sends window: aux bars, labels and pans (light green)
 #define CH_COLOR_POPUP_SEND    CH_COLOR_SEND_AUX        // value pop-up: send levels and pans
+#define CH_COLOR_BYPASSED      UI_RGB(0x80, 0x80, 0x8C) // EQ curve and aux bars while bypassed (grey)
+#define CH_COLOR_BYPASSED_FILL UI_RGB(0x30, 0x30, 0x38) // fill under the EQ curve while bypassed
+#define CH_COLOR_BYPASS_TEXT   UI_RGB(0xE0, 0xE0, 0xE8) // "EQ OFF" / "SENDS OFF"
+#define CH_COLOR_BADGE_48V     UI_RGB(0xFF, 0x30, 0x30) // badges under the title strip, right: +48 V red...
+#define CH_COLOR_BADGE_PHASE   UI_RGB(0xFF, 0xFF, 0xFF) // ...phase white...
+#define CH_COLOR_BADGE_HPF     UI_RGB(0xFF, 0xD8, 0x20) // ...HPF yellow, all with black text
+#define CH_COLOR_BADGE_TEXT    UI_RGB(0x00, 0x00, 0x00)
+#define CH_COLOR_HPF_LINE      CH_COLOR_BADGE_HPF       // the HPF's dotted line on the EQ graph
 #define CH_COLOR_NUMBER_MUTED  UI_RGB(0xBE, 0x5A, 0x5A) // channel number when muted
 #define CH_COLOR_NUMBER_SOLO   UI_RGB(0xE6, 0xC8, 0x4A) // channel number when soloed
 #define CH_COLOR_MUTE_BAR      UI_RGB(0xFF, 0x20, 0x20) // MUTE bar
@@ -113,9 +121,11 @@ typedef enum
  * with the knob's (or fader's) position; a dash to its left marks 0 dB. Fully down, a bar is empty.
  */
 #define CH_SENDS_BARS        5
-#define CH_SENDS_LABEL_Y     (CH_POPUP_TOP_Y + CH_POPUP_H + 1) // labels: 16 px font, just under the top pop-up (row 71 at 40 px)
-#define CH_SENDS_BAR_TOP     (CH_SENDS_LABEL_Y + 19)          // bar outlines from here (row 90 at 40 px)...
-#define CH_SENDS_BAR_BOTTOM  196                              // ...to here
+#define CH_STATUS_Y          (CH_POPUP_TOP_Y + CH_POPUP_H + 1) // "EQ OFF" on the EQ graph: 16 px, just under the top pop-up (row 71 at 40 px)
+#define CH_SENDS_LABEL_Y     (CH_BAR_Y + CH_BAR_H + 2)        // labels, and "SENDS OFF": 16 px, rows 58-73, just under the MUTE/SOLO bar
+#define CH_SENDS_BAR_TOP     (CH_SENDS_LABEL_Y + 19)          // bar outlines from row 77...
+#define CH_SENDS_BAR_BOTTOM  196                              // ...to row 196 (120 rows)
+/* On the sends page the top pop-up's patch reaches down over the labels too, so a pop-up never shows half a label. */
 #define CH_SENDS_PAN_Y       200 // pan of A1 and A2: 16 px font, rows 200-215
 #define CH_SENDS_TEXT_SIZE   16
 
@@ -126,6 +136,7 @@ typedef struct
     char pan_text[2][6];             //!< under A1 and A2: "C", "50L", "33R"
     ui_text_t texts[CH_SENDS_BARS + 2];
     uint8_t text_count;
+    bool off;                        //!< sends bypassed: aux bars grey, "SENDS OFF"; set by the region functions
 } channel_sends_view_t;
 
 /** Where the value pop-up is */
@@ -146,6 +157,11 @@ typedef struct
     bool title_lit;        //!< the selected channel's flash: title strip lighter right now
     bool show_eq;          //!< the knobs control the EQ, so the graph shows
     bool show_sends;       //!< the knobs control the sends, so the sends window shows
+    bool eq_off;           //!< EQ bypassed: graph grey, "EQ OFF"
+    bool sends_off;        //!< sends bypassed: aux bars grey, "SENDS OFF"
+    bool phantom;          //!< badges under the title strip, from the right: "48V"...
+    bool phase;            //!< ..."PHASE"...
+    bool hpf;              //!< ..."HPF" (the HPF also shows as a dotted line on the EQ graph)
     int16_t pan_fill;      //!< from channel_screen_pan_fill()
     channel_popup_where_t popup;
     const char *popup_text; //!< the value being changed, when popup isn't CH_POPUP_NONE
@@ -199,6 +215,11 @@ typedef struct
     int16_t marker_x[4];                                   //!< band markers along the bottom: LF, LMF, HMF, HF
     bool marker_active[4];                                 //!< the band boosts or cuts (more than 0.5 dB)
     uint32_t curve_rgb, fill_rgb;                          //!< set by the region functions from the screen state
+    bool off;                                              //!< EQ bypassed: "EQ OFF" over the graph
+    /* The HPF isn't part of the curve above: it's a dotted yellow line showing the whole response with it,
+       drawn only where the HPF makes a difference. [0]: with the EQ on (bands + HPF); [1]: EQ off (HPF alone). */
+    int16_t hpf_cols;                                      //!< it's drawn in columns 0 .. hpf_cols-1 (0: HPF off)
+    int16_t hpf_row[2][UI_SCREEN_W];                       //!< the line's row in each column
 } channel_eq_view_t;
 
 /** Everything worked out for the middle of the screen: the EQ graph and the sends window. Keep one per screen. */
@@ -211,16 +232,16 @@ typedef struct
 /** Memory for the shapes of a whole screen; keep it alive until the region has been drawn. */
 typedef struct
 {
-    ui_text_t texts[5];
+    ui_text_t texts[8];
     char number[4];
-    ui_rect_t rects[7];
+    ui_rect_t rects[10];
 } channel_screen_parts_t;
 
-/** Memory for the bar slot under the title strip (MUTE/SOLO bars or the pop-up) */
+/** Memory for the bar slot under the title strip (MUTE/SOLO bars and the badges, or the pop-up) */
 typedef struct
 {
-    ui_rect_t rects[2];
-    ui_text_t texts[2];
+    ui_rect_t rects[5];
+    ui_text_t texts[5];
 } channel_bar_parts_t;
 
 /** Memory for the pop-ups drawn over the EQ area */

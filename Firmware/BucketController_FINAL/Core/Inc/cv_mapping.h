@@ -90,6 +90,8 @@ typedef struct
     bool muted;                   //!< the user's mute: off the mix bus (sends keep going)
     bool soloed;                  //!< this channel is soloed
     bool other_soloed;            //!< another channel in the bucket is soloed: off the mix bus unless soloed too
+    bool eq_off;                  //!< EQ bypassed: every band's gain treated as 0 dB (flat); settings kept
+    bool sends_off;               //!< all sends at their lowest gain (off); levels kept
 } cv_params_t;
 
 /** Remembered between updates */

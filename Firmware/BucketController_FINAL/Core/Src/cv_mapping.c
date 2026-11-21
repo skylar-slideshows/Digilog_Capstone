@@ -227,14 +227,20 @@ void cv_compute (const cv_params_t *p, cv_state_t *state, cv_result_t *out)
     if (p->hpf) sw |= RS_HPF;
 
     // 2-5. EQ gain, and each band wired for boost or cut
+    // EQ bypassed: every band as if its gain were at 0 dB (VCA off, wired for boost): flat
+    const uint16_t flat = 32767U;
+    const cv_eq_band_t lf = {p->eq_off ? flat : p->lf.gain, p->lf.freq, p->lf.q, p->lf.bell};
+    const cv_eq_band_t lmf = {p->eq_off ? flat : p->lmf.gain, p->lmf.freq, p->lmf.q, p->lmf.bell};
+    const cv_eq_band_t hmf = {p->eq_off ? flat : p->hmf.gain, p->hmf.freq, p->hmf.q, p->hmf.bell};
+    const cv_eq_band_t hf = {p->eq_off ? flat : p->hf.gain, p->hf.freq, p->hf.q, p->hf.bell};
     bool cut;
-    out->code[CV_LF_GAIN] = cv_eq_gain_code(p->lf.gain, !p->lf.bell, &cut); // LF/HF: shelf unless switched to bell
+    out->code[CV_LF_GAIN] = cv_eq_gain_code(lf.gain, !lf.bell, &cut); // LF/HF: shelf unless switched to bell
     if (cut) sw |= RS_LF_CUT;
-    out->code[CV_LMF_GAIN] = cv_eq_gain_code(p->lmf.gain, false, &cut);
+    out->code[CV_LMF_GAIN] = cv_eq_gain_code(lmf.gain, false, &cut);
     if (cut) sw |= RS_LMF_CUT;
-    out->code[CV_HMF_GAIN] = cv_eq_gain_code(p->hmf.gain, false, &cut);
+    out->code[CV_HMF_GAIN] = cv_eq_gain_code(hmf.gain, false, &cut);
     if (cut) sw |= RS_HMF_CUT;
-    out->code[CV_HF_GAIN] = cv_eq_gain_code(p->hf.gain, !p->hf.bell, &cut);
+    out->code[CV_HF_GAIN] = cv_eq_gain_code(hf.gain, !hf.bell, &cut);
     if (cut) sw |= RS_HF_CUT;
 
     // 6-11. EQ frequency (LF and HF depend on shelf or bell) and Q
@@ -259,6 +265,11 @@ void cv_compute (const cv_params_t *p, cv_state_t *state, cv_result_t *out)
     out->code[CV_AUX2_R] = send_code(send2 + right);
     out->code[CV_AUX3] = send_code(send_level_db(p->aux_level[2]));
     out->code[CV_AUX4] = send_code(send_level_db(p->aux_level[3]));
+    if (p->sends_off) // all sends at their lowest gain; the levels themselves are kept
+    {
+        out->code[CV_AUX1_L] = out->code[CV_AUX1_R] = out->code[CV_AUX2_L] = out->code[CV_AUX2_R] = 0;
+        out->code[CV_AUX3] = out->code[CV_AUX4] = 0;
+    }
 
     // 18-19. fader and main pan; past the output VCAs' range the rest goes to the compressor (E)
     const float fader = cv_fader_db(p->fader);

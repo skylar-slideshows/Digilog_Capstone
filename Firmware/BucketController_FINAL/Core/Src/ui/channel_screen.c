@@ -53,8 +53,22 @@ static uint32_t number_colour (const channel_screen_state_t *s)
     return s->muted ? CH_COLOR_NUMBER_MUTED : (s->soloed ? CH_COLOR_NUMBER_SOLO : CH_COLOR_NUMBER);
 }
 
+/** "EQ OFF" / "SENDS OFF", centred on the status row */
+static ui_text_t bypass_text (const char *text)
+{
+    return (ui_text_t){(int16_t)((UI_SCREEN_W - ui_text_width(text, CH_SENDS_TEXT_SIZE)) / 2), CH_STATUS_Y, CH_SENDS_TEXT_SIZE,
+                       CH_COLOR_BYPASS_TEXT, text};
+}
+
 static void set_eq_colours (channel_eq_view_t *eq, const channel_screen_state_t *s)
 {
+    eq->off = s->eq_off;
+    if (s->eq_off) // bypassed: the graph goes grey; the curve still shows the stored settings
+    {
+        eq->curve_rgb = CH_COLOR_BYPASSED;
+        eq->fill_rgb = CH_COLOR_BYPASSED_FILL;
+        return;
+    }
     eq->curve_rgb = s->muted ? CH_COLOR_EQ_MUTED : (s->soloed ? CH_COLOR_EQ_SOLO : CH_COLOR_EQ);
     eq->fill_rgb = s->muted ? CH_COLOR_EQ_FILL_MUTED : (s->soloed ? CH_COLOR_EQ_FILL_SOLO : CH_COLOR_EQ_FILL);
 }
@@ -109,20 +123,23 @@ static float shelf (const band_t *b, float f, bool high)
     return b->gain_db * 0.5f * (1.0f + tanhf(1.4f * log2f(f / b->freq_hz) * (high ? 1.0f : -1.0f)));
 }
 
-/** Response in dB at frequency f, as the mockup's eqMagnitude(); limited to +/-CH_EQ_RANGE_DB */
-static float response_db (const channel_eq_t *eq, const band_t bands[4], float f)
+/** The four bands' response in dB at frequency f, as the mockup's eqMagnitude(); not limited */
+static float bands_db (const band_t bands[4], float f)
 {
-    float db = 0.0f;
-    if (eq->hpf)
-    {
-        const float x = powf(f / 80.0f, 4.0f);
-        db += 10.0f * log10f(x / (1.0f + x));
-    }
-    db += bands[CH_EQ_HF].bell ? bell(&bands[CH_EQ_HF], f) : shelf(&bands[CH_EQ_HF], f, true);
+    float db = bands[CH_EQ_HF].bell ? bell(&bands[CH_EQ_HF], f) : shelf(&bands[CH_EQ_HF], f, true);
     db += bell(&bands[CH_EQ_HMF], f) + bell(&bands[CH_EQ_LMF], f);
     db += bands[CH_EQ_LF].bell ? bell(&bands[CH_EQ_LF], f) : shelf(&bands[CH_EQ_LF], f, false);
-    return clampf(db, -CH_EQ_RANGE_DB, CH_EQ_RANGE_DB);
+    return db;
 }
+
+/** The HPF's own response in dB at f: 12 dB/octave below 80 Hz, as the mockup */
+static float hpf_db (float f)
+{
+    const float x = powf(f / 80.0f, 4.0f);
+    return 10.0f * log10f(x / (1.0f + x));
+}
+
+static float limited (float db) { return clampf(db, -CH_EQ_RANGE_DB, CH_EQ_RANGE_DB); }
 
 void channel_screen_eq_compute (channel_eq_view_t *view, const channel_eq_t *eq)
 {
@@ -134,10 +151,19 @@ void channel_screen_eq_compute (channel_eq_view_t *view, const channel_eq_t *eq)
     };
 
     static float y[UI_SCREEN_W]; // the curve's row in each column (static: too big for a task's stack)
+    view->hpf_cols = 0;
     for (int16_t x = 0; x < UI_SCREEN_W; x++)
     {
         const float f = 20.0f * powf(1000.0f, (float)x / (float)(UI_SCREEN_W - 1));
-        y[x] = db_row(response_db(eq, bands, f));
+        const float eq_db = bands_db(bands, f);
+        y[x] = db_row(limited(eq_db)); // the bands only: the HPF isn't drawn as part of the EQ
+        if (eq->hpf)
+        {
+            const float h = hpf_db(f);
+            view->hpf_row[0][x] = (int16_t)lroundf(db_row(limited(eq_db + h))); // EQ on: what you hear
+            view->hpf_row[1][x] = (int16_t)lroundf(db_row(limited(h)));         // EQ off: the HPF alone
+            if (h < -0.25f) view->hpf_cols = (int16_t)(x + 1);                   // where it makes a difference
+        }
     }
 
     for (int16_t x = 0; x < UI_SCREEN_W; x++)
@@ -204,14 +230,35 @@ static void paint_eq (const void *context, int16_t y, uint32_t *row, int16_t x0,
             }
         }
     }
+    // the HPF: a dotted yellow line, 2 pixels on and 2 off, never filled; still yellow when the EQ is off
+    if (view->hpf_cols > 0)
+    {
+        const int16_t *line = view->hpf_row[view->off ? 1 : 0];
+        for (int16_t x = x0; x <= x1 && x < view->hpf_cols; x++)
+        {
+            if ((x & 3) >= 2) continue;
+            // the line's row here, reaching halfway to its neighbours so steep parts stay joined
+            const int16_t here = line[x];
+            const int16_t left = x > 0 ? (int16_t)((line[x - 1] + here) / 2) : here;
+            const int16_t right = x < UI_SCREEN_W - 1 ? (int16_t)((line[x + 1] + here) / 2) : here;
+            const int16_t top = here < left ? (here < right ? here : right) : (left < right ? left : right);
+            const int16_t bottom = here > left ? (here > right ? here : right) : (left > right ? left : right);
+            if (y >= top && y <= bottom) row[x - x0] = CH_COLOR_HPF_LINE;
+        }
+    }
+    if (view->off)
+    {
+        const ui_text_t status = bypass_text("EQ OFF");
+        ui_draw_text_row(&status, y, row, x0, x1);
+    }
 }
 
 
 /*=============================== SENDS WINDOW ================================*/
 
 /* Bars left to right: M (wider), A1-A4. A dash to each bar's left marks 0 dB. */
-static const int16_t SEND_BAR_X[CH_SENDS_BARS] = {16, 72, 117, 162, 207};
-static const int16_t SEND_BAR_W[CH_SENDS_BARS] = {40, 30, 30, 30, 30};
+static const int16_t SEND_BAR_X[CH_SENDS_BARS] = {20, 68, 112, 156, 200};
+static const int16_t SEND_BAR_W[CH_SENDS_BARS] = {32, 24, 24, 24, 24};
 static const char *const SEND_LABELS[CH_SENDS_BARS] = {"M", "A1", "A2", "A3", "A4"};
 #define SEND_INNER_H (CH_SENDS_BAR_BOTTOM - CH_SENDS_BAR_TOP - 1) // rows inside the outline
 #define SEND_DASH_W  5                                            // the 0 dB dash, ending 2 px before the bar
@@ -222,6 +269,12 @@ static const char *const SEND_LABELS[CH_SENDS_BARS] = {"M", "A1", "A2", "A3", "A
 #define SEND_0DB_X   0.68129207f
 
 static uint32_t send_colour (uint8_t bar) { return bar == 0 ? CH_COLOR_SEND_MASTER : CH_COLOR_SEND_AUX; }
+
+/** The colour a bar is drawn in: the aux bars go grey while the sends are bypassed (M doesn't) */
+static uint32_t send_draw_colour (const channel_sends_view_t *view, uint8_t bar)
+{
+    return (view->off && bar != 0) ? CH_COLOR_BYPASSED : send_colour(bar);
+}
 
 /** Rows of a bar's inner area that are filled, from the bottom, for a position 0-65535 */
 static int16_t send_fill_rows (uint16_t level) { return (int16_t)lroundf((float)level / 65535.0f * (float)SEND_INNER_H); }
@@ -271,11 +324,11 @@ void channel_screen_sends_compute (channel_sends_view_t *view, int16_t fader, co
 static void paint_sends (const void *context, int16_t y, uint32_t *row, int16_t x0, int16_t x1)
 {
     const channel_sends_view_t *view = context;
-    if (y < CH_EQ_Y || y > CH_EQ_Y + CH_EQ_H - 1) return;
+    if (y < CH_SENDS_LABEL_Y || y > CH_EQ_Y + CH_EQ_H - 1) return; // the labels start a little above the graph's area
 
     for (uint8_t bar = 0; bar < CH_SENDS_BARS; bar++)
     {
-        const uint32_t colour = send_colour(bar);
+        const uint32_t colour = send_draw_colour(view, bar);
         const int16_t left = SEND_BAR_X[bar], right = (int16_t)(SEND_BAR_X[bar] + SEND_BAR_W[bar] - 1);
         if (y == send_dash_row(bar))
         {
@@ -296,7 +349,18 @@ static void paint_sends (const void *context, int16_t y, uint32_t *row, int16_t 
     }
     for (uint8_t t = 0; t < view->text_count; t++)
     {
-        ui_draw_text_row(&view->texts[t], y, row, x0, x1);
+        ui_text_t text = view->texts[t];
+        if (view->off && t >= 1 && t < CH_SENDS_BARS) continue;                        // A1-A4: "SENDS OFF" instead
+        if (view->off && text.rgb == CH_COLOR_SEND_AUX) text.rgb = CH_COLOR_BYPASSED;  // the pans of A1 and A2
+        ui_draw_text_row(&text, y, row, x0, x1);
+    }
+    if (view->off)
+    {
+        static const char status_text[] = "SENDS OFF";
+        const int16_t aux_centre = (int16_t)((SEND_BAR_X[1] + SEND_BAR_X[CH_SENDS_BARS - 1] + SEND_BAR_W[CH_SENDS_BARS - 1]) / 2);
+        const ui_text_t status = {(int16_t)(aux_centre - ui_text_width(status_text, CH_SENDS_TEXT_SIZE) / 2), CH_SENDS_LABEL_Y,
+                                  CH_SENDS_TEXT_SIZE, CH_COLOR_BYPASS_TEXT, status_text};
+        ui_draw_text_row(&status, y, row, x0, x1);
     }
 }
 
@@ -313,6 +377,7 @@ static const void *middle_context (const channel_screen_state_t *s, channel_view
         set_eq_colours(&views->eq, s);
         return &views->eq;
     }
+    views->sends.off = s->sends_off;
     return &views->sends;
 }
 
@@ -344,8 +409,38 @@ static void header_shapes (const channel_screen_state_t *s, char number[4], ui_r
 }
 
 /** The MUTE/SOLO bars for the slot under the title strip (none if neither) */
-static void bars_for (const channel_screen_state_t *state, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
-                      uint8_t *text_count);
+static void bars_for (const channel_screen_state_t *state, int16_t right, ui_rect_t *rects, uint8_t *rect_count,
+                      ui_text_t *texts, uint8_t *text_count);
+
+/* Badges under the title strip on the right, as tall as the strip: "48V" rightmost, then "PHASE", then
+   "HPF", each only while it's on; the ones still showing close up to the right. The MUTE/SOLO bar takes
+   what's left of the row. */
+#define BADGE_TEXT_SIZE 16
+#define BADGE_PAD       5 // each side of the text
+#define BADGE_GAP       2
+
+/** Adds the badges that are on; returns the column just left of them (the right edge for the bars) */
+static int16_t badge_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                             uint8_t *text_count)
+{
+    const struct { bool on; const char *text; uint32_t rgb; } badges[3] = {
+        {s->phantom, "48V", CH_COLOR_BADGE_48V},
+        {s->phase, "PHASE", CH_COLOR_BADGE_PHASE},
+        {s->hpf, "HPF", CH_COLOR_BADGE_HPF},
+    };
+    int16_t right = UI_SCREEN_W - 1;
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        if (!badges[i].on) continue;
+        const int16_t width = (int16_t)(ui_text_width(badges[i].text, BADGE_TEXT_SIZE) + 2 * BADGE_PAD);
+        const int16_t left = (int16_t)(right - width + 1);
+        rects[(*rect_count)++] = (ui_rect_t){left, CH_BAR_Y, right, CH_BAR_Y + CH_BAR_H - 1, badges[i].rgb};
+        texts[(*text_count)++] = (ui_text_t){(int16_t)(left + BADGE_PAD), (int16_t)(CH_BAR_Y + (CH_BAR_H - BADGE_TEXT_SIZE) / 2),
+                                             BADGE_TEXT_SIZE, CH_COLOR_BADGE_TEXT, badges[i].text};
+        right = (int16_t)(left - BADGE_GAP - 1);
+    }
+    return right;
+}
 
 /** A pop-up's text in the large font, centred across the screen at row y */
 static ui_text_t popup_text (const channel_screen_state_t *s, int16_t y)
@@ -354,11 +449,19 @@ static ui_text_t popup_text (const channel_screen_state_t *s, int16_t y)
     return (ui_text_t){(int16_t)((UI_SCREEN_W - ui_text_width(text, CH_POPUP_SIZE)) / 2), y, CH_POPUP_SIZE, s->popup_rgb, text};
 }
 
-/** A pop-up: a patch of background (hiding what's under it) with the value on it, from row y */
-static void popup_shapes (const channel_screen_state_t *s, int16_t y, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
-                          uint8_t *text_count)
+/** Last row of the top pop-up's patch: on the sends page it also covers the labels, so they're never cut in half */
+static int16_t top_popup_last_row (const channel_screen_state_t *s)
 {
-    rects[(*rect_count)++] = (ui_rect_t){0, y, UI_SCREEN_W - 1, (int16_t)(y + CH_POPUP_H - 1), background(s)};
+    const int16_t normal = (int16_t)(CH_POPUP_TOP_Y + CH_POPUP_H - 1);
+    const int16_t labels = (int16_t)(CH_SENDS_LABEL_Y + CH_SENDS_TEXT_SIZE);
+    return (s->show_sends && labels > normal) ? labels : normal;
+}
+
+/** A pop-up: a patch of background (hiding what's under it) from row y to last, with the value on it */
+static void popup_shapes (const channel_screen_state_t *s, int16_t y, int16_t last, ui_rect_t *rects, uint8_t *rect_count,
+                          ui_text_t *texts, uint8_t *text_count)
+{
+    rects[(*rect_count)++] = (ui_rect_t){0, y, UI_SCREEN_W - 1, last, background(s)};
     texts[(*text_count)++] = popup_text(s, (int16_t)(y + 1));
 }
 
@@ -368,11 +471,12 @@ static void bar_slot_shapes (const channel_screen_state_t *s, ui_rect_t *rects, 
 {
     if (s->popup == CH_POPUP_TOP)
     {
-        popup_shapes(s, CH_POPUP_TOP_Y, rects, rect_count, texts, text_count);
+        popup_shapes(s, CH_POPUP_TOP_Y, top_popup_last_row(s), rects, rect_count, texts, text_count);
     }
     else
     {
-        bars_for(s, rects, rect_count, texts, text_count);
+        const int16_t right = badge_shapes(s, rects, rect_count, texts, text_count);
+        bars_for(s, right, rects, rect_count, texts, text_count); // MUTE/SOLO move over for the badges
     }
 }
 
@@ -380,7 +484,10 @@ static void bar_slot_shapes (const channel_screen_state_t *s, ui_rect_t *rects, 
 static void low_popup_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
                               uint8_t *text_count)
 {
-    if (s->popup == CH_POPUP_LOW) popup_shapes(s, CH_POPUP_LOW_Y, rects, rect_count, texts, text_count);
+    if (s->popup == CH_POPUP_LOW)
+    {
+        popup_shapes(s, CH_POPUP_LOW_Y, (int16_t)(CH_POPUP_LOW_Y + CH_POPUP_H - 1), rects, rect_count, texts, text_count);
+    }
 }
 
 /** A bar under the title strip from column x0 to x1 with a word centred on it */
@@ -462,21 +569,24 @@ void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, 
     };
 }
 
-static void bars_for (const channel_screen_state_t *state, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
-                      uint8_t *text_count)
+/** The MUTE/SOLO bar from column 0 to right (where the badges begin) */
+static void bars_for (const channel_screen_state_t *state, int16_t right, ui_rect_t *rects, uint8_t *rect_count,
+                      ui_text_t *texts, uint8_t *text_count)
 {
+    if (right < 0) return;
     if (state->muted && state->soloed) // both: share the bar
     {
-        bar_shapes(0, UI_SCREEN_W / 2 - 1, CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
-        bar_shapes(UI_SCREEN_W / 2, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
+        const int16_t split = (int16_t)((right + 1) / 2);
+        bar_shapes(0, (int16_t)(split - 1), CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
+        bar_shapes(split, right, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
     }
     else if (state->muted)
     {
-        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
+        bar_shapes(0, right, CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
     }
     else if (state->soloed)
     {
-        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
+        bar_shapes(0, right, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
     }
 }
 
@@ -485,11 +595,14 @@ void channel_screen_middle (ui_region_t *region, channel_popup_parts_t *parts, c
 {
     uint8_t rect_count = 0, text_count = 0;
     // either pop-up reaches into the graph's area: drawn over the curve
-    if (state->popup == CH_POPUP_TOP) popup_shapes(state, CH_POPUP_TOP_Y, parts->rects, &rect_count, parts->texts, &text_count);
+    if (state->popup == CH_POPUP_TOP)
+    {
+        popup_shapes(state, CH_POPUP_TOP_Y, top_popup_last_row(state), parts->rects, &rect_count, parts->texts, &text_count);
+    }
     low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     *region = (ui_region_t){
         .x0 = 0,
-        .y0 = CH_EQ_Y,
+        .y0 = CH_BAR_Y + CH_BAR_H, // from under the MUTE/SOLO bar: the sends labels start above the graph's area
         .x1 = UI_SCREEN_W - 1,
         .y1 = EQ_LAST_ROW,
         .background = background(state),
@@ -511,7 +624,7 @@ void channel_screen_bar_slot (ui_region_t *region, channel_bar_parts_t *parts, c
         .x0 = 0,
         .y0 = CH_POPUP_TOP_Y,
         .x1 = UI_SCREEN_W - 1,
-        .y1 = CH_POPUP_TOP_Y + CH_POPUP_H - 1, // with no pop-up this redraws the bars and the graph's top it covered
+        .y1 = top_popup_last_row(state), // with no pop-up this redraws the bars and whatever the pop-up covered
         .background = background(state),
         .rects = parts->rects,
         .rect_count = rect_count,
