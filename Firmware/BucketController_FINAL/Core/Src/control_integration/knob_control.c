@@ -21,6 +21,54 @@ typedef struct
     bool reset;       //!< Push button was double pressed (reset value)
 } knob_input_t;
 
+/*
+ * After a double click resets a knob, the knob ignores everything (turning, holding) until
+ * RESET_QUIET_MS after its button is let go, so the knob being nudged while it's pressed doesn't
+ * move the value straight off its reset. Pressing it again during the quiet time restarts the wait.
+ */
+#define RESET_QUIET_MS     300U
+#define KNOBS_PER_CHANNEL  16U // room for every knob on a channel (there are 10)
+
+typedef enum
+{
+    KNOB_LIVE,          //!< inputs used normally
+    KNOB_RESET_HELD,    //!< just reset, button still down: ignore inputs
+    KNOB_RESET_RELEASED //!< let go: ignore inputs until RESET_QUIET_MS after release
+} knob_lock_state_t;
+
+typedef struct
+{
+    uint16_t knob; //!< which physical knob: its button's expander address and pin (0 = free entry)
+    knob_lock_state_t state;
+    TickType_t released_at;
+} knob_lock_t;
+
+// One table per channel: each channel's knobs are only read by that channel's I2C task
+static knob_lock_t s_knob_locks[CHANNELS][KNOBS_PER_CHANNEL];
+
+/** The physical knob's entry, found by its push button's location. The shared knobs belong to several
+ *  control sets, so the same knob can be read through different structs; this keeps one entry for it. */
+static knob_lock_t *knob_lock (const encoder_info_t *info)
+{
+    const uint8_t channel = i2c_bus_index(info->i2c_bus);
+    if (channel >= CHANNELS) return NULL;
+    const button_info_t *button = &(info->button_info);
+    const uint16_t key = (uint16_t)(0x8000U | ((button->addr & 0x7FU) << 8) | ((uint16_t)(button->port - MCP_GPIOA) << 4) | (button->pin & 0x0FU));
+
+    knob_lock_t *table = s_knob_locks[channel];
+    for (uint8_t i = 0; i < KNOBS_PER_CHANNEL; i++)
+    {
+        if (table[i].knob == key) return &table[i];
+        if (table[i].knob == 0)
+        {
+            table[i].knob = key; // first time this knob is read
+            table[i].state = KNOB_LIVE;
+            return &table[i];
+        }
+    }
+    return NULL; // table full: no quiet time for this knob
+}
+
 static knob_input_t read_knob (const encoder_info_t *info)
 {
     knob_input_t input = {0};
@@ -28,7 +76,7 @@ static knob_input_t read_knob (const encoder_info_t *info)
     input.reset = update_button(&(info->button_info)) == BUTTON_DOUBLE_PRESSED;
     input.held = get_button_held(&(info->button_info));
 
-    const encoder_turn_action_t motion = update_encoder(info);
+    const encoder_turn_action_t motion = update_encoder(info); // always read, so ignored turns don't pile up
     if (motion == ENCODER_TURN_A)
     {
         input.direction = 1;
@@ -37,26 +85,55 @@ static knob_input_t read_knob (const encoder_info_t *info)
     {
         input.direction = -1;
     }
+
+    knob_lock_t *lock = knob_lock(info);
+    if (lock != NULL)
+    {
+        const TickType_t now = xTaskGetTickCount();
+        if (input.reset)
+        {
+            lock->state = KNOB_RESET_HELD; // the reset itself still goes through below
+        }
+        else if (lock->state == KNOB_RESET_HELD && !input.held)
+        {
+            lock->state = KNOB_RESET_RELEASED;
+            lock->released_at = now;
+        }
+        else if (lock->state == KNOB_RESET_RELEASED)
+        {
+            if (input.held) lock->state = KNOB_RESET_HELD; // pressed again: wait for this release
+            else if (now - lock->released_at >= pdMS_TO_TICKS(RESET_QUIET_MS)) lock->state = KNOB_LIVE;
+        }
+
+        if (lock->state != KNOB_LIVE)
+        {
+            input.direction = 0;
+            input.held = false;
+        }
+    }
     return input;
 }
 
-static void apply_u_input (
+/** Applies a knob's input to an unsigned value. A reset puts it back to reset_to (its startup value).
+ *  Returns true if the knob was turned or reset (whether or not the value could move). */
+static bool apply_u_input (
     SemaphoreHandle_t *out_mutex,
     const knob_input_t *input,
     u_scalar_control_t *out,
-    s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+    s_scalar_control_t sensitivity, //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+    u_scalar_control_t reset_to
 )
 {
     if (!input->reset && input->direction == 0)
     {
-        return;
+        return false;
     }
     sensitivity *= input->direction;
 
     xSemaphoreTake(*out_mutex, portMAX_DELAY);
     if (input->reset)
     {
-        *out = 0;
+        *out = reset_to;
     }
     if (sensitivity > 0 && U_SCALAR_CONTROL_MAX - *out < (u_scalar_control_t)sensitivity)
     {
@@ -71,25 +148,28 @@ static void apply_u_input (
         *out += sensitivity;
     }
     xSemaphoreGive(*out_mutex);
+    return true;
 }
 
-static void apply_s_input (
+/** As apply_u_input, for a signed value */
+static bool apply_s_input (
     SemaphoreHandle_t *out_mutex,
     const knob_input_t *input,
     s_scalar_control_t *out,
-    s_scalar_control_t sensitivity //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+    s_scalar_control_t sensitivity, //!< sensitivity must be < S_SCALAR_CONTROL_MAX
+    s_scalar_control_t reset_to
 )
 {
     if (!input->reset && input->direction == 0)
     {
-        return;
+        return false;
     }
     sensitivity *= input->direction;
 
     xSemaphoreTake(*out_mutex, portMAX_DELAY);
     if (input->reset)
     {
-        *out = 0;
+        *out = reset_to;
     }
     if (sensitivity > 0 && *out > S_SCALAR_CONTROL_MAX - sensitivity)
     {
@@ -104,6 +184,7 @@ static void apply_s_input (
         *out += sensitivity;
     }
     xSemaphoreGive(*out_mutex);
+    return true;
 }
 
 // Holding a knob's button makes adjustments finer
@@ -112,26 +193,53 @@ static inline s_scalar_control_t fine_if_held (const knob_input_t *input, s_scal
     return input->held ? sensitivity / 2 : sensitivity;
 }
 
-static void update_u_value_from_encoder (
+static bool update_u_value_from_encoder (
     SemaphoreHandle_t *out_mutex,
     const encoder_info_t *info,
     u_scalar_control_t *out,
-    s_scalar_control_t sensitivity
+    s_scalar_control_t sensitivity,
+    u_scalar_control_t reset_to
 )
 {
     const knob_input_t input = read_knob(info);
-    apply_u_input(out_mutex, &input, out, fine_if_held(&input, sensitivity));
+    return apply_u_input(out_mutex, &input, out, fine_if_held(&input, sensitivity), reset_to);
 }
 
-static void update_s_value_from_encoder (
+static bool update_s_value_from_encoder (
     SemaphoreHandle_t *out_mutex,
     const encoder_info_t *info,
     s_scalar_control_t *out,
-    s_scalar_control_t sensitivity
+    s_scalar_control_t sensitivity,
+    s_scalar_control_t reset_to
 )
 {
     const knob_input_t input = read_knob(info);
-    apply_s_input(out_mutex, &input, out, fine_if_held(&input, sensitivity));
+    return apply_s_input(out_mutex, &input, out, fine_if_held(&input, sensitivity), reset_to);
+}
+
+/*=============================== LAST CHANGED VALUE ================================*/
+/* For the screens' value pop-up. Written by the channel's I2C task, read by the display task:
+   the kind and band go in one byte, written before the time. */
+
+static volatile uint8_t s_touched_what[CHANNELS];  // touched_param_t << 4 | band
+static volatile uint32_t s_touched_tick[CHANNELS];
+
+static void touched (uint8_t channel, touched_param_t param, uint8_t band)
+{
+    if (channel >= CHANNELS) return;
+    s_touched_what[channel] = (uint8_t)((param << 4) | (band & 0x0FU));
+    s_touched_tick[channel] = (uint32_t)xTaskGetTickCount();
+}
+
+touched_t control_last_touched (uint8_t channel)
+{
+    touched_t t = {TOUCHED_NOTHING, 0, 0};
+    if (channel >= CHANNELS) return t;
+    const uint8_t what = s_touched_what[channel];
+    t.tick = s_touched_tick[channel];
+    t.param = (touched_param_t)(what >> 4);
+    t.band = what & 0x0FU;
+    return t;
 }
 
 /*
@@ -225,10 +333,18 @@ static void update_send_knob_values (
         send_channel_interface_t *send_io = &(io->send_channel_interfaces[i]);
         send_channel_control_t *send_vals = &(vals->send_controls[i]);
 
-        update_u_value_from_encoder(vals_mutex, &(send_io->gain_knob.encoder), &(send_vals->gain), sensitivity);
+        const send_channel_control_t *start = &(control_defaults()->send_controls[i]);
+        if (update_u_value_from_encoder(vals_mutex, &(send_io->gain_knob.encoder), &(send_vals->gain), sensitivity, start->gain))
+        {
+            touched(channel_of(vals), TOUCHED_SEND_LEVEL, i);
+        }
         if (i < SEND_CHANNELS - 1) // pan is not used for the last send channel
         {
-            update_s_value_from_encoder(vals_mutex, &(send_io->pan_knob.encoder), &(send_vals->pan), sensitivity);
+            if (update_s_value_from_encoder(vals_mutex, &(send_io->pan_knob.encoder), &(send_vals->pan), sensitivity, start->pan) &&
+                i < 2) // only sends 1 and 2 are stereo; send 3's pan does nothing in the hardware
+            {
+                touched(channel_of(vals), TOUCHED_SEND_PAN, i);
+            }
         }
     }
 }
@@ -246,7 +362,9 @@ static void update_eq_band_knob_values (
     bool has_q,
     s_scalar_control_t sensitivity,
     uint8_t channel,
-    uint8_t mode_band
+    uint8_t mode_band,
+    uint8_t band,                    //!< for the value pop-up: 0 LF, 1 LMF, 2 HMF, 3 HF
+    const eq_band_control_t *start   //!< startup values, which resets go back to
 )
 {
     knob_input_t input = read_knob(&(band_io->gain_knob.encoder)); // q_knob is the same hardware
@@ -257,25 +375,32 @@ static void update_eq_band_knob_values (
         {
             // the second click holds the button, which would otherwise make this a q reset
             const knob_input_t reset_gain = {.reset = true};
-            apply_s_input(vals_mutex, &reset_gain, &(vals->gain), sensitivity);
+            apply_s_input(vals_mutex, &reset_gain, &(vals->gain), sensitivity, start->gain);
+            touched(channel, TOUCHED_EQ_GAIN, band);
             input.reset = false;
         }
         if (input.held)
         {
-            apply_u_input(vals_mutex, &input, &(vals->q), sensitivity);
+            if (apply_u_input(vals_mutex, &input, &(vals->q), sensitivity, start->q)) touched(channel, TOUCHED_EQ_Q, band);
         }
         else
         {
-            apply_s_input(vals_mutex, &input, &(vals->gain), sensitivity);
+            if (apply_s_input(vals_mutex, &input, &(vals->gain), sensitivity, start->gain)) touched(channel, TOUCHED_EQ_GAIN, band);
         }
     }
     else
     {
-        apply_s_input(vals_mutex, &input, &(vals->gain), fine_if_held(&input, sensitivity));
+        if (apply_s_input(vals_mutex, &input, &(vals->gain), fine_if_held(&input, sensitivity), start->gain))
+        {
+            touched(channel, TOUCHED_EQ_GAIN, band);
+        }
         check_mode_hold(channel, mode_band, &input, vals_mutex, &(vals->bell));
     }
 
-    update_u_value_from_encoder(vals_mutex, &(band_io->freq_knob.encoder), &(vals->freq), sensitivity);
+    if (update_u_value_from_encoder(vals_mutex, &(band_io->freq_knob.encoder), &(vals->freq), sensitivity, start->freq))
+    {
+        touched(channel, TOUCHED_EQ_FREQ, band);
+    }
 }
 
 static void update_comp_knob_values (
@@ -285,12 +410,13 @@ static void update_comp_knob_values (
     s_scalar_control_t sensitivity
 )
 {
-    update_s_value_from_encoder(vals_mutex, &(comp_io->in_gain_knob.encoder), &(vals->in_gain), sensitivity);
-    update_s_value_from_encoder(vals_mutex, &(comp_io->threshold_knob.encoder), &(vals->threshold), sensitivity);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->attack_time_knob.encoder), &(vals->attack_time), sensitivity);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->release_time_knob.encoder), &(vals->release_time), sensitivity);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->ratio_knob.encoder), &(vals->ratio), sensitivity);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->out_gain_knob.encoder), &(vals->out_gain), sensitivity);
+    const comp_control_t *start = &(control_defaults()->comp_control);
+    update_s_value_from_encoder(vals_mutex, &(comp_io->in_gain_knob.encoder), &(vals->in_gain), sensitivity, start->in_gain);
+    update_s_value_from_encoder(vals_mutex, &(comp_io->threshold_knob.encoder), &(vals->threshold), sensitivity, start->threshold);
+    update_u_value_from_encoder(vals_mutex, &(comp_io->attack_time_knob.encoder), &(vals->attack_time), sensitivity, start->attack_time);
+    update_u_value_from_encoder(vals_mutex, &(comp_io->release_time_knob.encoder), &(vals->release_time), sensitivity, start->release_time);
+    update_u_value_from_encoder(vals_mutex, &(comp_io->ratio_knob.encoder), &(vals->ratio), sensitivity, start->ratio);
+    update_u_value_from_encoder(vals_mutex, &(comp_io->out_gain_knob.encoder), &(vals->out_gain), sensitivity, start->out_gain);
 }
 
 void update_channel_knob_values (
@@ -301,9 +427,18 @@ void update_channel_knob_values (
 {
     const s_scalar_control_t sensitivity = S_SCALAR_CONTROL_MAX / 32;
 
+    const channel_controls *start = control_defaults();
+    const uint8_t channel = channel_of(vals);
+
     // Always active, regardless of the selected control set
-    update_u_value_from_encoder(vals_mutex, &(io->input_gain_knob.encoder), &(vals->input_gain), sensitivity);
-    update_s_value_from_encoder(vals_mutex, &(io->pan.encoder), &(vals->output_pan), sensitivity);
+    if (update_u_value_from_encoder(vals_mutex, &(io->input_gain_knob.encoder), &(vals->input_gain), sensitivity, start->input_gain))
+    {
+        touched(channel, TOUCHED_INPUT_GAIN, 0);
+    }
+    if (update_s_value_from_encoder(vals_mutex, &(io->pan.encoder), &(vals->output_pan), sensitivity, start->output_pan))
+    {
+        touched(channel, TOUCHED_PAN, 0);
+    }
 
     xSemaphoreTake(*vals_mutex, portMAX_DELAY);
     const channel_control_set_selection_t selection = vals->control_set_selection;
@@ -315,14 +450,11 @@ void update_channel_knob_values (
             update_send_knob_values(vals_mutex, vals, io, sensitivity);
             break;
         case EQ_CONTROL:
-        {
-            const uint8_t channel = channel_of(vals);
-            update_eq_band_knob_values(vals_mutex, &(vals->hf_control), &(io->hf_interface), false, sensitivity, channel, MODE_HF);
-            update_eq_band_knob_values(vals_mutex, &(vals->hmf_control), &(io->hmf_interface), true, sensitivity, channel, 0);
-            update_eq_band_knob_values(vals_mutex, &(vals->lmf_control), &(io->lmf_interface), true, sensitivity, channel, 0);
-            update_eq_band_knob_values(vals_mutex, &(vals->lf_control), &(io->lf_interface), false, sensitivity, channel, MODE_LF);
+            update_eq_band_knob_values(vals_mutex, &(vals->hf_control), &(io->hf_interface), false, sensitivity, channel, MODE_HF, 3, &(start->hf_control));
+            update_eq_band_knob_values(vals_mutex, &(vals->hmf_control), &(io->hmf_interface), true, sensitivity, channel, 0, 2, &(start->hmf_control));
+            update_eq_band_knob_values(vals_mutex, &(vals->lmf_control), &(io->lmf_interface), true, sensitivity, channel, 0, 1, &(start->lmf_control));
+            update_eq_band_knob_values(vals_mutex, &(vals->lf_control), &(io->lf_interface), false, sensitivity, channel, MODE_LF, 0, &(start->lf_control));
             break;
-        }
         case COMP_CONTROL:
             update_comp_knob_values(vals_mutex, &(vals->comp_control), &(io->comp_interface), sensitivity);
             break;
@@ -360,6 +492,30 @@ static void show_signed (led_device_t *ring, s_scalar_control_t value)
 }
 
 static void hide (led_device_t *ring) { show_unsigned(ring, 0); }
+
+/* Holding the EQ button resets the whole EQ (button_control.c); every EQ ring then flashes like this */
+static mode_flash_t s_eq_reset_flash[CHANNELS];
+
+void knob_flash_eq_rings (uint8_t channel)
+{
+    if (channel >= CHANNELS) return;
+    s_eq_reset_flash[channel].start = xTaskGetTickCount();
+    s_eq_reset_flash[channel].active = true;
+}
+
+/** Where a flash is in its on/off cycle: 1 = lit, 0 = dark, -1 = not flashing (or just finished) */
+static int8_t flash_phase (mode_flash_t *flash)
+{
+    if (!flash->active) return -1;
+    const TickType_t elapsed = xTaskGetTickCount() - flash->start;
+    const TickType_t period = pdMS_TO_TICKS(MODE_FLASH_PERIOD_MS);
+    if (elapsed >= MODE_FLASHES * period)
+    {
+        flash->active = false;
+        return -1;
+    }
+    return (elapsed % period < period / 2) ? 1 : 0;
+}
 
 /** While a band's shelf/bell flash runs, its gain ring blinks fully on and off. Returns false once it's over. */
 static bool show_mode_flash (uint8_t channel, uint8_t band, led_device_t *ring)
@@ -438,6 +594,19 @@ void update_channel_knob_leds (
             // a shelf/bell switch just happened: flash the gain ring over the normal display
             show_mode_flash(channel, MODE_HF, io->hf_interface.gain_knob.led_ring);
             show_mode_flash(channel, MODE_LF, io->lf_interface.gain_knob.led_ring);
+            // the whole EQ was just reset: flash every EQ ring
+            {
+                const int8_t phase = flash_phase(&s_eq_reset_flash[channel]);
+                if (phase >= 0)
+                {
+                    eq_band_interface_t *bands[4] = {&(io->hf_interface), &(io->hmf_interface), &(io->lmf_interface), &(io->lf_interface)};
+                    for (uint8_t b = 0; b < 4; b++)
+                    {
+                        show_unsigned(bands[b]->gain_knob.led_ring, phase ? U_SCALAR_CONTROL_MAX : 0);
+                        show_unsigned(bands[b]->freq_knob.led_ring, phase ? U_SCALAR_CONTROL_MAX : 0);
+                    }
+                }
+            }
             break;
         }
         case COMP_CONTROL:

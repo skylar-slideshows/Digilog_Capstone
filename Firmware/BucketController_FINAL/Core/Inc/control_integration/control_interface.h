@@ -130,4 +130,36 @@ void update_control_values (uint8_t channel);
  */
 void update_control_leds (uint8_t channel);
 
+/**
+ * @brief Every control's value at startup. Knob resets (double click) and the EQ reset (hold the EQ button)
+ * go back to these.
+ */
+const channel_controls *control_defaults (void);
+
+/** Which knob value was changed last on a channel, for the screens' value pop-up */
+typedef enum
+{
+    TOUCHED_NOTHING,
+    TOUCHED_INPUT_GAIN,
+    TOUCHED_PAN,
+    TOUCHED_EQ_GAIN, //!< band says which: 0 LF, 1 LMF, 2 HMF, 3 HF
+    TOUCHED_EQ_FREQ,
+    TOUCHED_EQ_Q,
+    TOUCHED_SEND_LEVEL, //!< band says which send: 0-3 (A1-A4)
+    TOUCHED_SEND_PAN,   //!< band says which send: 0-1 (A1, A2: the stereo ones)
+} touched_param_t;
+
+typedef struct
+{
+    touched_param_t param;
+    uint8_t band;     //!< EQ band for the EQ values (0 LF, 1 LMF, 2 HMF, 3 HF), or the send (0-3)
+    uint32_t tick;    //!< FreeRTOS tick (ms) of the last change
+} touched_t;
+
+/**
+ * @brief The value most recently changed by a knob on a channel (turned or reset), and when.
+ * param is TOUCHED_NOTHING until a knob has changed something.
+ */
+touched_t control_last_touched (uint8_t channel);
+
 #endif

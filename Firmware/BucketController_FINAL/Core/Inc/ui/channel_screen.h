@@ -19,6 +19,7 @@
 #define CHANNEL_SCREEN_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include "ui/ui_render.h"
 
@@ -28,7 +29,16 @@
 #define CH_COLOR_SCREEN_SOLO   UI_RGB(0x3A, 0x32, 0x08) // background when soloed
 #define CH_COLOR_HEADER        UI_RGB(0x2C, 0x2C, 0x38) // title strip (mockup C.edge)
 #define CH_COLOR_HEADER_LIT    UI_RGB(0x60, 0x60, 0x6E) // title strip's lighter flash while selected
-#define CH_COLOR_NUMBER        UI_RGB(0xA0, 0xA0, 0xB4) // channel number and input type
+#define CH_COLOR_NUMBER        UI_RGB(0xA0, 0xA0, 0xB4) // channel number
+#define CH_COLOR_INPUT_MIC     UI_RGB(0xFF, 0x48, 0x48) // input type in the title strip: MIC red
+#define CH_COLOR_INPUT_LINE    UI_RGB(0xFF, 0xFF, 0xFF) //                                LINE white
+#define CH_COLOR_INPUT_HIZ     UI_RGB(0x8C, 0xFF, 0x8C) //                                HI-Z light green
+#define CH_COLOR_POPUP_EQ      UI_RGB(0xD6, 0x8A, 0x3A) // value pop-up: EQ values orange (C.eq)
+#define CH_COLOR_POPUP_INPUT   UI_RGB(0xFF, 0xFF, 0xFF) //                input gain white
+#define CH_COLOR_POPUP_PAN     UI_RGB(0xB0, 0xB0, 0xC6) //                pan in the pan bar's colour
+#define CH_COLOR_SEND_MASTER   UI_RGB(0x7F, 0xC8, 0xFF) // sends window: master level bar and its label (light blue)
+#define CH_COLOR_SEND_AUX      UI_RGB(0x8C, 0xFF, 0x8C) // sends window: aux bars, labels and pans (light green)
+#define CH_COLOR_POPUP_SEND    CH_COLOR_SEND_AUX        // value pop-up: send levels and pans
 #define CH_COLOR_NUMBER_MUTED  UI_RGB(0xBE, 0x5A, 0x5A) // channel number when muted
 #define CH_COLOR_NUMBER_SOLO   UI_RGB(0xE6, 0xC8, 0x4A) // channel number when soloed
 #define CH_COLOR_MUTE_BAR      UI_RGB(0xFF, 0x20, 0x20) // MUTE bar
@@ -64,7 +74,21 @@
 #define CH_EQ_H        160                     // rows 60-219
 #define CH_EQ_MID      (CH_EQ_Y + CH_EQ_H / 2) // row 140 is 0 dB
 #define CH_EQ_RANGE_DB 24.0f                   // the curve stops at +/-24 dB
-#define CH_EQ_DB_PX    ((CH_EQ_H / 2) - 3)     // 77 rows for 24 dB, about 3.2 rows per dB
+#define CH_EQ_DB_PX    ((CH_EQ_H / 2) - 3)     // 77 rows from 0 dB to +/-24 dB
+/* The height is gently squeezed for big boosts and cuts, so the small moves most settings are can
+   be seen: rows = CH_EQ_DB_PX * asinh(dB / CH_EQ_SOFT_DB) / asinh(CH_EQ_RANGE_DB / CH_EQ_SOFT_DB).
+   At 10 dB, 1 dB near 0 dB is about 1.5x as tall as on a straight scale, and 0 to 3 dB is about 1.65x
+   the height of 12 to 15 dB. Smaller squeezes harder; much larger is close to a straight scale. */
+#define CH_EQ_SOFT_DB  10.0f
+
+/* Value pop-up while a knob is turned, in the large font: input gain and EQ values just under the title
+   strip (rows 28-69: over the MUTE/SOLO bar and the top of the EQ graph while it shows); the pan just
+   above the pan bar (rows 182-223, over the bottom of the EQ graph). Those rows are for a 40 px font;
+   the pop-ups follow whatever size ui_font_big.h was made at. */
+#define CH_POPUP_SIZE    ui_big_font_size() // UI_FONT_BIG_SIZE in ui_font_big.h
+#define CH_POPUP_H       (CH_POPUP_SIZE + 2)
+#define CH_POPUP_TOP_Y   CH_BAR_Y                     // rows 28-69
+#define CH_POPUP_LOW_Y   (CH_PAN_Y - 1 - CH_POPUP_H)  // rows 182-223
 
 /* Pan bar along the bottom. The centre line is in the middle column; each side has CH_PAN_HALF columns. */
 #define CH_PAN_HALF      112
@@ -82,6 +106,36 @@ typedef enum
     CH_INPUT_HIZ,
 } channel_input_t;
 
+/*
+ * Sends window, shown in the EQ graph's area while the knobs control the sends: five bars side by side,
+ * M (the channel's master level, which is its fader) then A1-A4 (the aux sends). Labels above them,
+ * the pan of the stereo sends A1 and A2 below theirs. Each bar is an outline that fills from the bottom
+ * with the knob's (or fader's) position; a dash to its left marks 0 dB. Fully down, a bar is empty.
+ */
+#define CH_SENDS_BARS        5
+#define CH_SENDS_LABEL_Y     (CH_POPUP_TOP_Y + CH_POPUP_H + 1) // labels: 16 px font, just under the top pop-up (row 71 at 40 px)
+#define CH_SENDS_BAR_TOP     (CH_SENDS_LABEL_Y + 19)          // bar outlines from here (row 90 at 40 px)...
+#define CH_SENDS_BAR_BOTTOM  196                              // ...to here
+#define CH_SENDS_PAN_Y       200 // pan of A1 and A2: 16 px font, rows 200-215
+#define CH_SENDS_TEXT_SIZE   16
+
+/** The sends window worked out from the levels, ready to draw */
+typedef struct
+{
+    uint16_t level[CH_SENDS_BARS];   //!< 0-65535: [0] master (fader), [1-4] A1-A4
+    char pan_text[2][6];             //!< under A1 and A2: "C", "50L", "33R"
+    ui_text_t texts[CH_SENDS_BARS + 2];
+    uint8_t text_count;
+} channel_sends_view_t;
+
+/** Where the value pop-up is */
+typedef enum
+{
+    CH_POPUP_NONE,
+    CH_POPUP_TOP,    //!< under the title strip
+    CH_POPUP_LOW,    //!< just above the pan bar
+} channel_popup_where_t;
+
 /** Everything on a channel's screen apart from the EQ curve itself */
 typedef struct
 {
@@ -91,7 +145,11 @@ typedef struct
     bool soloed;
     bool title_lit;        //!< the selected channel's flash: title strip lighter right now
     bool show_eq;          //!< the knobs control the EQ, so the graph shows
+    bool show_sends;       //!< the knobs control the sends, so the sends window shows
     int16_t pan_fill;      //!< from channel_screen_pan_fill()
+    channel_popup_where_t popup;
+    const char *popup_text; //!< the value being changed, when popup isn't CH_POPUP_NONE
+    uint32_t popup_rgb;
 } channel_screen_state_t;
 
 /** The EQ bands, low to high */
@@ -143,13 +201,34 @@ typedef struct
     uint32_t curve_rgb, fill_rgb;                          //!< set by the region functions from the screen state
 } channel_eq_view_t;
 
+/** Everything worked out for the middle of the screen: the EQ graph and the sends window. Keep one per screen. */
+typedef struct
+{
+    channel_eq_view_t eq;
+    channel_sends_view_t sends;
+} channel_views_t;
+
 /** Memory for the shapes of a whole screen; keep it alive until the region has been drawn. */
 typedef struct
 {
-    ui_text_t texts[4];
+    ui_text_t texts[5];
     char number[4];
-    ui_rect_t rects[6];
+    ui_rect_t rects[7];
 } channel_screen_parts_t;
+
+/** Memory for the bar slot under the title strip (MUTE/SOLO bars or the pop-up) */
+typedef struct
+{
+    ui_rect_t rects[2];
+    ui_text_t texts[2];
+} channel_bar_parts_t;
+
+/** Memory for the pop-ups drawn over the EQ area */
+typedef struct
+{
+    ui_rect_t rects[2];
+    ui_text_t texts[2];
+} channel_popup_parts_t;
 
 /** Memory for the shapes of the title strip on its own. */
 typedef struct
@@ -166,7 +245,7 @@ typedef struct
 } channel_pan_parts_t;
 
 /* Control values to dB, Hz and Q, the same as the hardware (cv_mapping.pdf) */
-float channel_eq_gain_db (int16_t gain);                                 //!< INT16_MIN..INT16_MAX -> -15..+15 dB
+float channel_eq_gain_db (int16_t gain, bool shelf);                     //!< INT16_MIN..INT16_MAX -> -15..+15 dB, tapered as the hardware
 float channel_eq_freq_hz (channel_eq_band_index_t band, uint16_t freq); //!< 0..65535 -> the band's range above
 float channel_eq_q (uint16_t q);                                         //!< 0..65535 -> Q 0.5..5, logarithmic; the middle is 1.58
 #define CH_EQ_LF_HF_BELL_Q 1.0f // LF/HF in bell mode have no Q control; drawn with this Q
@@ -175,15 +254,35 @@ float channel_eq_q (uint16_t q);                                         //!< 0.
  *  but limited to +/-CH_EQ_RANGE_DB instead of +/-15 dB. */
 void channel_screen_eq_compute (channel_eq_view_t *view, const channel_eq_t *eq);
 
-/** The whole screen. eq is only used when state->show_eq is true. */
+/**
+ * Works out the sends window: fader is the channel's output_gain control value, send_level the four sends'
+ * gain values (0 = off), send_pan the pans of sends 1 and 2.
+ */
+void channel_screen_sends_compute (channel_sends_view_t *view, int16_t fader, const uint16_t send_level[4],
+                                   const int16_t send_pan[2]);
+
+/** Pan as text: "C", or how far from the centre in percent and which side, "50L", "33R". */
+void channel_screen_pan_text (char *out, size_t size, int16_t pan);
+
+/** The whole screen: the EQ graph, the sends window or neither in the middle, depending on the state. */
 void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, const channel_screen_state_t *state,
-                          channel_eq_view_t *eq);
+                          channel_views_t *views);
 
 /** Just the title strip, for when only the input type or the selection flash changed. */
 void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, const channel_screen_state_t *state);
 
-/** Just the EQ graph's area: the graph when state->show_eq is true, otherwise empty. */
-void channel_screen_eq (ui_region_t *region, channel_eq_view_t *eq, const channel_screen_state_t *state);
+/** Just the middle of the screen (rows 60-219): the EQ graph, the sends window or nothing, plus any pop-up over it. */
+void channel_screen_middle (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                            const channel_screen_state_t *state);
+
+/** Just the area of the top pop-up (rows 28-69): the pop-up if showing, otherwise the MUTE/SOLO bars (or
+ *  nothing) and the top of the EQ graph. */
+void channel_screen_bar_slot (ui_region_t *region, channel_bar_parts_t *parts, channel_views_t *views,
+                              const channel_screen_state_t *state);
+
+/** Just the strip above the pan bar: the lower pop-up if showing, otherwise whatever is underneath it. */
+void channel_screen_low_popup_area (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                                    const channel_screen_state_t *state);
 
 /**
  * Converts a pan control value (INT16_MIN = hard left, 0 = centre, INT16_MAX = hard right) into

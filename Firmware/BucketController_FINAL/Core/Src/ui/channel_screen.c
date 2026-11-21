@@ -8,8 +8,10 @@
 */
 
 #include "ui/channel_screen.h"
+#include "cv_mapping.h"
 #include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 
 /* EQ graph details from the mockup's drawEq() */
 #define EQ_LAST_ROW   (CH_EQ_Y + CH_EQ_H - 1)  // 219
@@ -27,7 +29,12 @@ static const char *const INPUT_NAMES[] = {
 static float clampf (float v, float lo, float hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
 /** Screen row of a level in dB (0 dB is CH_EQ_MID), not rounded */
-static float db_row (float db) { return (float)CH_EQ_MID - db / CH_EQ_RANGE_DB * (float)CH_EQ_DB_PX; }
+static float db_row (float db)
+{
+    static float scale = 0.0f; // rows per unit of asinh, worked out once
+    if (scale == 0.0f) scale = (float)CH_EQ_DB_PX / asinhf(CH_EQ_RANGE_DB / CH_EQ_SOFT_DB);
+    return (float)CH_EQ_MID - scale * asinhf(db / CH_EQ_SOFT_DB);
+}
 
 /* Rows of the +/-10 dB and +/-20 dB grid lines, worked out once */
 static int16_t s_grid_rows[4];
@@ -55,12 +62,9 @@ static void set_eq_colours (channel_eq_view_t *eq, const channel_screen_state_t 
 
 /*=============================== EQ CURVE ================================*/
 
-float channel_eq_gain_db (int16_t gain)
+float channel_eq_gain_db (int16_t gain, bool shelf)
 {
-    // B = 15 c dB, with c the centred knob as in cv_mapping.pdf
-    const uint16_t p = (uint16_t)((uint16_t)gain ^ 0x8000U);
-    const float d = (float)p - 32767.0f;
-    return 15.0f * (p <= 32767U ? d / 32767.0f : d / 32768.0f);
+    return cv_eq_gain_db(cv_signed_to_p(gain), shelf); // the same tapered law the CVs use
 }
 float channel_eq_q (uint16_t q) { return 0.5f * powf(10.0f, (float)q / 65535.0f); }
 
@@ -86,7 +90,7 @@ typedef struct
 static band_t band (const channel_eq_band_t *b, channel_eq_band_index_t index, bool has_q)
 {
     return (band_t){
-        channel_eq_gain_db(b->gain),
+        channel_eq_gain_db(b->gain, !has_q && !b->bell), // shelves taper differently from bells
         channel_eq_freq_hz(index, b->freq),
         has_q ? channel_eq_q(b->q) : CH_EQ_LF_HF_BELL_Q,
         has_q || b->bell,
@@ -203,6 +207,116 @@ static void paint_eq (const void *context, int16_t y, uint32_t *row, int16_t x0,
 }
 
 
+/*=============================== SENDS WINDOW ================================*/
+
+/* Bars left to right: M (wider), A1-A4. A dash to each bar's left marks 0 dB. */
+static const int16_t SEND_BAR_X[CH_SENDS_BARS] = {16, 72, 117, 162, 207};
+static const int16_t SEND_BAR_W[CH_SENDS_BARS] = {40, 30, 30, 30, 30};
+static const char *const SEND_LABELS[CH_SENDS_BARS] = {"M", "A1", "A2", "A3", "A4"};
+#define SEND_INNER_H (CH_SENDS_BAR_BOTTOM - CH_SENDS_BAR_TOP - 1) // rows inside the outline
+#define SEND_DASH_W  5                                            // the 0 dB dash, ending 2 px before the bar
+
+/* Knob (or fader) position of 0 dB: the fader's mark at P 44380 (cv_mapping.pdf section 18); for the sends
+   L = 10 + 60 log10(x) is 0 dB at x = 10^(-1/6) (sections 12-15). */
+#define MASTER_0DB_X (44380.0f / 65535.0f)
+#define SEND_0DB_X   0.68129207f
+
+static uint32_t send_colour (uint8_t bar) { return bar == 0 ? CH_COLOR_SEND_MASTER : CH_COLOR_SEND_AUX; }
+
+/** Rows of a bar's inner area that are filled, from the bottom, for a position 0-65535 */
+static int16_t send_fill_rows (uint16_t level) { return (int16_t)lroundf((float)level / 65535.0f * (float)SEND_INNER_H); }
+
+/** Row of the 0 dB dash */
+static int16_t send_dash_row (uint8_t bar)
+{
+    const float x = bar == 0 ? MASTER_0DB_X : SEND_0DB_X;
+    return (int16_t)(CH_SENDS_BAR_BOTTOM - 1 - lroundf(x * (float)SEND_INNER_H));
+}
+
+void channel_screen_pan_text (char *out, size_t size, int16_t pan)
+{
+    const uint16_t p = (uint16_t)((uint16_t)pan ^ 0x8000U);
+    const float c = p <= 32767U ? ((float)p - 32767.0f) / 32767.0f : ((float)p - 32767.0f) / 32768.0f;
+    const long percent = lroundf(fabsf(c) * 100.0f);
+    if (percent == 0) snprintf(out, size, "C");
+    else snprintf(out, size, "%ld%c", percent, c < 0.0f ? 'L' : 'R');
+}
+
+void channel_screen_sends_compute (channel_sends_view_t *view, int16_t fader, const uint16_t send_level[4],
+                                   const int16_t send_pan[2])
+{
+    view->level[0] = (uint16_t)((uint16_t)fader ^ 0x8000U); // output_gain is signed; its knob position is P
+    for (uint8_t i = 0; i < 4; i++) view->level[i + 1] = send_level[i];
+    channel_screen_pan_text(view->pan_text[0], sizeof(view->pan_text[0]), send_pan[0]);
+    channel_screen_pan_text(view->pan_text[1], sizeof(view->pan_text[1]), send_pan[1]);
+
+    uint8_t n = 0;
+    for (uint8_t bar = 0; bar < CH_SENDS_BARS; bar++)
+    {
+        const char *label = SEND_LABELS[bar];
+        const int16_t centre = (int16_t)(SEND_BAR_X[bar] + SEND_BAR_W[bar] / 2);
+        view->texts[n++] = (ui_text_t){(int16_t)(centre - ui_text_width(label, CH_SENDS_TEXT_SIZE) / 2), CH_SENDS_LABEL_Y,
+                                       CH_SENDS_TEXT_SIZE, send_colour(bar), label};
+    }
+    for (uint8_t i = 0; i < 2; i++) // A1 and A2 are stereo: their pan under the bar
+    {
+        const int16_t centre = (int16_t)(SEND_BAR_X[i + 1] + SEND_BAR_W[i + 1] / 2);
+        view->texts[n++] = (ui_text_t){(int16_t)(centre - ui_text_width(view->pan_text[i], CH_SENDS_TEXT_SIZE) / 2),
+                                       CH_SENDS_PAN_Y, CH_SENDS_TEXT_SIZE, CH_COLOR_SEND_AUX, view->pan_text[i]};
+    }
+    view->text_count = n;
+}
+
+/** ui_region_t painter for the sends window; draws nothing outside its rows */
+static void paint_sends (const void *context, int16_t y, uint32_t *row, int16_t x0, int16_t x1)
+{
+    const channel_sends_view_t *view = context;
+    if (y < CH_EQ_Y || y > CH_EQ_Y + CH_EQ_H - 1) return;
+
+    for (uint8_t bar = 0; bar < CH_SENDS_BARS; bar++)
+    {
+        const uint32_t colour = send_colour(bar);
+        const int16_t left = SEND_BAR_X[bar], right = (int16_t)(SEND_BAR_X[bar] + SEND_BAR_W[bar] - 1);
+        if (y == send_dash_row(bar))
+        {
+            for (int16_t x = (int16_t)(left - 2 - SEND_DASH_W); x < left - 2; x++)
+            {
+                if (x >= x0 && x <= x1) row[x - x0] = colour;
+            }
+        }
+        if (y < CH_SENDS_BAR_TOP || y > CH_SENDS_BAR_BOTTOM) continue;
+
+        const bool edge = (y == CH_SENDS_BAR_TOP || y == CH_SENDS_BAR_BOTTOM);
+        const bool filled = y >= CH_SENDS_BAR_BOTTOM - send_fill_rows(view->level[bar]); // fills up from the bottom
+        for (int16_t x = left; x <= right; x++)
+        {
+            if (x < x0 || x > x1) continue;
+            if (edge || x == left || x == right || filled) row[x - x0] = colour;
+        }
+    }
+    for (uint8_t t = 0; t < view->text_count; t++)
+    {
+        ui_draw_text_row(&view->texts[t], y, row, x0, x1);
+    }
+}
+
+/* The middle of the screen shows whichever window the knobs control: EQ graph, sends, or nothing */
+static ui_paint_fn middle_paint (const channel_screen_state_t *s)
+{
+    return s->show_eq ? paint_eq : (s->show_sends ? paint_sends : NULL);
+}
+
+static const void *middle_context (const channel_screen_state_t *s, channel_views_t *views)
+{
+    if (s->show_eq)
+    {
+        set_eq_colours(&views->eq, s);
+        return &views->eq;
+    }
+    return &views->sends;
+}
+
+
 /*=============================== SHAPES ================================*/
 
 /** Title strip, number and input type. Returns the shape counts through rect_count and text_count. */
@@ -214,13 +328,59 @@ static void header_shapes (const channel_screen_state_t *s, char number[4], ui_r
     number[1] = (char)('0' + n % 10U);
     number[2] = '\0';
 
-    const char *input = INPUT_NAMES[s->input <= CH_INPUT_HIZ ? s->input : CH_INPUT_LINE];
+    const channel_input_t which = s->input <= CH_INPUT_HIZ ? s->input : CH_INPUT_LINE;
+    const char *input = INPUT_NAMES[which];
+    static const uint32_t INPUT_COLOURS[] = {
+        [CH_INPUT_MIC] = CH_COLOR_INPUT_MIC,
+        [CH_INPUT_LINE] = CH_COLOR_INPUT_LINE,
+        [CH_INPUT_HIZ] = CH_COLOR_INPUT_HIZ,
+    };
 
     rects[(*rect_count)++] = (ui_rect_t){0, 0, UI_SCREEN_W - 1, CH_HEADER_H - 1, s->title_lit ? CH_COLOR_HEADER_LIT : CH_COLOR_HEADER};
     texts[(*text_count)++] = (ui_text_t){CH_TEXT_MARGIN, CH_TEXT_Y, CH_TEXT_SIZE, number_colour(s), number};
     texts[(*text_count)++] = (ui_text_t){
-        (int16_t)(UI_SCREEN_W - CH_TEXT_MARGIN - ui_text_width(input, CH_INPUT_SIZE)), CH_INPUT_Y, CH_INPUT_SIZE, CH_COLOR_NUMBER, input,
+        (int16_t)(UI_SCREEN_W - CH_TEXT_MARGIN - ui_text_width(input, CH_INPUT_SIZE)), CH_INPUT_Y, CH_INPUT_SIZE, INPUT_COLOURS[which], input,
     };
+}
+
+/** The MUTE/SOLO bars for the slot under the title strip (none if neither) */
+static void bars_for (const channel_screen_state_t *state, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                      uint8_t *text_count);
+
+/** A pop-up's text in the large font, centred across the screen at row y */
+static ui_text_t popup_text (const channel_screen_state_t *s, int16_t y)
+{
+    const char *text = s->popup_text != NULL ? s->popup_text : "";
+    return (ui_text_t){(int16_t)((UI_SCREEN_W - ui_text_width(text, CH_POPUP_SIZE)) / 2), y, CH_POPUP_SIZE, s->popup_rgb, text};
+}
+
+/** A pop-up: a patch of background (hiding what's under it) with the value on it, from row y */
+static void popup_shapes (const channel_screen_state_t *s, int16_t y, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                          uint8_t *text_count)
+{
+    rects[(*rect_count)++] = (ui_rect_t){0, y, UI_SCREEN_W - 1, (int16_t)(y + CH_POPUP_H - 1), background(s)};
+    texts[(*text_count)++] = popup_text(s, (int16_t)(y + 1));
+}
+
+/** Under the title strip: the top pop-up while it shows, otherwise the MUTE/SOLO bars */
+static void bar_slot_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                             uint8_t *text_count)
+{
+    if (s->popup == CH_POPUP_TOP)
+    {
+        popup_shapes(s, CH_POPUP_TOP_Y, rects, rect_count, texts, text_count);
+    }
+    else
+    {
+        bars_for(s, rects, rect_count, texts, text_count);
+    }
+}
+
+/** Just above the pan bar: the lower pop-up while it shows */
+static void low_popup_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                              uint8_t *text_count)
+{
+    if (s->popup == CH_POPUP_LOW) popup_shapes(s, CH_POPUP_LOW_Y, rects, rect_count, texts, text_count);
 }
 
 /** A bar under the title strip from column x0 to x1 with a word centred on it */
@@ -261,27 +421,13 @@ static uint8_t pan_rects (ui_rect_t *rects, int16_t fill, bool with_trough)
 /*=============================== REGIONS ================================*/
 
 void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, const channel_screen_state_t *state,
-                          channel_eq_view_t *eq)
+                          channel_views_t *views)
 {
     uint8_t rect_count = 0, text_count = 0;
     header_shapes(state, parts->number, parts->rects, &rect_count, parts->texts, &text_count);
-
-    if (state->muted && state->soloed) // both: share the bar
-    {
-        bar_shapes(0, UI_SCREEN_W / 2 - 1, CH_COLOR_MUTE_BAR, "MUTE", parts->rects, &rect_count, parts->texts, &text_count);
-        bar_shapes(UI_SCREEN_W / 2, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", parts->rects, &rect_count, parts->texts, &text_count);
-    }
-    else if (state->muted)
-    {
-        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_MUTE_BAR, "MUTE", parts->rects, &rect_count, parts->texts, &text_count);
-    }
-    else if (state->soloed)
-    {
-        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", parts->rects, &rect_count, parts->texts, &text_count);
-    }
-
+    bar_slot_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
+    low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     rect_count = (uint8_t)(rect_count + pan_rects(&parts->rects[rect_count], state->pan_fill, true));
-    set_eq_colours(eq, state);
 
     *region = (ui_region_t){
         .x0 = 0,
@@ -293,8 +439,8 @@ void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, co
         .rect_count = rect_count,
         .texts = parts->texts,
         .text_count = text_count,
-        .paint = state->show_eq ? paint_eq : NULL, // other control sets: the graph's area stays empty
-        .paint_context = eq,
+        .paint = middle_paint(state), // EQ graph, sends window, or empty
+        .paint_context = middle_context(state, views),
     };
 }
 
@@ -316,17 +462,83 @@ void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, 
     };
 }
 
-void channel_screen_eq (ui_region_t *region, channel_eq_view_t *eq, const channel_screen_state_t *state)
+static void bars_for (const channel_screen_state_t *state, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                      uint8_t *text_count)
 {
-    set_eq_colours(eq, state);
+    if (state->muted && state->soloed) // both: share the bar
+    {
+        bar_shapes(0, UI_SCREEN_W / 2 - 1, CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
+        bar_shapes(UI_SCREEN_W / 2, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
+    }
+    else if (state->muted)
+    {
+        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_MUTE_BAR, "MUTE", rects, rect_count, texts, text_count);
+    }
+    else if (state->soloed)
+    {
+        bar_shapes(0, UI_SCREEN_W - 1, CH_COLOR_SOLO_BAR, "SOLO", rects, rect_count, texts, text_count);
+    }
+}
+
+void channel_screen_middle (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                            const channel_screen_state_t *state)
+{
+    uint8_t rect_count = 0, text_count = 0;
+    // either pop-up reaches into the graph's area: drawn over the curve
+    if (state->popup == CH_POPUP_TOP) popup_shapes(state, CH_POPUP_TOP_Y, parts->rects, &rect_count, parts->texts, &text_count);
+    low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     *region = (ui_region_t){
         .x0 = 0,
         .y0 = CH_EQ_Y,
         .x1 = UI_SCREEN_W - 1,
         .y1 = EQ_LAST_ROW,
         .background = background(state),
-        .paint = state->show_eq ? paint_eq : NULL,
-        .paint_context = eq,
+        .rects = parts->rects,
+        .rect_count = rect_count,
+        .texts = parts->texts,
+        .text_count = text_count,
+        .paint = middle_paint(state),
+        .paint_context = middle_context(state, views),
+    };
+}
+
+void channel_screen_bar_slot (ui_region_t *region, channel_bar_parts_t *parts, channel_views_t *views,
+                              const channel_screen_state_t *state)
+{
+    uint8_t rect_count = 0, text_count = 0;
+    bar_slot_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
+    *region = (ui_region_t){
+        .x0 = 0,
+        .y0 = CH_POPUP_TOP_Y,
+        .x1 = UI_SCREEN_W - 1,
+        .y1 = CH_POPUP_TOP_Y + CH_POPUP_H - 1, // with no pop-up this redraws the bars and the graph's top it covered
+        .background = background(state),
+        .rects = parts->rects,
+        .rect_count = rect_count,
+        .texts = parts->texts,
+        .text_count = text_count,
+        .paint = middle_paint(state),
+        .paint_context = middle_context(state, views),
+    };
+}
+
+void channel_screen_low_popup_area (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                                    const channel_screen_state_t *state)
+{
+    uint8_t rect_count = 0, text_count = 0;
+    low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
+    *region = (ui_region_t){
+        .x0 = 0,
+        .y0 = CH_POPUP_LOW_Y,
+        .x1 = UI_SCREEN_W - 1,
+        .y1 = CH_PAN_Y - 1, // up to the pan bar; with no pop-up this redraws what it covered
+        .background = background(state),
+        .rects = parts->rects,
+        .rect_count = rect_count,
+        .texts = parts->texts,
+        .text_count = text_count,
+        .paint = middle_paint(state),
+        .paint_context = middle_context(state, views),
     };
 }
 

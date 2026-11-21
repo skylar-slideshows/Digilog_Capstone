@@ -27,7 +27,8 @@ typedef struct
     uint32_t rgb;
 } ui_rect_t;
 
-/** One line of text. x, y is the top-left corner; size is 12, 16 or 24 (characters are half as wide). */
+/** One line of text. x, y is the top-left corner; size is 12, 16, 24 or UI_FONT_BIG_SIZE (40)
+ *  (characters are half as wide). */
 typedef struct
 {
     int16_t x, y;
@@ -62,6 +63,15 @@ typedef struct
  * Fills row[0 .. x1-x0] with the colours of screen row y of the region (y between y0 and y1).
  */
 void ui_render_row (const ui_region_t *region, int16_t y, uint32_t *row);
+
+/**
+ * Draws the pixels of one line of text that fall on screen row y into row[0 .. x1-x0] (row[i] is
+ * column x0 + i). For painters that draw text of their own.
+ */
+void ui_draw_text_row (const ui_text_t *text, int16_t y, uint32_t *row, int16_t x0, int16_t x1);
+
+/** Height of the large font in ui_font_big.h (UI_FONT_BIG_SIZE), whatever size it was made at. */
+uint8_t ui_big_font_size (void);
 
 /** Width in pixels of text at a font size (12, 16 or 24). */
 uint16_t ui_text_width (const char *text, uint8_t size);

@@ -1524,7 +1524,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, DISP_RST_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, SHIFTREG_OE_Pin|LED_TEST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SHIFTREG_OE_GPIO_Port, SHIFTREG_OE_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);

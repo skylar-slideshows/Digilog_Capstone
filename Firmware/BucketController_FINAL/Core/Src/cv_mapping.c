@@ -95,9 +95,15 @@ static const float INPUT_RANGE[3][2] = {
     [CV_SOURCE_HIZ] = {-24.0f, 33.0f},
 };
 
+float cv_input_gain_db (cv_source_t source, uint16_t p)
+{
+    if (source > CV_SOURCE_HIZ) source = CV_SOURCE_LINE;
+    return INPUT_RANGE[source][0] + cv_knob(p) * (INPUT_RANGE[source][1] - INPUT_RANGE[source][0]);
+}
+
 static uint16_t input_gain_code (cv_source_t source, uint16_t p, bool *pad_on, float *total_db)
 {
-    const float t = INPUT_RANGE[source][0] + cv_knob(p) * (INPUT_RANGE[source][1] - INPUT_RANGE[source][0]);
+    const float t = cv_input_gain_db(source, p);
     float fixed;
     if (source == CV_SOURCE_MIC)
     {
@@ -114,10 +120,27 @@ static uint16_t input_gain_code (cv_source_t source, uint16_t p, bool *pad_on, f
 }
 
 /*=============================== 2-5. EQ GAIN ================================*/
+/*
+ * The gain knobs are "zoomed in" around 0 dB instead of the PDF's straight B = 15 c:
+ *     B = 15 (a c + (1 - a) c^3) dB        c = centred knob, -1 ... +1
+ * Still -15 dB fully left, 0 dB in the middle, +15 dB fully right, but the knob travel for 0 to +1 dB
+ * is 1.5 times the travel for +14 to +15 dB on a bell, 1.8 times on a shelf (exactly, not just the
+ * slope). The stored value and the LED ring are unchanged, so the ring still moves evenly per step of
+ * the knob; only the dB per step changes.
+ */
+#define EQ_TAPER_BELL  0.8501585f // LMF, HMF, and LF/HF switched to bell: 1.5x
+#define EQ_TAPER_SHELF 0.7806492f // LF/HF as shelves: 1.8x
 
-uint16_t cv_eq_gain_code (uint16_t p, bool *cut)
+float cv_eq_gain_db (uint16_t p, bool shelf)
 {
-    const float boost_db = 15.0f * cv_centred(p);
+    const float c = cv_centred(p);
+    const float a = shelf ? EQ_TAPER_SHELF : EQ_TAPER_BELL;
+    return 15.0f * (a * c + (1.0f - a) * c * c * c);
+}
+
+uint16_t cv_eq_gain_code (uint16_t p, bool shelf, bool *cut)
+{
+    const float boost_db = cv_eq_gain_db(p, shelf);
     *cut = boost_db < 0.0f;
     const float a = powf(10.0f, fabsf(boost_db) / 20.0f) - 1.0f; // band VCA gain
     if (!(a > 0.0f)) return 0;                                   // 0 dB: VCA off
@@ -205,13 +228,13 @@ void cv_compute (const cv_params_t *p, cv_state_t *state, cv_result_t *out)
 
     // 2-5. EQ gain, and each band wired for boost or cut
     bool cut;
-    out->code[CV_LF_GAIN] = cv_eq_gain_code(p->lf.gain, &cut);
+    out->code[CV_LF_GAIN] = cv_eq_gain_code(p->lf.gain, !p->lf.bell, &cut); // LF/HF: shelf unless switched to bell
     if (cut) sw |= RS_LF_CUT;
-    out->code[CV_LMF_GAIN] = cv_eq_gain_code(p->lmf.gain, &cut);
+    out->code[CV_LMF_GAIN] = cv_eq_gain_code(p->lmf.gain, false, &cut);
     if (cut) sw |= RS_LMF_CUT;
-    out->code[CV_HMF_GAIN] = cv_eq_gain_code(p->hmf.gain, &cut);
+    out->code[CV_HMF_GAIN] = cv_eq_gain_code(p->hmf.gain, false, &cut);
     if (cut) sw |= RS_HMF_CUT;
-    out->code[CV_HF_GAIN] = cv_eq_gain_code(p->hf.gain, &cut);
+    out->code[CV_HF_GAIN] = cv_eq_gain_code(p->hf.gain, !p->hf.bell, &cut);
     if (cut) sw |= RS_HF_CUT;
 
     // 6-11. EQ frequency (LF and HF depend on shelf or bell) and Q

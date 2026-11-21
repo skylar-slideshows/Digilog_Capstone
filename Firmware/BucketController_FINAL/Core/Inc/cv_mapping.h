@@ -116,6 +116,8 @@ float cv_centred (uint16_t p);                                  //!< c, -1 ... +
 uint16_t cv_signed_to_p (int16_t value);                        //!< int16 control value -> P
 float cv_fader_db (uint16_t p);                                 //!< F; -INFINITY when P = 0
 void cv_pan_db (uint16_t p, float *left_db, float *right_db);   //!< constant-power pan law
-uint16_t cv_eq_gain_code (uint16_t p, bool *cut);               //!< and whether the band must be wired to cut
+float cv_eq_gain_db (uint16_t p, bool shelf);                   //!< EQ gain knob -> dB, with the taper (see cv_mapping.c)
+float cv_input_gain_db (cv_source_t source, uint16_t p);       //!< input gain knob -> total gain T in dB (section 1)
+uint16_t cv_eq_gain_code (uint16_t p, bool shelf, bool *cut);   //!< and whether the band must be wired to cut
 
 #endif

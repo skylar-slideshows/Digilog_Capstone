@@ -10,6 +10,9 @@
  */
 
 void init_knob_controls (uint8_t channel, channel_control_io_t *io);
+
+/** Flashes every EQ ring on a channel a few times (after the EQ has been reset). */
+void knob_flash_eq_rings (uint8_t channel);
 void update_channel_knob_values (
     SemaphoreHandle_t *vals_mutex,
     channel_controls *vals,

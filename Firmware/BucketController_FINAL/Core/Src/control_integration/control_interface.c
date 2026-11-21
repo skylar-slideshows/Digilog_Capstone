@@ -33,12 +33,15 @@ static void init_control_io (uint8_t channel)
     init_fader_controls(channel, &(channel_controls_io[channel]));
 }
 
-static void init_control_vals (uint8_t channel)
+static channel_controls s_defaults; // filled once by fill_defaults(); every channel starts as a copy
+
+const channel_controls *control_defaults (void)
 {
-    xSemaphoreTake(channel_control_mutexes[channel], portMAX_DELAY);
+    return &s_defaults;
+}
 
-    channel_controls *vals = &(channel_control_vals[channel]);
-
+static void fill_defaults (channel_controls *vals)
+{
     vals->input_type_selection = LINE_INPUT;
     vals->control_set_selection = EQ_CONTROL;
     vals->input_gain = 0;
@@ -76,12 +79,19 @@ static void init_control_vals (uint8_t channel)
     vals->comp_control.threshold = 0;
     vals->comp_control.de_ess_amt = 0;
     vals->comp_control.ratio = 0;
+}
 
+static void init_control_vals (uint8_t channel)
+{
+    xSemaphoreTake(channel_control_mutexes[channel], portMAX_DELAY);
+    channel_control_vals[channel] = s_defaults;
     xSemaphoreGive(channel_control_mutexes[channel]);
 }
 
 void init_control_interface (void)
 {
+    fill_defaults(&s_defaults);
+
     for (uint8_t channel = 0; channel < CHANNELS; channel++)
     {
         channel_control_mutexes[channel] = xSemaphoreCreateMutex();

@@ -1,4 +1,7 @@
 #include "button_control.h"
+#include "knob_control.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include "control_integration/control_interface.h"
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/button_driver.h"
@@ -20,6 +23,58 @@ static void update_toggle_button_val_from_info (
     xSemaphoreTake(*out_mutex, portMAX_DELAY);
     *val_out = !*val_out;
     xSemaphoreGive(*out_mutex);
+}
+
+/*
+ * Holding the EQ button for EQ_RESET_HOLD_MS resets every EQ setting (all four bands' gain, frequency
+ * and Q, and LF/HF back to shelves) to its startup value, and flashes the EQ rings. Once per hold.
+ */
+#define EQ_RESET_HOLD_MS 2000U
+
+typedef struct
+{
+    TickType_t since; //!< when the current press started
+    bool pressed;
+    bool done;        //!< already reset during this press
+} eq_hold_t;
+
+static eq_hold_t s_eq_hold[CHANNELS];
+
+static uint8_t channel_of (const channel_controls *vals)
+{
+    return (uint8_t)(vals - channel_control_vals);
+}
+
+static void check_eq_reset_hold (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
+{
+    const uint8_t channel = channel_of(vals);
+    if (channel >= CHANNELS) return;
+    eq_hold_t *hold = &s_eq_hold[channel];
+
+    if (!get_button_held(&(io->eq_button.button)))
+    {
+        hold->pressed = false;
+        return;
+    }
+    const TickType_t now = xTaskGetTickCount();
+    if (!hold->pressed)
+    {
+        hold->pressed = true;
+        hold->since = now;
+        hold->done = false;
+    }
+    if (!hold->done && (now - hold->since) >= pdMS_TO_TICKS(EQ_RESET_HOLD_MS))
+    {
+        const channel_controls *start = control_defaults();
+        xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+        vals->hf_control = start->hf_control;
+        vals->hmf_control = start->hmf_control;
+        vals->lmf_control = start->lmf_control;
+        vals->lf_control = start->lf_control;
+        xSemaphoreGive(*vals_mutex);
+        knob_flash_eq_rings(channel);
+        hold->done = true;
+    }
 }
 
 static void update_radio_buttons (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
@@ -96,6 +151,10 @@ static void update_input_select_button (SemaphoreHandle_t *vals_mutex, channel_c
     xSemaphoreGive(*vals_mutex);
 }
 
+// The input type cycle button's own LED (lit while it's held down)
+static const uint8_t INPUT_CYCLE_BUTTON_LEDS[CHANNELS] = {4, 12, 22, 30};
+static led_device_t *s_input_cycle_led[CHANNELS];
+
 static const uint8_t INPUT_SELECT_LEDS[CHANNELS][3] = {
     {1, 2, 3}, // line, mic, hi-z
     {9, 10, 11},
@@ -143,6 +202,7 @@ void init_button_controls (uint8_t channel, channel_control_io_t *io)
     io->input_selection.line_input_led = led_device_at(INPUT_SELECT_LEDS[channel][0]);
     io->input_selection.mic_input_led = led_device_at(INPUT_SELECT_LEDS[channel][1]);
     io->input_selection.hiz_input_led = led_device_at(INPUT_SELECT_LEDS[channel][2]);
+    s_input_cycle_led[channel] = led_device_at(INPUT_CYCLE_BUTTON_LEDS[channel]);
 
     io->phase_flip_button.button = BUTTONS[1];
     io->phase_flip_button.button.bus = bus;
@@ -202,6 +262,11 @@ void update_channel_button_leds (
     led_set_bool(io->input_selection.hiz_input_led, v.input_type_selection == HIZ_INPUT);
     led_set_bool(io->input_selection.line_input_led, v.input_type_selection == LINE_INPUT);
     led_set_bool(io->input_selection.mic_input_led, v.input_type_selection == MIC_INPUT);
+    const uint8_t channel = channel_of(vals);
+    if (channel < CHANNELS && s_input_cycle_led[channel] != NULL)
+    {
+        led_set_bool(s_input_cycle_led[channel], get_button_held(&(io->input_selection.input_select_button)));
+    }
 
     led_set_bool(io->eq_button.led, v.control_set_selection == EQ_CONTROL);
     led_set_bool(io->comp_button.led, v.control_set_selection == COMP_CONTROL);
@@ -220,6 +285,7 @@ void update_channel_button_leds (
 void update_channel_button_values (SemaphoreHandle_t *vals_mutex, channel_controls *vals, channel_control_io_t *io)
 {
     update_radio_buttons(vals_mutex, vals, io);
+    check_eq_reset_hold(vals_mutex, vals, io);
 
     update_input_select_button(vals_mutex, vals, io);
 

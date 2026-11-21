@@ -11,6 +11,7 @@
 
 #include "ui/ui_render.h"
 #include "hardware_drivers/driver_st7789_font.h"
+#include "ui/ui_font_big.h" // the value pop-up's large font, from ui_bigfont_gen.py
 #include <stddef.h>
 #include <string.h>
 
@@ -25,8 +26,14 @@ static const uint8_t *glyph (uint8_t size, char c, uint8_t *bytes_per_column)
         case 12: *bytes_per_column = 2; return gsc_st7789_ascii_1206[index];
         case 16: *bytes_per_column = 2; return gsc_st7789_ascii_1608[index];
         case 24: *bytes_per_column = 3; return gsc_st7789_ascii_2412[index];
+        case UI_FONT_BIG_SIZE: *bytes_per_column = (UI_FONT_BIG_SIZE + 7) / 8; return UI_FONT_BIG[index];
         default: return NULL;
     }
+}
+
+uint8_t ui_big_font_size (void)
+{
+    return UI_FONT_BIG_SIZE;
 }
 
 uint16_t ui_text_width (const char *text, uint8_t size)
@@ -63,26 +70,30 @@ void ui_render_row (const ui_region_t *region, int16_t y, uint32_t *row)
 
     for (uint8_t t = 0; t < region->text_count; t++)
     {
-        const ui_text_t *text = &region->texts[t];
-        if (text->text == NULL || y < text->y || y >= text->y + text->size) continue;
+        ui_draw_text_row(&region->texts[t], y, row, region->x0, region->x1);
+    }
+}
 
-        const uint8_t glyph_row = (uint8_t)(y - text->y);
-        const uint8_t columns = text->size / 2U;
-        int16_t char_x = text->x;
-        for (const char *c = text->text; *c != '\0'; c++, char_x = (int16_t)(char_x + columns))
+void ui_draw_text_row (const ui_text_t *text, int16_t y, uint32_t *row, int16_t x0, int16_t x1)
+{
+    if (text->text == NULL || y < text->y || y >= text->y + text->size) return;
+
+    const uint8_t glyph_row = (uint8_t)(y - text->y);
+    const uint8_t columns = text->size / 2U;
+    int16_t char_x = text->x;
+    for (const char *c = text->text; *c != '\0'; c++, char_x = (int16_t)(char_x + columns))
+    {
+        uint8_t bytes_per_column;
+        const uint8_t *bitmap = glyph(text->size, *c, &bytes_per_column);
+        if (bitmap == NULL) break;
+        for (uint8_t col = 0; col < columns; col++)
         {
-            uint8_t bytes_per_column;
-            const uint8_t *bitmap = glyph(text->size, *c, &bytes_per_column);
-            if (bitmap == NULL) break;
-            for (uint8_t col = 0; col < columns; col++)
+            const int16_t x = (int16_t)(char_x + col);
+            if (x < x0 || x > x1) continue;
+            const uint8_t bits = bitmap[col * bytes_per_column + (glyph_row >> 3)];
+            if (bits & (0x80U >> (glyph_row & 7U)))
             {
-                const int16_t x = (int16_t)(char_x + col);
-                if (x < region->x0 || x > region->x1) continue;
-                const uint8_t bits = bitmap[col * bytes_per_column + (glyph_row >> 3)];
-                if (bits & (0x80U >> (glyph_row & 7U)))
-                {
-                    row[x - left] = text->rgb;
-                }
+                row[x - x0] = text->rgb;
             }
         }
     }
