@@ -88,6 +88,14 @@
 #define LED_OE_TIM_CHAN        TIM_CHANNEL_2
 
 /*------------------------------ FADERS ------------------------------*/
+/** 0 while the faders are unplugged: they're ignored completely (not read, motors not driven), since
+ *  their open inputs read random positions and touches. Every channel's level then stays at 0 dB
+ *  (its fader at the 0 dB mark). Set to 1 once the faders are connected. */
+#define FADERS_CONNECTED 0
+
+/** Fader position of 0 dB (cv_mapping.pdf section 18): the level channels sit at while FADERS_CONNECTED is 0 */
+#define FADER_0DB_POSITION 44380U
+
 /** Fader n belongs to channel n. FADER_ADC must have its regular conversions ranked in fader
  *  order (rank 1 = fader 0 ... rank 4 = fader 3), see poll_faders(). */
 #define FADER_ADC              hadc2

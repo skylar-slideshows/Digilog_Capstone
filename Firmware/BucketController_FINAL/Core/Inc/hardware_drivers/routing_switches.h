@@ -10,10 +10,13 @@
   *        (routing board J24: SR_DAT, SR_CLK, SR_LAT). SHIFTREG_OE (PF9) drives SR_OE_EXT
   *        (J24 pin 7): high keeps the board's outputs off, low turns them on.
   *
-  * Chain order from SR_DAT, as measured on the board: the first pair of registers drives
-  * channel 4, then channel 3, channel 2, and the far end of the chain channel 1. (Channel 1's
-  * mute used to mute channel 4.) Each channel has 16 bits: the low byte is its first register,
-  * the high byte its second; bit 0 of each byte is QA. The order within a channel was right.
+  * Chain order, traced on the PCB (the board is flipped, so KiCad's channel names run backwards):
+  * SR_DAT enters U5, then U6, U7 ... U12. U5/U6 sit on the right (front view) and drive the
+  * rightmost channel, channel 4 (KiCad "CH1"); U7/U8 channel 3, U9/U10 channel 2, and U11/U12, at
+  * the far end of the chain on the left, channel 1 (KiCad "CH4"). The first bit sent ends up at
+  * U12's QH. Each channel has 16 bits: the low byte is its first register (U11 for channel 1:
+  * QA PRE ... QH P48), the high byte its second (U12: QA LF_CUT ... QH MIX_ON); bit 0 = QA.
+  * See RS_CHANNEL_1_AT_FAR_END in routing_switches.c.
   * Every bit is active high (1 = the thing named is on), as the cards are wired.
   **********************************************************************************
 */

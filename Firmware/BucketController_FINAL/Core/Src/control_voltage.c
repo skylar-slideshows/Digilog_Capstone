@@ -39,6 +39,7 @@
 #include "hardware_drivers/routing_switches.h"
 #include "CONFIG.h"
 #include <string.h>
+#include <stdio.h>
 
 static cv_state_t s_state[CHANNELS];          // mic pad hysteresis, per channel
 static cv_params_t s_last[CHANNELS];          // what the codes were last worked out from
@@ -129,6 +130,16 @@ void control_voltage_update (uint8_t channel)
         // only marks a DAC for rewriting when a value changed
         mcp4728_cache_write(bus, CV_DAC_SLOTS[cv].addr, CV_DAC_SLOTS[cv].output, result.code[cv]);
     }
+#if DEVELOPER_MODE
+    // what takes a channel off the mix bus, printed whenever its mix switch changes
+    if (((routing_switches_get(channel) ^ result.switches) & RS_MIX_ON) != 0U)
+    {
+        printf("\r\nCH%u mix bus %s: muted %d, fader P %u, soloed %d, other channels soloed %d%d%d%d\n",
+               (unsigned)(channel + 1U), (result.switches & RS_MIX_ON) ? "ON" : "OFF", params.muted,
+               (unsigned)params.fader, params.soloed, channel_control_vals[0].solo, channel_control_vals[1].solo,
+               channel_control_vals[2].solo, channel_control_vals[3].solo);
+    }
+#endif
     routing_switches_set(channel, result.switches); // only sends when a bit changed
     s_comp_extra_db[channel] = result.comp_extra_db;
 }

@@ -18,7 +18,11 @@ static inline uint16_t s_scalar_to_uint16 (s_scalar_control_t in)
 
 void update_channel_fader_hardware (channel_control_io_t *io)
 {
+#if FADERS_CONNECTED
     update_fader(&(io->fader));
+#else
+    (void)io; // faders unplugged: motors left off (CONFIG.h)
+#endif
 }
 
 void update_channel_fader_values (
@@ -27,6 +31,13 @@ void update_channel_fader_values (
     channel_control_io_t *io
 )
 {
+#if !FADERS_CONNECTED
+    // faders unplugged: their open inputs read random positions and touches, so leave the level alone (CONFIG.h)
+    (void)vals_mutex;
+    (void)vals;
+    (void)io;
+    return;
+#endif
     // TODO: Try to find a way to be more conservative about taking the mutex (only take it if values have changed?)
     const fader_state_t fader = get_fader_state(&(io->fader));
 

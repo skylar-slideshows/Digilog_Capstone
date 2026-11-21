@@ -45,7 +45,11 @@ static void fill_defaults (channel_controls *vals)
     vals->input_type_selection = LINE_INPUT;
     vals->control_set_selection = EQ_CONTROL;
     vals->input_gain = 0;
+#if FADERS_CONNECTED
     vals->output_gain = 0;
+#else
+    vals->output_gain = (s_scalar_control_t)((int32_t)FADER_0DB_POSITION - 32768); // faders unplugged: sit at 0 dB
+#endif
     vals->output_pan = 0;
 
     vals->phantom_48v = false;

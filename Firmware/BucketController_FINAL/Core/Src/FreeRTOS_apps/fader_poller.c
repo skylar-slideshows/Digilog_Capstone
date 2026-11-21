@@ -58,7 +58,9 @@ static void fader_poller_task (void *arg)
     for (;;)
     {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+#if FADERS_CONNECTED
         poll_faders();
+#endif
     }
 }
 

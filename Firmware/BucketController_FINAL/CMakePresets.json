@@ -28,11 +28,13 @@
     "buildPresets": [
         {
             "name": "Debug",
-            "configurePreset": "Debug"
+            "configurePreset": "Debug",
+            "cleanFirst": true
         },
         {
             "name": "Release",
-            "configurePreset": "Release"
+            "configurePreset": "Release",
+            "cleanFirst": true
         }
     ]
 }
