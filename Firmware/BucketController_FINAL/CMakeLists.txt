@@ -121,6 +121,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/FreeRTOS_apps/channel_display.c
     Core/Src/ui/ui_render.c
     Core/Src/ui/channel_screen.c
+    Core/Src/comp/comp_engine.c
+    Core/Src/FreeRTOS_apps/compressor.c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -134,6 +136,8 @@ set_source_files_properties(
     Core/Src/FreeRTOS_apps/channel_display.c
     Core/Src/ui/ui_render.c
     Core/Src/ui/channel_screen.c
+    Core/Src/comp/comp_engine.c
+    Core/Src/FreeRTOS_apps/compressor.c
     PROPERTIES COMPILE_OPTIONS "-O2"
 )
 

@@ -84,6 +84,8 @@ typedef struct
     uint16_t aux_level[4];        //!< P, sends 1-4
     uint16_t aux_pan[2];          //!< P (centred), sends 1 and 2 only
     uint16_t fader;               //!< P; 0 mutes the channel
+    uint16_t comp_output;         //!< compressor OUTPUT knob (P): a -10...+20 dB trim on top of the fader
+    bool comp_off;                //!< compressor bypassed: OUTPUT not applied
     uint16_t pan;                 //!< P (centred), main pan
     bool phantom, phase, hpf;
     bool insert, insert_pre;      //!< insert_pre: the insert send taps before the EQ
@@ -106,7 +108,8 @@ typedef struct
     uint16_t code[CV_COUNT]; //!< MCP4728 codes, 0-4095
     uint16_t switches;       //!< routing board bits for this channel (RS_* in routing_switches.h)
     float input_total_db;    //!< T: total input gain, for display
-    float comp_extra_db;     //!< E: attenuation (<= 0 dB) the output VCAs can't reach, for the compressor CV
+    float comp_extra_db;     //!< E: the part of fader + pan + OUTPUT the main VCA CVs can't reach (above
+                             //!< their +11.8 dB or below -40.2 dB), for the compressor CV to add
 } cv_result_t;
 
 /** Works out every code and switch bit for one channel */

@@ -47,6 +47,13 @@
 #define CH_COLOR_BADGE_HPF     UI_RGB(0xFF, 0xD8, 0x20) // ...HPF yellow, all with black text
 #define CH_COLOR_BADGE_TEXT    UI_RGB(0x00, 0x00, 0x00)
 #define CH_COLOR_HPF_LINE      CH_COLOR_BADGE_HPF       // the HPF's dotted line on the EQ graph
+#define CH_COLOR_POPUP_COMP    UI_RGB(0xFF, 0xFF, 0xFF) // value pop-up: compressor knobs (white for now)
+#define CH_COLOR_COMP_MAJOR    UI_RGB(0xEC, 0xEC, 0xF6) // gain-reduction meter (the mockup's colours): numbered ticks...
+#define CH_COLOR_COMP_MINOR    UI_RGB(0x6E, 0x6E, 0x7E) // ...in-between ticks, the "GR" reading...
+#define CH_COLOR_COMP_ARC      UI_RGB(0x3A, 0x3A, 0x48) // ...the scale's arc and the needle's hub...
+#define CH_COLOR_COMP_NEEDLE   UI_RGB(0xFA, 0xF6, 0xEC) // ...and the needle
+#define CH_COLOR_COMP_PEAK     UI_RGB(0xFF, 0xD8, 0x20) // detector, bottom left: PEAK yellow...
+#define CH_COLOR_COMP_RMS      UI_RGB(0x7F, 0xC8, 0xFF) // ...RMS blue
 #define CH_COLOR_NUMBER_MUTED  UI_RGB(0xBE, 0x5A, 0x5A) // channel number when muted
 #define CH_COLOR_NUMBER_SOLO   UI_RGB(0xE6, 0xC8, 0x4A) // channel number when soloed
 #define CH_COLOR_MUTE_BAR      UI_RGB(0xFF, 0x20, 0x20) // MUTE bar
@@ -139,6 +146,31 @@ typedef struct
     bool off;                        //!< sends bypassed: aux bars grey, "SENDS OFF"; set by the region functions
 } channel_sends_view_t;
 
+/*
+ * Compressor page, in the same area: a gain-reduction meter like the mockup's. The needle rests on 0 at
+ * the right and swings left to 20 dB across a 130 degree scale; ticks every 2.5 dB, numbered every 5.
+ * The reading at the top left, the detector (PEAK yellow / RMS blue) at the bottom left, and "COMP OFF"
+ * (needle and scale grey) while the compressor is bypassed.
+ */
+#define CH_COMP_PIVOT_X    120
+#define CH_COMP_PIVOT_Y    206
+#define CH_COMP_RADIUS     100  // the scale's arc
+#define CH_COMP_NEEDLE     96   // the needle's length
+#define CH_COMP_GR_MAX_DB  20.0f
+#define CH_COMP_READOUT_Y  72   // "GR 4.3 dB", 16 px, top left (and "COMP OFF" further along the row)
+#define CH_COMP_MODE_Y     204  // PEAK / RMS, 16 px, bottom left
+
+/** The compressor page worked out from the gain reduction and the settings, ready to draw */
+typedef struct
+{
+    float gr_db;              //!< as shown: 0 ... CH_COMP_GR_MAX_DB, to 0.1 dB
+    float tip_x, tip_y;       //!< the needle's tip
+    char readout[24];         //!< "GR 4.3 dB"
+    ui_text_t texts[8];       //!< scale numbers, reading, detector, COMP OFF
+    uint8_t text_count;
+    bool off;                 //!< bypassed: grey, "COMP OFF"
+} channel_comp_view_t;
+
 /** Where the value pop-up is */
 typedef enum
 {
@@ -157,8 +189,10 @@ typedef struct
     bool title_lit;        //!< the selected channel's flash: title strip lighter right now
     bool show_eq;          //!< the knobs control the EQ, so the graph shows
     bool show_sends;       //!< the knobs control the sends, so the sends window shows
+    bool show_comp;        //!< the knobs control the compressor, so its gain-reduction meter shows
     bool eq_off;           //!< EQ bypassed: graph grey, "EQ OFF"
     bool sends_off;        //!< sends bypassed: aux bars grey, "SENDS OFF"
+    bool comp_off;         //!< compressor bypassed: meter grey, "COMP OFF"
     bool phantom;          //!< badges under the title strip, from the right: "48V"...
     bool phase;            //!< ..."PHASE"...
     bool hpf;              //!< ..."HPF" (the HPF also shows as a dotted line on the EQ graph)
@@ -227,14 +261,15 @@ typedef struct
 {
     channel_eq_view_t eq;
     channel_sends_view_t sends;
+    channel_comp_view_t comp;
 } channel_views_t;
 
 /** Memory for the shapes of a whole screen; keep it alive until the region has been drawn. */
 typedef struct
 {
-    ui_text_t texts[8];
+    ui_text_t texts[10];
     char number[4];
-    ui_rect_t rects[10];
+    ui_rect_t rects[12];
 } channel_screen_parts_t;
 
 /** Memory for the bar slot under the title strip (MUTE/SOLO bars and the badges, or the pop-up) */
@@ -244,11 +279,11 @@ typedef struct
     ui_text_t texts[5];
 } channel_bar_parts_t;
 
-/** Memory for the pop-ups drawn over the EQ area */
+/** Memory for what's drawn over the middle of the screen: the pop-ups and the stacked badges */
 typedef struct
 {
-    ui_rect_t rects[2];
-    ui_text_t texts[2];
+    ui_rect_t rects[5];
+    ui_text_t texts[5];
 } channel_popup_parts_t;
 
 /** Memory for the shapes of the title strip on its own. */
@@ -282,6 +317,12 @@ void channel_screen_eq_compute (channel_eq_view_t *view, const channel_eq_t *eq)
 void channel_screen_sends_compute (channel_sends_view_t *view, int16_t fader, const uint16_t send_level[4],
                                    const int16_t send_pan[2]);
 
+/** Works out the compressor page: gain reduction in dB (clamped to the meter), detector, bypass */
+void channel_screen_comp_compute (channel_comp_view_t *view, float gr_db, bool rms, bool off);
+
+/** The box the needle (and its hub) covers, for redrawing just around it: x0, y0, x1, y1 */
+void channel_screen_comp_needle_box (const channel_comp_view_t *view, int16_t box[4]);
+
 /** Pan as text: "C", or how far from the centre in percent and which side, "50L", "33R". */
 void channel_screen_pan_text (char *out, size_t size, int16_t pan);
 
@@ -292,9 +333,14 @@ void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, co
 /** Just the title strip, for when only the input type or the selection flash changed. */
 void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, const channel_screen_state_t *state);
 
-/** Just the middle of the screen (rows 60-219): the EQ graph, the sends window or nothing, plus any pop-up over it. */
+/** Just the middle of the screen (rows 56-219): the EQ graph, the sends window, the compressor meter or nothing,
+ *  plus anything over it (pop-ups, badges). */
 void channel_screen_middle (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
                             const channel_screen_state_t *state);
+
+/** The same, but only the part inside x0..x1, y0..y1 (clipped to the middle), e.g. around the meter's needle */
+void channel_screen_middle_part (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                                 const channel_screen_state_t *state, int16_t x0, int16_t y0, int16_t x1, int16_t y1);
 
 /** Just the area of the top pop-up (rows 28-69): the pop-up if showing, otherwise the MUTE/SOLO bars (or
  *  nothing) and the top of the EQ graph. */

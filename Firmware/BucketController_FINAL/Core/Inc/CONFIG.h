@@ -87,6 +87,16 @@
 #define LED_OE_TIM_HANDLE      htim1
 #define LED_OE_TIM_CHAN        TIM_CHANNEL_2
 
+/*------------------------------ COMPRESSOR ------------------------------*/
+/** 1 once CubeMX has TIM6 triggering ADC4 with DMA (steps at the top of compressor.c). At 0 the
+ *  compressor DACs and op-amps still start, holding every channel at 0 dB (safe for comp cards), but
+ *  nothing compresses. */
+#define COMP_LOOP_ENABLED 0
+#define COMP_SAMPLE_HZ    32000     // nominal; the real rate is read from TIM6
+#define COMP_DAC_VREF     3.3f      // VREF+ of the STM32's ADCs and DACs, volts
+#define COMP_R7_OHMS      48700.0f  // comp card scaler input resistor: 48.7k as built (the card note's
+                                    // 3.3 V value is 78.7k; set this to match if it's changed)
+
 /*------------------------------ FADERS ------------------------------*/
 /** 0 while the faders are unplugged: they're ignored completely (not read, motors not driven), since
  *  their open inputs read random positions and touches. Every channel's level then stays at 0 dB

@@ -257,8 +257,8 @@ static void paint_eq (const void *context, int16_t y, uint32_t *row, int16_t x0,
 /*=============================== SENDS WINDOW ================================*/
 
 /* Bars left to right: M (wider), A1-A4. A dash to each bar's left marks 0 dB. */
-static const int16_t SEND_BAR_X[CH_SENDS_BARS] = {20, 68, 112, 156, 200};
-static const int16_t SEND_BAR_W[CH_SENDS_BARS] = {32, 24, 24, 24, 24};
+static const int16_t SEND_BAR_X[CH_SENDS_BARS] = {10, 54, 94, 134, 174}; // all left of the badge column (x 196 on)
+static const int16_t SEND_BAR_W[CH_SENDS_BARS] = {30, 22, 22, 22, 22};
 static const char *const SEND_LABELS[CH_SENDS_BARS] = {"M", "A1", "A2", "A3", "A4"};
 #define SEND_INNER_H (CH_SENDS_BAR_BOTTOM - CH_SENDS_BAR_TOP - 1) // rows inside the outline
 #define SEND_DASH_W  5                                            // the 0 dB dash, ending 2 px before the bar
@@ -364,10 +364,141 @@ static void paint_sends (const void *context, int16_t y, uint32_t *row, int16_t 
     }
 }
 
-/* The middle of the screen shows whichever window the knobs control: EQ graph, sends, or nothing */
+/*=============================== COMPRESSOR METER ================================*/
+
+#define COMP_DEG(d) ((25.0f + (d) / CH_COMP_GR_MAX_DB * 130.0f) * 0.017453293f) // 0 dB at 25 deg (right) ... 20 at 155
+
+static float comp_x (float r, float a) { return (float)CH_COMP_PIVOT_X + r * cosf(a); }
+static float comp_y (float r, float a) { return (float)CH_COMP_PIVOT_Y - r * sinf(a); }
+
+static const char *const COMP_SCALE_TEXT[5] = {"0", "5", "10", "15", "20"};
+
+void channel_screen_comp_compute (channel_comp_view_t *view, float gr_db, bool rms, bool off)
+{
+    if (!(gr_db > 0.0f)) gr_db = 0.0f;
+    if (gr_db > CH_COMP_GR_MAX_DB) gr_db = CH_COMP_GR_MAX_DB;
+    view->gr_db = gr_db;
+    view->off = off;
+    const float a = COMP_DEG(gr_db);
+    view->tip_x = comp_x((float)CH_COMP_NEEDLE, a);
+    view->tip_y = comp_y((float)CH_COMP_NEEDLE, a);
+
+    const unsigned int tenths = (unsigned int)lroundf(gr_db * 10.0f); // 0 ... 200
+    snprintf(view->readout, sizeof(view->readout), "GR %u.%u dB", tenths / 10U, tenths % 10U);
+
+    uint8_t n = 0;
+    for (uint8_t i = 0; i < 5; i++) // numbers just outside the ticks
+    {
+        const float ta = COMP_DEG(5.0f * (float)i);
+        const char *t = COMP_SCALE_TEXT[i];
+        view->texts[n++] = (ui_text_t){(int16_t)lroundf(comp_x(120.0f, ta) - (float)ui_text_width(t, 12) / 2.0f),
+                                       (int16_t)lroundf(comp_y(120.0f, ta) - 6.0f), 12,
+                                       off ? CH_COLOR_COMP_MINOR : CH_COLOR_COMP_MAJOR, t};
+    }
+    view->texts[n++] = (ui_text_t){4, CH_COMP_READOUT_Y, 16, CH_COLOR_COMP_MINOR, view->readout};
+    view->texts[n++] = (ui_text_t){4, CH_COMP_MODE_Y, 16, rms ? CH_COLOR_COMP_RMS : CH_COLOR_COMP_PEAK, rms ? "RMS" : "PEAK"};
+    if (off)
+    {
+        static const char status[] = "COMP OFF"; // on the reading's row, clear of the scale and the badges
+        view->texts[n++] = (ui_text_t){(int16_t)(192 - ui_text_width(status, 16)), CH_COMP_READOUT_Y, 16, CH_COLOR_BYPASS_TEXT, status};
+    }
+    view->text_count = n;
+}
+
+void channel_screen_comp_needle_box (const channel_comp_view_t *view, int16_t box[4])
+{
+    const float hub = 5.0f, pad = 2.0f;
+    box[0] = (int16_t)floorf(fminf(view->tip_x - pad, (float)CH_COMP_PIVOT_X - hub));
+    box[1] = (int16_t)floorf(fminf(view->tip_y - pad, (float)CH_COMP_PIVOT_Y - hub));
+    box[2] = (int16_t)ceilf(fmaxf(view->tip_x + pad, (float)CH_COMP_PIVOT_X + hub));
+    box[3] = (int16_t)ceilf(fmaxf(view->tip_y + pad, (float)CH_COMP_PIVOT_Y + hub));
+}
+
+/** Sets row[] pixels where the line from (xa, ya) to (xb, yb) crosses screen row y; width extra pixels to the right */
+static void line_row (float xa, float ya, float xb, float yb, int16_t y, uint8_t width, uint32_t rgb, uint32_t *row,
+                      int16_t x0, int16_t x1)
+{
+    const float lo = fminf(ya, yb), hi = fmaxf(ya, yb);
+    if ((float)y < lo - 0.5f || (float)y > hi + 0.5f) return;
+    float left, right;
+    if (fabsf(yb - ya) < 1e-3f)
+    {
+        left = fminf(xa, xb);
+        right = fmaxf(xa, xb);
+    }
+    else
+    {
+        // the part of the line inside this row's band, y - 0.5 ... y + 0.5
+        const float t0 = ((float)y - 0.5f - ya) / (yb - ya), t1 = ((float)y + 0.5f - ya) / (yb - ya);
+        const float ta = fminf(fmaxf(fminf(t0, t1), 0.0f), 1.0f), tb = fminf(fmaxf(fmaxf(t0, t1), 0.0f), 1.0f);
+        const float xa_ = xa + ta * (xb - xa), xb_ = xa + tb * (xb - xa);
+        left = fminf(xa_, xb_);
+        right = fmaxf(xa_, xb_);
+    }
+    for (int16_t x = (int16_t)lroundf(left); x <= (int16_t)lroundf(right) + width; x++)
+    {
+        if (x >= x0 && x <= x1) row[x - x0] = rgb;
+    }
+}
+
+/** ui_region_t painter for the compressor page */
+static void paint_comp (const void *context, int16_t y, uint32_t *row, int16_t x0, int16_t x1)
+{
+    const channel_comp_view_t *view = context;
+    if (y < CH_BAR_Y + CH_BAR_H || y > CH_EQ_Y + CH_EQ_H - 1) return;
+    const float dy = (float)(CH_COMP_PIVOT_Y - y);
+
+    // the scale's arc: a 2-pixel ring, only where it's above the 0 and 20 dB ends
+    const float r_out = (float)CH_COMP_RADIUS + 0.5f, r_in = (float)CH_COMP_RADIUS - 1.5f;
+    if (dy >= (float)CH_COMP_RADIUS * 0.42261826f && dy <= r_out) // sin 25 deg
+    {
+        const float outer = sqrtf(r_out * r_out - dy * dy);
+        const float inner = dy < r_in ? sqrtf(r_in * r_in - dy * dy) : 0.0f;
+        for (int16_t s = -1; s <= 1; s += 2)
+        {
+            const float a = (float)CH_COMP_PIVOT_X + (float)s * inner, b = (float)CH_COMP_PIVOT_X + (float)s * outer;
+            for (int16_t x = (int16_t)lroundf(fminf(a, b)); x <= (int16_t)lroundf(fmaxf(a, b)); x++)
+            {
+                if (x >= x0 && x <= x1) row[x - x0] = CH_COLOR_COMP_ARC;
+            }
+        }
+    }
+
+    // ticks every 2.5 dB: longer and brighter every 5
+    for (uint8_t i = 0; i <= 8; i++)
+    {
+        const bool major = (i % 2U) == 0U;
+        const float a = COMP_DEG(2.5f * (float)i);
+        const float r0 = major ? 102.6f : 106.4f, r1 = 111.5f;
+        const uint32_t rgb = view->off ? CH_COLOR_COMP_MINOR : (major ? CH_COLOR_COMP_MAJOR : CH_COLOR_COMP_MINOR);
+        line_row(comp_x(r0, a), comp_y(r0, a), comp_x(r1, a), comp_y(r1, a), y, 0, rgb, row, x0, x1);
+    }
+
+    // the needle (2 px wide) and its hub
+    line_row((float)CH_COMP_PIVOT_X, (float)CH_COMP_PIVOT_Y, view->tip_x, view->tip_y, y, 1,
+             view->off ? CH_COLOR_COMP_MINOR : CH_COLOR_COMP_NEEDLE, row, x0, x1);
+    if (fabsf(dy) <= 4.0f)
+    {
+        const float half = sqrtf(16.0f - dy * dy);
+        for (int16_t x = (int16_t)lroundf((float)CH_COMP_PIVOT_X - half); x <= (int16_t)lroundf((float)CH_COMP_PIVOT_X + half); x++)
+        {
+            if (x >= x0 && x <= x1) row[x - x0] = CH_COLOR_COMP_ARC;
+        }
+    }
+
+    for (uint8_t t = 0; t < view->text_count; t++)
+    {
+        ui_draw_text_row(&view->texts[t], y, row, x0, x1);
+    }
+}
+
+/* The middle of the screen shows whichever window the knobs control: EQ graph, sends or compressor */
 static ui_paint_fn middle_paint (const channel_screen_state_t *s)
 {
-    return s->show_eq ? paint_eq : (s->show_sends ? paint_sends : NULL);
+    if (s->show_eq) return paint_eq;
+    if (s->show_sends) return paint_sends;
+    if (s->show_comp) return paint_comp;
+    return NULL;
 }
 
 static const void *middle_context (const channel_screen_state_t *s, channel_views_t *views)
@@ -377,6 +508,7 @@ static const void *middle_context (const channel_screen_state_t *s, channel_view
         set_eq_colours(&views->eq, s);
         return &views->eq;
     }
+    if (s->show_comp) return &views->comp;
     views->sends.off = s->sends_off;
     return &views->sends;
 }
@@ -412,34 +544,36 @@ static void header_shapes (const channel_screen_state_t *s, char number[4], ui_r
 static void bars_for (const channel_screen_state_t *state, int16_t right, ui_rect_t *rects, uint8_t *rect_count,
                       ui_text_t *texts, uint8_t *text_count);
 
-/* Badges under the title strip on the right, as tall as the strip: "48V" rightmost, then "PHASE", then
-   "HPF", each only while it's on; the ones still showing close up to the right. The MUTE/SOLO bar takes
-   what's left of the row. */
+/* Badges stacked down the right edge, each as tall as the title strip: "48V" on top, then "PHASE", then
+   "HPF", each only while it's on, closing up when one goes off. They start right under the title strip,
+   or under the MUTE/SOLO bar while that shows. All three are the same width. They reach into the middle
+   of the screen, so the middle's regions draw them too; while the top pop-up shows they're hidden. */
 #define BADGE_TEXT_SIZE 16
-#define BADGE_PAD       5 // each side of the text
+#define BADGE_W         44 // "PHASE" plus 2 px either side; the sends bars stay left of this column
+#define BADGE_H         CH_HEADER_H
 #define BADGE_GAP       2
+#define BADGE_X0        (UI_SCREEN_W - BADGE_W)
 
-/** Adds the badges that are on; returns the column just left of them (the right edge for the bars) */
-static int16_t badge_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
-                             uint8_t *text_count)
+/** Adds the badges that are on, stacked down the right edge */
+static void badge_shapes (const channel_screen_state_t *s, ui_rect_t *rects, uint8_t *rect_count, ui_text_t *texts,
+                          uint8_t *text_count)
 {
+    if (s->popup == CH_POPUP_TOP) return; // the pop-up covers this area; they come back when it goes
     const struct { bool on; const char *text; uint32_t rgb; } badges[3] = {
         {s->phantom, "48V", CH_COLOR_BADGE_48V},
         {s->phase, "PHASE", CH_COLOR_BADGE_PHASE},
         {s->hpf, "HPF", CH_COLOR_BADGE_HPF},
     };
-    int16_t right = UI_SCREEN_W - 1;
+    int16_t top = (s->muted || s->soloed) ? (int16_t)(CH_BAR_Y + CH_BAR_H + BADGE_GAP) : (int16_t)CH_BAR_Y;
     for (uint8_t i = 0; i < 3; i++)
     {
         if (!badges[i].on) continue;
-        const int16_t width = (int16_t)(ui_text_width(badges[i].text, BADGE_TEXT_SIZE) + 2 * BADGE_PAD);
-        const int16_t left = (int16_t)(right - width + 1);
-        rects[(*rect_count)++] = (ui_rect_t){left, CH_BAR_Y, right, CH_BAR_Y + CH_BAR_H - 1, badges[i].rgb};
-        texts[(*text_count)++] = (ui_text_t){(int16_t)(left + BADGE_PAD), (int16_t)(CH_BAR_Y + (CH_BAR_H - BADGE_TEXT_SIZE) / 2),
-                                             BADGE_TEXT_SIZE, CH_COLOR_BADGE_TEXT, badges[i].text};
-        right = (int16_t)(left - BADGE_GAP - 1);
+        rects[(*rect_count)++] = (ui_rect_t){BADGE_X0, top, UI_SCREEN_W - 1, (int16_t)(top + BADGE_H - 1), badges[i].rgb};
+        texts[(*text_count)++] = (ui_text_t){
+            (int16_t)(BADGE_X0 + (BADGE_W - ui_text_width(badges[i].text, BADGE_TEXT_SIZE)) / 2),
+            (int16_t)(top + (BADGE_H - BADGE_TEXT_SIZE) / 2), BADGE_TEXT_SIZE, CH_COLOR_BADGE_TEXT, badges[i].text};
+        top = (int16_t)(top + BADGE_H + BADGE_GAP);
     }
-    return right;
 }
 
 /** A pop-up's text in the large font, centred across the screen at row y */
@@ -475,8 +609,8 @@ static void bar_slot_shapes (const channel_screen_state_t *s, ui_rect_t *rects, 
     }
     else
     {
-        const int16_t right = badge_shapes(s, rects, rect_count, texts, text_count);
-        bars_for(s, right, rects, rect_count, texts, text_count); // MUTE/SOLO move over for the badges
+        bars_for(s, UI_SCREEN_W - 1, rects, rect_count, texts, text_count); // MUTE/SOLO across the whole width
+        badge_shapes(s, rects, rect_count, texts, text_count);              // the badges below it, down the right
     }
 }
 
@@ -569,7 +703,7 @@ void channel_screen_header (ui_region_t *region, channel_header_parts_t *parts, 
     };
 }
 
-/** The MUTE/SOLO bar from column 0 to right (where the badges begin) */
+/** The MUTE/SOLO bar from column 0 to right */
 static void bars_for (const channel_screen_state_t *state, int16_t right, ui_rect_t *rects, uint8_t *rect_count,
                       ui_text_t *texts, uint8_t *text_count)
 {
@@ -593,18 +727,30 @@ static void bars_for (const channel_screen_state_t *state, int16_t right, ui_rec
 void channel_screen_middle (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
                             const channel_screen_state_t *state)
 {
+    channel_screen_middle_part(region, parts, views, state, 0, CH_BAR_Y + CH_BAR_H, UI_SCREEN_W - 1, EQ_LAST_ROW);
+}
+
+void channel_screen_middle_part (ui_region_t *region, channel_popup_parts_t *parts, channel_views_t *views,
+                                 const channel_screen_state_t *state, int16_t x0, int16_t y0, int16_t x1, int16_t y1)
+{
+    // clipped to the middle area
+    if (x0 < 0) x0 = 0;
+    if (x1 > UI_SCREEN_W - 1) x1 = UI_SCREEN_W - 1;
+    if (y0 < CH_BAR_Y + CH_BAR_H) y0 = CH_BAR_Y + CH_BAR_H;
+    if (y1 > EQ_LAST_ROW) y1 = EQ_LAST_ROW;
     uint8_t rect_count = 0, text_count = 0;
-    // either pop-up reaches into the graph's area: drawn over the curve
+    // either pop-up reaches into the graph's area, and so do the stacked badges: drawn over the curve
     if (state->popup == CH_POPUP_TOP)
     {
         popup_shapes(state, CH_POPUP_TOP_Y, top_popup_last_row(state), parts->rects, &rect_count, parts->texts, &text_count);
     }
     low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
+    badge_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     *region = (ui_region_t){
-        .x0 = 0,
-        .y0 = CH_BAR_Y + CH_BAR_H, // from under the MUTE/SOLO bar: the sends labels start above the graph's area
-        .x1 = UI_SCREEN_W - 1,
-        .y1 = EQ_LAST_ROW,
+        .x0 = x0,
+        .y0 = y0, // the whole middle starts under the MUTE/SOLO bar: the sends labels start above the graph's area
+        .x1 = x1,
+        .y1 = y1,
         .background = background(state),
         .rects = parts->rects,
         .rect_count = rect_count,

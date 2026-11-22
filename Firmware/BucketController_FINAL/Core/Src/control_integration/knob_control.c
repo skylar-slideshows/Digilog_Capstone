@@ -260,6 +260,7 @@ enum
 {
     MODE_LF,
     MODE_HF,
+    MODE_RMS,   // compressor THRESH knob: peak/RMS detector
     MODE_BANDS
 };
 
@@ -407,16 +408,42 @@ static void update_comp_knob_values (
     SemaphoreHandle_t *vals_mutex,
     comp_control_t *vals,
     comp_interface_t *comp_io,
-    s_scalar_control_t sensitivity
+    s_scalar_control_t sensitivity,
+    uint8_t channel
 )
 {
     const comp_control_t *start = &(control_defaults()->comp_control);
-    update_s_value_from_encoder(vals_mutex, &(comp_io->in_gain_knob.encoder), &(vals->in_gain), sensitivity, start->in_gain);
-    update_s_value_from_encoder(vals_mutex, &(comp_io->threshold_knob.encoder), &(vals->threshold), sensitivity, start->threshold);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->attack_time_knob.encoder), &(vals->attack_time), sensitivity, start->attack_time);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->release_time_knob.encoder), &(vals->release_time), sensitivity, start->release_time);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->ratio_knob.encoder), &(vals->ratio), sensitivity, start->ratio);
-    update_u_value_from_encoder(vals_mutex, &(comp_io->out_gain_knob.encoder), &(vals->out_gain), sensitivity, start->out_gain);
+    if (update_u_value_from_encoder(vals_mutex, &(comp_io->in_gain_knob.encoder), &(vals->in_gain), sensitivity, start->in_gain))
+    {
+        touched(channel, TOUCHED_COMP_INPUT, 0);
+    }
+    if (update_u_value_from_encoder(vals_mutex, &(comp_io->attack_time_knob.encoder), &(vals->attack_time), sensitivity, start->attack_time))
+    {
+        touched(channel, TOUCHED_COMP_ATTACK, 0);
+    }
+
+    // THRESH: turning sets it; holding it 2 s (without turning) switches the detector between peak and RMS
+    const knob_input_t thresh = read_knob(&(comp_io->threshold_knob.encoder));
+    if (apply_u_input(vals_mutex, &thresh, &(vals->threshold), fine_if_held(&thresh, sensitivity), start->threshold))
+    {
+        touched(channel, TOUCHED_COMP_THRESH, 0);
+    }
+    const bool was_rms = vals->rms; // only this task writes it
+    check_mode_hold(channel, MODE_RMS, &thresh, vals_mutex, &(vals->rms));
+    if (vals->rms != was_rms) touched(channel, TOUCHED_COMP_MODE, 0);
+
+    if (update_u_value_from_encoder(vals_mutex, &(comp_io->release_time_knob.encoder), &(vals->release_time), sensitivity, start->release_time))
+    {
+        touched(channel, TOUCHED_COMP_RELEASE, 0);
+    }
+    if (update_u_value_from_encoder(vals_mutex, &(comp_io->out_gain_knob.encoder), &(vals->out_gain), sensitivity, start->out_gain))
+    {
+        touched(channel, TOUCHED_COMP_OUTPUT, 0);
+    }
+    if (update_u_value_from_encoder(vals_mutex, &(comp_io->ratio_knob.encoder), &(vals->ratio), sensitivity, start->ratio))
+    {
+        touched(channel, TOUCHED_COMP_RATIO, 0);
+    }
 }
 
 void update_channel_knob_values (
@@ -456,7 +483,7 @@ void update_channel_knob_values (
             update_eq_band_knob_values(vals_mutex, &(vals->lf_control), &(io->lf_interface), false, sensitivity, channel, MODE_LF, 0, &(start->lf_control));
             break;
         case COMP_CONTROL:
-            update_comp_knob_values(vals_mutex, &(vals->comp_control), &(io->comp_interface), sensitivity);
+            update_comp_knob_values(vals_mutex, &(vals->comp_control), &(io->comp_interface), sensitivity, channel);
             break;
     }
 }
@@ -504,6 +531,14 @@ void knob_flash_eq_rings (uint8_t channel)
 }
 
 static mode_flash_t s_send_reset_flash[CHANNELS];
+static mode_flash_t s_comp_reset_flash[CHANNELS];
+
+void knob_flash_comp_rings (uint8_t channel)
+{
+    if (channel >= CHANNELS) return;
+    s_comp_reset_flash[channel].start = xTaskGetTickCount();
+    s_comp_reset_flash[channel].active = true;
+}
 
 void knob_flash_send_rings (uint8_t channel)
 {
@@ -631,15 +666,31 @@ void update_channel_knob_leds (
             break;
         }
         case COMP_CONTROL:
-            show_signed(io->comp_interface.in_gain_knob.led_ring, v.comp_control.in_gain);
-            show_signed(io->comp_interface.threshold_knob.led_ring, v.comp_control.threshold);
+        {
+            const uint8_t channel = channel_of(vals);
+            show_unsigned(io->comp_interface.in_gain_knob.led_ring, v.comp_control.in_gain);
+            show_unsigned(io->comp_interface.threshold_knob.led_ring, v.comp_control.threshold);
             show_unsigned(io->comp_interface.attack_time_knob.led_ring, v.comp_control.attack_time);
             show_unsigned(io->comp_interface.release_time_knob.led_ring, v.comp_control.release_time);
             show_unsigned(io->comp_interface.ratio_knob.led_ring, v.comp_control.ratio);
             show_unsigned(io->comp_interface.out_gain_knob.led_ring, v.comp_control.out_gain);
             hide(io->lf_interface.gain_knob.led_ring);
             hide(io->lf_interface.freq_knob.led_ring);
+            // peak/RMS just switched: the THRESH ring flashes over its normal display
+            show_mode_flash(channel, MODE_RMS, io->comp_interface.threshold_knob.led_ring);
+            // the compressor was just reset: its six rings flash
+            const int8_t phase = flash_phase(&s_comp_reset_flash[channel]);
+            if (phase >= 0)
+            {
+                led_device_t *rings[6] = {
+                    io->comp_interface.in_gain_knob.led_ring, io->comp_interface.attack_time_knob.led_ring,
+                    io->comp_interface.threshold_knob.led_ring, io->comp_interface.release_time_knob.led_ring,
+                    io->comp_interface.out_gain_knob.led_ring, io->comp_interface.ratio_knob.led_ring,
+                };
+                for (uint8_t r = 0; r < 6; r++) show_unsigned(rings[r], phase ? U_SCALAR_CONTROL_MAX : 0);
+            }
             break;
+        }
     }
 }
 
@@ -788,11 +839,11 @@ void init_knob_controls (uint8_t channel, channel_control_io_t *io)
     init_knob(channel, &(io->lf_interface.gain_knob), 7);
     init_knob(channel, &(io->lf_interface.freq_knob), 8);
 
-    // COMP
-    init_knob(channel, &(io->comp_interface.in_gain_knob), 1);
-    init_knob(channel, &(io->comp_interface.threshold_knob), 2);
-    init_knob(channel, &(io->comp_interface.attack_time_knob), 3);
-    init_knob(channel, &(io->comp_interface.release_time_knob), 4);
-    init_knob(channel, &(io->comp_interface.ratio_knob), 5);
-    init_knob(channel, &(io->comp_interface.out_gain_knob), 6);
+    // COMP, as printed on the faceplate (K7 and K8 unused)
+    init_knob(channel, &(io->comp_interface.in_gain_knob), 1);      // K1 INPUT
+    init_knob(channel, &(io->comp_interface.attack_time_knob), 2);  // K2 ATK
+    init_knob(channel, &(io->comp_interface.threshold_knob), 3);    // K3 THRESH
+    init_knob(channel, &(io->comp_interface.release_time_knob), 4); // K4 REL
+    init_knob(channel, &(io->comp_interface.out_gain_knob), 5);     // K5 OUTPUT
+    init_knob(channel, &(io->comp_interface.ratio_knob), 6);        // K6 RATIO
 }

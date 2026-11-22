@@ -274,9 +274,9 @@ static const struct { uint16_t offset; bool is_signed; } KNOB_VALUES[] = {
     {offsetof(channel_controls, lmf_control.q),             false}, // 15 eq_3_q
     {offsetof(channel_controls, lf_control.gain),           true},  // 16 eq_4_gain (LF)
     {offsetof(channel_controls, lf_control.freq),           false}, // 17 eq_4_freq
-    {offsetof(channel_controls, comp_control.in_gain),      true},  // 18 comp_input
+    {offsetof(channel_controls, comp_control.in_gain),      false}, // 18 comp_input
     {offsetof(channel_controls, comp_control.attack_time),  false}, // 19 comp_atk
-    {offsetof(channel_controls, comp_control.threshold),    true},  // 20 comp_thresh
+    {offsetof(channel_controls, comp_control.threshold),    false}, // 20 comp_thresh
     {offsetof(channel_controls, comp_control.release_time), false}, // 21 comp_rel
     {offsetof(channel_controls, comp_control.de_ess_amt),   false}, // 22 comp_deess
     {offsetof(channel_controls, comp_control.ratio),        false}, // 23 comp_ratio

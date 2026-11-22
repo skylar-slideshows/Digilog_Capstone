@@ -1,3 +1,4 @@
+#include "comp/comp_engine.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -76,16 +77,19 @@ static void fill_defaults (channel_controls *vals)
     vals->lmf_control = default_eq_band_control;
     vals->lf_control = default_eq_band_control;
 
-    vals->comp_control.attack_time = U_SCALAR_CONTROL_MID;
-    vals->comp_control.release_time = U_SCALAR_CONTROL_MID;
-    vals->comp_control.in_gain = 0;
-    vals->comp_control.out_gain = 0;
-    vals->comp_control.threshold = 0;
+    // compressor: does nothing until RATIO is turned up (1:1), with sensible times and threshold ready
+    vals->comp_control.in_gain = comp_p_from_fraction(1.0f / 3.0f);          // INPUT 0 dB (ring a third lit)
+    vals->comp_control.attack_time = comp_p_from_fraction(2.0f / 3.0f);      // ATK 10 ms
+    vals->comp_control.threshold = comp_p_from_fraction(30.0f / 50.0f);      // THRESH 0 dBu
+    vals->comp_control.release_time = comp_p_from_fraction(0.43457f);        // REL 100 ms
+    vals->comp_control.out_gain = comp_p_from_fraction(1.0f / 3.0f);         // OUTPUT 0 dB (ring a third lit)
+    vals->comp_control.ratio = 0;                                            // RATIO 1:1
     vals->comp_control.de_ess_amt = 0;
-    vals->comp_control.ratio = 0;
+    vals->comp_control.rms = false;                                          // peak detector
 
     vals->eq_off = false;
     vals->sends_off = false;
+    vals->comp_off = false;
 }
 
 static void init_control_vals (uint8_t channel)

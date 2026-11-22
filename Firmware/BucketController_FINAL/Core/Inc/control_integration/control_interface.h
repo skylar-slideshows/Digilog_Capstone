@@ -49,16 +49,17 @@ typedef struct
     s_scalar_control_t pan;  //!< TODO desc / pan range; note only applies to sends 1-3
 } send_channel_control_t;
 
+/** Compressor knobs, each 0-65535 from fully left (laws in comp/comp_engine.c), with their FX knob */
 typedef struct
 {
-    s_scalar_control_t in_gain;  //!< TODO desc / gain range (dB-like)
-    u_scalar_control_t out_gain; //!< TODO desc / gain range (dB-like)
-
-    u_scalar_control_t attack_time;  //!< Time before gain is reduced after vol>threshold / attack range (time; 100us-100ms ish)
-    u_scalar_control_t release_time; //!< TODO desc / release range (time; 10ms-5sec ish)
-    s_scalar_control_t threshold;    //!< Max volume of input / TODO thresh range (dB-like)
-    u_scalar_control_t ratio;        //!< TODO desc / ratio range (unitless on log scale; 0 = 1, MAX/2 = 4, MAX=~inf or 40)
-    u_scalar_control_t de_ess_amt;   //!< TODO desc / De-Ess Amt range (dB-like; same units as threshold)
+    u_scalar_control_t in_gain;      //!< K1 INPUT -10...+20 dB (0 dB a third round): how loud the detector sees the audio
+    u_scalar_control_t out_gain;     //!< K5 OUTPUT -10...+20 dB (0 dB a third round): trim on the main VCAs after the fader
+    u_scalar_control_t attack_time;  //!< K2 ATK 0.1...100 ms (log)
+    u_scalar_control_t release_time; //!< K4 REL 10 ms...2 s (log)
+    u_scalar_control_t threshold;    //!< K3 THRESH -30...+20 dBu
+    u_scalar_control_t ratio;        //!< K6 RATIO 1:1...inf:1 (4:1 at the middle)
+    u_scalar_control_t de_ess_amt;   //!< not used: the de-esser was dropped. Kept so the remote app's numbers don't shift
+    bool rms;                        //!< detector: false = peak (startup), true = RMS. Hold THRESH 2 s to switch
 } comp_control_t;
 
 
@@ -107,6 +108,7 @@ typedef struct
 
     bool eq_off;    //!< EQ bypassed: every band flat, as if no gain were set
     bool sends_off; //!< all four sends at their lowest gain (off)
+    bool comp_off;  //!< compressor bypassed: no gain reduction, and OUTPUT not applied (just fader and pan)
 } channel_controls;
 
 
@@ -152,6 +154,13 @@ typedef enum
     TOUCHED_EQ_Q,
     TOUCHED_SEND_LEVEL, //!< band says which send: 0-3 (A1-A4)
     TOUCHED_SEND_PAN,   //!< band says which send: 0-1 (A1, A2: the stereo ones)
+    TOUCHED_COMP_INPUT,
+    TOUCHED_COMP_ATTACK,
+    TOUCHED_COMP_THRESH,
+    TOUCHED_COMP_RELEASE,
+    TOUCHED_COMP_OUTPUT,
+    TOUCHED_COMP_RATIO,
+    TOUCHED_COMP_MODE,  //!< peak/RMS switched (hold THRESH)
 } touched_param_t;
 
 typedef struct

@@ -37,6 +37,7 @@
 #include "hardware_drivers/i2c_driver.h"
 #include "hardware_drivers/mcp4728_cache.h"
 #include "hardware_drivers/routing_switches.h"
+#include "FreeRTOS_apps/compressor.h"
 #include "CONFIG.h"
 #include <string.h>
 #include <stdio.h>
@@ -69,6 +70,7 @@ static cv_eq_band_t band_of (const eq_band_control_t *band)
 void control_voltage_init (void)
 {
     routing_switches_init();
+    compressor_init(); // its DAC outputs up at 0 dB straight away
 }
 
 /** Whether any channel other than this one is soloed. Read without the locks: each flag is one byte,
@@ -114,7 +116,12 @@ void control_voltage_update (uint8_t channel)
     params.other_soloed = other_soloed; // solo takes the other channels off the mix without setting their mute
     params.eq_off = v->eq_off;
     params.sends_off = v->sends_off;
+    params.comp_output = v->comp_control.out_gain;
+    params.comp_off = v->comp_off;
+    const comp_control_t comp = v->comp_control;
     xSemaphoreGive(channel_control_mutexes[channel]);
+
+    compressor_set_knobs(channel, &comp, params.comp_off); // cheap when nothing changed
 
     // the maths runs only when something changed; this is called every I2C frame
     if (s_have_last[channel] && memcmp(&params, &s_last[channel], sizeof(params)) == 0) return;
@@ -123,6 +130,7 @@ void control_voltage_update (uint8_t channel)
 
     cv_result_t result;
     cv_compute(&params, &s_state[channel], &result);
+    compressor_set_extra_gain(channel, result.comp_extra_db); // what the main VCA CVs couldn't reach
 
     I2C_TypeDef *bus = i2c_channel_bus(channel);
     for (uint8_t cv = 0; cv < CV_COUNT; cv++)

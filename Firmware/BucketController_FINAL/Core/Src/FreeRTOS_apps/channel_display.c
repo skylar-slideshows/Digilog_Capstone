@@ -28,6 +28,8 @@
 #include <string.h>
 #include <math.h>
 #include "cv_mapping.h"
+#include "comp/comp_engine.h"
+#include "FreeRTOS_apps/compressor.h"
 
 #define CHANNEL_DISPLAY_PERIOD_MS 33U   // about 30 checks a second
 #define SELECT_FLASH_MS           500U  // selected channel: title strip lighter for this long, then normal for this long
@@ -47,6 +49,9 @@ typedef struct
     int16_t fader;                //!< what the sends window was drawn from: master level...
     uint16_t send_level[4];       //!< ...the four sends...
     int16_t send_pan[2];          //!< ...and the pans of sends 1 and 2
+    float comp_gr;                //!< what the compressor meter was drawn from: gain reduction (0.1 dB steps)...
+    bool comp_rms;                //!< ...and the detector
+    int16_t needle_box[4];        //!< where the needle was drawn, to clean up after it
     char popup[48];               //!< the pop-up text on screen (state.popup_text points here)
 } shown_t;
 
@@ -126,6 +131,51 @@ static void text_pan (char *out, size_t size, int16_t pan)
     channel_screen_pan_text(out, size, pan); // the same text the sends window shows under A1 and A2
 }
 
+/** A level in dBu to 0.1 dB: "-12.3 dBu", "0.0 dBu", "+4.5 dBu" */
+static void text_dbu (char *out, size_t size, float dbu)
+{
+    long tenths = lroundf(dbu * 10.0f);
+    const char *sign = tenths < 0 ? "-" : (tenths > 0 ? "+" : "");
+    if (tenths < 0) tenths = -tenths;
+    snprintf(out, size, "%s%ld.%ld dBu", sign, tenths / 10L, tenths % 10L);
+}
+
+/** A time to three figures: "0.25 ms", "3.16 ms", "31.6 ms", "141 ms", "1.41 s" */
+static void text_time (char *out, size_t size, float ms)
+{
+    if (ms < 9.995f)
+    {
+        const long hundredths = lroundf(ms * 100.0f);
+        snprintf(out, size, "%ld.%02ld ms", hundredths / 100L, hundredths % 100L);
+    }
+    else if (ms < 99.95f)
+    {
+        const long tenths = lroundf(ms * 10.0f);
+        snprintf(out, size, "%ld.%ld ms", tenths / 10L, tenths % 10L);
+    }
+    else if (ms < 999.5f)
+    {
+        snprintf(out, size, "%ld ms", lroundf(ms));
+    }
+    else
+    {
+        const long hundredths = lroundf(ms / 10.0f); // seconds, to 0.01
+        snprintf(out, size, "%ld.%02ld s", hundredths / 100L, hundredths % 100L);
+    }
+}
+
+/** A ratio: "1.0:1", "4.0:1", "12:1", "inf:1" */
+static void text_ratio (char *out, size_t size, float ratio)
+{
+    if (!(ratio < 1000.0f)) snprintf(out, size, "inf:1");
+    else if (ratio < 9.95f)
+    {
+        const long tenths = lroundf(ratio * 10.0f);
+        snprintf(out, size, "%ld.%ld:1", tenths / 10L, tenths % 10L);
+    }
+    else snprintf(out, size, "%ld:1", lroundf(ratio));
+}
+
 /** A send's level: "OFF" fully down, otherwise its dB, L = 10 + 60 log10(x) (cv_mapping.pdf 12-15) */
 static void text_send (char *out, size_t size, uint16_t level)
 {
@@ -188,6 +238,34 @@ static channel_popup_where_t popup_for (uint8_t channel, const channel_controls 
             text_pan(text, size, v->send_controls[t.band < 2 ? t.band : 0].pan);
             *rgb = CH_COLOR_POPUP_SEND;
             return CH_POPUP_TOP;
+        case TOUCHED_COMP_INPUT:
+            text_db(text, size, comp_input_db(v->comp_control.in_gain));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_OUTPUT:
+            text_db(text, size, comp_output_db(v->comp_control.out_gain));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_THRESH:
+            text_dbu(text, size, comp_threshold_dbu(v->comp_control.threshold));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_ATTACK:
+            text_time(text, size, comp_attack_ms(v->comp_control.attack_time));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_RELEASE:
+            text_time(text, size, comp_release_ms(v->comp_control.release_time));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_RATIO:
+            text_ratio(text, size, comp_ratio(v->comp_control.ratio));
+            *rgb = CH_COLOR_POPUP_COMP;
+            return CH_POPUP_TOP;
+        case TOUCHED_COMP_MODE:
+            snprintf(text, size, "%s", v->comp_control.rms ? "RMS" : "PEAK");
+            *rgb = v->comp_control.rms ? CH_COLOR_COMP_RMS : CH_COLOR_COMP_PEAK;
+            return CH_POPUP_TOP;
         default:
             return CH_POPUP_NONE;
     }
@@ -217,6 +295,8 @@ static void update_display (uint8_t display, bool flash_on)
         .title_lit = v.sel && flash_on,
         .show_eq = (v.control_set_selection == EQ_CONTROL),
         .show_sends = (v.control_set_selection == SENDS_CONTROL),
+        .show_comp = (v.control_set_selection == COMP_CONTROL),
+        .comp_off = v.comp_off,
         .eq_off = v.eq_off,
         .sends_off = v.sends_off,
         .phantom = v.phantom_48v,
@@ -257,6 +337,22 @@ static void update_display (uint8_t display, bool flash_on)
         memcpy(shown->send_level, send_level, sizeof(send_level));
         memcpy(shown->send_pan, send_pan, sizeof(send_pan));
     }
+
+    // compressor meter: the gain reduction right now, to the meter's 0.1 dB steps
+    float gr = compressor_gain_reduction_db(channel);
+    gr = roundf(fminf(fmaxf(gr, 0.0f), CH_COMP_GR_MAX_DB) * 10.0f) / 10.0f;
+    const bool comp_rms = v.comp_control.rms;
+    const bool comp_look_changed = !shown->drawn || comp_rms != shown->comp_rms || now.comp_off != was->comp_off;
+    const bool comp_gr_changed = !shown->drawn || gr != shown->comp_gr;
+    int16_t old_box[4];
+    memcpy(old_box, shown->needle_box, sizeof(old_box));
+    if (now.show_comp && (comp_look_changed || comp_gr_changed || now.show_comp != was->show_comp))
+    {
+        channel_screen_comp_compute(&views->comp, gr, comp_rms, now.comp_off);
+        channel_screen_comp_needle_box(&views->comp, shown->needle_box);
+    }
+    shown->comp_gr = gr;
+    shown->comp_rms = comp_rms;
 
     // first time, or mute or solo changed: the background colour changes, so draw the whole screen
     if (!shown->drawn || now.muted != was->muted || now.soloed != was->soloed)
@@ -301,19 +397,40 @@ static void update_display (uint8_t display, bool flash_on)
         displays_draw_region(display, &region);
     }
 
+    // the badges stack down into the middle: it's redrawn when they change, or when the top pop-up
+    // (which hides them) comes or goes
+    const bool any_badge = now.phantom || now.phase || now.hpf;
+    const bool top_popup_toggled = (old_where == CH_POPUP_TOP) != (now.popup == CH_POPUP_TOP);
+    const bool badges_in_middle = badges_changed || (any_badge && top_popup_toggled);
+
     // switched between EQ, sends and compressor, or what the middle shows changed (including a bypass)
-    if (now.show_eq != was->show_eq || now.show_sends != was->show_sends ||
-        (now.show_eq && (eq_changed || now.eq_off != was->eq_off)) ||
-        (now.show_sends && (sends_changed || now.sends_off != was->sends_off)))
+    if (now.show_eq != was->show_eq || now.show_sends != was->show_sends || now.show_comp != was->show_comp ||
+        badges_in_middle || (now.show_eq && (eq_changed || now.eq_off != was->eq_off)) ||
+        (now.show_sends && (sends_changed || now.sends_off != was->sends_off)) || (now.show_comp && comp_look_changed))
     {
         channel_popup_parts_t parts;
         channel_screen_middle(&region, &parts, views, &now);
         displays_draw_region(display, &region);
         was->show_eq = now.show_eq;
         was->show_sends = now.show_sends;
+        was->show_comp = now.show_comp;
+    }
+    else if (now.show_comp && comp_gr_changed)
+    {
+        // only the gain reduction moved: redraw around the needle (where it was and where it is) and the reading
+        channel_popup_parts_t parts;
+        channel_screen_middle_part(&region, &parts, views, &now,
+                                   old_box[0] < shown->needle_box[0] ? old_box[0] : shown->needle_box[0],
+                                   old_box[1] < shown->needle_box[1] ? old_box[1] : shown->needle_box[1],
+                                   old_box[2] > shown->needle_box[2] ? old_box[2] : shown->needle_box[2],
+                                   old_box[3] > shown->needle_box[3] ? old_box[3] : shown->needle_box[3]);
+        displays_draw_region(display, &region);
+        channel_screen_middle_part(&region, &parts, views, &now, 0, CH_COMP_READOUT_Y, 100, CH_COMP_READOUT_Y + 15);
+        displays_draw_region(display, &region);
     }
     was->eq_off = now.eq_off;
     was->sends_off = now.sends_off;
+    was->comp_off = now.comp_off;
     if (popup_changed && (old_where == CH_POPUP_LOW || now.popup == CH_POPUP_LOW))
     {
         channel_popup_parts_t parts;

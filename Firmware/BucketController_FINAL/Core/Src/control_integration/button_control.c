@@ -26,11 +26,12 @@ static void update_toggle_button_val_from_info (
 }
 
 /*
- * The EQ and SENDS buttons, besides selecting what the knobs control:
+ * The EQ, SENDS and COMP buttons, besides selecting what the knobs control:
  *  - held for RESET_HOLD_MS: every setting of that section goes back to its startup value (EQ: all
  *    four bands' gain, frequency and Q, and LF/HF back to shelves; SENDS: all four sends' level and
- *    pan), and its rings flash. Once per hold.
- *  - double tapped: that section is bypassed (EQ flat; sends at their lowest gain) without changing
+ *    pan; COMP: all six knobs and the peak detector), and its rings flash. Once per hold.
+ *  - double tapped: that section is bypassed (EQ flat; sends at their lowest gain; compressor: no gain
+ *    reduction and OUTPUT not applied) without changing
  *    its settings, and its button flashes until it's double tapped again. The knobs still change the
  *    settings while it's bypassed; they're heard once the bypass is lifted.
  */
@@ -46,6 +47,7 @@ typedef struct
 
 static hold_t s_eq_hold[CHANNELS];
 static hold_t s_sends_hold[CHANNELS];
+static hold_t s_comp_hold[CHANNELS];
 
 static uint8_t channel_of (const channel_controls *vals)
 {
@@ -98,15 +100,24 @@ static void check_section_buttons (SemaphoreHandle_t *vals_mutex, channel_contro
         xSemaphoreGive(*vals_mutex);
         knob_flash_send_rings(channel);
     }
+    if (held_long_enough(&s_comp_hold[channel], &(io->comp_button.button)))
+    {
+        xSemaphoreTake(*vals_mutex, portMAX_DELAY);
+        vals->comp_control = start->comp_control; // every knob, and back to the peak detector
+        xSemaphoreGive(*vals_mutex);
+        knob_flash_comp_rings(channel);
+    }
 
     // double taps toggle the bypasses (each button is read for presses exactly once per update, here)
     const bool eq_double = update_button(&(io->eq_button.button)) == BUTTON_DOUBLE_PRESSED;
     const bool sends_double = update_button(&(io->send_button.button)) == BUTTON_DOUBLE_PRESSED;
-    if (eq_double || sends_double)
+    const bool comp_double = update_button(&(io->comp_button.button)) == BUTTON_DOUBLE_PRESSED;
+    if (eq_double || sends_double || comp_double)
     {
         xSemaphoreTake(*vals_mutex, portMAX_DELAY);
         if (eq_double) vals->eq_off = !vals->eq_off;
         if (sends_double) vals->sends_off = !vals->sends_off;
+        if (comp_double) vals->comp_off = !vals->comp_off;
         xSemaphoreGive(*vals_mutex);
     }
 }
@@ -357,7 +368,7 @@ void update_channel_button_leds (
     // a bypassed section's button flashes, whether or not it's selected
     const bool flash_lit = ((xTaskGetTickCount() / pdMS_TO_TICKS(BYPASS_FLASH_MS)) & 1U) == 0U;
     led_set_bool(io->eq_button.led, v.eq_off ? flash_lit : (v.control_set_selection == EQ_CONTROL));
-    led_set_bool(io->comp_button.led, v.control_set_selection == COMP_CONTROL);
+    led_set_bool(io->comp_button.led, v.comp_off ? flash_lit : (v.control_set_selection == COMP_CONTROL));
     led_set_bool(io->send_button.led, v.sends_off ? flash_lit : (v.control_set_selection == SENDS_CONTROL));
 
     led_set_bool(io->phase_flip_button.led, v.phase_flip);

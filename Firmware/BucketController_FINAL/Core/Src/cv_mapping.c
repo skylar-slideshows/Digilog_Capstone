@@ -8,6 +8,7 @@
 */
 
 #include "cv_mapping.h"
+#include "comp/comp_engine.h"
 #include "hardware_drivers/routing_switches.h"
 #include <math.h>
 
@@ -53,6 +54,7 @@ const cv_dac_slot_t CV_DAC_SLOTS[CV_COUNT] = {
 #define OUT_V0       0.4655629f   // sections 18-19: output gain G, volts at 0 dB; more volts = quieter
 #define OUT_V_DB     -0.03940625f
 #define OUT_FLOOR_DB -40.16f      // the output VCAs' deepest cut (at 0xFFF); beyond it goes to the compressor
+#define OUT_CEIL_DB  (-OUT_V0 / OUT_V_DB) // their most gain (at 0x000), +11.81 dB; beyond it too
 
 static uint16_t volts_to_code (float volts)
 {
@@ -271,14 +273,30 @@ void cv_compute (const cv_params_t *p, cv_state_t *state, cv_result_t *out)
         out->code[CV_AUX3] = out->code[CV_AUX4] = 0;
     }
 
-    // 18-19. fader and main pan; past the output VCAs' range the rest goes to the compressor (E)
-    const float fader = cv_fader_db(p->fader);
+    // 18-19. fader, the compressor's OUTPUT trim, and main pan. The compressor CV drives the same VCAs,
+    // so whatever these CVs can't reach goes to it as E: a boost past +11.8 dB (both sides come down by
+    // E and the compressor CV adds it back) or a cut past -40.2 dB (as cv_mapping.pdf).
+    const float trim = p->comp_off ? 0.0f : comp_output_db(p->comp_output); // bypassed: just fader and pan
+    const float fader = cv_fader_db(p->fader) + trim;                          // -inf stays -inf (mute)
     cv_pan_db(p->pan, &left, &right);
-    const float gain_l = fader + left, gain_r = fader + right;
+    float gain_l = fader + left, gain_r = fader + right;
+    const float louder = gain_l > gain_r ? gain_l : gain_r;
+    out->comp_extra_db = 0.0f;
+    if (!isinf(louder))
+    {
+        if (louder > OUT_CEIL_DB)
+        {
+            out->comp_extra_db = louder - OUT_CEIL_DB;
+            gain_l -= out->comp_extra_db;
+            gain_r -= out->comp_extra_db;
+        }
+        else if (louder < OUT_FLOOR_DB)
+        {
+            out->comp_extra_db = louder - OUT_FLOOR_DB;
+        }
+    }
     out->code[CV_OUT_L] = output_code(gain_l);
     out->code[CV_OUT_R] = output_code(gain_r);
-    const float louder = gain_l > gain_r ? gain_l : gain_r;
-    out->comp_extra_db = isinf(louder) ? 0.0f : fminf(0.0f, louder - OUT_FLOOR_DB);
 
     // insert: PRE_LCV high takes the insert send after the EQ, low before it ("pre")
 #if CV_ENABLE_INSERT
