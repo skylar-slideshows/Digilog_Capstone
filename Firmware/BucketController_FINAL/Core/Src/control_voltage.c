@@ -139,13 +139,26 @@ void control_voltage_update (uint8_t channel)
         mcp4728_cache_write(bus, CV_DAC_SLOTS[cv].addr, CV_DAC_SLOTS[cv].output, result.code[cv]);
     }
 #if DEVELOPER_MODE
-    // what takes a channel off the mix bus, printed whenever its mix switch changes
-    if (((routing_switches_get(channel) ^ result.switches) & RS_MIX_ON) != 0U)
+    // every routing-board switch the channel sets, printed whenever any of them changes: shows that the EQ
+    // cut lines (LF_CUT, HF_CUT, LMF_CUT, HMF_CUT) go on as a gain knob is turned below 0 dB
+    const uint16_t was = routing_switches_get(channel);
+    if (was != result.switches)
     {
-        printf("\r\nCH%u mix bus %s: muted %d, fader P %u, soloed %d, other channels soloed %d%d%d%d\n",
-               (unsigned)(channel + 1U), (result.switches & RS_MIX_ON) ? "ON" : "OFF", params.muted,
-               (unsigned)params.fader, params.soloed, channel_control_vals[0].solo, channel_control_vals[1].solo,
-               channel_control_vals[2].solo, channel_control_vals[3].solo);
+        static const char *const NAMES[16] = {"PRE", "PAD", "HPF", "PHASE", "HIZ", "LINE", "MIC", "P48",
+                                              "LF_CUT", "LF_BELL", "HF_CUT", "HF_BELL", "LMF_CUT", "HMF_CUT", "INSERT", "MIX"};
+        const uint16_t changed = (uint16_t)(was ^ result.switches);
+        printf("\r\nCH%u switches 0x%04X:", (unsigned)(channel + 1U), (unsigned)result.switches);
+        for (uint8_t b = 0; b < 16U; b++)
+        {
+            if ((changed >> b) & 1U) printf(" %s%s", ((result.switches >> b) & 1U) ? "+" : "-", NAMES[b]);
+        }
+        printf("\n");
+        if ((changed & RS_MIX_ON) != 0U) // what takes a channel off the mix bus
+        {
+            printf("  mix: muted %d, fader P %u, soloed %d, other channels soloed %d%d%d%d\n", params.muted,
+                   (unsigned)params.fader, params.soloed, channel_control_vals[0].solo, channel_control_vals[1].solo,
+                   channel_control_vals[2].solo, channel_control_vals[3].solo);
+        }
     }
 #endif
     routing_switches_set(channel, result.switches); // only sends when a bit changed

@@ -248,9 +248,10 @@ touched_t control_last_touched (uint8_t channel)
  */
 
 /*
- * LF and HF shelf/bell: holding the band's gain knob down for MODE_HOLD_MS (without turning it) switches the band
- * between shelf and bell. Its ring then flashes fully MODE_FLASHES times to confirm. Turning while held is fine
- * adjustment, so a hold that turns never switches. One switch per hold; let go and hold again to switch back.
+ * LF and HF shelf/bell (and the compressor's peak/RMS on THRESH): holding the knob down for MODE_HOLD_MS switches
+ * it. Its ring then flashes fully MODE_FLASHES times to confirm. A slight turn while held (under 1/20 of the
+ * range) still switches, and is undone; a bigger turn is fine adjustment and that hold doesn't switch. One switch
+ * per hold; let go and hold again to switch back.
  */
 #define MODE_HOLD_MS         2000U
 #define MODE_FLASHES         3U
@@ -266,10 +267,16 @@ enum
 
 typedef struct
 {
-    TickType_t since; //!< when the current press started
-    bool pressed;     //!< the button was down at the last update
-    bool spent;       //!< this press has turned the knob or already switched: no switch until it's let go
+    TickType_t since;    //!< when the current press started
+    bool pressed;        //!< the button was down at the last update
+    bool spent;          //!< this press turned the knob too far or already switched: no switch until let go
+    int32_t start_value; //!< the knob's value when the press started
 } mode_hold_t;
+
+/* A press still counts as a hold while the knob stays within this of where it started (1/20 of its range),
+   so a slight accidental turn doesn't stop the switch. When the switch happens, the knob's value is put
+   back where it was, undoing the nudge. */
+#define MODE_HOLD_TOLERANCE (65536 / 20)
 
 typedef struct
 {
@@ -285,12 +292,21 @@ static uint8_t channel_of (const channel_controls *vals)
     return (uint8_t)(vals - channel_control_vals);
 }
 
+/** The knob's value, whichever kind it is, as a plain number for the hold tolerance */
+static int32_t knob_value (const s_scalar_control_t *s_value, const u_scalar_control_t *u_value)
+{
+    return s_value != NULL ? (int32_t)*s_value : (int32_t)*u_value;
+}
+
+/** Call after the knob's turn has been applied. The knob's value is s_value or u_value (the other NULL). */
 static void check_mode_hold (
     uint8_t channel,
     uint8_t band,
     const knob_input_t *input,
     SemaphoreHandle_t *vals_mutex,
-    bool *bell
+    bool *flag,
+    s_scalar_control_t *s_value,
+    u_scalar_control_t *u_value
 )
 {
     mode_hold_t *hold = &(s_mode_hold[channel][band]);
@@ -301,20 +317,25 @@ static void check_mode_hold (
     }
 
     const TickType_t now = xTaskGetTickCount();
+    const int32_t value = knob_value(s_value, u_value); // only this task writes it
     if (!hold->pressed)
     {
         hold->pressed = true;
         hold->since = now;
         hold->spent = false;
+        hold->start_value = value;
     }
-    if (input->direction != 0)
+    const int32_t moved = value > hold->start_value ? value - hold->start_value : hold->start_value - value;
+    if (moved >= MODE_HOLD_TOLERANCE)
     {
-        hold->spent = true;
+        hold->spent = true; // turned on purpose: no switch this press
     }
     if (!hold->spent && (now - hold->since) >= pdMS_TO_TICKS(MODE_HOLD_MS))
     {
         xSemaphoreTake(*vals_mutex, portMAX_DELAY);
-        *bell = !*bell;
+        *flag = !*flag;
+        if (s_value != NULL) *s_value = (s_scalar_control_t)hold->start_value; // undo the accidental nudge
+        else *u_value = (u_scalar_control_t)hold->start_value;
         xSemaphoreGive(*vals_mutex);
         s_mode_flash[channel][band].start = now;
         s_mode_flash[channel][band].active = true;
@@ -395,7 +416,7 @@ static void update_eq_band_knob_values (
         {
             touched(channel, TOUCHED_EQ_GAIN, band);
         }
-        check_mode_hold(channel, mode_band, &input, vals_mutex, &(vals->bell));
+        check_mode_hold(channel, mode_band, &input, vals_mutex, &(vals->bell), &(vals->gain), NULL);
     }
 
     if (update_u_value_from_encoder(vals_mutex, &(band_io->freq_knob.encoder), &(vals->freq), sensitivity, start->freq))
@@ -429,7 +450,7 @@ static void update_comp_knob_values (
         touched(channel, TOUCHED_COMP_THRESH, 0);
     }
     const bool was_rms = vals->rms; // only this task writes it
-    check_mode_hold(channel, MODE_RMS, &thresh, vals_mutex, &(vals->rms));
+    check_mode_hold(channel, MODE_RMS, &thresh, vals_mutex, &(vals->rms), NULL, &(vals->threshold));
     if (vals->rms != was_rms) touched(channel, TOUCHED_COMP_MODE, 0);
 
     if (update_u_value_from_encoder(vals_mutex, &(comp_io->release_time_knob.encoder), &(vals->release_time), sensitivity, start->release_time))

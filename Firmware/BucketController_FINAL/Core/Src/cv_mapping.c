@@ -97,10 +97,19 @@ static const float INPUT_RANGE[3][2] = {
     [CV_SOURCE_HIZ] = {-24.0f, 33.0f},
 };
 
+/* The input gain knob is "zoomed in" around 12 o'clock, like the EQ gains: the stored value and the LED
+   ring still move evenly per step of the knob, but a step near the middle is fewer dB. With
+   T = mid + half (a c + (1 - a) c^3), c = -1 ... +1 across the knob, the knob travel per dB at the
+   middle is 1.8 times the travel per dB at either end ((3 - 2a) / a = 1.8). The ends are unchanged. */
+#define INPUT_TAPER_A (3.0f / 3.8f)
+
 float cv_input_gain_db (cv_source_t source, uint16_t p)
 {
     if (source > CV_SOURCE_HIZ) source = CV_SOURCE_LINE;
-    return INPUT_RANGE[source][0] + cv_knob(p) * (INPUT_RANGE[source][1] - INPUT_RANGE[source][0]);
+    const float lo = INPUT_RANGE[source][0], hi = INPUT_RANGE[source][1];
+    const float c = 2.0f * cv_knob(p) - 1.0f; // 0 at 12 o'clock
+    const float shaped = INPUT_TAPER_A * c + (1.0f - INPUT_TAPER_A) * c * c * c;
+    return 0.5f * (lo + hi) + 0.5f * (hi - lo) * shaped;
 }
 
 static uint16_t input_gain_code (cv_source_t source, uint16_t p, bool *pad_on, float *total_db)
