@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digilog Channel Display Prototype</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0b0e;
+      --panel: #15151a;
+      --edge: #30303a;
+      --ink: #ececf6;
+      --dim: #898999;
+      --accent: #d68a3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font: 13px/1.45 system-ui, -apple-system, sans-serif;
+    }
+    h1 {
+      margin: 0;
+      color: var(--dim);
+      font-size: 14px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .sub { margin: 4px 0 20px; color: #666675; }
+    .screens { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 16px; }
+    .screen { min-width: 0; cursor: pointer; }
+    canvas {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 1;
+      image-rendering: pixelated;
+      background: #08080b;
+      border: 1px solid #292932;
+      border-radius: 3px;
+    }
+    .screen.selected canvas { border-color: #8c8ca1; }
+    .caption { margin-top: 5px; color: #666675; font-size: 11px; text-transform: uppercase; }
+    .screen.selected .caption { color: var(--ink); }
+    .workspace { display: grid; grid-template-columns: minmax(270px, 360px) 1fr; gap: 18px; margin-top: 22px; }
+    .panel {
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--edge);
+      border-radius: 4px;
+    }
+    h2 { margin: 0 0 12px; color: var(--dim); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    button, input[type=text] {
+      border: 1px solid #3a3a45;
+      border-radius: 3px;
+      background: #222229;
+      color: #c5c5d1;
+      font: inherit;
+    }
+    button { padding: 5px 10px; cursor: pointer; }
+    button.on { border-color: var(--accent); background: var(--accent); color: #160f08; font-weight: 700; }
+    input[type=text] { width: 100%; padding: 6px 8px; margin-bottom: 12px; background: #0f0f13; }
+    .control { display: grid; grid-template-columns: 72px 1fr 72px; gap: 8px; align-items: center; margin: 7px 0; }
+    .control label { color: var(--dim); font-size: 11px; }
+    .control output { color: var(--ink); font: 11px ui-monospace, monospace; text-align: right; }
+    input[type=range] { min-width: 0; accent-color: var(--accent); }
+    .note { color: #6d6d7b; font-size: 11px; }
+    @media (max-width: 1100px) { .screens { grid-template-columns: repeat(2, minmax(240px, 1fr)); } }
+    @media (max-width: 720px) {
+      body { padding: 16px; }
+      .screens, .workspace { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Digilog · Channel Display</h1>
+  <p class="sub">Virtual Layout C review · 240×240 geometry · no firmware integration</p>
+  <main class="screens" id="screens"></main>
+  <section class="workspace">
+    <div class="panel">
+      <h2>Selected channel</h2>
+      <input id="name" type="text" maxlength="16" aria-label="Channel name">
+      <div class="buttons" id="pages"></div>
+      <div class="buttons" id="flags"></div>
+      <div class="buttons" id="presets"></div>
+      <p class="note">Showcase values are loaded for review. Gain reduction is simulated. Only SENDS / EQ / COMP changes the stage.</p>
+    </div>
+    <div class="panel">
+      <h2 id="control-title">Controls</h2>
+      <div id="controls"></div>
+    </div>
+  </section>
+
+  <script>
+    const W = 240, H = 240, HOT_MS = 3000;
+    const C = {
+      bg:'#08080b', panel:'#14141a', edge:'#2c2c38', ink:'#ececf6', dim:'#6e6e7e',
+      faint:'#3a3a48', eq:'#d68a3a', eqFill:'#4a3014', comp:'#40baca',
+      pan:'#b0b0c6', send:'#7eb074', mute:'#d63e3e', solo:'#debc3e',
+      phan:'#5cc47c', hot:'#d68a3a', trough:'#22222a'
+    };
+    const flags = [
+      ['p48','48V',C.phan], ['phase','PH',C.pan], ['hpf','HPF',C.pan],
+      ['ins','INS',C.send], ['pre','PRE',C.send], ['solo','SOLO',C.solo], ['mute','MUTE',C.mute]
+    ];
+    const pages = ['SENDS','EQ','COMP'];
+    const RATIOS = [2,4,10];
+    const ATTACKS = [.01,.1,.3,1,3,10,30];
+    const RELEASES = [.1,.2,.4,.6,.8,1.2];
+    const channels = [
+      makeChannel(1,'KICK IN','SENDS'),
+      makeChannel(2,'SNARE TOP','EQ'),
+      makeChannel(3,'BASS DI','COMP'),
+      makeChannel(4,'VOX LEAD','EQ')
+    ];
+    channels[1].flags.p48 = true;
+    channels[1].flags.hpf = true;
+    channels[2].flags.mute = true;
+    channels[3].flags.p48 = true;
+    channels[3].flags.solo = true;
+    channels[3].flags.ins = true;
+
+    function makeChannel(num,name,page) {
+      return {
+        num, name, page, hot:null, gr: num * 2.4,
+        flags:{p48:false,phase:false,hpf:false,ins:false,pre:false,solo:false,mute:false},
+        input:58, pan:0,
+        sends:[.64,.28,0,.80], sendPans:[0,-.35,.22],
+        eq:{
+          hf:{gain:3.2,freq:12000,q:1}, hmf:{gain:-4.5,freq:2400,q:2.2},
+          lmf:{gain:2.4,freq:420,q:1.5}, lf:{gain:5.5,freq:90,q:1}
+        },
+        comp:{threshold:-18,ratio:4,attack:3,release:.4,input:4,output:8}
+      };
+    }
+    function makeFirmwareDefault(num) {
+      return {
+        num, name:`CHANNEL ${num}`, page:'EQ', hot:null, gr:0,
+        flags:{p48:false,phase:false,hpf:false,ins:false,pre:false,solo:false,mute:false},
+        input:0, pan:0,
+        sends:[0,0,0,0], sendPans:[0,0,0],
+        eq:{
+          hf:{gain:0,freq:20,q:1}, hmf:{gain:0,freq:20,q:1.7},
+          lmf:{gain:0,freq:20,q:1.7}, lf:{gain:0,freq:20,q:1}
+        },
+        comp:{threshold:-30,ratio:2,attack:1,release:.6,input:0,output:0}
+      };
+    }
+
+    const canvases = [];
+    let selected = 0;
+    const screens = document.querySelector('#screens');
+    channels.forEach((channel,index) => {
+      const box = document.createElement('div');
+      box.className = 'screen' + (index === 0 ? ' selected' : '');
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      caption.textContent = `display ${index} · channel ${index + 1}`;
+      box.append(canvas,caption);
+      box.onclick = () => selectChannel(index);
+      screens.append(box);
+      canvases.push(canvas);
+    });
+
+    function selectChannel(index) {
+      selected = index;
+      [...screens.children].forEach((el,i) => el.classList.toggle('selected',i === index));
+      buildPanel();
+    }
+
+    function ctxFor(index) {
+      const g = canvases[index].getContext('2d');
+      g.imageSmoothingEnabled = false;
+      g.textBaseline = 'top';
+      return g;
+    }
+    const FONT = {};
+    function buildFont(size,cellW,cellH,emPx,baseline) {
+      const canvas=document.createElement('canvas');
+      canvas.width=cellW; canvas.height=cellH;
+      const g=canvas.getContext('2d'), glyphs=[];
+      for (let i=0;i<95;i++) {
+        g.clearRect(0,0,cellW,cellH);
+        g.fillStyle='#fff'; g.font=`${emPx}px ui-monospace,Menlo,monospace`; g.textBaseline='alphabetic';
+        const ch=String.fromCharCode(32+i), width=g.measureText(ch).width;
+        g.fillText(ch,Math.round((cellW-width)/2),baseline);
+        const data=g.getImageData(0,0,cellW,cellH).data, bitmap=new Uint8Array(cellW*cellH);
+        for (let p=0;p<bitmap.length;p++) bitmap[p]=data[p*4+3]>110?1:0;
+        glyphs.push(bitmap);
+      }
+      FONT[size]={cellW,cellH,glyphs};
+    }
+    buildFont(12,6,12,10,9);
+    buildFont(16,8,16,13,12);
+    buildFont(24,12,24,20,18);
+
+    function rect(g,x,y,w,h,color) { g.fillStyle=color; g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h)); }
+    function text(g,x,y,size,value,color,align='left') {
+      const font=FONT[size]||FONT[12], valueText=String(value);
+      let start=Math.round(x);
+      const width=valueText.length*font.cellW;
+      if (align==='right') start-=width;
+      else if (align==='center') start-=Math.round(width/2);
+      g.fillStyle=color;
+      for (let i=0;i<valueText.length;i++) {
+        let code=valueText.charCodeAt(i)-32;
+        if (code<0||code>94) code=0;
+        const bitmap=font.glyphs[code];
+        for (let row=0;row<font.cellH;row++) {
+          for (let col=0;col<font.cellW;col++) {
+            if (bitmap[row*font.cellW+col]) g.fillRect(start+i*font.cellW+col,Math.round(y)+row,1,1);
+          }
+        }
+      }
+    }
+    function bar(g,x,y,w,h,value,signed,color) {
+      rect(g,x,y,w,h,C.trough);
+      if (signed) {
+        const mid=x+w/2, n=Math.round(value*w/2);
+        if (n >= 0) rect(g,mid,y,Math.max(1,n),h,color);
+        else rect(g,mid+n,y,Math.max(1,-n),h,color);
+        rect(g,mid,y,1,h,C.dim);
+      } else if (value > 0) rect(g,x,y,Math.round(value*w),h,color);
+    }
+    const hotRegion = channel => channel.hot && Date.now()-channel.hot.time < HOT_MS ? channel.hot.key : null;
+    function touch(channel,key) { channel.hot={key,time:Date.now()}; }
+    function pageName(page) { return page; }
+    function panText(v) { const n=Math.round(v*100); return n===0?'C':`${Math.abs(n)}${n<0?'L':'R'}`; }
+    function db(v,plus=false) { return `${plus&&v>=0?'+':''}${v.toFixed(1)}dB`; }
+    function freqFromRaw(v) { return 20*Math.pow(1000,v/65535); }
+    function rawFromFreq(v) { return Math.round(Math.log10(Math.max(20,v)/20)/3*65535); }
+    function freqText(v) { return v>=1000?`${(v/1000).toFixed(v>=10000?0:2)}kHz`:`${Math.round(v)}Hz`; }
+
+    function draw(index) {
+      const channel=channels[index], g=ctxFor(index), hot=hotRegion(channel);
+      rect(g,0,0,W,H,C.bg);
+      drawName(g,channel);
+      drawFlags(g,channel,hot);
+      drawStageHeader(g,channel,hot);
+      if (channel.page === 'SENDS') drawSends(g,channel,hot);
+      else if (channel.page === 'EQ') drawEq(g,channel,hot);
+      else drawComp(g,channel,hot);
+      rect(g,0,196,W,1,C.edge);
+      drawChassis(g,channel,hot);
+    }
+
+    function drawName(g,c) {
+      const muted=c.flags.mute;
+      if (muted) rect(g,0,0,W,28,'#380e0e');
+      text(g,4,2,24,String(c.num).padStart(2,'0'),muted?'#be5a5a':C.faint);
+      text(g,38,2,24,c.name.toUpperCase().slice(0,16),muted?'#ff7878':C.ink);
+    }
+    function drawFlags(g,c,hot) {
+      let x=4;
+      flags.forEach(([key,label,color]) => {
+        const on=c.flags[key], live=hot===`flag:${key}`;
+        if (!on && !live) return;
+        const width=label.length*8+6;
+        if (live) rect(g,x-2,28,width,17,'#2c200e');
+        text(g,x,29,16,label,on?color:C.faint);
+        x+=width+4;
+      });
+      rect(g,0,47,W,1,C.edge);
+    }
+    function hotValue(c,hot) {
+      if (hot==='input') return ['INPUT',`${c.input.toFixed(1)}dB`];
+      if (hot==='pan') return ['PAN',panText(c.pan)];
+      if (hot?.startsWith('send:')) {
+        const i=+hot.split(':')[1]; return [`SEND ${i+1}`,c.sends[i]<.006?'OFF':db(-60+c.sends[i]*60)];
+      }
+      if (hot?.startsWith('sendpan:')) {
+        const i=+hot.split(':')[1]; return [`SEND ${i+1} PAN`,panText(c.sendPans[i])];
+      }
+      if (hot?.startsWith('eq:')) {
+        const [,band,param]=hot.split(':'), b=c.eq[band];
+        return [`${band.toUpperCase()} ${param.toUpperCase()}`,param==='gain'?db(b.gain,true):param==='freq'?freqText(b.freq):`Q${b.q.toFixed(1)}`];
+      }
+      if (hot?.startsWith('comp:')) {
+        const key=hot.split(':')[1], labels={threshold:'THRESHOLD',ratio:'RATIO',attack:'ATTACK',release:'RELEASE',input:'COMP IN',output:'MAKEUP'};
+        const value=key==='threshold'?db(c.comp[key]):key==='ratio'?`${c.comp[key]}:1`:key==='attack'?`${c.comp[key]}ms`:key==='release'?`${c.comp[key]}s`:db(c.comp[key],true);
+        return [labels[key],value];
+      }
+      return null;
+    }
+    function drawStageHeader(g,c,hot) {
+      const value=hotValue(c,hot);
+      if (value) {
+        text(g,4,53,16,value[0],C.dim);
+        text(g,236,48,24,value[1],C.hot,'right');
+      } else text(g,4,53,16,pageName(c.page),C.eq);
+      rect(g,0,73,W,1,C.edge);
+    }
+    function drawSends(g,c,hot) {
+      c.sends.forEach((value,i) => {
+        const y=78+i*30, live=hot===`send:${i}`||hot===`sendpan:${i}`;
+        if (live) rect(g,0,y-3,W,28,'#1e180a');
+        text(g,4,y+1,12,`S${i+1}`,live?C.hot:C.dim);
+        bar(g,22,y,152,12,value,false,live?'#f0b460':value<.006?C.trough:C.send);
+        text(g,236,y+1,12,value<.006?'OFF':db(-60+value*60),live?C.hot:C.dim,'right');
+        if (i<3) {
+          rect(g,22,y+15,152,4,C.trough);
+          rect(g,97+c.sendPans[i]*73,y+15,3,4,live?C.hot:C.pan);
+        }
+      });
+    }
+    function eqMagnitude(c,f) {
+      let value=0;
+      if (c.flags.hpf) {
+        const x=Math.pow(f/80,4);
+        value+=10*Math.log10(x/(1+x));
+      }
+      const bell=b => b.gain*Math.exp(-Math.pow(Math.log2(f/b.freq),2)/(2*Math.pow(.9/Math.max(.3,b.q),2)));
+      const shelf=(b,high) => b.gain*.5*(1+Math.tanh(1.4*Math.log2(f/b.freq)*(high?1:-1)));
+      return Math.max(-15,Math.min(15,value+shelf(c.eq.hf,true)+bell(c.eq.hmf)+bell(c.eq.lmf)+shelf(c.eq.lf,false)));
+    }
+    function drawEq(g,c,hot) {
+      const y0=74,h=122,mid=y0+h/2;
+      rect(g,0,y0,W,h,C.bg);
+      [100,1000,10000].forEach(f => {
+        const x=Math.log10(f/20)/3*(W-1);
+        rect(g,x,y0,1,h,'#1a1a22');
+      });
+      rect(g,0,mid,W,1,C.faint);
+      [-10,10].forEach(dbv => rect(g,0,mid-dbv/15*(h/2-3),W,1,'#1a1a22'));
+      g.beginPath();
+      for (let x=0;x<W;x++) {
+        const f=20*Math.pow(1000,x/(W-1));
+        const y=mid-eqMagnitude(c,f)/15*(h/2-3);
+        if (!x) g.moveTo(x,y); else g.lineTo(x,y);
+      }
+      g.lineTo(W,mid); g.lineTo(0,mid); g.closePath(); g.fillStyle=C.eqFill; g.fill();
+      g.beginPath();
+      for (let x=0;x<W;x++) {
+        const f=20*Math.pow(1000,x/(W-1));
+        const y=mid-eqMagnitude(c,f)/15*(h/2-3);
+        if (!x) g.moveTo(x,y); else g.lineTo(x,y);
+      }
+      g.strokeStyle=C.eq; g.lineWidth=2; g.stroke();
+      ['lf','lmf','hmf','hf'].forEach(key => {
+        const x=Math.log10(c.eq[key].freq/20)/3*(W-1), live=hot?.startsWith(`eq:${key}:`);
+        if (live) rect(g,x,y0,1,h,'#b07634');
+        rect(g,x-1,y0+h-(live?6:3),live?3:2,live?6:3,live?'#ffc878':Math.abs(c.eq[key].gain)>.5?C.eq:C.faint);
+      });
+    }
+    function drawComp(g,c,hot) {
+      const y0=74, pivotY=170, radius=78, value=Math.min(20,c.gr);
+      rect(g,0,y0,W,122,C.bg);
+      g.beginPath(); g.arc(120,pivotY,78,Math.PI*1.14,Math.PI*1.86); g.strokeStyle=C.faint; g.lineWidth=2; g.stroke();
+      for (let d=0;d<=20;d+=2.5) {
+        const a=(25+d/20*130)*Math.PI/180;
+        const major=d%5===0, r0=major?80:83, r1=87;
+        g.beginPath(); g.moveTo(120+r0*Math.cos(a),pivotY-r0*Math.sin(a)); g.lineTo(120+r1*Math.cos(a),pivotY-r1*Math.sin(a));
+        g.strokeStyle=major?C.ink:C.dim; g.lineWidth=1; g.stroke();
+      }
+      const a=(25+value/20*130)*Math.PI/180;
+      g.beginPath(); g.moveTo(120,pivotY); g.lineTo(120+radius*Math.cos(a),pivotY-radius*Math.sin(a));
+      g.strokeStyle='#faf6ec'; g.lineWidth=2; g.stroke();
+      text(g,4,76,12,'GR',C.dim); text(g,236,76,12,`${value.toFixed(1)}dB`,C.dim,'right');
+      const cells=[
+        ['THR',db(c.comp.threshold),'threshold'],['RAT',`${c.comp.ratio}:1`,'ratio'],['ATK',`${c.comp.attack}ms`,'attack'],
+        ['REL',`${c.comp.release}s`,'release'],['IN',db(c.comp.input,true),'input'],['OUT',db(c.comp.output,true),'output']
+      ];
+      cells.forEach((cell,i) => {
+        const x=(i%3)*80,y=137+Math.floor(i/3)*30,live=hot===`comp:${cell[2]}`;
+        if (live) rect(g,x,y,80,29,'#2c200e');
+        if (i%3) rect(g,x,y,1,29,C.edge);
+        text(g,x+5,y+1,12,cell[0],live?C.hot:C.faint);
+        text(g,x+5,y+13,16,cell[1],live?'#ffd696':C.ink);
+      });
+    }
+    function drawChassis(g,c,hot) {
+      rect(g,0,198,W,4,C.panel);
+      rect(g,0,198,Math.round(Math.min(20,c.gr)/20*W),4,C.comp);
+      text(g,4,207,12,'IN',hot==='input'?C.hot:C.dim);
+      bar(g,30,205,150,16,c.input/60,false,hot==='input'?'#f0b460':C.send);
+      text(g,236,205,16,`${c.input.toFixed(1)}dB`,hot==='input'?C.hot:C.ink,'right');
+      text(g,4,225,12,'PAN',hot==='pan'?C.hot:C.dim);
+      bar(g,30,223,150,16,c.pan,true,hot==='pan'?'#f0b460':C.pan);
+      text(g,236,223,16,panText(c.pan),hot==='pan'?C.hot:C.ink,'right');
+    }
+
+    function addButton(parent,label,on,action) {
+      const button=document.createElement('button');
+      button.textContent=label; button.classList.toggle('on',on); button.onclick=action; parent.append(button);
+    }
+    function addSlider(parent,label,min,max,step,value,format,onInput) {
+      const row=document.createElement('div'); row.className='control';
+      const lab=document.createElement('label'); lab.textContent=label;
+      const input=document.createElement('input'); input.type='range'; input.min=min; input.max=max; input.step=step; input.value=value;
+      const output=document.createElement('output'); output.textContent=format(+value);
+      input.oninput=()=>{ onInput(+input.value); output.textContent=format(+input.value); renderAll(); };
+      row.append(lab,input,output); parent.append(row);
+    }
+    function addStepSlider(parent,label,values,value,format,onInput) {
+      const current=Math.max(0,values.indexOf(value));
+      addSlider(parent,label,0,values.length-1,1,current,index=>format(values[index]),index=>onInput(values[index]));
+    }
+    function addFrequencySlider(parent,label,value,onInput) {
+      addSlider(parent,label,0,65535,1,rawFromFreq(value),raw=>freqText(freqFromRaw(raw)),raw=>onInput(freqFromRaw(raw)));
+    }
+    function buildPanel() {
+      const c=channels[selected], name=document.querySelector('#name');
+      name.value=c.name;
+      name.oninput=()=>{ c.name=name.value; renderAll(); };
+      const pageBox=document.querySelector('#pages'); pageBox.innerHTML='';
+      pages.forEach(page => addButton(pageBox,page,c.page===page,()=>{ c.page=page; c.hot=null; buildPanel(); renderAll(); }));
+      const flagBox=document.querySelector('#flags'); flagBox.innerHTML='';
+      flags.forEach(([key,label]) => addButton(flagBox,label,c.flags[key],()=>{ c.flags[key]=!c.flags[key]; touch(c,`flag:${key}`); buildPanel(); renderAll(); }));
+      const presetBox=document.querySelector('#presets'); presetBox.innerHTML='';
+      addButton(presetBox,'FIRMWARE DEFAULTS',false,()=>{
+        channels[selected]=makeFirmwareDefault(c.num);
+        buildPanel(); renderAll();
+      });
+      const controls=document.querySelector('#controls'); controls.innerHTML='';
+      addSlider(controls,'INPUT',0,60,.1,c.input,v=>`${v.toFixed(1)}dB`,v=>{c.input=v;touch(c,'input');});
+      addSlider(controls,'PAN',-1,1,.01,c.pan,panText,v=>{c.pan=v;touch(c,'pan');});
+      if (c.page==='SENDS') c.sends.forEach((value,i)=>{
+        addSlider(controls,`SEND ${i+1}`,0,1,.001,value,v=>v<.006?'OFF':db(-60+v*60),v=>{c.sends[i]=v;touch(c,`send:${i}`);});
+        if (i<3) addSlider(controls,`S${i+1} PAN`,-1,1,.01,c.sendPans[i],panText,v=>{c.sendPans[i]=v;touch(c,`sendpan:${i}`);});
+      });
+      if (c.page==='EQ') ['hf','hmf','lmf','lf'].forEach(key => {
+        addSlider(controls,`${key.toUpperCase()} G`,-18,18,.1,c.eq[key].gain,v=>db(v,true),v=>{c.eq[key].gain=v;touch(c,`eq:${key}:gain`);});
+        addFrequencySlider(controls,`${key.toUpperCase()} F`,c.eq[key].freq,v=>{c.eq[key].freq=v;touch(c,`eq:${key}:freq`);});
+        if (key==='hmf'||key==='lmf') addSlider(controls,`${key.toUpperCase()} Q*`,.3,10,.1,c.eq[key].q,v=>`Q${v.toFixed(1)}`,v=>{c.eq[key].q=v;touch(c,`eq:${key}:q`);});
+      });
+      if (c.page==='COMP') {
+        addSlider(controls,'THRESHOLD',-60,0,.1,c.comp.threshold,v=>db(v),v=>{c.comp.threshold=v;touch(c,'comp:threshold');});
+        addStepSlider(controls,'RATIO',RATIOS,c.comp.ratio,v=>`${v}:1`,v=>{c.comp.ratio=v;touch(c,'comp:ratio');});
+        addStepSlider(controls,'ATTACK',ATTACKS,c.comp.attack,v=>`${v<1?v.toFixed(2):v}ms`,v=>{c.comp.attack=v;touch(c,'comp:attack');});
+        addStepSlider(controls,'RELEASE',RELEASES,c.comp.release,v=>`${v.toFixed(1)}s`,v=>{c.comp.release=v;touch(c,'comp:release');});
+        addSlider(controls,'COMP IN',-18,18,.1,c.comp.input,v=>db(v,true),v=>{c.comp.input=v;touch(c,'comp:input');});
+        addSlider(controls,'MAKEUP',0,20,.1,c.comp.output,v=>db(v,true),v=>{c.comp.output=v;touch(c,'comp:output');});
+      }
+      if (c.page==='EQ') {
+        const note=document.createElement('p'); note.className='note';
+        note.textContent='* HMF/LMF Q uses the gain knob while its push switch is held.';
+        controls.append(note);
+      }
+      document.querySelector('#control-title').textContent=`${c.page} controls`;
+    }
+
+    function renderAll() { channels.forEach((_,i)=>draw(i)); }
+    function animate(now) {
+      channels.forEach((c,i)=>{ c.gr=Math.max(0,Math.min(20,5+i*1.7+3*Math.sin(now/900+i))); });
+      renderAll(); requestAnimationFrame(animate);
+    }
+    buildPanel();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
