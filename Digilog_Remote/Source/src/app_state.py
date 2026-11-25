@@ -187,6 +187,11 @@ chains = list(USER_SETTINGS.get("chains", []))
 
 current_state_file_path = None
 
+# From the last .dgl loaded, written back unchanged when the mix is saved: the console's master section
+# and its automation moves (the app has no controls for either). None / [] for a mix started in the app.
+loaded_master = None
+loaded_automation = []
+
 TEMPLATES_DIR = user_settings.SETTINGS_DIR / "Templates"
 DEFAULT_MIX_FILE_NAME = f"DEFAULT{state_file_extension}"
 DEFAULT_TEMPLATE_FILE_NAME = f"MixTemplate{state_file_extension}"
@@ -461,14 +466,19 @@ def save_state_file(file_path):
         channels_to_save,
         current_channel,
         state_file_extension,
+        master=loaded_master,
+        automation=loaded_automation,
     )
     current_state_file_path = file_path
     return file_path
 
 
 def load_state_file(file_path):
-    global current_state_file_path
+    global current_state_file_path, loaded_master, loaded_automation
     file_path, state_document = state.load_state(file_path, state_file_extension)
+    # kept as they are, and written back on save (version 2 files have neither)
+    loaded_master = state_document.get("master")
+    loaded_automation = state_document.get("automation", []) or []
 
     loaded_channels = state_document["channels"]
     _set_channel_count(len(loaded_channels), preserve=False)

@@ -17,7 +17,8 @@
   *                  the DAW's own state. FRW / FF are Mackie REWIND / FAST FWD: the DAW winds
   *                  while they're held.
   *          K4, B0-B3   the screen's knob and buttons: collected as events for the screen
-  *                  (control_take_screen_input), nothing else yet. B0-B3 light while held.
+  *                  (control_take_screen_input). B0-B3 light while held, and as the screen
+  *                  asks (control_set_screen_leds).
   *          B4-B6   no function yet: each toggles a flag and its LED.
   **********************************************************************************
 */
@@ -54,7 +55,7 @@ typedef struct
     u_scalar_control_t aux_return_level[AUX_RETURNS]; //!< K0-K3: 0-65535 across the VCA's range; AUX_RETURN_UNITY is 0 dB
     bool aux_return_to_mix[AUX_RETURNS];               //!< return summed into the mix (LCV_AUX1-4)
     bool insert;                                       //!< mix insert in (LCV_INSERT)
-    bool user_button[USER_BUTTONS];                    //!< B4-B6: latching, no function yet
+    bool user_button[USER_BUTTONS];                    //!< B4-B6: latching (B6 is AUTO REC, kept in mix/automation.c instead)
 } master_controls;
 
 
@@ -90,6 +91,17 @@ void update_control_leds (void);
  */
 const master_controls *control_defaults (void);
 
+/**
+ * @brief The aux returns (K0-K3 levels, and whether each is in the mix), for saving a mix, and
+ * setting them from a loaded one: the outputs follow, fading around any in/out switch. Any task.
+ */
+void control_get_aux_returns (uint16_t level[AUX_RETURNS], bool to_mix[AUX_RETURNS]);
+void control_set_aux_returns (const uint16_t level[AUX_RETURNS], const bool to_mix[AUX_RETURNS]);
+
+/** One aux return's level, or whether it's in the mix (automation playing back). Any task. */
+void control_set_aux_level (uint8_t index, uint16_t level);
+void control_set_aux_to_mix (uint8_t index, bool to_mix);
+
 
 /*=============================== SCREEN INPUTS ================================*/
 
@@ -105,6 +117,12 @@ typedef struct
  * @brief Copies what the screen controls did since the last call, and starts counting again from zero.
  */
 void control_take_screen_input (screen_input_t *out);
+
+/**
+ * @brief The screen's soft-key lights: bit n is button Bn (B0 leftmost). on: lit; flash: blinking.
+ * A button is also lit while it's held. Safe from any task.
+ */
+void control_set_screen_leds (uint8_t on_mask, uint8_t flash_mask);
 
 
 /*=============================== LAST TOUCHED ================================*/

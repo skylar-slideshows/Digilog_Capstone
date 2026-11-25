@@ -17,4 +17,7 @@ void screen_input_turned (int8_t steps);
 void screen_input_knob_pressed (void);
 void screen_input_button_pressed (uint8_t button);
 
+/** What the screen asked of B0-B3's lights (control_set_screen_leds) */
+void screen_leds_get (uint8_t *on_mask, uint8_t *flash_mask);
+
 #endif

@@ -69,8 +69,10 @@ extern SPI_HandleTypeDef SD_SPI_HANDLE;
 #define READ_TIMEOUT_MS 200  // to start sending a block
 #define BUSY_TIMEOUT_MS 500  // to finish storing a block
 #define SD_SPI_TIMEOUT_MS 100
-#define SD_SPI_PRESCALER 64
-#define SD_SPI_PRESCALER_INIT 64
+// HAL's divider codes, not the numbers themselves (HAL masks the value into CR1's BR bits, so a plain
+// 64 would come out as /2: 85 MHz). SPI3 runs from APB1, 170 MHz.
+#define SD_SPI_PRESCALER      SPI_BAUDRATEPRESCALER_16  // 10.6 MHz once the card is up (SD allows 25)
+#define SD_SPI_PRESCALER_INIT SPI_BAUDRATEPRESCALER_256 // 664 kHz while it starts (the slowest SPI3 goes)
 
 
 /*=============================== STATE ================================*/

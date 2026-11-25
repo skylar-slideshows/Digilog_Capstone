@@ -37,8 +37,13 @@ def handle_incoming_command(command_text: str):
             app_state.apply_incoming_channel_name(int(parts[1]), name)
         elif cmd == "chct":
             app_state.apply_incoming_channel_count(int(parts[1]))
-    except (ValueError, IndexError):
-        pass
+    except Exception as e:
+        # The console now sends its own changes ($ud/$sw: knobs moved on the panel, automation playing
+        # back). One the GUI can't show is noted in the console log; it mustn't read as a connection error.
+        try:
+            console_monitor_window.append_console_log(f"(couldn't show {command_text!r}: {e})\n", color=(255, 120, 120, 255))
+        except Exception:
+            pass
 
 def main():
     # Instantiate the STM32 USART serial communicator

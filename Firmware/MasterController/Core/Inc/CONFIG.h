@@ -20,11 +20,15 @@
 #include "main.h" // CubeMX labels (<Name>_Pin, <Name>_GPIO_Port) and HAL types
 #include <stdbool.h>
 
+#ifndef DEVELOPER_MODE
+    #define DEVELOPER_MODE 1 // 1 = debug text on the log UART (USART2, 921600), 0 = quiet
+#endif
+
 
 /*=============================== CONSOLE SIZE ================================*/
 /** @brief The remote app numbers channels 0-31 across the whole console; each bucket
  *         controller knows only its own four, as 0-3. (macros: used for array sizes) */
-#define BUCKET_COUNT         8 // bucket controllers on the master SPI, one chip select each
+#define BUCKET_COUNT         4 // bucket controllers on the master SPI, one chip select each (J9-J12, CS_Bucket0-3)
 #define CHANNELS_PER_BUCKET  4
 #define CONSOLE_CHANNELS     (BUCKET_COUNT * CHANNELS_PER_BUCKET)
 
@@ -58,6 +62,29 @@ static const uint32_t BUCKET_CS_GAP_US      = 10; // chip select high -> next tr
 /** USART2, 921600 baud, asynchronous (set up in CubeMX): text messages for debugging, such as
  *  the DAW's transport changes from daw_control.c. Open it with any terminal at 921600. */
 #define LOG_UART_HANDLE      huart2
+
+/*=============================== SD CARD (mixes) ================================*/
+/** The SD card on SPI3 (DISK_SCK PC10, DISK_MISO PC11, DISK_MOSI PC12, DISK_CS PA15): hardware_drivers/sd_spi.c,
+ *  reached by FatFs through FATFS/Target/user_diskio.c. Mixes are .dgl files in its root (mix/mix_file.c). */
+#define SD_SPI_HANDLE        hspi3
+
+/*=============================== AUTOMATION (mix/automation.c, mix/mix_store.c) ================================*/
+/* The moves live on the SD card (mix_store.c); RAM only holds what's being recorded and what's about to play. */
+/** Moves being recorded: two buffers of this many (8 bytes each). One fills while the other is written to the card. */
+#define AUTOMATION_REC_EVENTS       384
+/** Moves about to play: two windows of this many, read ahead from the card */
+#define AUTOMATION_WINDOW_EVENTS    192
+/** A knob being turned is recorded at most this often (its latest value wins); switches always */
+#define AUTOMATION_MIN_GAP_MS       20
+/** Autosave ("<mix> (autosave).dgl"): this long after the last save if anything changed ... */
+#define AUTOSAVE_PERIOD_MS          (5U * 60U * 1000U)
+/** ... or as soon as this many moves have been recorded since the last save, whichever comes first */
+#define AUTOSAVE_AFTER_MOVES        3000
+/** A bucket's report reaches the master this long after the move, on average (the bucket looks at its
+ *  panel every 10 ms, the master asks every 5 ms): taken off the timecode a move is recorded at */
+#define AUTOMATION_REPORT_LATENCY_MS 7
+/** Which of B4-B6 is AUTO REC (0 = B4, 1 = B5, 2 = B6) */
+#define AUTO_REC_BUTTON             2
 static const uint32_t LOG_UART_TIMEOUT_MS = 10;
 
 

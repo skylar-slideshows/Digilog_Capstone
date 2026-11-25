@@ -7,13 +7,13 @@
   *        LVGL on top of it.
   *
   *        Levetop's LT768x library (LT768.c, LT768_Lib.c, if_port.c) drives the LT7683 over
-  *        the 16-bit 8080 bus on the FMC. LVGL draws into a 10-line buffer in the MCU's RAM
+  *        the 16-bit 8080 bus on the FMC. LVGL draws into a 4-line buffer in the MCU's RAM
   *        and each finished strip is written to the LT7683's frame memory through its
   *        "active window + memory write" (MPU16_16bpp_Memory_Write). Everything runs in one
   *        FreeRTOS task, so LVGL is only ever called from there.
   *
-  *        For now the screen is a plain console test (ui_console_test.c): the controls being
-  *        moved on the buckets, and which buckets are there.
+  *        The screen is the mixes on the SD card (ui_mixes.c), so the SD card (FatFs) is used
+  *        from this task too.
   **********************************************************************************
 */
 
@@ -24,7 +24,7 @@
  ----------------------------------------------------------------------------------
   @brief PUBLIC display_start : void -> void
   Starts the display task: it resets and sets up the LT7683, turns the backlight on,
-  starts LVGL and shows the console test screen. Call in USER CODE BEGIN RTOS_THREADS (TIM1,
+  starts LVGL and shows the mixes screen. Call in USER CODE BEGIN RTOS_THREADS (TIM1,
   whose channel 3 is the backlight, is set up by CubeMX; led_init() may change its period).
  ----------------------------------------------------------------------------------
 */

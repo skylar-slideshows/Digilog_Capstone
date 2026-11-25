@@ -31,11 +31,8 @@ static const bucket_cs_t BUCKET_CS[BUCKET_COUNT] = {
     {CS_Bucket1_GPIO_Port, CS_Bucket1_Pin},
     {CS_Bucket2_GPIO_Port, CS_Bucket2_Pin},
     {CS_Bucket3_GPIO_Port, CS_Bucket3_Pin},
-    {CS_Bucket4_GPIO_Port, CS_Bucket4_Pin},
-    {CS_Bucket5_GPIO_Port, CS_Bucket5_Pin},
-    {CS_Bucket6_GPIO_Port, CS_Bucket6_Pin},
-    {CS_Bucket7_GPIO_Port, CS_Bucket7_Pin},
 };
+_Static_assert(sizeof(BUCKET_CS) / sizeof(BUCKET_CS[0]) == BUCKET_COUNT, "one chip select per bucket");
 
 static SemaphoreHandle_t s_lock; // one bus: one transfer at a time
 static StaticSemaphore_t s_lock_mem;

@@ -57,6 +57,8 @@ file(GLOB APP_SRC CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/Core/Src/FreeRTOS_apps/*.c
     ${CMAKE_SOURCE_DIR}/Core/Src/hardware_drivers/*.c   # for drivers like the bucket's, when you add them
     ${CMAKE_SOURCE_DIR}/Core/Src/display/*.c            # the LT7683 display and its screens
+    ${CMAKE_SOURCE_DIR}/Core/Src/control_integration/*.c # the master panel's knobs, buttons, LEDs, outputs
+    ${CMAKE_SOURCE_DIR}/Core/Src/mix/*.c                 # the mix state and the mixes on the SD card
 )
 # LVGL: every .c under its src/ (the project keeps only the parts it uses; see its README_DIGILOG.md)
 file(GLOB_RECURSE LVGL_SRC CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Middlewares/Third_Party/lvgl/src/*.c)

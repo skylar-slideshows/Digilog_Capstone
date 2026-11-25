@@ -113,6 +113,58 @@ void screen_input_button_pressed (uint8_t button)
     taskEXIT_CRITICAL();
 }
 
+void control_get_aux_returns (uint16_t level[AUX_RETURNS], bool to_mix[AUX_RETURNS])
+{
+    xSemaphoreTake(master_control_mutex, portMAX_DELAY);
+    for (uint8_t i = 0; i < AUX_RETURNS; i++)
+    {
+        level[i] = master_control_vals.aux_return_level[i];
+        to_mix[i] = master_control_vals.aux_return_to_mix[i];
+    }
+    xSemaphoreGive(master_control_mutex);
+}
+
+void control_set_aux_returns (const uint16_t level[AUX_RETURNS], const bool to_mix[AUX_RETURNS])
+{
+    xSemaphoreTake(master_control_mutex, portMAX_DELAY);
+    for (uint8_t i = 0; i < AUX_RETURNS; i++)
+    {
+        master_control_vals.aux_return_level[i] = level[i];
+        master_control_vals.aux_return_to_mix[i] = to_mix[i];
+    }
+    xSemaphoreGive(master_control_mutex);
+}
+
+void control_set_aux_level (uint8_t index, uint16_t level)
+{
+    if (index >= AUX_RETURNS) return;
+    xSemaphoreTake(master_control_mutex, portMAX_DELAY);
+    master_control_vals.aux_return_level[index] = level;
+    xSemaphoreGive(master_control_mutex);
+}
+
+void control_set_aux_to_mix (uint8_t index, bool to_mix)
+{
+    if (index >= AUX_RETURNS) return;
+    xSemaphoreTake(master_control_mutex, portMAX_DELAY);
+    master_control_vals.aux_return_to_mix[index] = to_mix;
+    xSemaphoreGive(master_control_mutex);
+}
+
+static volatile uint8_t s_screen_leds_on, s_screen_leds_flash;
+
+void control_set_screen_leds (uint8_t on_mask, uint8_t flash_mask)
+{
+    s_screen_leds_on = on_mask;
+    s_screen_leds_flash = flash_mask;
+}
+
+void screen_leds_get (uint8_t *on_mask, uint8_t *flash_mask)
+{
+    *on_mask = s_screen_leds_on;
+    *flash_mask = s_screen_leds_flash;
+}
+
 void control_take_screen_input (screen_input_t *out)
 {
     if (out == NULL) return;

@@ -19,6 +19,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "tusb.h"
+#include "FreeRTOS_apps/remote_cmd_handler.h"
 
 #define USB_RHPORT           0                          // the G4 has one USB port
 #define USB_TASK_STACK_WORDS 256
@@ -62,9 +63,11 @@ static void usb_task (void *arg)
 
     for (;;)
     {
-        // Sleeps until the interrupt hands it work, then runs TinyUSB's callbacks in this task,
-        // including tud_midi_rx_cb() when MIDI arrives from the DAW.
-        tud_task();
+        // Sleeps until the interrupt hands it work (or 2 ms pass), then runs TinyUSB's callbacks
+        // in this task, including tud_midi_rx_cb() when MIDI arrives from the DAW. Then whatever the
+        // console has to tell the app (remote_report) goes out: only this task touches TinyUSB.
+        tud_task_ext(2, false);
+        remote_cmd_usb_service();
     }
 }
 

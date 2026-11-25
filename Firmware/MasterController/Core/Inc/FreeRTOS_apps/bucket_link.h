@@ -19,8 +19,9 @@
   *   $0:hi#xx^              hello: it's on but doesn't know its channels -> the master sends %base%
   *                          (and the names) in its next window
   *   $0:#xx^                keep-alive: nothing to report
-  *   $<1-99>:<reports>#xx^  panel changes, CONSOLE channel numbers (0-15), sent again every
-  *                          window until acknowledged; repeats are dropped by seq
+  *   $<1-99>:<reports>#xx^  panel changes, CONSOLE channel numbers, sent again every
+  *                          window until acknowledged; repeats are dropped by seq. Every
+  *                          report (ud, sw, sel) goes into the mix state (mix/mix_state.c)
   * So a bucket that starts late, or restarts, is found within one window of saying hello, and
   * an unplugged one is still asked every BUCKET_RETRY_MS.
   **********************************************************************************
@@ -31,6 +32,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "CONFIG.h" // CHANNEL_NAME_MAX
 
 /** How a bucket is doing, for the screen */
 typedef enum
@@ -49,27 +51,25 @@ void bucket_link_start (void);
 bucket_status_t bucket_link_status (uint8_t bucket);
 
 /** Queues a whole command, "%ud 1 25 40000%" (local channel), for a bucket's next windows. False if its
- *  queue is full. Call from one task only (the remote command relay). */
+ *  queue is full. Safe from any task. */
 bool bucket_link_send (uint8_t bucket, const char *frame, uint16_t len);
+
+/** As bucket_link_send, but waits (up to timeout_ms) for room in the bucket's queue */
+bool bucket_link_send_wait (uint8_t bucket, const char *frame, uint16_t len, uint32_t timeout_ms);
+
+/** True while a bucket is there to take commands (present, connecting, or briefly quiet). Commands for
+ *  one that isn't (never answered, or taken as unplugged) are skipped rather than queued. */
+bool bucket_link_listening (uint8_t bucket);
 
 /** Remembers a channel's name (console channel 0-based) and sends it to its bucket; sent again whenever
  *  that bucket says hello. */
 void bucket_link_name (uint16_t channel, const char *name);
 
+/** A channel's name as last set ("" for none) (any task) */
+void bucket_link_name_get (uint16_t channel, char out[CHANNEL_NAME_MAX + 1]);
+
 /** Asks every bucket to report everything again (the app has connected) */
 void bucket_link_dump_all (void);
-
-/** A control a bucket reported moving, for the test screen */
-typedef struct
-{
-    uint16_t channel; //!< console channel, 0-based
-    uint8_t id;       //!< control id (ud)
-    uint16_t value;   //!< 0-65535
-    uint32_t age_ms;  //!< how long ago
-} bucket_ctrl_move_t;
-
-/** The controls moved in the last within_ms, newest first, at most max. Returns how many. */
-uint8_t bucket_link_recent (bucket_ctrl_move_t *out, uint8_t max, uint32_t within_ms);
 
 /** Counts for debugging */
 typedef struct

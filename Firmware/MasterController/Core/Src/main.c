@@ -26,6 +26,19 @@
 #include "FreeRTOS_apps/usb_device_task.h"
 #include "FreeRTOS_apps/bucket_link.h"
 #include "display/lt7683_display.h"
+#include "mix/mix_state.h"
+#include "mix/automation.h"
+#include "mix/mix_file.h"
+#include "FreeRTOS_apps/i2c_scheduler.h"
+#include "FreeRTOS_apps/led_handler.h"
+#include "control_integration/control_interface.h"
+#include "control_integration/control_outputs.h"
+#include "hardware_drivers/i2c_driver.h"
+#include "hardware_drivers/led_driver.h"
+#include "hardware_drivers/mcp23017.h"
+#include "hardware_drivers/mcp4728.h"
+#include "CONFIG.h"
+#include <stdio.h>
 #include "hardware_drivers/bucket_spi.h"
 #include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "FreeRTOS_apps/daw_control.h"
@@ -156,6 +169,36 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+  /*=============================== CONTROLS AND LEDS (as on the bucket) ================================*/
+  if (DEVELOPER_MODE)
+  {
+    setvbuf(stdout, NULL, _IONBF, 0); // printf goes straight out on the log UART
+    printf("\r\n\n*******************************************************\r\n");
+    printf("Initializing Master Controller...\r\n    Build %s %s\r\n", __DATE__, __TIME__);
+  }
+
+  i2c_init(); // I2C2 to 400 kHz, timeouts
+  if (DEVELOPER_MODE) i2c_probeall();
+
+  led_init(); // PLEASE keep led_init before init_control_interface: the controls look up their LEDs
+  led_brightness(LED_BRIGHTNESS_DEFAULT);
+
+  mcp23017_init(CONTROLS_I2C_BUS, MCP23017_KNOBS_ADDR);
+  mcp23017_init(CONTROLS_I2C_BUS, MCP23017_PANEL_ADDR);
+  mcp4728_init_settings(CONTROLS_I2C_BUS, MCP4728_ADDR); // internal 2.048 V reference, gain 1
+
+  control_outputs_init(); // LCV lines to their power-up state, LDAC low
+  mix_state_init();       // every channel's controls at the bucket's start-up values, until told otherwise
+  automation_init();      // no moves yet; AUTO REC off
+  init_control_interface();
+
+  if (DEVELOPER_MODE)
+  {
+    led_print_config();
+    printf("\r\n*******************************************************\n");
+  }
+  /*=============================== END CONTROLS AND LEDS ================================*/
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -184,10 +227,13 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   usb_device_start();
   bucket_spi_init();
-  bucket_link_start(); // a window with every bucket every few ms: channel numbers, commands, their reports
+  bucket_link_start();  // a window with every bucket every few ms: channel numbers, commands, their reports
   remote_cmd_init();
   daw_control_init();
-  display_start();     // the console test screen
+  init_i2c_scheduler(); // the panel's knobs, buttons, DAC (after init_control_interface)
+  init_led_handler();   // the panel's LEDs
+  mix_file_start();     // the SD card: mixes, autosave, automation's moves
+  display_start();      // the mixes screen (after led_init, which sets TIM1's period: CH3 is the backlight)
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

@@ -49,6 +49,8 @@ extern UART_HandleTypeDef LOG_UART_HANDLE;
 #define CIN_CC          0xB
 
 // note numbers
+#define MCU_REWIND      0x5B
+#define MCU_FAST_FWD    0x5C
 #define MCU_STOP        0x5D
 #define MCU_PLAY        0x5E
 #define MCU_RECORD      0x5F
@@ -84,13 +86,15 @@ static const daw_key_t KEYS[DAW_BUTTON_COUNT] = {
     [DAW_RECORD]   = {DAW_NO_MODIFIER, MCU_RECORD},
     [DAW_TO_START] = {DAW_TO_START_MODIFIER, DAW_TO_START_NOTE},
     [DAW_TO_END]   = {DAW_TO_END_MODIFIER, DAW_TO_END_NOTE},
+    [DAW_REWIND]   = {DAW_NO_MODIFIER, MCU_REWIND},
+    [DAW_FORWARD]  = {DAW_NO_MODIFIER, MCU_FAST_FWD},
 };
 
 
 /*=============================== STATE ================================*/
 
 // what the DAW has said so far (only daw_task touches these)
-static led_t led_play, led_stop, led_record, led_smpte, led_beats;
+static led_t led_play, led_stop, led_record, led_smpte, led_beats, led_rewind, led_forward;
 static char  tc_digits[MCU_TC_DIGITS]; // [0] is the rightmost digit
 static bool  tc_dots[MCU_TC_DIGITS];   // a dot drawn after that digit
 static bool  tc_valid;
@@ -103,6 +107,22 @@ static bool            reported_armed;
 static daw_timecode_t  published_tc;
 static daw_transport_t published_state;
 static bool            published_armed;
+static bool            published_lit[DAW_BUTTON_COUNT];
+
+// the playhead: an SMPTE time in ms and the tick its digits arrived (published with the rest)
+typedef struct
+{
+    bool valid;
+    uint32_t ms;
+    TickType_t tick;
+} anchor_t;
+static anchor_t   published_anchor;
+static bool       published_rolling;
+static uint16_t   tc_units = 30;      // the frames group counts this many per second (learned)
+static uint16_t   tc_group_max;       // the frames group's highest value seen this second
+static uint32_t   tc_last_seconds;    // h:m:s of the last update, in seconds
+static bool       tc_have_seconds;
+static char       tc_last_digits[MCU_TC_DIGITS];
 
 // task
 static TaskHandle_t      s_task;
@@ -191,6 +211,8 @@ static void set_led (uint8_t note, uint8_t velocity)
     case MCU_RECORD:    led_record = state; break;
     case MCU_LED_SMPTE: led_smpte  = state; break;
     case MCU_LED_BEATS: led_beats  = state; break;
+    case MCU_REWIND:    led_rewind = state; break;
+    case MCU_FAST_FWD:  led_forward = state; break;
     default:            break; // not one of ours
     }
 }
@@ -303,19 +325,79 @@ static void handle_packet (const uint8_t packet[4])
   Reads every waiting packet, then publishes the result and reports any transport change
  ----------------------------------------------------------------------------------
 */
+/** A rate the frames group might count at, from the highest value it reached before wrapping */
+static uint16_t snap_units (uint16_t top)
+{
+    static const uint16_t RATES[] = {24, 25, 30, 50, 60, 100, 1000};
+    for (uint8_t i = 0; i < sizeof(RATES) / sizeof(RATES[0]); i++) if (top <= RATES[i]) return RATES[i];
+    return 1000;
+}
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief INTERNAL update_anchor : timecode, arrival tick -> void
+  When the SMPTE digits change, the time they show and the tick they arrived at become the
+  playhead's anchor. The frames group's rate is learned as the seconds tick over.
+ ----------------------------------------------------------------------------------
+*/
+static anchor_t s_anchor;
+static void update_anchor (const daw_timecode_t *tc, TickType_t arrived)
+{
+    // Many DAWs never send the SMPTE / BEATS indicators: then the digits are taken as SMPTE. Only a
+    // display the DAW says is bars and beats can't be turned into time.
+    if (!tc->valid || tc->mode == DAW_TIME_BEATS)
+    {
+        s_anchor.valid = false;
+        tc_have_seconds = false;
+        return;
+    }
+    if (s_anchor.valid && memcmp(tc_last_digits, tc_digits, sizeof(tc_digits)) == 0) return; // no change
+    memcpy(tc_last_digits, tc_digits, sizeof(tc_digits));
+
+    const uint32_t seconds = ((uint32_t)tc->field[0] * 60U + tc->field[1]) * 60U + tc->field[2];
+    const uint16_t frames  = tc->field[3];
+    if (tc_have_seconds && seconds == tc_last_seconds + 1U)
+    {
+        tc_units = snap_units((uint16_t)(tc_group_max + 1U)); // it just wrapped: its top was the last second's highest
+        tc_group_max = frames;
+    }
+    else if (tc_have_seconds && seconds == tc_last_seconds)
+    {
+        if (frames > tc_group_max) tc_group_max = frames;
+    }
+    else
+    {
+        tc_group_max = frames; // a jump: start learning again
+    }
+    if (frames >= tc_units) tc_units = snap_units((uint16_t)(frames + 1U)); // never below what it shows
+    tc_last_seconds = seconds;
+    tc_have_seconds = true;
+
+    s_anchor = (anchor_t){true, seconds * 1000U + ((uint32_t)frames * 1000U) / tc_units, arrived};
+}
+
 static void process_pending (void)
 {
+    const TickType_t arrived = xTaskGetTickCount(); // when this batch came in: what the timecode is stamped with
     uint8_t packet[4];
     while (tud_midi_packet_read(packet)) handle_packet(packet);
 
     daw_timecode_t tc;
     build_timecode(&tc);
     const daw_transport_t state = transport_state();
+    update_anchor(&tc, arrived);
 
     taskENTER_CRITICAL();
     published_tc    = tc;
     published_state = state;
     published_armed = record_armed(state);
+    published_lit[DAW_PLAY]    = led_play != LED_OFF;
+    published_lit[DAW_STOP]    = led_stop != LED_OFF;
+    published_lit[DAW_RECORD]  = led_record != LED_OFF;
+    published_lit[DAW_REWIND]  = led_rewind != LED_OFF;
+    published_lit[DAW_FORWARD] = led_forward != LED_OFF;
+    published_anchor  = s_anchor;
+    published_rolling = (state == DAW_PLAYING || state == DAW_RECORDING);
     taskEXIT_CRITICAL();
 
     report_changes();
@@ -403,6 +485,16 @@ daw_transport_t daw_control_transport (bool *armed)
 }
 
 
+bool daw_control_button_lit (daw_button_t button)
+{
+    if ((unsigned)button >= DAW_BUTTON_COUNT) return false;
+    taskENTER_CRITICAL();
+    const bool lit = published_lit[button];
+    taskEXIT_CRITICAL();
+    return lit;
+}
+
+
 void daw_control_timecode (daw_timecode_t *out)
 {
     if (out == NULL) return;
@@ -410,6 +502,36 @@ void daw_control_timecode (daw_timecode_t *out)
     taskENTER_CRITICAL();
     *out = published_tc;
     taskEXIT_CRITICAL();
+}
+
+
+bool daw_control_position_at (uint32_t tick, uint32_t *ms)
+{
+    taskENTER_CRITICAL();
+    const anchor_t a = published_anchor;
+    const bool rolling = published_rolling;
+    taskEXIT_CRITICAL();
+    if (!a.valid || ms == NULL) return false;
+
+    uint32_t t = a.ms;
+    if (rolling)
+    {
+        // moved on by the time since the digits arrived (at most 2 s, in case the DAW stops sending)
+        const int32_t dt = (int32_t)(tick - a.tick);
+        if (dt > 0) t += (dt > 2000) ? 2000U : (uint32_t)dt;
+        else if (dt < 0) t = ((uint32_t)(-dt) > t) ? 0U : t - (uint32_t)(-dt);
+    }
+    *ms = t;
+    return true;
+}
+
+
+bool daw_control_rolling (void)
+{
+    taskENTER_CRITICAL();
+    const bool r = published_rolling;
+    taskEXIT_CRITICAL();
+    return r;
 }
 
 

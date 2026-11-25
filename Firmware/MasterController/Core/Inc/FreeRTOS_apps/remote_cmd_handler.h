@@ -31,6 +31,7 @@ typedef enum
     CMD_SEL,      // channel select
     CMD_SETT,     // setting changed
     CMD_MD,       // mass data command
+    CMD_TIME,     // the app's clock, "time YYYY-MM-DD HH:MM:SS": sets the master's (mix titles, file dates)
     CMD_COUNT,
     CMD_UNKNOWN = 0xFF
 } cmd_verb_t;
@@ -65,5 +66,23 @@ void remote_cmd_init (void);
  ----------------------------------------------------------------------------------
 */
 void remote_cmd_counts (remote_cmd_stats_t *out);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC remote_report : text, length -> void
+  A message for the app, framed as the app expects ("$ud 3 25 40000^"): queued for the USB
+  task, which writes it. Dropped while the app doesn't have the port open, or if the queue
+  is full. Call from one task only (the bucket link's).
+ ----------------------------------------------------------------------------------
+*/
+void remote_report (const char *text, uint16_t len);
+
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC remote_cmd_usb_service : void -> void
+  Writes the queued reports to the app. The USB task calls it after every tud_task_ext().
+ ----------------------------------------------------------------------------------
+*/
+void remote_cmd_usb_service (void);
 
 #endif // REMOTE_CMD_HANDLER_H

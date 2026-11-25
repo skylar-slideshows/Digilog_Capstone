@@ -8,11 +8,14 @@
   *        - PLAY, STOP, REC, FRW, FF: pressed and released straight to the DAW as Mackie
   *          Control (FRW and FF are MCU REWIND and FAST FWD: the DAW winds while they're
   *          held); their lights follow what the DAW says
-  *        - B0-B3: the screen's buttons, counted for the screen; lit while held
-  *        - B4-B6: no function yet, each toggles a flag and its light
+  *        - B0-B3: the screen's buttons, counted for the screen; lit while held, and lit or
+  *          blinking as the screen asks (control_set_screen_leds)
+  *        - B6: AUTO REC (mix/automation.c; AUTO_REC_BUTTON): lit when on, flashing while it records
+  *        - B4, B5: no function yet, each toggles a flag and its light
   **********************************************************************************
 */
 
+#include "mix/automation.h"
 #include "button_control.h"
 #include "control_internal.h"
 #include "FreeRTOS.h"
@@ -26,6 +29,7 @@
 #include <stddef.h>
 
 #define TRANSPORT_FLASH_MS 250U // paused (PLAY) or record armed (REC): lit this long, then dark this long
+#define SCREEN_FLASH_MS    300U // a soft key the screen offers: lit this long, then dark this long
 
 static void update_toggle_button_val_from_info (SemaphoreHandle_t *out_mutex, const button_info_t *info, bool *val_out)
 {
@@ -81,9 +85,14 @@ void update_button_values (SemaphoreHandle_t *vals_mutex, master_controls *vals,
         if (vals->insert != before) control_touched(TOUCHED_INSERT, 0); // only this task writes it
     }
 
-    // B4-B6: no function yet
+    // AUTO REC (B6); B4, B5: no function yet
     for (uint8_t i = 0; i < USER_BUTTONS; i++)
     {
+        if (i == AUTO_REC_BUTTON)
+        {
+            if (update_button(&(io->user_button[i].button)) == BUTTON_PRESSED) automation_rec_toggle();
+            continue;
+        }
         update_toggle_button_val_from_info(vals_mutex, &(io->user_button[i].button), &(vals->user_button[i]));
     }
 
@@ -112,14 +121,25 @@ void update_button_leds (SemaphoreHandle_t *vals_mutex, master_controls *vals, m
 
     set_led(io->insert_button.led, v.insert);
 
+    const bool slow_flash_on = ((xTaskGetTickCount() / pdMS_TO_TICKS(TRANSPORT_FLASH_MS)) & 1U) != 0U;
     for (uint8_t i = 0; i < USER_BUTTONS; i++)
     {
+        if (i == AUTO_REC_BUTTON)
+        {
+            const auto_rec_t rec = automation_rec_state();
+            set_led(io->user_button[i].led, rec == AUTO_REC_ARMED || (rec == AUTO_REC_RECORDING && slow_flash_on));
+            continue;
+        }
         set_led(io->user_button[i].led, v.user_button[i]);
     }
 
+    uint8_t on_mask, flash_mask;
+    screen_leds_get(&on_mask, &flash_mask);
+    const bool screen_flash_on = ((xTaskGetTickCount() / pdMS_TO_TICKS(SCREEN_FLASH_MS)) & 1U) != 0U;
     for (uint8_t i = 0; i < SCREEN_BUTTONS; i++)
     {
-        set_led(io->screen_button[i].led, get_button_held(&(io->screen_button[i].button)));
+        const bool asked = ((on_mask >> i) & 1U) || (((flash_mask >> i) & 1U) && screen_flash_on);
+        set_led(io->screen_button[i].led, asked || get_button_held(&(io->screen_button[i].button)));
     }
 
     // transport: from what the DAW says, not from the buttons

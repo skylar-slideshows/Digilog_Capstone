@@ -35,6 +35,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include "ff_gen_drv.h"
+#include "hardware_drivers/sd_spi.h" // the SD card on SPI3 (one physical drive, number 0)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -42,6 +43,15 @@
 /* Private variables ---------------------------------------------------------*/
 /* Disk status */
 static volatile DSTATUS Stat = STA_NOINIT;
+
+/* ST's disk_initialize() (diskio.c) calls USER_initialize only once, ever, even when that
+   first call finds no card. So reads, writes and ioctls start the card themselves whenever
+   it isn't ready: no card at the first mount, or an error since. */
+static bool card_ready (void)
+{
+    if (Stat & STA_NOINIT) Stat = (sd_spi_init() == 0) ? 0 : STA_NOINIT;
+    return !(Stat & STA_NOINIT);
+}
 
 /* USER CODE END DECL */
 
@@ -81,7 +91,8 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
-    Stat = STA_NOINIT;
+    if (pdrv != 0) return STA_NOINIT;
+    Stat = (sd_spi_init() == 0) ? 0 : STA_NOINIT; // stays STA_NOINIT if no card answered
     return Stat;
   /* USER CODE END INIT */
 }
@@ -96,7 +107,7 @@ DSTATUS USER_status (
 )
 {
   /* USER CODE BEGIN STATUS */
-    Stat = STA_NOINIT;
+    if (pdrv != 0) return STA_NOINIT;
     return Stat;
   /* USER CODE END STATUS */
 }
@@ -117,7 +128,11 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-    return RES_OK;
+    if (pdrv != 0 || count == 0) return RES_PARERR;
+    if (!card_ready()) return RES_NOTRDY;
+    if (sd_spi_read(buff, sector, count) == 0) return RES_OK;
+    Stat = STA_NOINIT; // the next access starts the card again
+    return RES_ERROR;
   /* USER CODE END READ */
 }
 
@@ -138,8 +153,11 @@ DRESULT USER_write (
 )
 {
   /* USER CODE BEGIN WRITE */
-  /* USER CODE HERE */
-    return RES_OK;
+    if (pdrv != 0 || count == 0) return RES_PARERR;
+    if (!card_ready()) return RES_NOTRDY;
+    if (sd_spi_write(buff, sector, count) == 0) return RES_OK;
+    Stat = STA_NOINIT; // the next access starts the card again
+    return RES_ERROR;
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */
@@ -159,8 +177,25 @@ DRESULT USER_ioctl (
 )
 {
   /* USER CODE BEGIN IOCTL */
-    DRESULT res = RES_ERROR;
-    return res;
+    if (pdrv != 0) return RES_PARERR;
+    if (!card_ready()) return RES_NOTRDY;
+
+    switch (cmd)
+    {
+    case CTRL_SYNC: // finish any write the card is still storing
+        return (sd_spi_sync() == 0) ? RES_OK : RES_ERROR;
+    case GET_SECTOR_COUNT:
+        *(DWORD *)buff = sd_spi_sector_count();
+        return RES_OK;
+    case GET_SECTOR_SIZE:
+        *(WORD *)buff = SD_SECTOR_SIZE;
+        return RES_OK;
+    case GET_BLOCK_SIZE: // erase block in sectors, used by f_mkfs to align the file system
+        *(DWORD *)buff = sd_spi_erase_block();
+        return RES_OK;
+    default:
+        return RES_PARERR;
+    }
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */

@@ -23,6 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "mix/mix_file.h" // the clock, for file dates
 
 /* USER CODE END Includes */
 
@@ -103,7 +104,7 @@ int32_t MX_FATFS_Process(void)
 DWORD get_fattime(void)
 {
   /* USER CODE BEGIN get_fattime */
-  return 0;
+  return mix_clock_fattime(); // the remote app's clock once it has sent it
   /* USER CODE END get_fattime */
 }
 

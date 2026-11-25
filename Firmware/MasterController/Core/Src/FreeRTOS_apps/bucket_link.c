@@ -9,16 +9,19 @@
 
 #include "FreeRTOS_apps/bucket_link.h"
 #include "hardware_drivers/bucket_spi.h"
+#include "mix/mix_state.h"
+#include "mix/automation.h"
+#include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "CONFIG.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "message_buffer.h"
+#include "semphr.h"
 #include "cmsis_os2.h"
 #include <stdio.h>
 #include <string.h>
 
-#define QUEUE_BYTES   1024 // commands waiting for one bucket's windows
-#define RECENT_MOVES  48   // controls remembered for the test screen
+#define QUEUE_BYTES   256  // commands waiting for one bucket's windows (a dozen; the app resends if full)
 #define CTRL_IDS      27   // ud ids 0-26 (26 = fader)
 
 _Static_assert(CHANNELS_PER_BUCKET <= 10, "a bucket's channel number is sent as one digit");
@@ -43,74 +46,13 @@ static char s_names[CONSOLE_CHANNELS][CHANNEL_NAME_MAX + 1]; // from the app; ""
 static MessageBufferHandle_t s_queue[BUCKET_COUNT];
 static uint8_t s_queue_mem[BUCKET_COUNT][QUEUE_BYTES + 1];
 static StaticMessageBuffer_t s_queue_cb[BUCKET_COUNT];
+static SemaphoreHandle_t s_send_lock; // bucket_link_send from more than one task (the app relay, the screen)
+static StaticSemaphore_t s_send_lock_mem;
 
-typedef struct
-{
-    uint16_t channel;
-    uint8_t id;
-    uint16_t value;
-    TickType_t when;
-    bool used;
-} move_t;
-static move_t s_moves[RECENT_MOVES];
 
-static uint32_t s_stack[768];
+static uint32_t s_stack[512];
 static StaticTask_t s_tcb;
 static TickType_t s_started;
-
-
-/*=============================== RECENT MOVES (for the test screen) ================================*/
-
-static void note_move (uint16_t channel, uint8_t id, uint16_t value, TickType_t now)
-{
-    taskENTER_CRITICAL();
-    move_t *slot = NULL;
-    for (uint8_t i = 0; i < RECENT_MOVES && slot == NULL; i++) // the same control again
-    {
-        if (s_moves[i].used && s_moves[i].channel == channel && s_moves[i].id == id) slot = &s_moves[i];
-    }
-    for (uint8_t i = 0; i < RECENT_MOVES && slot == NULL; i++) // else a free slot
-    {
-        if (!s_moves[i].used) slot = &s_moves[i];
-    }
-    if (slot == NULL) // else the one moved longest ago makes room
-    {
-        slot = &s_moves[0];
-        for (uint8_t i = 1; i < RECENT_MOVES; i++)
-        {
-            if ((TickType_t)(now - s_moves[i].when) > (TickType_t)(now - slot->when)) slot = &s_moves[i];
-        }
-    }
-    *slot = (move_t){channel, id, value, now, true};
-    taskEXIT_CRITICAL();
-}
-
-uint8_t bucket_link_recent (bucket_ctrl_move_t *out, uint8_t max, uint32_t within_ms)
-{
-    if (out == NULL || max == 0U) return 0;
-    move_t copy[RECENT_MOVES];
-    taskENTER_CRITICAL();
-    memcpy(copy, s_moves, sizeof(copy));
-    taskEXIT_CRITICAL();
-
-    const TickType_t now = xTaskGetTickCount();
-    uint8_t n = 0;
-    for (;;) // newest first: pick the newest left each time (only a few dozen)
-    {
-        int16_t best = -1;
-        for (uint8_t i = 0; i < RECENT_MOVES; i++)
-        {
-            const move_t *m = &copy[i];
-            if (!m->used || (uint32_t)(now - m->when) > pdMS_TO_TICKS(within_ms)) continue;
-            if (best < 0 || (TickType_t)(now - m->when) < (TickType_t)(now - copy[best].when)) best = (int16_t)i;
-        }
-        if (best < 0 || n >= max) break;
-        out[n++] = (bucket_ctrl_move_t){copy[best].channel, copy[best].id, copy[best].value,
-                                        (uint32_t)(now - copy[best].when) * portTICK_PERIOD_MS};
-        copy[best].used = false;
-    }
-    return n;
-}
 
 
 /*=============================== PACKETS FROM A BUCKET ================================*/
@@ -139,20 +81,51 @@ static int hex_digit (char c)
     return -1;
 }
 
-/** One report from a bucket, e.g. "ud 5 25 40000" (console channel), as given */
-static void take_report (const char *r, const char *end, TickType_t now)
+/**
+ * One report from a bucket, e.g. "ud 5 25 40000" (console channel). While AUTO REC records it's a
+ * move at the time of this window (automation.c); otherwise a change to the mix. Either way the app
+ * is told, so its controls follow the console.
+ */
+static void take_report (uint8_t bucket, const char *r, const char *end, TickType_t when)
 {
+    const char *p;
+    uint32_t ch, id, value;
+    char app[32];
     if (end - r > 3 && strncmp(r, "ud ", 3) == 0)
     {
-        const char *p = r + 3;
-        uint32_t ch, id, value;
+        p = r + 3;
         if (read_number(&p, end, CONSOLE_CHANNELS - 1U, &ch) && read_number(&p, end, CTRL_IDS - 1U, &id) &&
             read_number(&p, end, 65535U, &value))
         {
-            note_move((uint16_t)ch, (uint8_t)id, (uint16_t)value, now);
+            if (!automation_record((uint16_t)ch, (uint8_t)id, (uint16_t)value, (uint32_t)when, AUTOMATION_REPORT_LATENCY_MS))
+            {
+                mix_state_set_knob((uint16_t)ch, (uint8_t)id, (uint16_t)value);
+            }
+            remote_report(app, (uint16_t)snprintf(app, sizeof(app), "$ud %u %u %u^", (unsigned)ch, (unsigned)id, (unsigned)value));
         }
     }
-    // sw and sel reports: for the app, once the master passes the buckets' reports on (not yet)
+    else if (end - r > 3 && strncmp(r, "sw ", 3) == 0)
+    {
+        p = r + 3;
+        if (!read_number(&p, end, CONSOLE_CHANNELS - 1U, &ch) || !read_number(&p, end, MIX_SWITCHES - 1U, &id)) return;
+        while (p < end && *p == ' ') p++;
+        if (p >= end || (*p != '0' && *p != '1')) return;
+        // "0"/"1"; the input type as two binary digits: "00" line, "01" mic, "10" hi-z
+        uint8_t v = (uint8_t)(*p - '0');
+        const bool two = p + 1 < end && (p[1] == '0' || p[1] == '1');
+        if (two) v = (uint8_t)(v * 2U + (uint8_t)(p[1] - '0'));
+        if (!automation_record((uint16_t)ch, AUTO_LANE_SW(id), v, (uint32_t)when, AUTOMATION_REPORT_LATENCY_MS))
+        {
+            mix_state_set_switch((uint16_t)ch, (uint8_t)id, v);
+        }
+        remote_report(app, (uint16_t)snprintf(app, sizeof(app), "$sw %u %u %.*s^", (unsigned)ch, (unsigned)id, two ? 2 : 1, p));
+    }
+    else if (end - r >= 5 && strncmp(r, "sel ", 4) == 0)
+    {
+        p = r + 4;
+        if (*p == '-') mix_state_set_bucket_select(bucket, -1); // none of its channels
+        else if (read_number(&p, end, CONSOLE_CHANNELS - 1U, &ch)) mix_state_set_bucket_select(bucket, (int16_t)ch);
+    }
 }
 
 /**
@@ -209,7 +182,7 @@ static bool take_packet (uint8_t bucket, const uint8_t *rx, uint16_t len, TickTy
     {
         const char *semi = memchr(r, ';', (size_t)(hash - r));
         const char *r_end = semi ? semi : hash;
-        take_report(r, r_end, now);
+        take_report(bucket, r, r_end, now);
         r = r_end + 1;
     }
     return true;
@@ -323,6 +296,7 @@ static void link_task (void *argument)
     TickType_t wake = s_started;
     for (;;)
     {
+        automation_tick(); // AUTO REC passes, and moves played to the buckets for where the playhead is
         link_round();
         vTaskDelayUntil(&wake, pdMS_TO_TICKS(BUCKET_POLL_MS));
     }
@@ -333,6 +307,7 @@ static void link_task (void *argument)
 
 void bucket_link_start (void)
 {
+    s_send_lock = xSemaphoreCreateMutexStatic(&s_send_lock_mem);
     for (uint8_t b = 0; b < BUCKET_COUNT; b++)
     {
         s_link[b] = (link_t){.status = BUCKET_ASKING};
@@ -340,7 +315,9 @@ void bucket_link_start (void)
     }
     static const osThreadAttr_t attr = {
         .name = "bucket_link",
-        .priority = osPriorityAboveNormal, // short exchanges on a fixed beat
+        // below the panel's controls and LEDs (BelowNormal), so an exchange never delays a knob read;
+        // above the display (Low)
+        .priority = osPriorityLow7,
         .stack_mem = s_stack,
         .stack_size = sizeof(s_stack),
         .cb_mem = &s_tcb,
@@ -357,7 +334,43 @@ bucket_status_t bucket_link_status (uint8_t bucket)
 bool bucket_link_send (uint8_t bucket, const char *frame, uint16_t len)
 {
     if (bucket >= BUCKET_COUNT || frame == NULL || len == 0U || len > BUCKET_XCHG_BYTES - 12U) return false;
-    return xMessageBufferSend(s_queue[bucket], frame, len, 0) == len;
+    // a message buffer takes one writer at a time
+    xSemaphoreTake(s_send_lock, portMAX_DELAY);
+    const bool ok = xMessageBufferSend(s_queue[bucket], frame, len, 0) == len;
+    xSemaphoreGive(s_send_lock);
+    return ok;
+}
+
+bool bucket_link_send_wait (uint8_t bucket, const char *frame, uint16_t len, uint32_t timeout_ms)
+{
+    const TickType_t start = xTaskGetTickCount();
+    for (;;)
+    {
+        if (bucket_link_send(bucket, frame, len)) return true;
+        if (!bucket_link_listening(bucket)) return false; // it went away
+        if ((TickType_t)(xTaskGetTickCount() - start) >= pdMS_TO_TICKS(timeout_ms)) return false;
+        vTaskDelay(pdMS_TO_TICKS(BUCKET_POLL_MS)); // a window or two drains it
+    }
+}
+
+bool bucket_link_listening (uint8_t bucket)
+{
+    if (bucket >= BUCKET_COUNT) return false;
+    const bucket_status_t st = s_link[bucket].status;
+    return st == BUCKET_PRESENT || st == BUCKET_CONNECTING || st == BUCKET_LOST;
+}
+
+void bucket_link_name_get (uint16_t channel, char out[CHANNEL_NAME_MAX + 1])
+{
+    if (out == NULL) return;
+    if (channel >= CONSOLE_CHANNELS)
+    {
+        out[0] = '\0';
+        return;
+    }
+    taskENTER_CRITICAL();
+    memcpy(out, s_names[channel], CHANNEL_NAME_MAX + 1);
+    taskEXIT_CRITICAL();
 }
 
 void bucket_link_name (uint16_t channel, const char *text)
@@ -376,6 +389,7 @@ void bucket_link_name (uint16_t channel, const char *text)
     name[len] = '\0';
 
     link_t *l = &s_link[channel / CHANNELS_PER_BUCKET];
+    if (strcmp(s_names[channel], name) != 0) mix_state_changed(); // for autosave
     taskENTER_CRITICAL();
     memcpy(s_names[channel], name, len + 1U);
     l->names |= (uint8_t)(1U << (channel % CHANNELS_PER_BUCKET));

@@ -1,7 +1,7 @@
 /*
  * LVGL configuration for the Digilog master controller (from LVGL's lv_conf_template.h).
  * What was changed from the template, to keep LVGL small:
- *   - RGB565 colour, 24 KB LVGL heap (the test pattern uses about 15 KB), no OS support
+ *   - RGB565 colour, 20 KB LVGL heap (the mixes screen peaks at about 13 KB), no OS support
  *     (LVGL is only called from the display task)
  *   - software drawing for RGB565, A8 (text), RGB888 (gradients) and ARGB8888 only
  *   - no themes, no flex/grid layouts, no observer
@@ -68,7 +68,7 @@
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
 /** Size of the pool `lv_malloc()` allocates from. Needs to be at least 2kB (2048). */
-#define LV_MEM_SIZE (24 * 1024U)
+#define LV_MEM_SIZE (20 * 1024U)
 
 /** Place the pool at a fixed address instead of allocating it as a normal array.
  *  0: unused.

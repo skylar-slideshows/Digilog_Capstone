@@ -8,7 +8,7 @@ font: "assets/EnterCommand.ttf"
 app_version: "1.1"
 # Channels shown at start-up. The master controller handles 8 buckets of 4 channels (0-31) and
 # forwards each command to the right bucket; a loaded .dgl file sets its own channel count.
-num_channels: 32
+num_channels: 16
 num_inserts: 16
 insert_dropdown_pos: [45, 450]
 group_label_size: 30

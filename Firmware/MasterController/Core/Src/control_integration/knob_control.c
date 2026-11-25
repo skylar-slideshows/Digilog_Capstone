@@ -14,6 +14,7 @@
   **********************************************************************************
 */
 
+#include "mix/automation.h"
 #include "CONFIG.h"
 #include "control_integration/control_interface.h"
 #include "control_internal.h"
@@ -226,7 +227,12 @@ static void check_mode_hold (uint8_t ret, const knob_input_t *input, SemaphoreHa
         xSemaphoreTake(*vals_mutex, portMAX_DELAY);
         vals->aux_return_to_mix[ret] = !vals->aux_return_to_mix[ret];
         vals->aux_return_level[ret] = (u_scalar_control_t)hold->start_value; // undo the accidental nudge
+        const bool to_mix = vals->aux_return_to_mix[ret];
+        const uint16_t level = vals->aux_return_level[ret];
         xSemaphoreGive(*vals_mutex);
+        // to automation once the mutex is free (playback takes automation's lock, then this mutex)
+        automation_master_moved((uint8_t)(AUX_RETURNS + ret), to_mix ? 1U : 0U);
+        automation_master_moved(ret, level);
         s_mode_flash[ret].start = now;
         s_mode_flash[ret].active = true;
         hold->spent = true;
@@ -275,6 +281,7 @@ void update_knob_values (SemaphoreHandle_t *vals_mutex, master_controls *vals, m
                           start->aux_return_level[ret]))
         {
             control_touched(TOUCHED_AUX_RETURN_LEVEL, ret);
+            automation_master_moved(ret, vals->aux_return_level[ret]); // a move while AUTO REC records
         }
         check_mode_hold(ret, &input, vals_mutex, vals);
     }

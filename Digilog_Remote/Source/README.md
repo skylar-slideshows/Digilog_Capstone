@@ -4,7 +4,7 @@
 The remote talks to the console's master controller over USB. Leave COM Port empty and press Connect
 (or press Find Console) and the app finds the console by its USB IDs: console_usb_vid and
 console_usb_pid in config/CONFIG.yaml. The baud rate only matters when connecting straight to a bucket
-controller's UART; USB ignores it. Channels are numbered 0-31 across the whole console, and the master
+controller's UART; USB ignores it. Channels are numbered 0-15 across the whole console, and the master
 controller forwards each command to the bucket that owns the channel.
 
 ### What changed in 1.1
@@ -14,7 +14,20 @@ controller forwards each command to the bucket that owns the channel.
 - Unplugging the console is noticed: the status shows the connection was lost.
 - Messages from the console are read as $...^ frames (they carry no newline), ready for
   console-to-remote updates.
-- Starts with 32 channels, the master controller's full range (8 buckets of 4).
+- Starts with 16 channels, the master controller's full range (4 buckets of 4).
+
+### Mix files (.dgl), version 4
+Saved mixes use the console master's format (version 4). It is the same as before, plus two sections the app
+keeps but doesn't edit:
+- `master`: the master section's aux returns (levels, and whether each is in the mix).
+- `automation`: control moves recorded on the console with AUTO REC, against the DAW's SMPTE timecode, in time
+  order: `[milliseconds, channel (1-16 or "master"), "tag", value]`.
+Loading a file sends its static mix to the console as before. Re-saving a file that came from the console writes
+both sections back unchanged. Older files (versions 2 and 3) still load.
+
+### The console and the app follow each other
+Moving a control in the app moves it on the console, and moving one on the console (or automation playing it
+back) moves it in the app, as it happens. When the app connects, the console sends every control's state.
 
 ###________________________________________________________________
 ### $chct [N]^

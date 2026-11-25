@@ -8,7 +8,7 @@
 */
 
 #include "display/lt7683_display.h"
-#include "display/ui_console_test.h"
+#include "display/ui_mixes.h"
 #include "LT768_Lib.h"
 #include "lvgl.h"
 #include "CONFIG.h"
@@ -23,11 +23,12 @@ extern TIM_HandleTypeDef htim1; // channel 3 (PC2, Disp_PWM) is the backlight
 #define DISP_W LCD_XSIZE_TFT // 1024 (LT768_Lib.h)
 #define DISP_H LCD_YSIZE_TFT // 600
 
-// LVGL draws this many lines at a time; each strip then goes to the LT7683
-#define DRAW_BUF_LINES 10
-static uint16_t draw_buf[DISP_W * DRAW_BUF_LINES] __attribute__((aligned(4))); // 20 KB
+// LVGL draws this many lines at a time; each strip then goes to the LT7683. Four lines keep RAM down
+// (the screen is mostly still); more lines only make big redraws a little faster.
+#define DRAW_BUF_LINES 4
+static uint16_t draw_buf[DISP_W * DRAW_BUF_LINES] __attribute__((aligned(4))); // 8 KB
 
-static uint32_t     display_stack[1536]; // 6 KB: LVGL's software renderer
+static uint32_t     display_stack[1024]; // 4 KB: LVGL's software renderer (the SD card is the storage task's)
 static StaticTask_t display_tcb;
 
 
@@ -88,7 +89,7 @@ static void lvgl_start (void)
     lv_display_set_buffers(disp, draw_buf, NULL, sizeof(draw_buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
     lv_display_set_flush_cb(disp, flush_cb);
 
-    ui_console_test_create();
+    ui_mixes_create(); // the mixes on the SD card (mounts it)
 }
 
 
@@ -104,10 +105,10 @@ static void display_task (void *argument)
 
     for (;;)
     {
-        ui_console_test_update();           // moves and bucket status into the widgets
+        ui_mixes_update();                  // the screen knob and buttons, the card, the clock, the buckets
         uint32_t wait = lv_timer_handler(); // draws whatever changed; says when it next needs to run
         if (wait < 5U) wait = 5U;
-        if (wait > 50U) wait = 50U;
+        if (wait > 20U) wait = 20U;         // the knob and buttons are read at least this often
         vTaskDelay(pdMS_TO_TICKS(wait));
     }
 }
