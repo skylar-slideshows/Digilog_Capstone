@@ -39,6 +39,8 @@
 #include "hardware_drivers/routing_switches.h"
 #include "FreeRTOS_apps/compressor.h"
 #include "CONFIG.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -66,6 +68,9 @@ static cv_eq_band_t band_of (const eq_band_control_t *band)
         .bell = band->bell,
     };
 }
+
+/* Each channel's CV DACs: not on the channel's own I2C bus since the November 2026 remap (CONFIG.h) */
+static I2C_TypeDef *const CV_DAC_BUS[CHANNELS] = {CV_DAC_BUS_CH1, CV_DAC_BUS_CH2, CV_DAC_BUS_CH3, CV_DAC_BUS_CH4};
 
 void control_voltage_init (void)
 {
@@ -132,7 +137,7 @@ void control_voltage_update (uint8_t channel)
     cv_compute(&params, &s_state[channel], &result);
     compressor_set_extra_gain(channel, result.comp_extra_db); // what the main VCA CVs couldn't reach
 
-    I2C_TypeDef *bus = i2c_channel_bus(channel);
+    I2C_TypeDef *bus = CV_DAC_BUS[channel]; // written here, sent by that bus's own I2C task
     for (uint8_t cv = 0; cv < CV_COUNT; cv++)
     {
         // only marks a DAC for rewriting when a value changed

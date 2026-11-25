@@ -98,19 +98,24 @@
 
 /* Value pop-up while a knob is turned, in the large font: input gain and EQ values just under the title
    strip (rows 28-69: over the MUTE/SOLO bar and the top of the EQ graph while it shows); the pan just
-   above the pan bar (rows 182-223, over the bottom of the EQ graph). Those rows are for a 40 px font;
+   above the pan bar (rows 177-218, over the bottom of the EQ graph). Those rows are for a 40 px font;
    the pop-ups follow whatever size ui_font_big.h was made at. */
 #define CH_POPUP_SIZE    ui_big_font_size() // UI_FONT_BIG_SIZE in ui_font_big.h
 #define CH_POPUP_H       (CH_POPUP_SIZE + 2)
 #define CH_POPUP_TOP_Y   CH_BAR_Y                     // rows 28-69
-#define CH_POPUP_LOW_Y   (CH_PAN_Y - 1 - CH_POPUP_H)  // rows 182-223
+#define CH_POPUP_LOW_Y   (CH_PAN_Y - 1 - CH_POPUP_H)  // rows 177-218
 
 /* Pan bar along the bottom. The centre line is in the middle column; each side has CH_PAN_HALF columns. */
 #define CH_PAN_HALF      112
 #define CH_PAN_X         8
 #define CH_PAN_W         (2 * CH_PAN_HALF + 1) // 225: odd, so both sides are the same width
-#define CH_PAN_H         11
-#define CH_PAN_Y         225 // rows 225-235
+#define CH_PAN_H         8
+#define CH_PAN_Y         220 // rows 220-227
+
+/* Status line under the pan bar, rows 228-239: NO MASTER in red when no master answered at start-up */
+#define CH_FOOTER_Y         228
+#define CH_FOOTER_SIZE      12
+#define CH_COLOR_NO_MASTER  UI_RGB(0xFF, 0x30, 0x30)
 #define CH_PAN_CENTRE_X  (CH_PAN_X + CH_PAN_HALF) // 120
 
 /** Input type, shown at the right of the title strip */
@@ -182,7 +187,7 @@ typedef enum
 /** Everything on a channel's screen apart from the EQ curve itself */
 typedef struct
 {
-    uint8_t number;        //!< 1-99, shown as two digits
+    uint8_t number;        //!< console channel 1-99, shown as two digits; 0 shows "--" (not known yet)
     channel_input_t input;
     bool muted;
     bool soloed;
@@ -195,6 +200,7 @@ typedef struct
     bool comp_off;         //!< compressor bypassed: meter grey, "COMP OFF"
     bool phantom;          //!< badges under the title strip, from the right: "48V"...
     bool phase;            //!< ..."PHASE"...
+    bool no_master;        //!< no master answered at start-up (solo mode): NO MASTER along the bottom
     bool hpf;              //!< ..."HPF" (the HPF also shows as a dotted line on the EQ graph)
     int16_t pan_fill;      //!< from channel_screen_pan_fill()
     channel_popup_where_t popup;
@@ -360,5 +366,14 @@ int16_t channel_screen_pan_fill (int16_t pan);
 
 /** Just the pan bar, for when only the pan changed. */
 void channel_screen_pan (ui_region_t *region, channel_pan_parts_t *parts, int16_t fill);
+
+/** Memory for the status line's shapes */
+typedef struct
+{
+    ui_text_t texts[1];
+} channel_footer_parts_t;
+
+/** Just the status line along the bottom (NO MASTER, or nothing), for when that changed. */
+void channel_screen_footer (ui_region_t *region, channel_footer_parts_t *parts, const channel_screen_state_t *state);
 
 #endif

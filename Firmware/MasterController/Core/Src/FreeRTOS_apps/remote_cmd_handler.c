@@ -12,8 +12,10 @@
   * there when the app sends, the bytes go through the bucket's %...% framing straight away,
   * and the acknowledgement is written from there too. No other task calls into TinyUSB.
   *
-  * Knob (ud) and switch (sw) commands are handed to relay_task, which sends them to the
-  * bucket that owns the channel over the master SPI, so an SPI transfer never holds up USB.
+  * Knob (ud), switch (sw) and channel-name (chnm) commands are handed to relay_task, which
+  * queues them for the bucket that owns the channel; the bucket link (bucket_link.c) sends them
+  * in that bucket's next SPI window. Names are also kept, and sent again whenever a bucket
+  * (re)starts and says hello.
   * A command is only acknowledged once relay_task has it. If its queue were ever full, the
   * command gets no acknowledgement and the app sends it again: everything the app waits on
   * still arrives, and a live knob position it doesn't wait on is replaced by the next one.
@@ -22,12 +24,14 @@
   * "%<verb> <channel%4><rest>%", everything after the channel passed on unchanged:
   *   "ud 5 25 40000" -> bucket 1 gets "%ud 1 25 40000%"
   *   "sw 9 0 10"     -> bucket 2 gets "%sw 1 0 10%"
-  * chnm, sel, sett and md are acknowledged, as the bucket does, but not forwarded yet.
+  *   "chnm 6 Kick In" -> bucket 1 gets "%chnm 2 Kick In%"
+  * sel, sett and md are acknowledged, as the bucket does, but not forwarded yet. When the app
+  * opens the port, every bucket is asked to report everything again (%dump%).
   **********************************************************************************
 */
 
 #include "FreeRTOS_apps/remote_cmd_handler.h"
-#include "hardware_drivers/bucket_spi.h"
+#include "FreeRTOS_apps/bucket_link.h"
 #include "CONFIG.h"
 #include "FreeRTOS.h"
 #include "message_buffer.h"
@@ -143,7 +147,7 @@ static void frame_complete (cmd_verb_t verb)
 {
     stat_frames++;
 
-    if (verb == CMD_UD || verb == CMD_SW)
+    if (verb == CMD_UD || verb == CMD_SW || verb == CMD_CHNM)
     {
         if (relay_frames == NULL || xMessageBufferSend(relay_frames, rx, rx_len, 0) != rx_len)
         {
@@ -239,6 +243,7 @@ void tud_cdc_line_state_cb (uint8_t itf, bool dtr, bool rts)
     {
         in_frame = false;
         rx_len   = 0;
+        bucket_link_dump_all(); // the app has just connected: every bucket reports everything again
     }
 }
 
@@ -248,8 +253,9 @@ void tud_cdc_line_state_cb (uint8_t itf, bool dtr, bool rts)
 /**
  ----------------------------------------------------------------------------------
   @brief INTERNAL relay_frame : command string -> bool
-  Renumbers the channel for its bucket and sends the command there. False if the
-  channel is missing or out of range, or the SPI transfer failed.
+  Renumbers the channel for its bucket and queues the command for it (names are kept by the
+  bucket link, which sends them). False if the channel is missing or out of range, or the
+  bucket's queue is full.
  ----------------------------------------------------------------------------------
 */
 static bool relay_frame (const char *frame)
@@ -275,6 +281,12 @@ static bool relay_frame (const char *frame)
     if (*p != '\0' && *p != ' ' && *p != '\t') return false; // e.g. "5x"
     if (channel >= CONSOLE_CHANNELS) return false;
 
+    if (verb_len == 4U && strncmp(frame, "chnm", 4) == 0)
+    {
+        bucket_link_name((uint16_t)channel, p); // kept, and sent in the bucket's next window
+        return true;
+    }
+
     const uint8_t bucket = (uint8_t)(channel / CHANNELS_PER_BUCKET);
     const uint8_t local  = (uint8_t)(channel % CHANNELS_PER_BUCKET); // one digit: a bucket has 4
 
@@ -292,7 +304,7 @@ static bool relay_frame (const char *frame)
     n = (uint16_t)(n + rest_len);
     out[n++] = CMD_CLOSE;
 
-    return bucket_spi_send(bucket, (const uint8_t *)out, n) == 0;
+    return bucket_link_send(bucket, out, n);
 }
 
 

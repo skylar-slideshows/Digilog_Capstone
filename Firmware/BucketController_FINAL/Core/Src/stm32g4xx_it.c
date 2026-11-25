@@ -23,8 +23,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-// Skylar
-#include "FreeRTOS_apps/remote_cmd_handler.h"
 
 
 /* USER CODE END Includes */

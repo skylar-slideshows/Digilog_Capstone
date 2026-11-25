@@ -30,6 +30,8 @@
 #include "cv_mapping.h"
 #include "comp/comp_engine.h"
 #include "FreeRTOS_apps/compressor.h"
+#include "console_state_bucket.h"
+#include "FreeRTOS_apps/boot_screen.h"
 
 #define CHANNEL_DISPLAY_PERIOD_MS 33U   // about 30 checks a second
 #define SELECT_FLASH_MS           500U  // selected channel: title strip lighter for this long, then normal for this long
@@ -288,7 +290,8 @@ static void update_display (uint8_t display, bool flash_on)
     const channel_popup_where_t where = popup_for(channel, &v, popup, sizeof(popup), &popup_rgb);
 
     channel_screen_state_t now = {
-        .number = (uint8_t)(channel + 1U),
+        .number = console_channel_number(channel), // 01-16 across the console, once the master has said
+        .no_master = console_state_solo(),         // no master answered at start-up: NO MASTER along the bottom
         .input = input_type(v.input_type_selection),
         .muted = v.muted,
         .soloed = v.solo,
@@ -369,12 +372,13 @@ static void update_display (uint8_t display, bool flash_on)
         return;
     }
 
-    // title strip: input type changed, or the selected channel's strip flashes
-    if (now.input != was->input || now.title_lit != was->title_lit)
+    // title strip: channel number (from the master) or input type changed, or the selected channel's strip flashes
+    if (now.number != was->number || now.input != was->input || now.title_lit != was->title_lit)
     {
         channel_header_parts_t parts;
         channel_screen_header(&region, &parts, &now);
         displays_draw_region(display, &region);
+        was->number = now.number;
         was->input = now.input;
         was->title_lit = now.title_lit;
     }
@@ -445,11 +449,28 @@ static void update_display (uint8_t display, bool flash_on)
         displays_draw_region(display, &region);
         was->pan_fill = now.pan_fill;
     }
+
+    // status line along the bottom: NO MASTER appeared or went
+    if (now.no_master != was->no_master)
+    {
+        channel_footer_parts_t parts;
+        channel_screen_footer(&region, &parts, &now);
+        displays_draw_region(display, &region);
+        was->no_master = now.no_master;
+    }
+}
+
+static volatile bool s_ready; // every screen has had its first full frame
+
+bool channel_display_ready (void)
+{
+    return s_ready;
 }
 
 static void channel_display_task (void *argument)
 {
     (void)argument;
+    while (!boot_screen_done()) osDelay(10); // the start-up screen has the displays until then
     for (;;)
     {
         const bool flash_on = ((xTaskGetTickCount() / pdMS_TO_TICKS(SELECT_FLASH_MS)) & 1U) != 0U;
@@ -457,6 +478,7 @@ static void channel_display_task (void *argument)
         {
             update_display(display, flash_on);
         }
+        s_ready = true;
         osDelay(pdMS_TO_TICKS(CHANNEL_DISPLAY_PERIOD_MS));
     }
 }

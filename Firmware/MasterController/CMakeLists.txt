@@ -56,9 +56,13 @@ list(APPEND TINYUSB_SRC
 file(GLOB APP_SRC CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/Core/Src/FreeRTOS_apps/*.c
     ${CMAKE_SOURCE_DIR}/Core/Src/hardware_drivers/*.c   # for drivers like the bucket's, when you add them
+    ${CMAKE_SOURCE_DIR}/Core/Src/display/*.c            # the LT7683 display and its screens
 )
+# LVGL: every .c under its src/ (the project keeps only the parts it uses; see its README_DIGILOG.md)
+file(GLOB_RECURSE LVGL_SRC CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Middlewares/Third_Party/lvgl/src/*.c)
 # macOS leaves "._name.c" metadata files on drives that aren't Mac-formatted; they aren't C
 list(FILTER APP_SRC EXCLUDE REGEX "/\\._[^/]*$")
+list(FILTER LVGL_SRC EXCLUDE REGEX "/\\._[^/]*$")
 
 
 # Link directories setup
@@ -70,6 +74,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${APP_SRC}
+    ${LVGL_SRC}
     ${TINYUSB_SRC}
 )
 
@@ -77,6 +82,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${TINYUSB_DIR}
+    ${CMAKE_SOURCE_DIR}/Core/Inc/display
+    ${CMAKE_SOURCE_DIR}/Middlewares/Third_Party/lvgl
 )
 
 # Add project symbols (macros)

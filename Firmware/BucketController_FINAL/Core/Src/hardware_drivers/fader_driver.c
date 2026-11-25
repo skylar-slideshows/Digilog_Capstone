@@ -23,15 +23,29 @@
 #define FADER_AVG_DERIVATIVE_AMOUNT 0.4f
 #define FADER_AVG_PROPORTIONAL_AMOUNT_INV_COEF 5
 
-// ADC STUFF
-extern ADC_HandleTypeDef FADER_ADC; // from main.c
-uint32_t adc_buf[CHANNELS] = {UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX};
+// What each fader is wired to (CONFIG.h): motor A and B can be on different timers, positions on two ADCs
+extern ADC_HandleTypeDef FADER0_ADC, FADER1_ADC, FADER2_ADC, FADER3_ADC;         // from main.c
+extern TIM_HandleTypeDef FADER0_A_TIM, FADER0_B_TIM, FADER1_A_TIM, FADER1_B_TIM; // from main.c
+extern TIM_HandleTypeDef FADER2_A_TIM, FADER2_B_TIM, FADER3_A_TIM, FADER3_B_TIM;
 
-// TIMER STUFF
-extern TIM_HandleTypeDef FADER0_TIM_HANDLE; // from main.c
-extern TIM_HandleTypeDef FADER1_TIM_HANDLE; // from main.c
-extern TIM_HandleTypeDef FADER2_TIM_HANDLE; // from main.c
-extern TIM_HandleTypeDef FADER3_TIM_HANDLE; // from main.c
+typedef struct
+{
+    TIM_HandleTypeDef *tim_a;
+    uint32_t chan_a;
+    TIM_HandleTypeDef *tim_b;
+    uint32_t chan_b;
+    ADC_HandleTypeDef *adc;
+    uint32_t adc_chan;
+} fader_hw_t;
+
+static const fader_hw_t FADER_HW[CHANNELS] = {
+    {&FADER0_A_TIM, FADER0_A_CHAN, &FADER0_B_TIM, FADER0_B_CHAN, &FADER0_ADC, FADER0_ADC_CHAN},
+    {&FADER1_A_TIM, FADER1_A_CHAN, &FADER1_B_TIM, FADER1_B_CHAN, &FADER1_ADC, FADER1_ADC_CHAN},
+    {&FADER2_A_TIM, FADER2_A_CHAN, &FADER2_B_TIM, FADER2_B_CHAN, &FADER2_ADC, FADER2_ADC_CHAN},
+    {&FADER3_A_TIM, FADER3_A_CHAN, &FADER3_B_TIM, FADER3_B_CHAN, &FADER3_ADC, FADER3_ADC_CHAN},
+};
+
+uint32_t adc_buf[CHANNELS] = {UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX};
 
 
 uint32_t fader_touched_countdown[CHANNELS] = {0};
@@ -46,10 +60,58 @@ static bool is_fader_touched (const fader_info_t *info)
     return hw_touched || fader_touched_countdown[info->channel] > 0;
 }
 
+/**
+ * The ADCs the faders use are set to one conversion at a time, whatever CubeMX ranked, and calibrated.
+ * Only waits on loop counts, never HAL_GetTick(), so it's safe before the scheduler starts.
+ */
+static void setup_fader_adcs (void)
+{
+    for (uint8_t i = 0; i < CHANNELS; i++)
+    {
+        ADC_HandleTypeDef *h = FADER_HW[i].adc;
+        bool done = false;
+        for (uint8_t j = 0; j < i; j++) done |= FADER_HW[j].adc == h; // each ADC once
+        if (done) continue;
+        h->Init.ScanConvMode = ADC_SCAN_DISABLE;
+        h->Init.NbrOfConversion = 1;
+        h->Init.ContinuousConvMode = DISABLE;
+        h->Init.DiscontinuousConvMode = DISABLE;
+        h->Init.ExternalTrigConv = ADC_SOFTWARE_START;
+        h->Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+        h->Init.DMAContinuousRequests = DISABLE;
+        h->Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
+        HAL_ADC_Init(h);
+        HAL_ADCEx_Calibration_Start(h, ADC_SINGLE_ENDED);
+    }
+}
+
+/** One fader's position, 12-bit, or -1 if its ADC didn't answer. Runs in the fader poller task. */
+static int32_t read_fader_adc (const fader_hw_t *hw)
+{
+    ADC_ChannelConfTypeDef c = {0};
+    c.Channel = hw->adc_chan;
+    c.Rank = ADC_REGULAR_RANK_1;
+    c.SamplingTime = FADER_ADC_SAMPLETIME;
+    c.SingleDiff = ADC_SINGLE_ENDED;
+    c.OffsetNumber = ADC_OFFSET_NONE;
+    c.Offset = 0;
+    if (HAL_ADC_ConfigChannel(hw->adc, &c) != HAL_OK) return -1;
+    if (HAL_ADC_Start(hw->adc) != HAL_OK) return -1;
+    int32_t value = -1;
+    for (uint32_t spins = 0; spins < 200000U; spins++) // a conversion is tens of microseconds
+    {
+        if (__HAL_ADC_GET_FLAG(hw->adc, ADC_FLAG_EOC))
+        {
+            value = (int32_t)HAL_ADC_GetValue(hw->adc);
+            break;
+        }
+    }
+    HAL_ADC_Stop(hw->adc);
+    return value;
+}
+
 void poll_faders (void)
 {
-    HAL_ADC_Start(&FADER_ADC);
-
     for (int i = 0; i < CHANNELS; i++)
     {
         if (fader_touched_countdown[i] > 0)
@@ -57,9 +119,10 @@ void poll_faders (void)
             fader_touched_countdown[i]--;
         }
 
-        if (HAL_ADC_PollForConversion(&FADER_ADC, 10) == HAL_OK)
+        const int32_t raw = read_fader_adc(&FADER_HW[i]);
+        if (raw >= 0)
         {
-            uint16_t read = HAL_ADC_GetValue(&FADER_ADC) << 4; // Multiply up to 16bit
+            uint16_t read = (uint16_t)(raw << 4); // Multiply up to 16bit
             if (fader_touched_countdown[i] > 0)
             { // disable smoothing if touched
                 adc_buf[i] = read;
@@ -78,27 +141,12 @@ void poll_faders (void)
             adc_buf[i] = next + last;
         }
     }
-
-    HAL_ADC_Stop(&FADER_ADC);
 }
 
 static uint16_t get_physical_fader_position (const fader_info_t *info) { return adc_buf[info->channel]; }
 
-typedef struct
-{
-    TIM_HandleTypeDef *timer;
-    uint32_t timer_a_channel;
-    uint32_t timer_b_channel;
-} motor_hw_info;
-
-const motor_hw_info motor_hw[CHANNELS] = {
-    (motor_hw_info){.timer = &FADER0_TIM_HANDLE, .timer_a_channel = FADER0_A_TIM_CHAN, .timer_b_channel = FADER0_B_TIM_CHAN},
-    (motor_hw_info){.timer = &FADER1_TIM_HANDLE, .timer_a_channel = FADER1_A_TIM_CHAN, .timer_b_channel = FADER1_B_TIM_CHAN},
-    (motor_hw_info){.timer = &FADER2_TIM_HANDLE, .timer_a_channel = FADER2_A_TIM_CHAN, .timer_b_channel = FADER2_B_TIM_CHAN},
-    (motor_hw_info){.timer = &FADER3_TIM_HANDLE, .timer_a_channel = FADER3_A_TIM_CHAN, .timer_b_channel = FADER3_B_TIM_CHAN},
-};
-
-uint32_t fader_pwm_period[CHANNELS];
+uint32_t fader_pwm_period[CHANNELS];   //!< motor A's timer period: the scale the control loop's power is in
+static uint32_t s_period_b[CHANNELS];   //!< motor B's timer period (the same unless the timers differ)
 
 typedef struct
 {
@@ -113,15 +161,18 @@ static fader_state_t fader_cache[CHANNELS]; //!< Last state of each fader, index
 
 void init_faders (void)
 {
-    poll_faders();
+#if FADERS_CONNECTED
+    setup_fader_adcs(); // positions are first read by the fader poller task (poll_faders), once running
+#endif
     for (uint8_t i = 0; i < CHANNELS; i++)
     {
-        HAL_TIM_PWM_Start(motor_hw[i].timer, motor_hw[i].timer_a_channel);
-        HAL_TIM_PWM_Start(motor_hw[i].timer, motor_hw[i].timer_b_channel);
+        HAL_TIM_PWM_Start(FADER_HW[i].tim_a, FADER_HW[i].chan_a);
+        HAL_TIM_PWM_Start(FADER_HW[i].tim_b, FADER_HW[i].chan_b);
 
-        fader_pwm_period[i] = __HAL_TIM_GET_AUTORELOAD(motor_hw[i].timer);
+        fader_pwm_period[i] = __HAL_TIM_GET_AUTORELOAD(FADER_HW[i].tim_a);
+        s_period_b[i] = __HAL_TIM_GET_AUTORELOAD(FADER_HW[i].tim_b);
 
-        motor_pivs[i] = (motor_piv_info){.deviation_integral = 0, .last_pos = adc_buf[i]};
+        motor_pivs[i] = (motor_piv_info){.deviation_integral = 0, .last_pos = 0};
         fader_cache[i] = DEFAULT_FADER_STATE;
     }
 }
@@ -133,24 +184,32 @@ static void update_motor_power (
     int32_t power_pwm_period
 )
 {
-    const motor_hw_info *hw = &(motor_hw[info->channel]);
+    const fader_hw_t *hw = &(FADER_HW[info->channel]);
+    const uint32_t period_a = fader_pwm_period[info->channel], period_b = s_period_b[info->channel];
 
     if (!powered)
     {
-        __HAL_TIM_SET_COMPARE(hw->timer, hw->timer_a_channel, 0);
-        __HAL_TIM_SET_COMPARE(hw->timer, hw->timer_b_channel, 0);
+        __HAL_TIM_SET_COMPARE(hw->tim_a, hw->chan_a, 0);
+        __HAL_TIM_SET_COMPARE(hw->tim_b, hw->chan_b, 0);
+        return;
     }
 
-    const uint32_t main_channel = power_pwm_period > 0 ? hw->timer_a_channel : hw->timer_b_channel;
-    const uint32_t low_channel = power_pwm_period <= 0 ? hw->timer_a_channel : hw->timer_b_channel;
+    // one side held fully on, the other PWM'd: the difference drives the motor (power is in motor A's period)
+    const bool forward = power_pwm_period > 0;
+    uint32_t power =
+        power_pwm_period < 0 ? (power_pwm_period == INT32_MIN ? INT32_MAX : (uint32_t)(-power_pwm_period)) : (uint32_t)power_pwm_period;
+    if (power > period_a) power = period_a;
 
-    power_pwm_period =
-        power_pwm_period < 0 ? (power_pwm_period == INT32_MIN ? INT32_MAX : -power_pwm_period) : power_pwm_period;
-
-    // __HAL_TIM_SET_COMPARE(hw->timer, low_channel, 0);
-    // __HAL_TIM_SET_COMPARE(hw->timer, main_channel, power_pwm_period);
-    __HAL_TIM_SET_COMPARE(hw->timer, low_channel, fader_pwm_period[info->channel] - power_pwm_period);
-    __HAL_TIM_SET_COMPARE(hw->timer, main_channel, fader_pwm_period[info->channel]);
+    if (forward)
+    {
+        __HAL_TIM_SET_COMPARE(hw->tim_a, hw->chan_a, period_a);
+        __HAL_TIM_SET_COMPARE(hw->tim_b, hw->chan_b, period_b - (uint32_t)((uint64_t)power * period_b / period_a));
+    }
+    else
+    {
+        __HAL_TIM_SET_COMPARE(hw->tim_b, hw->chan_b, period_b);
+        __HAL_TIM_SET_COMPARE(hw->tim_a, hw->chan_a, period_a - power);
+    }
 }
 
 /**

@@ -34,4 +34,13 @@ uint8_t bucket_spi_init (void);
 */
 uint8_t bucket_spi_send (uint8_t bucket, const uint8_t *data, uint16_t len);
 
+/**
+ ----------------------------------------------------------------------------------
+  @brief PUBLIC bucket_spi_exchange : bucket, out, in, length -> uint8_t
+  Selects one bucket and clocks len bytes both ways: tx out on MOSI while the bucket's reply is
+  read from MISO into rx. Blocks the calling task until done. Returns 0 on success.
+ ----------------------------------------------------------------------------------
+*/
+uint8_t bucket_spi_exchange (uint8_t bucket, const uint8_t *tx, uint8_t *rx, uint16_t len);
+
 #endif // BUCKET_SPI_H

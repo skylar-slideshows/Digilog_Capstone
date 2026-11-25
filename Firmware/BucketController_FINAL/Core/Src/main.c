@@ -40,7 +40,8 @@
 #include "portmacro.h"
 #include "projdefs.h"
 #include "stm32g474xx.h"
-#include "FreeRTOS_apps/remote_cmd_handler.h"
+#include "FreeRTOS_apps/master_link.h"
+#include "FreeRTOS_apps/boot_screen.h"
 #include "FreeRTOS_apps/led_handler.h"
 #include "FreeRTOS_apps/i2c_scheduler.h"
 #include "FreeRTOS_apps/fader_poller.h"
@@ -68,6 +69,7 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc2;
 ADC_HandleTypeDef hadc4;
+ADC_HandleTypeDef hadc5;
 
 DAC_HandleTypeDef hdac1;
 DAC_HandleTypeDef hdac3;
@@ -132,6 +134,7 @@ static void MX_OPAMP4_Init(void);
 static void MX_OPAMP6_Init(void);
 static void MX_ADC4_Init(void);
 static void MX_DAC1_Init(void);
+static void MX_ADC5_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -209,6 +212,7 @@ int main(void)
   MX_OPAMP6_Init();
   MX_ADC4_Init();
   MX_DAC1_Init();
+  MX_ADC5_Init();
   /* USER CODE BEGIN 2 */
 
   /*=============================== STARTUP HARDWARE INITIALIZATION ================================*/
@@ -229,7 +233,9 @@ int main(void)
     i2c_probeall();
   }
 
-  uart_cmd_init(); // uart2 startup for comms w/ remote app
+  // SPI1 slave to the master (our channel numbers, remote commands in, panel changes out). Early, so PB4
+  // stops driving the MISO line the four buckets share; its task starts with the scheduler.
+  master_link_init();
 
   led_init(); // PLEASE keep led_init before init_control_interface. otherwise control hardware gets set to nullptrs and we have no LEDs
   shiftreg_init();
@@ -298,6 +304,7 @@ int main(void)
   init_i2c_scheduler();
   init_fader_poller();
   init_faders();
+  boot_screen_init();     // start-up picture and LED animation until the master answers (or solo mode)
   init_channel_display(); // channel screens (after displays_init and init_control_interface)
 
   /* USER CODE END RTOS_THREADS */
@@ -396,7 +403,7 @@ static void MX_ADC2_Init(void)
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc2.Init.LowPowerAutoWait = DISABLE;
   hadc2.Init.ContinuousConvMode = ENABLE;
-  hadc2.Init.NbrOfConversion = 4;
+  hadc2.Init.NbrOfConversion = 2;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -410,7 +417,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Channel = ADC_CHANNEL_9;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
@@ -430,23 +437,6 @@ static void MX_ADC2_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_8;
-  sConfig.Rank = ADC_REGULAR_RANK_3;
-  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_9;
-  sConfig.Rank = ADC_REGULAR_RANK_4;
-  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN ADC2_Init 2 */
 
   /* USER CODE END ADC2_Init 2 */
@@ -536,6 +526,74 @@ static void MX_ADC4_Init(void)
   /* USER CODE BEGIN ADC4_Init 2 */
 
   /* USER CODE END ADC4_Init 2 */
+
+}
+
+/**
+  * @brief ADC5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC5_Init(void)
+{
+
+  /* USER CODE BEGIN ADC5_Init 0 */
+
+  /* USER CODE END ADC5_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC5_Init 1 */
+
+  /* USER CODE END ADC5_Init 1 */
+
+  /** Common config
+  */
+  hadc5.Instance = ADC5;
+  hadc5.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc5.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc5.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc5.Init.GainCompensation = 0;
+  hadc5.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc5.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc5.Init.LowPowerAutoWait = DISABLE;
+  hadc5.Init.ContinuousConvMode = DISABLE;
+  hadc5.Init.NbrOfConversion = 2;
+  hadc5.Init.DiscontinuousConvMode = DISABLE;
+  hadc5.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc5.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc5.Init.DMAContinuousRequests = DISABLE;
+  hadc5.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc5.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_13;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc5, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_12;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  if (HAL_ADC_ConfigChannel(&hadc5, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC5_Init 2 */
+
+  /* USER CODE END ADC5_Init 2 */
 
 }
 
@@ -1521,7 +1579,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, DISP_RST_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, DISP_RST_Pin|SHIFTREG_LAT_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SHIFTREG_OE_GPIO_Port, SHIFTREG_OE_Pin, GPIO_PIN_SET);
@@ -1530,7 +1588,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, DISP_CS3_Pin|DISP_CS2_Pin|DISP_CS1_Pin|DISP_CS0_Pin, GPIO_PIN_RESET);
@@ -1541,14 +1599,16 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, LDAC0_Pin|LDAC1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : F0_Touch_Pin F3_Touch_Pin */
-  GPIO_InitStruct.Pin = F0_Touch_Pin|F3_Touch_Pin;
+  /*Configure GPIO pins : F3_TOUCH_Pin F2_TOUCH_Pin F0_TOUCH_Pin */
+  GPIO_InitStruct.Pin = F3_TOUCH_Pin|F2_TOUCH_Pin|F0_TOUCH_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : DISP_RST_Pin LDAC4_Pin LDAC3_Pin LDAC2_Pin */
-  GPIO_InitStruct.Pin = DISP_RST_Pin|LDAC4_Pin|LDAC3_Pin|LDAC2_Pin;
+  /*Configure GPIO pins : DISP_RST_Pin SHIFTREG_LAT_Pin LDAC4_Pin LDAC3_Pin
+                           LDAC2_Pin */
+  GPIO_InitStruct.Pin = DISP_RST_Pin|SHIFTREG_LAT_Pin|LDAC4_Pin|LDAC3_Pin
+                          |LDAC2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1561,21 +1621,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SHIFTREG_Latch_Pin SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
-  GPIO_InitStruct.Pin = SHIFTREG_Latch_Pin|SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
+  /*Configure GPIO pins : SHIFTREG_Clock_Pin SHIFTREG_Data_Pin */
+  GPIO_InitStruct.Pin = SHIFTREG_Clock_Pin|SHIFTREG_Data_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : F1_Touch_Pin */
-  GPIO_InitStruct.Pin = F1_Touch_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(F1_Touch_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : F2_Touch_Pin SPI1_CS_IN_Pin */
-  GPIO_InitStruct.Pin = F2_Touch_Pin|SPI1_CS_IN_Pin;
+  /*Configure GPIO pins : F1_TOUCH_Pin SPI1_CS_IN_Pin */
+  GPIO_InitStruct.Pin = F1_TOUCH_Pin|SPI1_CS_IN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

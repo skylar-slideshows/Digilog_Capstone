@@ -113,7 +113,11 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/control_integration/button_control.c
     Core/Src/control_integration/knob_control.c
     Core/Src/control_integration/fader_control.c
-    Core/Src/FreeRTOS_apps/remote_cmd_handler.c
+    Core/Src/FreeRTOS_apps/master_link.c
+    Core/Src/FreeRTOS_apps/boot_screen.c
+    Core/Src/FreeRTOS_apps/cmd_exec.c
+    Core/Src/control_report.c
+    Core/Src/console_state_bucket.c
     Core/Src/FreeRTOS_apps/led_handler.c
     Core/Src/FreeRTOS_apps/i2c_scheduler.c
     Core/Src/FreeRTOS_apps/fader_poller.c

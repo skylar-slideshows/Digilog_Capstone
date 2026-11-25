@@ -63,4 +63,10 @@ uint8_t displays_clear (uint8_t display);
  */
 uint8_t displays_draw_region (uint8_t display, const ui_region_t *region);
 
+/**
+ * Backlight of all four screens, 0 (off) to 1000 (full, BACKLIGHT_PERCENT). It starts off; the start-up
+ * screen fades it in. Any task.
+ */
+void displays_backlight (uint16_t permille);
+
 #endif

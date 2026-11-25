@@ -106,31 +106,73 @@
 /** Fader position of 0 dB (cv_mapping.pdf section 18): the level channels sit at while FADERS_CONNECTED is 0 */
 #define FADER_0DB_POSITION 44380U
 
-/** Fader n belongs to channel n. FADER_ADC must have its regular conversions ranked in fader
- *  order (rank 1 = fader 0 ... rank 4 = fader 3), see poll_faders(). */
-#define FADER_ADC              hadc2
+/** What each fader is wired to (fader n belongs to channel n+1). Since the pin remap of November 2026 a
+ *  fader's two motor outputs can be on different timers (TIM2 and TIM3 run the same PWM), and the
+ *  positions come from two ADCs. Touch inputs are the CubeMX labels F0_TOUCH ... F3_TOUCH.
+ *
+ *  fader   motor A          motor B          position          touch
+ *    0     PA5  TIM2 CH1    PB10 TIM2 CH3    PD9  ADC5 IN13    PE15
+ *    1     PA6  TIM3 CH1    PA7  TIM3 CH2    PD8  ADC5 IN12    PB2
+ *    2     PB7  TIM3 CH4    PD6  TIM2 CH4    PC3  ADC2 IN9     PE6
+ *    3     PE4  TIM3 CH3    PA1  TIM2 CH2    PC0  ADC2 IN6     PE5   */
+#define FADER0_A_TIM      htim2
+#define FADER0_A_CHAN     TIM_CHANNEL_1
+#define FADER0_B_TIM      htim2
+#define FADER0_B_CHAN     TIM_CHANNEL_3
+#define FADER0_ADC        hadc5
+#define FADER0_ADC_CHAN   ADC_CHANNEL_13
 
-#define FADER0_TIM_HANDLE      htim2
-#define FADER0_A_TIM_CHAN      TIM_CHANNEL_1
-#define FADER0_B_TIM_CHAN      TIM_CHANNEL_2
+#define FADER1_A_TIM      htim3
+#define FADER1_A_CHAN     TIM_CHANNEL_1
+#define FADER1_B_TIM      htim3
+#define FADER1_B_CHAN     TIM_CHANNEL_2
+#define FADER1_ADC        hadc5
+#define FADER1_ADC_CHAN   ADC_CHANNEL_12
 
-#define FADER1_TIM_HANDLE      htim2
-#define FADER1_A_TIM_CHAN      TIM_CHANNEL_3
-#define FADER1_B_TIM_CHAN      TIM_CHANNEL_4
+#define FADER2_A_TIM      htim3
+#define FADER2_A_CHAN     TIM_CHANNEL_4
+#define FADER2_B_TIM      htim2
+#define FADER2_B_CHAN     TIM_CHANNEL_4
+#define FADER2_ADC        hadc2
+#define FADER2_ADC_CHAN   ADC_CHANNEL_9
 
-#define FADER2_TIM_HANDLE      htim3
-#define FADER2_A_TIM_CHAN      TIM_CHANNEL_1
-#define FADER2_B_TIM_CHAN      TIM_CHANNEL_2
+#define FADER3_A_TIM      htim3
+#define FADER3_A_CHAN     TIM_CHANNEL_3
+#define FADER3_B_TIM      htim2
+#define FADER3_B_CHAN     TIM_CHANNEL_2
+#define FADER3_ADC        hadc2
+#define FADER3_ADC_CHAN   ADC_CHANNEL_6
 
-#define FADER3_TIM_HANDLE      htim3
-#define FADER3_A_TIM_CHAN      TIM_CHANNEL_3
-#define FADER3_B_TIM_CHAN      TIM_CHANNEL_4
+#define FADER_ADC_SAMPLETIME ADC_SAMPLETIME_47CYCLES_5 // fader pots: a longer sample settles better
 
-/*------------------------------ REMOTE UART (USB debug + remote app) ------------------------------*/
-#define REMOTE_UART_HANDLE     huart2           // HAL handle, used for printf
-#define REMOTE_UART            USART2           // register access by the command handler
-#define REMOTE_UART_IRQn       USART2_IRQn
-#define REMOTE_UART_IRQHandler USART2_IRQHandler
+/*------------------------------ CV DACs ------------------------------*/
+/** The I2C bus each channel's control-voltage DACs (its five MCP4728s) are on. A channel's MCP23017s are on
+ *  the bus with its own number (I2C1 = channel 1 ...), but since the November 2026 remap the DACs aren't:
+ *  I2C1 carries channel 4's CVs, I2C2 channel 1's, I2C3 channel 3's, I2C4 channel 2's. */
+#define CV_DAC_BUS_CH1    I2C2
+#define CV_DAC_BUS_CH2    I2C4
+#define CV_DAC_BUS_CH3    I2C3
+#define CV_DAC_BUS_CH4    I2C1
+
+/*------------------------------ DEBUG UART (USART2, 921600) ------------------------------*/
+#define REMOTE_UART_HANDLE     huart2           // HAL handle: the debug log (printf). The remote app now
+                                                // reaches the bucket through the master, over SPI1.
+
+/*------------------------------ START-UP SCREEN ------------------------------*/
+/** The DIGILOG picture on the screens (boot_screen.c), until the master gives this bucket its
+ *  channels or BOOT_MASTER_TIMEOUT_MS passes (then solo mode: channels 01-04, nothing over SPI, and NO MASTER
+ *  in red along the bottom of the channel screens). */
+#define BOOT_FADE_IN_MS         1000U
+#define BOOT_FADE_OUT_MS        300U
+#define BOOT_MASTER_TIMEOUT_MS  5000U   // from start-up
+
+/*------------------------------ MASTER LINK ------------------------------*/
+/** SPI1 slave to the master controller (master_link.c, BUCKET_CONTROL_SYNC.md). Each chip-select
+ *  window is an exchange of up to LINK_XCHG_BYTES: commands in on MOSI, this bucket's report packet
+ *  out on MISO. */
+#define LINK_XCHG_BYTES 64
+#define LINK_RX_RING    1024  // received bytes waiting for the link task (power of two)
+#define LINK_SCAN_MS    10    // how often the panel is checked for changes to report
 
 
 /*=============================== CLOCKS ================================*/

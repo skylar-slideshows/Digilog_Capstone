@@ -521,8 +521,8 @@ static void header_shapes (const channel_screen_state_t *s, char number[4], ui_r
                            ui_text_t *texts, uint8_t *text_count)
 {
     const uint8_t n = (uint8_t)(s->number % 100U);
-    number[0] = (char)('0' + n / 10U);
-    number[1] = (char)('0' + n % 10U);
+    number[0] = n ? (char)('0' + n / 10U) : '-'; // 0: not known yet (the master hasn't said which channels)
+    number[1] = n ? (char)('0' + n % 10U) : '-';
     number[2] = '\0';
 
     const channel_input_t which = s->input <= CH_INPUT_HIZ ? s->input : CH_INPUT_LINE;
@@ -659,6 +659,16 @@ static uint8_t pan_rects (ui_rect_t *rects, int16_t fill, bool with_trough)
 }
 
 
+/** The status line: NO MASTER in red, centred, when no master answered at start-up; nothing otherwise */
+static void footer_shapes (const channel_screen_state_t *s, ui_text_t *texts, uint8_t *text_count)
+{
+    if (!s->no_master) return;
+    static const char text[] = "NO MASTER";
+    texts[(*text_count)++] = (ui_text_t){(int16_t)((UI_SCREEN_W - ui_text_width(text, CH_FOOTER_SIZE)) / 2), CH_FOOTER_Y,
+                                         CH_FOOTER_SIZE, CH_COLOR_NO_MASTER, text};
+}
+
+
 /*=============================== REGIONS ================================*/
 
 void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, const channel_screen_state_t *state,
@@ -669,6 +679,7 @@ void channel_screen_full (ui_region_t *region, channel_screen_parts_t *parts, co
     bar_slot_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     low_popup_shapes(state, parts->rects, &rect_count, parts->texts, &text_count);
     rect_count = (uint8_t)(rect_count + pan_rects(&parts->rects[rect_count], state->pan_fill, true));
+    footer_shapes(state, parts->texts, &text_count);
 
     *region = (ui_region_t){
         .x0 = 0,
@@ -808,6 +819,21 @@ int16_t channel_screen_pan_fill (int16_t pan)
     int32_t columns = (magnitude * CH_PAN_HALF + 16384) / 32768;
     if (columns > CH_PAN_HALF) columns = CH_PAN_HALF;
     return (int16_t)(pan < 0 ? -columns : columns);
+}
+
+void channel_screen_footer (ui_region_t *region, channel_footer_parts_t *parts, const channel_screen_state_t *state)
+{
+    uint8_t text_count = 0;
+    footer_shapes(state, parts->texts, &text_count);
+    *region = (ui_region_t){
+        .x0 = 0,
+        .y0 = CH_FOOTER_Y,
+        .x1 = UI_SCREEN_W - 1,
+        .y1 = UI_SCREEN_H - 1,
+        .background = background(state),
+        .texts = parts->texts,
+        .text_count = text_count,
+    };
 }
 
 void channel_screen_pan (ui_region_t *region, channel_pan_parts_t *parts, int16_t fill)

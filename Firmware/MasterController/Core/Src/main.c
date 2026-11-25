@@ -24,6 +24,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "FreeRTOS_apps/usb_device_task.h"
+#include "FreeRTOS_apps/bucket_link.h"
+#include "display/lt7683_display.h"
 #include "hardware_drivers/bucket_spi.h"
 #include "FreeRTOS_apps/remote_cmd_handler.h"
 #include "FreeRTOS_apps/daw_control.h"
@@ -182,8 +184,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   usb_device_start();
   bucket_spi_init();
+  bucket_link_start(); // a window with every bucket every few ms: channel numbers, commands, their reports
   remote_cmd_init();
   daw_control_init();
+  display_start();     // the console test screen
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

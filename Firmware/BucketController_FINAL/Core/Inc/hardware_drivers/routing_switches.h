@@ -6,7 +6,7 @@
   * @brief The routing board's eight 74HC595s (U5-U12) set every switch on the
   *        channel cards: input source, pad, phantom, phase, HPF, EQ cut/boost and
   *        shelf/bell, insert, insert source and mix-bus on. They are one 64-bit chain
-  *        on the controller's SHIFTREG_Data / SHIFTREG_Clock / SHIFTREG_Latch pins
+  *        on the controller's SHIFTREG_Data / SHIFTREG_Clock / SHIFTREG_LAT pins (latch on PC5)
   *        (routing board J24: SR_DAT, SR_CLK, SR_LAT). SHIFTREG_OE (PF9) drives SR_OE_EXT
   *        (J24 pin 7): high keeps the board's outputs off, low turns them on.
   *

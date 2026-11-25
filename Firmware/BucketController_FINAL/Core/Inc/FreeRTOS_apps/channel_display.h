@@ -16,6 +16,11 @@
  * Starts the channel display task. Call in main.c USER CODE BEGIN RTOS_THREADS, after
  * displays_init() and init_control_interface() have run.
  */
+#include <stdbool.h>
+
 void init_channel_display (void);
+
+/** True once every screen has drawn its first full frame (after the start-up screen) */
+bool channel_display_ready (void);
 
 #endif

@@ -106,3 +106,23 @@ uint8_t bucket_spi_send (uint8_t bucket, const uint8_t *data, uint16_t len)
     xSemaphoreGive(s_lock);
     return (status == HAL_OK) ? 0 : 1;
 }
+
+
+uint8_t bucket_spi_exchange (uint8_t bucket, const uint8_t *tx, uint8_t *rx, uint16_t len)
+{
+    if (bucket >= BUCKET_COUNT || tx == NULL || rx == NULL || len == 0) return 1;
+
+    xSemaphoreTake(s_lock, portMAX_DELAY);
+
+    HAL_GPIO_WritePin(BUCKET_CS[bucket].port, BUCKET_CS[bucket].pin, GPIO_PIN_RESET);
+    delay_us(BUCKET_CS_SETUP_US); // the bucket's chip-select interrupt starts driving MISO
+
+    const HAL_StatusTypeDef status =
+        HAL_SPI_TransmitReceive(&BUCKET_SPI_HANDLE, (uint8_t *)tx, rx, len, BUCKET_SPI_TIMEOUT_MS);
+
+    HAL_GPIO_WritePin(BUCKET_CS[bucket].port, BUCKET_CS[bucket].pin, GPIO_PIN_SET);
+    delay_us(BUCKET_CS_GAP_US); // the bucket loads its next packet
+
+    xSemaphoreGive(s_lock);
+    return (status == HAL_OK) ? 0 : 1;
+}

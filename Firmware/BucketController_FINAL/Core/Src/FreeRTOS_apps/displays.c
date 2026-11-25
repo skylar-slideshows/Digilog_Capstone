@@ -29,6 +29,11 @@
 #define DISPLAY_SIZE_PX   240
 #define BACKLIGHT_PERCENT 100 // 0-100: screen brightness (TIM1 channel 3 duty; the PWM frequency is BRIGHTNESS_PWM_HZ in CONFIG.h)
 
+// The interface's colours are shown this much brighter, in percent: the UI's colour values in channel_screen.h
+// stay as designed. Black (the screens' background) is unaffected. Every colour gets the same treatment wherever
+// it's drawn, so a part of the screen redrawn on its own always matches the rest.
+#define UI_BRIGHTEN_PERCENT 125U
+
 // The screens are mounted upside down relative to the panel's own orientation, so everything is turned
 // 180 degrees. Turned, the 240 visible rows are rows 80-319 of the panel's 320-row memory, so every row
 // address gets ROW_OFFSET added. Set DISPLAY_FLIP_180 to 0 to undo.
@@ -193,8 +198,8 @@ uint8_t displays_init (void)
 
     // Backlight: TIM1 channel 3, on while high. TIM1 also runs the LED brightness PWM and
     // led_init() changes its period, so use the period the timer is actually running at.
-    const uint32_t period = __HAL_TIM_GET_AUTORELOAD(&htim1) + 1U;
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (period * BACKLIGHT_PERCENT) / 100U);
+    // Starts dark: the start-up screen (boot_screen.c) fades it in once the panels have a picture.
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0U);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
 
     DRIVER_ST7789_LINK_INIT(&s_st7789, st7789_handle_t);
@@ -341,6 +346,30 @@ static uint8_t send_chunk (uint32_t length, uint8_t first)
                  : st7789_memory_continue_write(&s_st7789, s_chunk, (uint16_t)length);
 }
 
+void displays_backlight (uint16_t permille)
+{
+    if (permille > 1000U) permille = 1000U;
+    const uint32_t period = __HAL_TIM_GET_AUTORELOAD(&htim1) + 1U; // led_init() may have changed it
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (period * BACKLIGHT_PERCENT * permille) / 100000U);
+}
+
+/**
+ * An interface colour, UI_BRIGHTEN_PERCENT brighter, keeping its hue: red, green and blue all scale by the
+ * same amount, at most as far as the strongest of them reaching full. So greys and darker colours lift by the
+ * whole amount, and a colour already at full strength in one channel (white, the mute red) stays as it is
+ * rather than turning towards white or another hue.
+ */
+static uint32_t brighten (uint32_t c)
+{
+    const uint32_t r = (c >> 16) & 0xFFU, g = (c >> 8) & 0xFFU, b = c & 0xFFU;
+    uint32_t peak = r > g ? r : g;
+    if (b > peak) peak = b;
+    if (peak == 0U) return c;
+    uint32_t k = UI_BRIGHTEN_PERCENT * 256U / 100U; // gain in 1/256ths
+    if (peak * k > 255U * 256U) k = 255U * 256U / peak;
+    return ((r * k / 256U) << 16) | ((g * k / 256U) << 8) | (b * k / 256U);
+}
+
 uint8_t displays_draw_region (uint8_t display, const ui_region_t *region)
 {
     if (display >= DISPLAY_COUNT || region == NULL) return 1;
@@ -376,7 +405,8 @@ uint8_t displays_draw_region (uint8_t display, const ui_region_t *region)
             if (c != converted)
             {
                 converted = c;
-                pixel = (uint16_t)((to_bits(c >> 16, 31) << 11) | (to_bits(c >> 8, 63) << 5) | to_bits(c, 31));
+                const uint32_t shown = brighten(c); // black stays black
+                pixel = (uint16_t)((to_bits(shown >> 16, 31) << 11) | (to_bits(shown >> 8, 63) << 5) | to_bits(shown, 31));
             }
             s_chunk[used++] = (uint8_t)(pixel >> 8);
             s_chunk[used++] = (uint8_t)pixel;
@@ -384,9 +414,10 @@ uint8_t displays_draw_region (uint8_t display, const ui_region_t *region)
             if (c != converted)
             {
                 converted = c;
-                r = to_bits(c >> 16, 15);
-                g = to_bits(c >> 8, 15);
-                b = to_bits(c, 15);
+                const uint32_t shown = brighten(c); // black stays black
+                r = to_bits(shown >> 16, 15);
+                g = to_bits(shown >> 8, 15);
+                b = to_bits(shown, 15);
             }
             // two pixels share three bytes: R1G1, B1R2, G2B2
             if (!half)

@@ -113,9 +113,9 @@ void latch_out(bool led)
     } else {
         SHIFTREG_Clock_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Clock_Pin);
         wait_half();
-        SHIFTREG_Latch_GPIO_Port->BSRR = PIN_SET(SHIFTREG_Latch_Pin);
+        SHIFTREG_LAT_GPIO_Port->BSRR = PIN_SET(SHIFTREG_LAT_Pin);
         wait_half();
-        SHIFTREG_Latch_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Latch_Pin);
+        SHIFTREG_LAT_GPIO_Port->BSRR = PIN_RST(SHIFTREG_LAT_Pin);
     }
 }
 
@@ -156,9 +156,9 @@ void shiftreg_init(void)
 
     pin_out_fast(SHIFTREG_Data_GPIO_Port, SHIFTREG_Data_Pin); // initialize the pins needed - serial data
     pin_out_fast(SHIFTREG_Clock_GPIO_Port, SHIFTREG_Clock_Pin); // serial clock
-    pin_out_fast(SHIFTREG_Latch_GPIO_Port, SHIFTREG_Latch_Pin); // latch pin
+    pin_out_fast(SHIFTREG_LAT_GPIO_Port, SHIFTREG_LAT_Pin); // latch pin
     SHIFTREG_Data_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Data_Pin);
     SHIFTREG_Clock_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Clock_Pin);
-    SHIFTREG_Latch_GPIO_Port->BSRR = PIN_RST(SHIFTREG_Latch_Pin);
+    SHIFTREG_LAT_GPIO_Port->BSRR = PIN_RST(SHIFTREG_LAT_Pin);
 
 }

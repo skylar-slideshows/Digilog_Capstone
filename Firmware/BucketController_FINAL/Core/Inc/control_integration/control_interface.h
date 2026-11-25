@@ -138,6 +138,12 @@ void update_control_values (uint8_t channel);
 void update_control_leds (uint8_t channel);
 
 /**
+ * @brief True while someone has a hand on a channel's fader, so a remote value mustn't move it
+ * (fader_control.c; always false while FADERS_CONNECTED is 0)
+ */
+bool fader_control_touched (uint8_t channel);
+
+/**
  * @brief Every control's value at startup. Knob resets (double click) and the EQ reset (hold the EQ button)
  * go back to these.
  */
