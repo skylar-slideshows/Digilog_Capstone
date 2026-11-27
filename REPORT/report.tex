@@ -35,13 +35,13 @@
     \centering
     \vspace*{0cm}
     
-    {\huge \textbf{Analog Mixing Console with Digital Control\\ \vspace{0.5cm}and Automated Signal Path Configuration}} \\[1cm]
+    {\huge \textbf{Design and Evaluation of a VCA-Based Mixing Console with Instant Recall} \\[1cm]
     
     \vspace{0.5cm}
     
     {\huge Capstone Project Report}
     
-    \vspace{5cm}
+    \vspace{4cm}
     
 
 
@@ -50,38 +50,37 @@
     
     {\Large \textbf{Skylar Denno}}
     
-    \vspace{0.3cm}
+    \\
     
     {\Large \textbf{Darya Petrova}}
     
-        \vspace{0.3cm}
+    \\
     
     {\Large \textbf{Evan Forcucci}}
     
-        \vspace{0.3cm}
+\\
     
     {\Large \textbf{Xinhao Chen}}
     
-        \vspace{0.3cm}
+\\
     
     {\Large \textbf{Luke Garrity}}
     
-        \vspace{0.3cm}
-    
-    {\Large \textbf{Daniel Salas}}
+        \vspace{0.5cm}
     
 
     
-    \vspace{0.5cm}
+
     
-        {\large \textbf{Advisor: }Milad Siami \textbf{[Team \#2]}}
     
-        \vspace{1.3cm}
+        {\large \textbf{Advisor: }Milad Siami [Team \#2]}
+    
+        \vspace{2cm}
 
     
         {\LARGE \textbf{Northeastern University}} \\
         
-    Department of Electrical and Computer Engineering \\
+    \large Department of Electrical and Computer Engineering \\
     \vspace{1cm}
     
     
@@ -97,8 +96,52 @@
 
 \section{Introduction}
 \subsection{Background}
-\subsection{Problem Statement}
+
+\subsubsection{Mixing}
+
+In professional audio, "mixing" generally refers to the application of processing to  individual elements of a recorded performance (i.e. the bass, the piano, the snare drum) in order to produce a pleasant listening experience and to present each element in the best way possible within the summed stereo master.
+
+This processing usually is gain-based or frequency-based. For example, automatic gain control (called "compression" in mixing) is often applied to recordings of singers to make even quiet phrases audible over an instrumental. This is an example of gain-based processing. Frequency-based processing may be used to correct issues from recording or to accentuate flattering parts of the spectrum for certain instruments while attenuating others. For example, if several microphones are placed in a room to record a drumset performance, resonances from the room's geometry and comb filtering from the phase relationships of the multiple microphones can result in an unpleasant listening experience when all these tracks are played back together. Frequency-based processing such as the application of filters or frequency range equalization (EQ) is often used in such situations.
+
+It is important to note that different elements within a recording will require different, tailored processing, and that this processing is applied to the elements individually before they are summed into the full recording. In mixing a song with over a hundred recorded layers (which is common today), this can result in hundreds of individual parameters.
+
+\subsubsection{Analog and Digital Sound Processors}
+
+The equipment used for music mixing can broadly sorted into two categories. Analog sound processing units utilize amplifiers, envelope detectors, filters, and other similar circuits made of real passive components and op-amps to process the signal directly in its analog form. Digital processors, on the other hand, can be software based and use digital signal processing (DSP) to produce similar effects on audio after it has been converted to a digital representation.
+
+While in many other areas, analog processing has been phased out on account of its complexity and expense, analog equipment is still widely used in music mixing because of its perceived better sound and its enhanced ergonomics. In a 2019 study (https://aes.org/publications/elibrary/elibrary-page/) published by the Audio Engineering Society, listeners had a small, but measurable preference for songs mixed on analog hardware even when they didn't know which version was which, with a split up to 79\% preferring a song's analog mix. A large proportion of mixing engineers today still use analog processors in conjunction with DSP in "hybrid" workflows (https://www.taylorfrancis.com/chapters/edit/10.4324/9781351016711-12/mixing-beyond-box-alex-stevenson). 
+
+The question of which is truly "better," and the question of whether DSP can truly replicate analog processing without noticeable differences is beyond the scope of this project. We simply want to recognize that there remains a large demand for analog sound processing, despite its drawbacks when compared to digital processing. 
+
+
+\subsection{Problem}
+
+\subsubsection{Recall}
+Perhaps the largest drawback of analog music processing is that of recall. The hundreds of parameters set during the mixing process to produce the desired processing is traditionally set with potentiometers and variable resistors, which set and save their value through their physical configuration (i.e. wiper along a resistive strip). This means that in order to save settings for later recall, the audio engineer must note the physical positions of knobs and switches, and to return to the settings of a song for revisions, the audio engineer must return every knob to the same physical state as before. This process is called "recall," and it is one of the biggest drawbacks of using analog processing today, especially since modern musicians see mixing as a tweaking stage requiring several revisions, rather than a single one-off step, and audio engineers must be more flexible than ever to accommodate many clients at a time, as recording budgets have declined. If an audio engineer using analog hardware must recall mix settings of five different songs in a day, a significant amount of time will be devoted to physically turning knobs to match pictures or recall sheets.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/recall2.jpg}
+
+    \caption{One page of a filled-out recall sheet (https://www.soundonsound.com/techniques/inside-track-bruce-springsteen-letter-you)}
+\end{figure}
+
+\subsubsection{Existing Products}
+
+
+\subsubsection{Problem Statement}
+
+\subsection{Proposed Solution}
+
+\subsubsection{Substituting the Potentiometer}
+
+\subsubsection{VCAs vs. MDACs}
+
+
+
 \subsection{Scope and Design Goals}
+
+Our goal is to demonstrate full digital control of gain-related and frequency-related parameters using a fully analog, VCA-based signal chain. Furthermore, we aim to show that using this architecture produces noise and linearity (distortion) metrics comparable to popular high-end analog mixing consoles built using the traditional potentiometer architecture; i.e. that this kind of digital control does not compromise on audio quality. Finally, we want to show that this VCA-based architecture is significantly less costly than the MDAC-based approach of the current products of this class, making possible the entry of such products into the "pro-sumer" music market.
 
 \newpage
 
